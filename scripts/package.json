@@ -1,0 +1,13 @@
+{
+  "name": "sorcery-news-fetcher",
+  "version": "1.0.0",
+  "description": "Fetches and translates Sorcery TCG news",
+  "type": "module",
+  "scripts": {
+    "fetch": "node fetch-news.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "openai": "^4.52.0"
+  }
+}

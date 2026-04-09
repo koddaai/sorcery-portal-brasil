@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sorcery Brasil - O Portal Brasileiro de Sorcery TCG</title>
+    <meta name="description" content="O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#d4af37">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sorcery BR">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Sorcery Portal Brasil">
+    <meta name="msapplication-TileColor" content="#0d0d0f">
+    <meta name="msapplication-TileImage" content="/icons/icon-144.png">
+
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192.png">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css?v=21">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <!-- Top Bar -->
+            <div class="header-top">
+                <a href="javascript:showView('home')" class="logo">
+                    <img src="sorcery-logo.png" alt="Sorcery" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-divider">|</span>
+                        <span class="logo-brasil">BRASIL</span>
+                    </div>
+                </a>
+
+                <div class="header-actions">
+                    <!-- Language Selector -->
+                    <div class="language-selector">
+                        <button id="lang-toggle" class="header-icon-btn" title="Idioma">
+                            <i data-lucide="globe"></i>
+                        </button>
+                        <div id="lang-dropdown" class="lang-dropdown hidden">
+                            <button class="lang-option active" data-lang="pt">🇧🇷 Português</button>
+                            <button class="lang-option" data-lang="en">🇺🇸 English</button>
+                            <button class="lang-option" data-lang="es">🇪🇸 Español</button>
+                        </div>
+                    </div>
+
+                    <!-- User Section -->
+                    <div id="user-logged-out" class="user-status">
+                        <button id="login-btn" class="btn btn-sm ghost" data-i18n="login">Entrar</button>
+                        <button id="register-btn" class="btn btn-sm primary" data-i18n="register">Criar Conta</button>
+                    </div>
+                    <div id="user-logged-in" class="user-status hidden">
+                        <button id="sync-btn" class="header-icon-btn" title="Sincronizar">
+                            <i data-lucide="cloud"></i>
+                        </button>
+                        <div class="user-avatar">
+                            <span id="user-display-name"></span>
+                        </div>
+                        <button id="logout-btn" class="header-icon-btn" title="Sair">
+                            <i data-lucide="log-out"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Bar -->
+            <nav class="nav-bar">
+                <!-- Primary Navigation -->
+                <div class="nav-primary">
+                    <button class="nav-btn" data-view="cards">
+                        <i data-lucide="layers"></i>
+                        <span>Cards</span>
+                    </button>
+                    <button class="nav-btn" data-view="collection">
+                        <i data-lucide="folder-heart"></i>
+                        <span>Coleção</span>
+                    </button>
+                    <button class="nav-btn" data-view="decks">
+                        <i data-lucide="layout-grid"></i>
+                        <span>Decks</span>
+                    </button>
+                    <button class="nav-btn" data-view="art">
+                        <i data-lucide="brush"></i>
+                        <span>Arte</span>
+                    </button>
+                </div>
+
+                <!-- Dropdown Menus -->
+                <div class="nav-dropdowns">
+                    <!-- Ferramentas Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="nav-dropdown-trigger">
+                            <i data-lucide="wrench"></i>
+                            <span>Ferramentas</span>
+                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <button class="nav-dropdown-item" data-view="wishlist">
+                                <i data-lucide="heart"></i> Wishlist
+                            </button>
+                            <button class="nav-dropdown-item" data-view="trade">
+                                <i data-lucide="repeat"></i> Trade Binder
+                            </button>
+                            <button class="nav-dropdown-item" data-view="precons">
+                                <i data-lucide="package"></i> Precons
+                            </button>
+                            <button class="nav-dropdown-item" data-view="stats">
+                                <i data-lucide="bar-chart-3"></i> Estatísticas
+                            </button>
+                            <button class="nav-dropdown-item" data-view="dust">
+                                <i data-lucide="sparkles"></i> Dust Tracker
+                            </button>
+                            <button class="nav-dropdown-item" data-view="promos">
+                                <i data-lucide="gift"></i> Promos
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Aprender Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="nav-dropdown-trigger">
+                            <i data-lucide="book-open"></i>
+                            <span>Aprender</span>
+                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <button class="nav-dropdown-item" data-view="codex">
+                                <i data-lucide="book-open"></i> Codex
+                            </button>
+                            <button class="nav-dropdown-item" data-view="rulebook">
+                                <i data-lucide="scroll-text"></i> Rulebook
+                            </button>
+                            <button class="nav-dropdown-item" data-view="faq">
+                                <i data-lucide="help-circle"></i> FAQ
+                            </button>
+                            <button class="nav-dropdown-item" data-view="guides">
+                                <i data-lucide="compass"></i> Guias
+                            </button>
+                            <button class="nav-dropdown-item" data-view="lore">
+                                <i data-lucide="feather"></i> Lore
+                            </button>
+                            <button class="nav-dropdown-item" data-view="quiz">
+                                <i data-lucide="brain"></i> Quiz
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Comunidade Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="nav-dropdown-trigger">
+                            <i data-lucide="users"></i>
+                            <span>Comunidade</span>
+                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <button class="nav-dropdown-item" data-view="community">
+                                <i data-lucide="users"></i> Discord & Links
+                            </button>
+                            <button class="nav-dropdown-item" data-view="locator">
+                                <i data-lucide="map-pin"></i> Lojas Brasil
+                            </button>
+                            <button class="nav-dropdown-item" data-view="meta">
+                                <i data-lucide="trophy"></i> Meta & Tier List
+                            </button>
+                            <button class="nav-dropdown-item" data-view="art">
+                                <i data-lucide="brush"></i> A Arte & Artistas
+                            </button>
+                            <button class="nav-dropdown-item" data-view="timeline">
+                                <i data-lucide="calendar"></i> Timeline
+                            </button>
+                            <button class="nav-dropdown-item" data-view="news">
+                                <i data-lucide="newspaper"></i> Noticias
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scanner Button -->
+                <button id="scanner-btn" class="nav-btn scanner-btn">
+                    <i data-lucide="scan"></i>
+                    <span>Scanner</span>
+                </button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Home View -->
+            <section id="home-view" class="view active">
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Sorcery: Contested Realm</h1>
+                        <p class="hero-subtitle" data-i18n="heroSubtitle">O jogo de cartas colecionáveis com arte pintada à mão por mestres da fantasia</p>
+                        <div class="hero-actions">
+                            <button class="btn primary btn-lg" onclick="showView('cards')">
+                                <i data-lucide="layers"></i>
+                                <span data-i18n="exploreCards">Explorar Cards</span>
+                            </button>
+                            <button class="btn btn-lg ghost" onclick="showView('rulebook')">
+                                <i data-lucide="book-open"></i>
+                                <span>Como Jogar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Features -->
+                <div class="features-section">
+                    <div class="features-grid">
+                        <div class="feature-card" onclick="showView('collection')">
+                            <div class="feature-icon">
+                                <i data-lucide="folder-heart"></i>
+                            </div>
+                            <h3 data-i18n="featureCollection">Gerencie sua Coleção</h3>
+                            <p data-i18n="featureCollectionDesc">Rastreie todos os seus cards, valores e progresso de completude</p>
+                        </div>
+                        <div class="feature-card" onclick="showView('decks')">
+                            <div class="feature-icon">
+                                <i data-lucide="layout-grid"></i>
+                            </div>
+                            <h3 data-i18n="featureDecks">Monte Decks</h3>
+                            <p data-i18n="featureDecksDesc">Crie e salve seus decks com estatísticas detalhadas</p>
+                        </div>
+                        <div class="feature-card" onclick="showView('locator')">
+                            <div class="feature-icon">
+                                <i data-lucide="map-pin"></i>
+                            </div>
+                            <h3 data-i18n="featureStores">Encontre Lojas</h3>
+                            <p data-i18n="featureStoresDesc">Localize lojas brasileiras que vendem Sorcery</p>
+                        </div>
+                        <div class="feature-card" onclick="showView('codex')">
+                            <div class="feature-icon">
+                                <i data-lucide="book-open"></i>
+                            </div>
+                            <h3 data-i18n="featureCodex">Codex de Regras</h3>
+                            <p data-i18n="featureCodexDesc">Consulte todas as regras e mecânicas do jogo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Elements Section -->
+                <div class="elements-showcase">
+                    <div class="section-header">
+                        <h2>Os Quatro Elementos</h2>
+                        <p>Domine os elementos primordiais e forje seu próprio caminho para a vitória</p>
+                    </div>
+                    <div class="elements-grid-home">
+                        <div class="element-card-home fire">
+                            <img src="assets/elements/fire.png" alt="Fogo" class="element-icon-img">
+                            <h3>Fogo</h3>
+                            <p>Agressão e destruição direta. Ideal para quem busca vitórias rápidas e explosivas.</p>
+                        </div>
+                        <div class="element-card-home water">
+                            <img src="assets/elements/water.png" alt="Água" class="element-icon-img">
+                            <h3>Água</h3>
+                            <p>Controle e manipulação. Perfeito para estratégias de longo prazo e negação.</p>
+                        </div>
+                        <div class="element-card-home earth">
+                            <img src="assets/elements/earth.png" alt="Terra" class="element-icon-img">
+                            <h3>Terra</h3>
+                            <p>Resistência e crescimento. Construa um exército imparável de criaturas poderosas.</p>
+                        </div>
+                        <div class="element-card-home air">
+                            <img src="assets/elements/air.png" alt="Ar" class="element-icon-img">
+                            <h3>Ar</h3>
+                            <p>Velocidade e evasão. Supere seu oponente com mobilidade e ataques precisos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About the Game -->
+                <div class="about-section">
+                    <div class="about-content">
+                        <h2>Sobre Sorcery: Contested Realm</h2>
+                        <p><strong>Arte Tradicional Pintada à Mão</strong> — Cada carta de Sorcery apresenta ilustrações originais criadas com técnicas tradicionais como óleo, acrílico, aquarela e nanquim. Artistas lendários do RPG e da fantasia, criadores de capas de álbuns de metal e talentos emergentes compõem o elenco de ilustradores.</p>
+                        <p><strong>Dois Avatares em Duelo</strong> — Você assume o papel de um Avatar poderoso, montando seu próprio deck para conjurar magias elementais, invocar lacaios míticos e moldar o mundo ao seu redor através do seu Atlas, expandindo seu domínio até banir seu adversário.</p>
+                        <p><strong>Valores do Jogo</strong> — Sorcery foi construído sobre três pilares: <em>Criatividade</em>, <em>Maestria</em> e <em>Encantamento</em>. Um jogo acessível para novos jogadores, mas com profundidade estratégica para recompensar a dedicação.</p>
+                    </div>
+                    <div class="about-stats">
+                        <div class="about-stat">
+                            <div class="about-stat-value" id="home-total-cards">1100+</div>
+                            <div class="about-stat-label">Cards Únicos</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="about-stat-value">4</div>
+                            <div class="about-stat-label">Elementos</div>
+                        </div>
+                        <div class="about-stat">
+                            <div class="about-stat-value">6</div>
+                            <div class="about-stat-label">Expansões</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Latest News Preview -->
+                <div class="news-section">
+                    <div class="section-header">
+                        <h2>Ultimas Noticias</h2>
+                        <button onclick="switchView('news')" class="link-more">Ver Todas <i data-lucide="arrow-right"></i></button>
+                    </div>
+                    <div class="news-grid" id="landing-news-grid">
+                        <!-- Dynamic news loaded by news-service.js -->
+                        <div class="news-loading">
+                            <i data-lucide="loader-2" class="spin"></i>
+                            <span>Carregando noticias...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Community CTA -->
+                <div class="community-cta">
+                    <div class="cta-content">
+                        <h2>Junte-se à Comunidade</h2>
+                        <p>Conecte-se com jogadores do mundo todo, encontre parceiros para jogar, organize trocas e fique por dentro de todos os eventos e novidades.</p>
+                        <div class="cta-buttons">
+                            <a href="https://discord.gg/qvYVGFAS5n" target="_blank" class="btn primary btn-lg">
+                                <i data-lucide="message-circle"></i>
+                                <span>Discord Oficial</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cards View -->
+            <section id="cards-view" class="view">
+                <div class="filters">
+                    <input type="text" id="search-input" placeholder="Buscar cards..." data-i18n-placeholder="searchCards" class="search-input">
+                    <select id="set-filter" class="filter-select">
+                        <option value="">All Sets</option>
+                        <option value="Alpha">Alpha</option>
+                        <option value="Beta">Beta</option>
+                        <option value="Arthurian Legends">Arthurian Legends</option>
+                        <option value="Gothic">Gothic</option>
+                        <option value="Dragonlord">Dragonlord</option>
+                        <option value="Promotional">Promotional</option>
+                    </select>
+                    <select id="type-filter" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="Avatar">Avatar</option>
+                        <option value="Minion">Minion</option>
+                        <option value="Magic">Magic</option>
+                        <option value="Artifact">Artifact</option>
+                        <option value="Aura">Aura</option>
+                        <option value="Site">Site</option>
+                    </select>
+                    <select id="element-filter" class="filter-select">
+                        <option value="">All Elements</option>
+                        <option value="Air">Air</option>
+                        <option value="Earth">Earth</option>
+                        <option value="Fire">Fire</option>
+                        <option value="Water">Water</option>
+                        <option value="None">Neutral</option>
+                    </select>
+                    <select id="rarity-filter" class="filter-select">
+                        <option value="">All Rarities</option>
+                        <option value="Ordinary">Ordinary</option>
+                        <option value="Elite">Elite</option>
+                        <option value="Exceptional">Exceptional</option>
+                        <option value="Unique">Unique</option>
+                    </select>
+                    <div class="keyword-filter-container">
+                        <input type="text" id="keyword-search" placeholder="Filter by keyword..." class="keyword-search-input" autocomplete="off">
+                        <div id="keyword-dropdown" class="keyword-dropdown hidden">
+                            <!-- Keywords will be populated by JS -->
+                        </div>
+                        <div id="active-keywords" class="active-keywords">
+                            <!-- Active keyword tags will appear here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="results-info">
+                    <span id="results-count">Loading...</span>
+                </div>
+                <div id="cards-grid" class="cards-grid">
+                    <!-- Cards will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Collection View -->
+            <section id="collection-view" class="view">
+                <div class="collection-header">
+                    <h2>My Collection</h2>
+                    <div class="collection-stats">
+                        <span id="collection-count">0</span> cards collected
+                    </div>
+                </div>
+
+                <!-- Set Progress Section -->
+                <div class="set-progress-section" id="set-progress-section">
+                    <div class="section-toggle" onclick="toggleSetProgress()">
+                        <h3><i data-lucide="bar-chart-3"></i> Progresso por Set</h3>
+                        <i data-lucide="chevron-down" class="toggle-icon"></i>
+                    </div>
+                    <div class="set-progress-content" id="set-progress-content">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+
+                <div class="filters">
+                    <input type="text" id="collection-search" placeholder="Search in collection..." class="search-input">
+                    <select id="collection-set-filter" class="filter-select">
+                        <option value="">All Sets</option>
+                        <option value="Alpha">Alpha</option>
+                        <option value="Beta">Beta</option>
+                        <option value="Arthurian Legends">Arthurian Legends</option>
+                        <option value="Gothic">Gothic</option>
+                        <option value="Dragonlord">Dragonlord</option>
+                        <option value="Promotional">Promotional</option>
+                    </select>
+                    <select id="collection-finish-filter" class="filter-select">
+                        <option value="">All Finishes</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Foil">Foil</option>
+                        <option value="Rainbow">Rainbow</option>
+                    </select>
+                </div>
+                <div id="collection-grid" class="cards-grid">
+                    <!-- Collection cards will be shown here -->
+                </div>
+            </section>
+
+            <!-- Precons View -->
+            <section id="precons-view" class="view">
+                <h2>Preconstructed Decks</h2>
+                <p class="subtitle">Mark the precons you own to automatically add their cards to your collection.</p>
+
+                <div class="precons-container">
+                    <div class="precon-set">
+                        <h3>Beta Edition - The Four Elements</h3>
+                        <div class="precon-cards">
+                            <div class="precon-card" data-precon="beta-fire">
+                                <div class="precon-image fire"></div>
+                                <h4>Fire Precon</h4>
+                                <p>Flamecaller</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-beta-fire">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                            <div class="precon-card" data-precon="beta-air">
+                                <div class="precon-image air"></div>
+                                <h4>Air Precon</h4>
+                                <p>Sparkmage</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-beta-air">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                            <div class="precon-card" data-precon="beta-water">
+                                <div class="precon-image water"></div>
+                                <h4>Water Precon</h4>
+                                <p>Waveshaper</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-beta-water">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                            <div class="precon-card" data-precon="beta-earth">
+                                <div class="precon-image earth"></div>
+                                <h4>Earth Precon</h4>
+                                <p>Geomancer</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-beta-earth">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="precon-set">
+                        <h3>Gothic - Prophets of Doom</h3>
+                        <div class="precon-cards">
+                            <div class="precon-card" data-precon="gothic-necromancer">
+                                <div class="precon-image necromancer"></div>
+                                <h4>Necromancer Precon</h4>
+                                <p>Raise the dead</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-gothic-necromancer">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                            <div class="precon-card" data-precon="gothic-harbinger">
+                                <div class="precon-image harbinger"></div>
+                                <h4>Harbinger Precon</h4>
+                                <p>Omens darken the skies</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-gothic-harbinger">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                            <div class="precon-card" data-precon="gothic-persecutor">
+                                <div class="precon-image persecutor"></div>
+                                <h4>Persecutor Precon</h4>
+                                <p>Cast out corruption</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-gothic-persecutor">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                            <div class="precon-card" data-precon="gothic-savior">
+                                <div class="precon-image savior"></div>
+                                <h4>Savior Precon</h4>
+                                <p>Shield for the innocent</p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="precon-gothic-savior">
+                                    <span class="checkmark"></span>
+                                    I own this
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Decks View -->
+            <section id="decks-view" class="view">
+                <div class="decks-header">
+                    <h2>My Decks</h2>
+                    <button id="new-deck-btn" class="btn primary">+ New Deck</button>
+                </div>
+                <div id="decks-list" class="decks-list">
+                    <!-- Decks will be listed here -->
+                </div>
+
+                <div class="recommended-section">
+                    <h3>Recommended Community Decks</h3>
+                    <p class="subtitle">Popular decks from Curiosa.io community</p>
+                    <div id="recommended-decks-list" class="decks-list">
+                        <!-- Recommended decks will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="recommended-section">
+                    <h3>Tournament Winners</h3>
+                    <p class="subtitle">Championship-winning decklists</p>
+                    <div id="tournament-decks-list" class="decks-list">
+                        <!-- Tournament decks will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Deck Builder Modal -->
+                <div id="deck-builder-modal" class="modal hidden">
+                    <div class="modal-content deck-builder">
+                        <div class="modal-header">
+                            <input type="text" id="deck-name-input" placeholder="Deck Name" class="deck-name-input">
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        <div class="deck-builder-container">
+                            <div class="deck-cards-search">
+                                <input type="text" id="deck-card-search" placeholder="Search cards to add..." class="search-input">
+                                <div id="deck-search-results" class="deck-search-results"></div>
+                            </div>
+                            <div class="deck-current">
+                                <div class="deck-value-display">
+                                    <span>Deck Value:</span>
+                                    <span id="deck-total-value" class="deck-value-amount">$0.00</span>
+                                </div>
+                                <h4>Spellbook (<span id="spellbook-count">0</span>/60)</h4>
+                                <div id="deck-spellbook" class="deck-section"></div>
+                                <h4>Atlas (<span id="atlas-count">0</span>/30)</h4>
+                                <div id="deck-atlas" class="deck-section"></div>
+                            </div>
+                            <!-- Threshold Analysis Panel -->
+                            <div class="deck-analysis-panel">
+                                <div class="analysis-toggle" onclick="toggleDeckAnalysis()">
+                                    <h4><i data-lucide="bar-chart-2"></i> Deck Analysis</h4>
+                                    <i data-lucide="chevron-down" class="toggle-icon" id="analysis-toggle-icon"></i>
+                                </div>
+                                <div class="analysis-content" id="deck-analysis-content">
+                                    <div class="analysis-grid">
+                                        <div class="analysis-card">
+                                            <h5>Threshold Requirements</h5>
+                                            <div id="threshold-requirements"></div>
+                                        </div>
+                                        <div class="analysis-card">
+                                            <h5>Mana Curve</h5>
+                                            <div id="mana-curve-chart"></div>
+                                        </div>
+                                        <div class="analysis-card">
+                                            <h5>Element Distribution</h5>
+                                            <div id="element-distribution"></div>
+                                        </div>
+                                        <div class="analysis-card">
+                                            <h5>Site Suggestions</h5>
+                                            <div id="site-suggestions"></div>
+                                        </div>
+                                    </div>
+                                    <div class="validation-messages" id="deck-validation-messages">
+                                        <!-- Warnings and errors will appear here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="save-deck-btn" class="btn primary">Save Deck</button>
+                            <button id="cancel-deck-btn" class="btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wishlist View -->
+            <section id="wishlist-view" class="view">
+                <div class="wishlist-header">
+                    <h2>Wishlist</h2>
+                    <span id="wishlist-count">0 cards</span>
+                </div>
+                <div id="wishlist-grid" class="cards-grid">
+                    <!-- Wishlist cards will be shown here -->
+                </div>
+            </section>
+
+            <!-- Stats View -->
+            <section id="stats-view" class="view">
+                <h2>Collection Statistics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Cards</h3>
+                        <div class="stat-value" id="stat-total">0</div>
+                        <div class="stat-label">in collection</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Completion</h3>
+                        <div class="stat-value" id="stat-completion">0%</div>
+                        <div class="stat-label">of all cards</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Precons Owned</h3>
+                        <div class="stat-value" id="stat-precons">0/8</div>
+                        <div class="stat-label">precon decks</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Wishlist</h3>
+                        <div class="stat-value" id="stat-wishlist">0</div>
+                        <div class="stat-label">cards wanted</div>
+                    </div>
+                </div>
+
+                <!-- Collection Value Section -->
+                <div class="stats-breakdown value-section">
+                    <h3>Collection Value (Estimated)</h3>
+                    <p class="subtitle">Based on rarity estimates. Import real prices via CSV for accurate values.</p>
+                    <div class="value-grid">
+                        <div class="value-card">
+                            <div class="value-amount" id="collection-value">$0.00</div>
+                            <div class="value-label">Total Value</div>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-amount" id="average-card-value">$0.00</div>
+                            <div class="value-label">Avg. Card Value</div>
+                        </div>
+                        <div class="value-card">
+                            <div class="value-amount" id="wishlist-value">$0.00</div>
+                            <div class="value-label">Wishlist Value</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Most Valuable Cards -->
+                <div class="stats-breakdown">
+                    <h3>Most Valuable Cards in Collection</h3>
+                    <div id="valuable-cards-list" class="valuable-cards-list">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Investment Analytics -->
+                <div class="stats-breakdown analytics-section">
+                    <h3>Investment Analytics</h3>
+                    <p class="subtitle">Portfolio breakdown by category</p>
+
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h4>Value by Set</h4>
+                            <div id="analytics-by-set" class="analytics-list">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h4>Value by Rarity</h4>
+                            <div id="analytics-by-rarity" class="analytics-list">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h4>Value by Element</h4>
+                            <div id="analytics-by-element" class="analytics-list">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h4>Value by Type</h4>
+                            <div id="analytics-by-type" class="analytics-list">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-breakdown">
+                    <h3>Collection by Set</h3>
+                    <div id="set-progress" class="progress-bars">
+                        <!-- Set progress bars will be generated here -->
+                    </div>
+                </div>
+
+                <div class="stats-breakdown">
+                    <h3>Collection by Element</h3>
+                    <div id="element-progress" class="progress-bars">
+                        <!-- Element progress bars will be generated here -->
+                    </div>
+                </div>
+
+                <div class="stats-breakdown">
+                    <h3>Collection by Rarity</h3>
+                    <div id="rarity-progress" class="progress-bars">
+                        <!-- Rarity progress bars will be generated here -->
+                    </div>
+                </div>
+
+                <div class="stats-breakdown">
+                    <h3>Export / Import Collection</h3>
+                    <div class="export-import-buttons">
+                        <button id="export-json-btn" class="btn">Export JSON</button>
+                        <button id="export-csv-btn" class="btn">Export CSV</button>
+                        <button id="import-btn" class="btn">Import Collection</button>
+                        <input type="file" id="import-file" accept=".json" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="stats-breakdown">
+                    <h3>Price Data Management</h3>
+                    <p class="subtitle">Import prices from CSV (columns: name, price, foil) or export current prices.</p>
+                    <div class="export-import-buttons">
+                        <button id="import-prices-btn" class="btn">Import Prices CSV</button>
+                        <button id="export-prices-btn" class="btn">Export Prices CSV</button>
+                        <input type="file" id="import-prices-file" accept=".csv" style="display: none;">
+                    </div>
+                    <div id="price-import-status" class="import-status"></div>
+                </div>
+
+                <!-- Achievements Section -->
+                <div class="stats-breakdown achievements-section">
+                    <h3>Achievements</h3>
+                    <div class="achievement-summary">
+                        <span id="achievement-count">0/0</span> achievements unlocked
+                    </div>
+                    <div id="achievements-grid" class="achievements-grid">
+                        <!-- Achievements will be populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trade Binder View -->
+            <section id="trade-view" class="view">
+                <div class="trade-header">
+                    <h2>Trade Binder</h2>
+                    <p class="subtitle">Cards you have available for trade</p>
+                </div>
+                <div class="trade-stats">
+                    <span id="trade-count">0</span> cards for trade |
+                    Estimated value: <span id="trade-value">$0.00</span>
+                </div>
+                <div class="filters">
+                    <input type="text" id="trade-search" placeholder="Search trade binder..." class="search-input">
+                </div>
+                <div id="trade-grid" class="cards-grid">
+                    <!-- Trade cards will be shown here -->
+                </div>
+            </section>
+
+            <!-- Community View -->
+            <section id="community-view" class="view">
+                <div class="section-header">
+                    <h2>Comunidade</h2>
+                    <p class="subtitle">Conecte-se com a comunidade brasileira de Sorcery TCG</p>
+                </div>
+
+                <!-- Discord Section -->
+                <div class="discord-section">
+                    <div class="discord-widget">
+                        <div class="discord-widget-header">
+                            <svg class="discord-logo" viewBox="0 0 24 24" width="28" height="28">
+                                <path fill="currentColor" d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                            </svg>
+                            <span>Sorcery Brasil</span>
+                        </div>
+                        <div class="discord-widget-body">
+                            <div class="discord-server-info">
+                                <div class="discord-status">
+                                    <span class="status-dot online"></span>
+                                    <span id="discord-online-count">100+ membros</span>
+                                </div>
+                                <p class="discord-description">Comunidade brasileira oficial de Sorcery: Contested Realm</p>
+                            </div>
+                            <div class="discord-channels">
+                                <div class="discord-channel">
+                                    <span class="channel-icon">#</span>
+                                    <span>geral</span>
+                                </div>
+                                <div class="discord-channel">
+                                    <span class="channel-icon">#</span>
+                                    <span>trocas</span>
+                                </div>
+                                <div class="discord-channel">
+                                    <span class="channel-icon">#</span>
+                                    <span>deck-building</span>
+                                </div>
+                                <div class="discord-channel">
+                                    <span class="channel-icon">#</span>
+                                    <span>eventos</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="discord-widget-footer">
+                            <a href="https://discord.gg/qvYVGFAS5n" target="_blank" class="discord-join-btn">
+                                Entrar no Servidor
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="discord-features">
+                        <div class="discord-feature">
+                            <i data-lucide="message-square"></i>
+                            <h4>Chat em Tempo Real</h4>
+                            <p>Converse com jogadores do mundo todo</p>
+                        </div>
+                        <div class="discord-feature">
+                            <i data-lucide="repeat"></i>
+                            <h4>Canal de Trocas</h4>
+                            <p>Compre, venda e troque cards</p>
+                        </div>
+                        <div class="discord-feature">
+                            <i data-lucide="trophy"></i>
+                            <h4>Torneios Online</h4>
+                            <p>Participe de eventos da comunidade</p>
+                        </div>
+                        <div class="discord-feature">
+                            <i data-lucide="help-circle"></i>
+                            <h4>Tire Duvidas</h4>
+                            <p>Pergunte sobre regras e estrategias</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brazilian Stores -->
+                <div class="stores-section">
+                    <div class="section-header">
+                        <h3>Lojas Brasileiras</h3>
+                        <p class="subtitle">Encontre Sorcery TCG nas melhores lojas do Brasil</p>
+                    </div>
+
+                    <div class="filters stores-filters">
+                        <select id="store-type-filter" class="filter-select">
+                            <option value="">Todos os Tipos</option>
+                            <option value="Sealed/Singles">Sealed + Singles</option>
+                            <option value="Sealed">Apenas Sealed</option>
+                            <option value="Singles">Apenas Singles</option>
+                            <option value="Acessórios">Acessórios</option>
+                        </select>
+                    </div>
+
+                    <div id="stores-grid" class="stores-grid">
+                        <!-- Stores will be rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Useful Links -->
+                <div class="links-section">
+                    <h3>Links Úteis</h3>
+                    <div class="links-grid">
+                        <a href="https://sorcerytcg.com/" target="_blank" class="link-card">
+                            <i data-lucide="globe"></i>
+                            <span>Site Oficial</span>
+                        </a>
+                        <a href="javascript:showView('rulebook')" class="link-card">
+                            <i data-lucide="book-open"></i>
+                            <span>Como Jogar</span>
+                        </a>
+                        <a href="https://sorcerytcg.com/events" target="_blank" class="link-card">
+                            <i data-lucide="calendar"></i>
+                            <span>Eventos</span>
+                        </a>
+                        <a href="https://curiosa.io" target="_blank" class="link-card">
+                            <i data-lucide="search"></i>
+                            <span>Curiosa.io</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Meta View -->
+            <section id="meta-view" class="view">
+                <div class="section-header">
+                    <h2>Meta & Estratégia</h2>
+                    <p class="subtitle">Guias de deck, tier list e dicas de gameplay</p>
+                </div>
+
+                <!-- Tier List -->
+                <div class="tier-section">
+                    <h3>Tier List Atual</h3>
+                    <p class="meta-date">Atualizado: Abril 2026</p>
+
+                    <div class="tier-list">
+                        <div class="tier tier-s">
+                            <div class="tier-label">S</div>
+                            <div class="tier-decks" id="tier-s-decks">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <div class="tier tier-a">
+                            <div class="tier-label">A</div>
+                            <div class="tier-decks" id="tier-a-decks"></div>
+                        </div>
+                        <div class="tier tier-b">
+                            <div class="tier-label">B</div>
+                            <div class="tier-decks" id="tier-b-decks"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategy Guides -->
+                <div class="guides-section">
+                    <h3>Guias de Estratégia</h3>
+
+                    <div class="guides-grid">
+                        <div class="guide-card" onclick="showView('rulebook')">
+                            <i data-lucide="book-open"></i>
+                            <h4>Guia para Iniciantes</h4>
+                            <p>Aprenda os fundamentos do jogo</p>
+                        </div>
+                        <div class="guide-card" onclick="window.open('https://curiosa.io/decks', '_blank')">
+                            <i data-lucide="layers"></i>
+                            <h4>Construção de Decks</h4>
+                            <p>Veja decks da comunidade</p>
+                        </div>
+                        <div class="guide-card" data-guide="elements">
+                            <i data-lucide="flame"></i>
+                            <h4>Guia de Elementos</h4>
+                            <p>Pontos fortes de cada elemento</p>
+                        </div>
+                        <div class="guide-card" data-guide="budget">
+                            <i data-lucide="wallet"></i>
+                            <h4>Decks Budget</h4>
+                            <p>Decks competitivos com baixo custo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Element Overview -->
+                <div class="elements-section">
+                    <h3>Visão Geral dos Elementos</h3>
+                    <div class="elements-grid">
+                        <div class="element-card fire">
+                            <div class="element-icon"><i data-lucide="flame"></i></div>
+                            <h4>Fire</h4>
+                            <p>Agressivo, dano direto, remoção eficiente</p>
+                        </div>
+                        <div class="element-card water">
+                            <div class="element-icon"><i data-lucide="droplet"></i></div>
+                            <h4>Water</h4>
+                            <p>Controle, draw, manipulação de mão</p>
+                        </div>
+                        <div class="element-card earth">
+                            <div class="element-icon"><i data-lucide="mountain"></i></div>
+                            <h4>Earth</h4>
+                            <p>Criaturas resilientes, ramp, midrange</p>
+                        </div>
+                        <div class="element-card air">
+                            <div class="element-icon"><i data-lucide="wind"></i></div>
+                            <h4>Air</h4>
+                            <p>Evasão, tempo, spells versáteis</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Store Locator View -->
+            <section id="locator-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="storeLocator">Encontre Lojas</h2>
+                    <p class="subtitle" data-i18n="storeLocatorDesc">Lojas brasileiras que vendem Sorcery: Contested Realm</p>
+                </div>
+
+                <!-- Map Container -->
+                <div class="locator-container">
+                    <div class="locator-sidebar">
+                        <div class="locator-filters">
+                            <input type="text" id="locator-search" placeholder="Buscar por cidade ou estado..." class="search-input">
+                            <select id="locator-state-filter" class="filter-select">
+                                <option value="">Todos os Estados</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="PR">Paraná</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="BA">Bahia</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="CE">Ceará</option>
+                            </select>
+                            <select id="locator-type-filter" class="filter-select">
+                                <option value="">Todos os Tipos</option>
+                                <option value="Sealed/Singles">Sealed + Singles</option>
+                                <option value="Sealed">Produtos Selados</option>
+                                <option value="Singles">Cartas Avulsas</option>
+                                <option value="Eventos">Eventos/Torneios</option>
+                            </select>
+                        </div>
+
+                        <div class="locator-results" id="locator-results">
+                            <!-- Store list will be rendered here -->
+                        </div>
+                    </div>
+
+                    <div class="locator-map">
+                        <div id="locator-map-container" class="map-container">
+                            <!-- Map will be rendered here -->
+                            <div class="map-placeholder">
+                                <i data-lucide="map"></i>
+                                <p data-i18n="mapPlaceholder">Selecione uma loja para ver no mapa</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Store CTA -->
+                <div class="add-store-cta">
+                    <p data-i18n="addStoreCta">Conhece uma loja que vende Sorcery e não está na lista?</p>
+                    <a href="mailto:contato@sorcerybrasil.com?subject=Sugestão de Loja" class="btn ghost">
+                        <i data-lucide="plus"></i>
+                        <span data-i18n="suggestStore">Sugerir Loja</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Codex View -->
+            <section id="codex-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="codexTitle">Codex de Regras</h2>
+                    <p class="subtitle" data-i18n="codexDesc">Referência completa de regras e mecânicas de Sorcery</p>
+                </div>
+
+                <!-- Search -->
+                <div class="codex-search-container">
+                    <input type="text" id="codex-search" placeholder="Buscar termo ou mecânica..." class="search-input codex-search-input">
+                </div>
+
+                <!-- Quick Links -->
+                <div class="codex-quick-links">
+                    <button class="codex-link active" data-section="basics" data-i18n="codexBasics">Básico</button>
+                    <button class="codex-link" data-section="cardtypes" data-i18n="codexCardTypes">Tipos de Cards</button>
+                    <button class="codex-link" data-section="mechanics" data-i18n="codexMechanics">Mecânicas</button>
+                    <button class="codex-link" data-section="keywords" data-i18n="codexKeywords">Palavras-chave</button>
+                    <button class="codex-link" data-section="zones" data-i18n="codexZones">Zonas de Jogo</button>
+                    <button class="codex-link" data-section="formats" data-i18n="codexFormats">Formatos</button>
+                    <button class="codex-link" data-section="organized" data-i18n="codexOrganized">Organized Play</button>
+                </div>
+
+                <!-- Codex Content -->
+                <div id="codex-content" class="codex-content">
+                    <!-- Basics Section -->
+                    <div class="codex-section active" data-section="basics">
+                        <h3>Conceitos Básicos</h3>
+
+                        <div class="codex-entry">
+                            <h4>Objetivo do Jogo</h4>
+                            <p>Reduza os pontos de vida do Avatar adversário de 20 para 0. Você pode causar dano através de ataques com criaturas ou efeitos de magias e habilidades.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>A Regra de Ouro</h4>
+                            <p>Use o bom senso primeiro. Quando o texto de um card é informal ou ambíguo, interprete-o da forma mais razoável. Consulte o rulebook apenas quando necessário.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>A Regra de Prata</h4>
+                            <p>Texto específico tem precedência sobre regras gerais. Se um card diz que você "pode" fazer algo normalmente proibido, o card tem prioridade.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Estrutura do Turno</h4>
+                            <ol>
+                                <li><strong>Fase de Início (Start Phase):</strong> Desvirar permanentes, comprar um card, resolver triggers de início</li>
+                                <li><strong>Fase Principal (Main Phase):</strong> Jogar cards, ativar habilidades, movimentar criaturas, atacar</li>
+                                <li><strong>Fase de Fim (End Phase):</strong> Descartar até o limite de mão (7 cards), resolver triggers de fim</li>
+                            </ol>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Recursos: Threshold e Mana</h4>
+                            <p><strong>Threshold:</strong> Representa seu domínio sobre os elementos. Cada card de Site jogado aumenta seu threshold permanentemente. Threshold nunca diminui durante o jogo.</p>
+                            <p><strong>Mana:</strong> Recurso gerado ao virar Sites. É gasto para jogar cards e ativar habilidades. Mana não utilizado é perdido no fim do turno.</p>
+                            <p><strong>Affinity:</strong> Alguns cards têm custo reduzido baseado no seu threshold de um elemento específico.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Os Quatro Elementos</h4>
+                            <div class="element-list">
+                                <div class="element-item fire"><i data-lucide="flame"></i> <strong>Fogo:</strong> Dano direto, agressividade, destruição</div>
+                                <div class="element-item water"><i data-lucide="droplet"></i> <strong>Água:</strong> Controle, compra de cards, manipulação</div>
+                                <div class="element-item earth"><i data-lucide="mountain"></i> <strong>Terra:</strong> Resistência, crescimento, criaturas poderosas</div>
+                                <div class="element-item air"><i data-lucide="wind"></i> <strong>Ar:</strong> Evasão, velocidade, versatilidade</div>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Construção de Deck</h4>
+                            <p><strong>Spellbook:</strong> Seu deck principal com exatamente 60 cards (magias, criaturas, artefatos, auras).</p>
+                            <p><strong>Atlas:</strong> Seu deck de Sites, separado do Spellbook. Contém até 30 cards de Site.</p>
+                            <p><strong>Limite de cópias:</strong> Máximo de 4 cópias de qualquer card (exceto Sites básicos).</p>
+                        </div>
+                    </div>
+
+                    <!-- Card Types Section -->
+                    <div class="codex-section" data-section="cardtypes">
+                        <h3>Tipos de Cards</h3>
+
+                        <div class="codex-entry">
+                            <h4>Avatar</h4>
+                            <p>Seu personagem principal. Começa no campo de batalha com 20 pontos de vida. Se seu Avatar for derrotado, você perde o jogo.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Minion (Lacaio)</h4>
+                            <p>Criaturas que lutam por você. Podem atacar, bloquear e ter habilidades especiais. Têm valores de Ataque e Defesa.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Magic (Magia)</h4>
+                            <p>Feitiços de uso único. São jogados, resolvem seu efeito e vão para o cemitério.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Artifact (Artefato)</h4>
+                            <p>Objetos mágicos que permanecem no campo de batalha. Fornecem habilidades contínuas ou podem ser ativados.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Aura</h4>
+                            <p>Encantamentos que se anexam a outros permanentes, modificando suas características ou concedendo habilidades.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Site (Lugar)</h4>
+                            <p>Locais que geram mana e fornecem threshold. Formam a base de recursos do seu deck.</p>
+                        </div>
+                    </div>
+
+                    <!-- Mechanics Section -->
+                    <div class="codex-section" data-section="mechanics">
+                        <h3>Mecânicas do Jogo</h3>
+
+                        <div class="codex-entry">
+                            <h4>Movimento</h4>
+                            <p>Criaturas podem se mover pelo campo de batalha. O campo é dividido em regiões, e criaturas podem mover entre regiões adjacentes durante sua fase principal.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Combate</h4>
+                            <p>Durante a fase de combate, você declara atacantes. O oponente pode bloquear. Dano é atribuído simultaneamente, exceto quando uma criatura tem First Strike.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Spellbook vs Atlas</h4>
+                            <p><strong>Spellbook:</strong> Seu deck principal de cards (magias, criaturas, artefatos). Máximo de 60 cards.</p>
+                            <p><strong>Atlas:</strong> Seu deck de Sites. Separado do Spellbook. Máximo de 30 cards.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Bursting</h4>
+                            <p>Habilidade de jogar cards em resposta a ações do oponente. Cards com Burst podem ser jogados a qualquer momento, como reação.</p>
+                        </div>
+                    </div>
+
+                    <!-- Keywords Section -->
+                    <div class="codex-section" data-section="keywords">
+                        <h3>Palavras-chave</h3>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Habilidades de Movimento</h4>
+
+                            <div class="codex-entry">
+                                <h4>Airborne (Voar)</h4>
+                                <p>Esta criatura só pode ser bloqueada por outras criaturas com Airborne. Criaturas Airborne podem se mover sobre obstáculos.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Burrowing (Escavar)</h4>
+                                <p>Esta criatura pode se mover para regiões subterrâneas e atravessar terreno sólido.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Submerge (Submergir)</h4>
+                                <p>Esta criatura pode entrar em regiões aquáticas e se mover pela água.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Voidwalk</h4>
+                                <p>Esta criatura pode se mover através do Void, ignorando restrições normais de movimento.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Habilidades de Combate</h4>
+
+                            <div class="codex-entry">
+                                <h4>Defender</h4>
+                                <p>Esta criatura não pode atacar, mas pode bloquear normalmente.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>First Strike</h4>
+                                <p>Esta criatura causa seu dano de combate antes de criaturas sem First Strike. Se ambas criaturas têm First Strike, o dano é simultâneo.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Lethal</h4>
+                                <p>Qualquer quantidade de dano (1 ou mais) causado por esta criatura a outra criatura é suficiente para destruí-la, independente da defesa.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Ranged</h4>
+                                <p>Esta criatura pode atacar criaturas ou Avatares em regiões adjacentes sem precisar se mover para lá.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Stealth</h4>
+                                <p>Esta criatura não pode ser bloqueada. Ataques com Stealth sempre atingem o alvo.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Lance</h4>
+                                <p>+2 de Ataque quando esta criatura ataca. O bônus não se aplica ao defender.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Intercept</h4>
+                                <p>Esta criatura pode bloquear atacantes que estão atacando outras criaturas ou o Avatar na mesma região.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Habilidades Defensivas</h4>
+
+                            <div class="codex-entry">
+                                <h4>Ward</h4>
+                                <p>Esta criatura não pode ser alvo de habilidades ou magias controladas pelo oponente. Ward não protege contra efeitos que não são direcionados (como "destrua todas as criaturas").</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Disable</h4>
+                                <p>Previne que uma criatura use suas habilidades ativadas e remove suas habilidades passivas temporariamente.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Triggers (Gatilhos)</h4>
+
+                            <div class="codex-entry">
+                                <h4>Genesis</h4>
+                                <p>Efeito que é acionado quando este card entra no campo de batalha (Realm). Acontece apenas uma vez.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Death</h4>
+                                <p>Efeito que é acionado quando este card é destruído e vai para o cemitério (Cemetery).</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Awaken</h4>
+                                <p>Efeito que é acionado no início do seu turno enquanto este card está em jogo.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Landfall</h4>
+                                <p>Efeito que é acionado quando você joga um Site.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Tokens</h4>
+
+                            <div class="codex-entry">
+                                <h4>Tokens Comuns</h4>
+                                <p>Tokens são criaturas criadas por efeitos de cards. Os tokens mais comuns são:</p>
+                                <ul>
+                                    <li><strong>Foot Soldier:</strong> 1/1 sem habilidades</li>
+                                    <li><strong>Skeleton:</strong> 1/1 sem habilidades</li>
+                                    <li><strong>Frog:</strong> 1/1 sem habilidades</li>
+                                    <li><strong>Tawny (Leão):</strong> 2/2 sem habilidades</li>
+                                    <li><strong>Bruin (Urso):</strong> 3/3 sem habilidades</li>
+                                    <li><strong>Rubble:</strong> 0/1 Defender</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zones Section -->
+                    <div class="codex-section" data-section="zones">
+                        <h3>Zonas de Jogo</h3>
+
+                        <div class="codex-entry">
+                            <h4>Battlefield (Campo de Batalha)</h4>
+                            <p>Área onde permanentes (criaturas, artefatos, auras, sites) ficam em jogo. Dividido em regiões para movimento.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Hand (Mão)</h4>
+                            <p>Cards que você comprou mas ainda não jogou. Limite de 7 cards no final do turno.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Graveyard (Cemitério)</h4>
+                            <p>Onde vão cards destruídos, descartados ou usados. Alguns efeitos podem interagir com o cemitério.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Void (Vazio)</h4>
+                            <p>Zona de exílio. Cards removidos do jogo vão para o Void e normalmente não podem mais ser usados.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Stack (Pilha)</h4>
+                            <p>Zona temporária onde magias e habilidades aguardam resolução. Magias resolvem em ordem inversa (último a entrar, primeiro a resolver).</p>
+                        </div>
+                    </div>
+
+                    <!-- Formats Section -->
+                    <div class="codex-section" data-section="formats">
+                        <h3>Formatos de Jogo</h3>
+
+                        <div class="codex-entry format-card">
+                            <h4><i data-lucide="layers"></i> Constructed (Construído)</h4>
+                            <p>O formato Constructed é uma tela para jogadores expressarem sua criatividade construindo decks únicos a partir de suas coleções.</p>
+                            <div class="format-details">
+                                <p><strong>Requisitos do Deck:</strong></p>
+                                <ul>
+                                    <li>Spellbook: Exatamente 60 cards</li>
+                                    <li>Atlas: Até 30 cards de Site</li>
+                                    <li>Máximo de 4 cópias de cada card (exceto Sites básicos)</li>
+                                    <li>1 Avatar obrigatório</li>
+                                </ul>
+                                <p><strong>Ideal para:</strong> Jogadores que querem explorar sinergias e construir estratégias personalizadas.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry format-card">
+                            <h4><i data-lucide="shuffle"></i> Draft</h4>
+                            <p>O formato Draft desafia jogadores a construir decks na hora usando boosters que circulam entre os participantes.</p>
+                            <div class="format-details">
+                                <p><strong>Como funciona:</strong></p>
+                                <ol>
+                                    <li>Cada jogador recebe boosters (geralmente 4-6)</li>
+                                    <li>Abra um booster, escolha 1 card, passe o resto</li>
+                                    <li>Repita até todos os boosters serem draftados</li>
+                                    <li>Construa um deck de 40 cards com os cards draftados</li>
+                                </ol>
+                                <p><strong>Ideal para:</strong> Jogadores que gostam de adaptação e tomada de decisão rápida.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry format-card">
+                            <h4><i data-lucide="package-open"></i> Sealed</h4>
+                            <p>O formato Sealed testa sua habilidade de construir o melhor deck possível com um pool limitado de cards.</p>
+                            <div class="format-details">
+                                <p><strong>Como funciona:</strong></p>
+                                <ol>
+                                    <li>Cada jogador recebe boosters selados (geralmente 6)</li>
+                                    <li>Abra todos os boosters</li>
+                                    <li>Construa um deck de 40 cards usando apenas esses cards</li>
+                                    <li>Enfrente outros jogadores no torneio</li>
+                                </ol>
+                                <p><strong>Ideal para:</strong> Iniciantes e jogadores que querem testar novas expansões.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organized Play Section -->
+                    <div class="codex-section" data-section="organized">
+                        <h3>Organized Play 2026</h3>
+                        <p class="section-intro">O programa de Organized Play de Sorcery é construído como um "círculo em expansão" - começando em comunidades locais e crescendo até competições globais.</p>
+
+                        <div class="op-tiers">
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-1">1</div>
+                                <div class="tier-content">
+                                    <h4>Gothic Store Kits</h4>
+                                    <p>A base do jogo organizado. Kits para lojas promoverem eventos regulares com cards promocionais e playmats como prêmios.</p>
+                                    <span class="tier-tag">Eventos Semanais</span>
+                                </div>
+                            </div>
+
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-2">2</div>
+                                <div class="tier-content">
+                                    <h4>Cornerstone Championships</h4>
+                                    <p>Celebrações anuais em lojas estabelecidas. Eventos maiores que reúnem jogadores de lojas vizinhas.</p>
+                                    <span class="tier-tag">Eventos Anuais</span>
+                                </div>
+                            </div>
+
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-3">3</div>
+                                <div class="tier-content">
+                                    <h4>Grand Contests</h4>
+                                    <p>Grandes torneios regionais como SCG CON e SorceryFest. Reúnem jogadores de várias regiões para competições de alto nível.</p>
+                                    <span class="tier-tag">Eventos Regionais</span>
+                                </div>
+                            </div>
+
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-4">4</div>
+                                <div class="tier-content">
+                                    <h4>Avatar of the Realm</h4>
+                                    <p>O campeonato mundial. O ápice da competição, reunindo os melhores jogadores do mundo.</p>
+                                    <span class="tier-tag">Campeonato Mundial</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Sistema de Dust</h4>
+                            <p><strong>Dust</strong> é a moeda de recompensa do Organized Play. Você ganha Dust participando de eventos em qualquer nível e pode trocar por prêmios exclusivos.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Encontre Eventos</h4>
+                            <p>Use o <a href="https://sorcerytcg.com/locator" target="_blank">Sorcery Play Network</a> para encontrar lojas e eventos perto de você.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- External Links -->
+                <div class="codex-links">
+                    <button class="btn primary" onclick="showView('rulebook')">
+                        <i data-lucide="scroll-text"></i>
+                        <span>Rulebook Completo em Português</span>
+                    </button>
+                    <a href="https://curiosa.io/codex" target="_blank" class="btn ghost">
+                        <i data-lucide="external-link"></i>
+                        <span>Codex Completo (Curiosa.io)</span>
+                    </a>
+                    <a href="https://sorcerytcg.com/how-to-play" target="_blank" class="btn ghost">
+                        <i data-lucide="play-circle"></i>
+                        <span data-i18n="officialRulebook">Rulebook Oficial (EN)</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Rulebook View -->
+            <section id="rulebook-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="rulebookTitle">Rulebook - Português</h2>
+                    <p class="subtitle">Tradução completa do Rulebook oficial de Sorcery: Contested Realm</p>
+                    <p class="version-info">Versão: Dezembro 2025</p>
+                </div>
+
+                <div id="rulebook-content" class="rulebook-container">
+                    <!-- Will be populated by JS -->
+                </div>
+
+                <div class="rulebook-footer">
+                    <p>Esta é uma tradução não-oficial para fins educacionais. O documento original em inglês pode ser encontrado em <a href="https://sorcerytcg.com/how-to-play" target="_blank">sorcerytcg.com</a>.</p>
+                </div>
+            </section>
+
+            <!-- FAQ View -->
+            <section id="faq-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="faqTitle">Perguntas Frequentes</h2>
+                    <p class="subtitle">Respostas para as dúvidas mais comuns sobre Sorcery: Contested Realm</p>
+                </div>
+
+                <div class="faq-search-container">
+                    <div class="search-box">
+                        <i data-lucide="search"></i>
+                        <input type="text" id="faq-search" placeholder="Buscar perguntas..." oninput="searchFAQ(this.value)">
+                    </div>
+                </div>
+
+                <div id="faq-content" class="faq-container">
+                    <!-- Will be populated by JS -->
+                </div>
+
+                <div class="faq-footer">
+                    <p>Não encontrou sua resposta? Pergunte no <a href="https://discord.gg/qvYVGFAS5n" target="_blank">Discord Oficial</a> ou consulte o <a href="https://curiosa.io/codex" target="_blank">Codex Completo</a>.</p>
+                </div>
+            </section>
+
+            <!-- Lore / Flavor Text View -->
+            <section id="lore-view" class="view">
+                <div class="section-header">
+                    <h2>Coleção de Lore</h2>
+                    <p class="subtitle">Explore as histórias e o universo por trás dos cards</p>
+                </div>
+
+                <div class="lore-controls">
+                    <div class="filters">
+                        <input type="text" id="lore-search" placeholder="Buscar no lore..." class="search-input">
+                        <select id="lore-element-filter" class="filter-select">
+                            <option value="all">Todos os Elementos</option>
+                            <option value="fire">Fogo</option>
+                            <option value="water">Água</option>
+                            <option value="earth">Terra</option>
+                            <option value="air">Ar</option>
+                        </select>
+                    </div>
+                    <div class="lore-stats">
+                        <span id="flavor-text-count">0 cards com lore</span>
+                    </div>
+                </div>
+
+                <div id="flavor-text-grid" class="flavor-text-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- Rules Quiz View -->
+            <section id="quiz-view" class="view">
+                <div class="section-header">
+                    <h2>Quiz de Regras</h2>
+                    <p class="subtitle">Teste seus conhecimentos sobre Sorcery: Contested Realm</p>
+                </div>
+
+                <div id="quiz-container" class="quiz-container">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+
+            <!-- Deck Guides View -->
+            <section id="guides-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="guidesTitle">Guias de Deck</h2>
+                    <p class="subtitle">Aprenda a construir decks competitivos em Sorcery: Contested Realm</p>
+                </div>
+
+                <div class="guides-nav">
+                    <a href="#guide-basics" class="guide-nav-link active">
+                        <i data-lucide="book"></i>
+                        <span>Fundamentos</span>
+                    </a>
+                    <a href="#guide-elements" class="guide-nav-link">
+                        <i data-lucide="palette"></i>
+                        <span>Elementos</span>
+                    </a>
+                    <a href="#guide-archetypes" class="guide-nav-link">
+                        <i data-lucide="layers"></i>
+                        <span>Arquétipos</span>
+                    </a>
+                    <a href="#guide-beginner" class="guide-nav-link">
+                        <i data-lucide="graduation-cap"></i>
+                        <span>Iniciantes</span>
+                    </a>
+                </div>
+
+                <div id="deck-guides-content" class="guides-container">
+                    <!-- Will be populated by JS -->
+                </div>
+
+                <div class="guides-footer">
+                    <p>Explore decks populares no <a href="https://curiosa.io/decks" target="_blank">Curiosa.io</a> e participe do <a href="https://discord.gg/qvYVGFAS5n" target="_blank">Discord Oficial</a>.</p>
+                </div>
+            </section>
+
+            <!-- Art & Artists View (Unified) -->
+            <section id="art-view" class="view">
+                <div class="section-header">
+                    <h2>A Arte de Sorcery</h2>
+                    <p class="subtitle">Cada carta é uma obra-prima pintada à mão por mestres da fantasia</p>
+                </div>
+
+                <!-- Art Philosophy -->
+                <div class="art-philosophy">
+                    <div class="philosophy-content">
+                        <h3>Arte Tradicional, Visão Única</h3>
+                        <p>Sorcery: Contested Realm celebra a arte tradicional pintada à mão. Cada ilustração é criada usando técnicas clássicas — óleo, acrílico, aquarela, nanquim e lápis — por artistas que dominam seu ofício.</p>
+                        <p>O programa de arte do jogo reúne estilos diversos, do realismo meticuloso à abstração expressiva, unidos pelo compromisso de criar mundos que ressoam miticamente e emocionam profundamente.</p>
+                    </div>
+                </div>
+
+                <!-- Search Filters -->
+                <div class="art-gallery-section">
+                    <h3>Galeria de Artistas</h3>
+                    <p class="section-desc">Explore os artistas que dão vida ao mundo de Sorcery. Busque por nome do artista ou nome da carta.</p>
+
+                    <div class="art-search-filters">
+                        <div class="search-box">
+                            <i data-lucide="user"></i>
+                            <input type="text" id="art-artist-search" placeholder="Buscar por artista...">
+                        </div>
+                        <div class="search-box">
+                            <i data-lucide="image"></i>
+                            <input type="text" id="art-card-search" placeholder="Buscar por nome da carta...">
+                        </div>
+                    </div>
+
+                    <div id="art-gallery-content" class="artists-container">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Keep artists-view for backwards compatibility but redirect -->
+            <section id="artists-view" class="view" style="display:none !important;">
+                <!-- Redirects to art-view -->
+            </section>
+
+            <!-- Release Timeline View -->
+            <section id="timeline-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="timelineTitle">Timeline de Lançamentos</h2>
+                    <p class="subtitle">Histórico de expansões e lançamentos de Sorcery: Contested Realm</p>
+                </div>
+
+                <div id="timeline-content" class="timeline-container">
+                    <!-- Will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- Dust Tracker View -->
+            <section id="dust-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="dustTitle">Dust Tracker</h2>
+                    <p class="subtitle">Acompanhe seus pontos Dust do Organized Play</p>
+                </div>
+
+                <div class="dust-actions">
+                    <button class="btn primary" onclick="openAddDustModal()">
+                        <i data-lucide="plus"></i>
+                        <span>Adicionar Dust</span>
+                    </button>
+                    <button class="btn secondary" onclick="openAddEventModal()">
+                        <i data-lucide="calendar-plus"></i>
+                        <span>Adicionar Evento</span>
+                    </button>
+                </div>
+
+                <div id="dust-content" class="dust-container">
+                    <!-- Will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- Promos Tracker View -->
+            <section id="promos-view" class="view">
+                <div class="section-header">
+                    <h2 data-i18n="promosTitle">Tracker de Promos</h2>
+                    <p class="subtitle">Cards promocionais, exclusivos e variantes especiais</p>
+                </div>
+
+                <div class="promos-tabs">
+                    <button class="promo-tab active" data-category="all">Todos</button>
+                    <button class="promo-tab" data-category="retailer_exclusive">Retailer</button>
+                    <button class="promo-tab" data-category="kickstarter">Kickstarter</button>
+                    <button class="promo-tab" data-category="organized_play">OP</button>
+                    <button class="promo-tab" data-category="box_topper">Box Topper</button>
+                    <button class="promo-tab" data-category="rainbow">Rainbow</button>
+                </div>
+
+                <div id="promos-content" class="promos-container">
+                    <!-- Will be populated by JS -->
+                </div>
+            </section>
+
+            <!-- News View -->
+            <section id="news-view" class="view">
+                <div class="section-header">
+                    <h2>Noticias</h2>
+                    <p class="subtitle">Ultimas novidades de Sorcery: Contested Realm em portugues</p>
+                </div>
+
+                <div id="news-content" class="news-container">
+                    <!-- Will be populated by news-service.js -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Card Detail Modal -->
+        <div id="card-modal" class="modal hidden">
+            <div class="modal-content">
+                <button class="close-modal" onclick="closeCardModal()">&times;</button>
+                <div class="card-detail">
+                    <div class="card-image-container">
+                        <img id="modal-card-image" src="" alt="">
+                    </div>
+                    <div class="card-info">
+                        <h2 id="modal-card-name"></h2>
+                        <div class="card-meta">
+                            <span id="modal-card-type" class="badge"></span>
+                            <span id="modal-card-rarity" class="badge"></span>
+                            <span id="modal-card-element" class="badge"></span>
+                        </div>
+                        <div class="card-stats">
+                            <span id="modal-card-cost"></span>
+                            <span id="modal-card-attack"></span>
+                            <span id="modal-card-defence"></span>
+                        </div>
+                        <p id="modal-card-rules" class="rules-text"></p>
+
+                        <!-- Artist Info -->
+                        <div class="card-artist-section" id="modal-artist-section">
+                            <a href="#" id="modal-artist-link" class="artist-link-modal">
+                                <i data-lucide="brush"></i>
+                                <span id="modal-artist-name"></span>
+                            </a>
+                        </div>
+
+                        <div class="card-price-section">
+                            <h4>Precos por Versao</h4>
+                            <div id="modal-price-table">
+                                <!-- Price table will be rendered by JS -->
+                            </div>
+                        </div>
+                        <div class="card-sets">
+                            <h4>Available in:</h4>
+                            <div id="modal-card-sets"></div>
+                        </div>
+
+                        <!-- Variant Selector -->
+                        <div class="variant-selector" id="variant-selector">
+                            <h4>Selecionar Variante</h4>
+                            <div class="variant-tabs">
+                                <button class="variant-tab active" data-finish="Standard">Standard</button>
+                                <button class="variant-tab" data-finish="Foil">Foil</button>
+                                <button class="variant-tab" data-finish="Rainbow">Rainbow</button>
+                            </div>
+                            <div class="variant-list" id="variant-list">
+                                <!-- Will be populated by JS -->
+                            </div>
+                            <div class="owned-variants" id="owned-variants">
+                                <h5>Na sua coleção:</h5>
+                                <div class="owned-list" id="owned-list">
+                                    <!-- Will be populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-actions">
+                            <button id="add-to-collection-btn" class="btn primary">
+                                <span class="icon">+</span> Add to Collection
+                            </button>
+                            <button id="add-to-wishlist-btn" class="btn">
+                                <span class="icon">&#10084;</span> Add to Wishlist
+                            </button>
+                            <button id="add-to-trade-btn" class="btn">
+                                <span class="icon">&#128257;</span> Add to Trade
+                            </button>
+                            <button id="add-photo-btn" class="btn">
+                                <span class="icon">&#128247;</span> Add Photo
+                            </button>
+                            <button id="share-card-btn" class="btn">
+                                <i data-lucide="share-2"></i> Share
+                            </button>
+                            <button id="qr-card-btn" class="btn">
+                                <i data-lucide="qr-code"></i> QR Code
+                            </button>
+                        </div>
+
+                        <!-- QR Code Display -->
+                        <div id="qr-code-container" class="qr-code-container hidden">
+                            <img id="qr-code-image" src="" alt="QR Code">
+                            <p class="qr-code-hint">Scan to open this card</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login/Register Modal -->
+        <div id="auth-modal" class="modal hidden">
+            <div class="modal-content auth-modal-content">
+                <button class="close-modal">&times;</button>
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Login</button>
+                    <button class="auth-tab" data-tab="register">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <h3>Login to Your Account</h3>
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required placeholder="Your password">
+                    </div>
+                    <div id="login-error" class="auth-error hidden"></div>
+                    <button type="submit" class="btn primary btn-full">Login</button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form hidden">
+                    <h3>Create an Account</h3>
+                    <div class="form-group">
+                        <label for="register-name">Display Name</label>
+                        <input type="text" id="register-name" required placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required minlength="6" placeholder="Min 6 characters">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password-confirm">Confirm Password</label>
+                        <input type="password" id="register-password-confirm" required placeholder="Repeat password">
+                    </div>
+                    <div id="register-error" class="auth-error hidden"></div>
+                    <button type="submit" class="btn primary btn-full">Create Account</button>
+                </form>
+
+                <p class="auth-info">Your collection will be synced to the cloud so you can access it from any device.</p>
+            </div>
+        </div>
+
+        <!-- Sync Options Modal -->
+        <div id="sync-modal" class="modal hidden">
+            <div class="modal-content sync-modal-content">
+                <button class="close-modal">&times;</button>
+                <h3>Cloud Sync</h3>
+                <p class="subtitle">Synchronize your collection with the cloud</p>
+
+                <div class="sync-options">
+                    <button id="sync-upload-btn" class="btn sync-btn">
+                        <span class="sync-icon">&#8593;</span>
+                        <span class="sync-label">Upload to Cloud</span>
+                        <span class="sync-desc">Save local collection to cloud</span>
+                    </button>
+                    <button id="sync-download-btn" class="btn sync-btn">
+                        <span class="sync-icon">&#8595;</span>
+                        <span class="sync-label">Download from Cloud</span>
+                        <span class="sync-desc">Replace local with cloud data</span>
+                    </button>
+                </div>
+
+                <div id="sync-status" class="sync-status hidden">
+                    <div class="sync-progress"></div>
+                    <span class="sync-message">Syncing...</span>
+                </div>
+
+                <div class="sync-info">
+                    <h4>Last Sync</h4>
+                    <span id="last-sync-time">Never</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Upload Modal -->
+        <div id="photo-modal" class="modal hidden">
+            <div class="modal-content photo-modal-content">
+                <button class="close-modal">&times;</button>
+                <h3>Card Photo</h3>
+                <div id="photo-card-name" class="photo-card-name"></div>
+
+                <div class="photo-capture-section">
+                    <div class="photo-preview-container">
+                        <img id="photo-preview" class="photo-preview hidden" alt="Photo preview">
+                        <div id="photo-placeholder" class="photo-placeholder">
+                            <span>&#128247;</span>
+                            <p>Take or upload a photo</p>
+                        </div>
+                    </div>
+
+                    <div class="photo-actions">
+                        <button id="capture-photo-btn" class="btn">
+                            <span>&#128247;</span> Take Photo
+                        </button>
+                        <button id="upload-photo-btn" class="btn">
+                            <span>&#128194;</span> Upload
+                        </button>
+                        <input type="file" id="photo-file-input" accept="image/*" capture="environment" style="display: none;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photo-condition">Condition</label>
+                        <select id="photo-condition">
+                            <option value="NM">Near Mint (NM)</option>
+                            <option value="LP">Lightly Played (LP)</option>
+                            <option value="MP">Moderately Played (MP)</option>
+                            <option value="HP">Heavily Played (HP)</option>
+                            <option value="DMG">Damaged (DMG)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photo-notes">Notes</label>
+                        <textarea id="photo-notes" placeholder="Any notes about this card..."></textarea>
+                    </div>
+
+                    <button id="save-photo-btn" class="btn primary btn-full" disabled>Save Photo</button>
+                </div>
+
+                <div class="existing-photos">
+                    <h4>Existing Photos</h4>
+                    <div id="card-photos-grid" class="photos-grid">
+                        <!-- Photos will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Scanner Modal -->
+        <div id="scanner-modal" class="modal hidden">
+            <div class="modal-content scanner-modal-content">
+                <button class="close-modal">&times;</button>
+                <h3>Card Scanner</h3>
+                <p class="subtitle">Point your camera at a card to scan it</p>
+
+                <div class="scanner-container">
+                    <!-- Camera View -->
+                    <div class="scanner-camera-section">
+                        <div id="scanner-video-container" class="scanner-video-container">
+                            <video id="scanner-video" autoplay playsinline></video>
+                            <canvas id="scanner-canvas" class="hidden"></canvas>
+                            <div id="scanner-overlay" class="scanner-overlay">
+                                <div class="scanner-frame"></div>
+                                <p>Position card name in the frame</p>
+                            </div>
+                        </div>
+
+                        <div class="scanner-controls">
+                            <button id="scanner-capture-btn" class="btn primary">
+                                <span>&#128247;</span> Capture
+                            </button>
+                            <button id="scanner-switch-camera-btn" class="btn" title="Switch camera">
+                                <span>&#128260;</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div id="scanner-results" class="scanner-results hidden">
+                        <div class="scanner-captured-image">
+                            <img id="scanner-captured" alt="Captured image">
+                        </div>
+
+                        <div class="scanner-status">
+                            <div id="scanner-processing" class="scanner-processing hidden">
+                                <div class="scanner-spinner"></div>
+                                <span>Reading card name...</span>
+                            </div>
+                            <div id="scanner-detected-text" class="scanner-detected-text hidden">
+                                <label>Detected text:</label>
+                                <input type="text" id="scanner-text-input" placeholder="Card name">
+                                <button id="scanner-search-btn" class="btn primary">Search</button>
+                            </div>
+                        </div>
+
+                        <div id="scanner-matches" class="scanner-matches hidden">
+                            <h4>Matching Cards</h4>
+                            <div id="scanner-matches-list" class="scanner-matches-list">
+                                <!-- Card matches will appear here -->
+                            </div>
+                        </div>
+
+                        <div class="scanner-result-actions">
+                            <button id="scanner-retry-btn" class="btn">
+                                <span>&#128260;</span> Scan Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Search Fallback -->
+                <div class="scanner-manual-section">
+                    <p class="scanner-manual-label">Or search manually:</p>
+                    <div class="scanner-manual-search">
+                        <input type="text" id="scanner-manual-input" placeholder="Type card name...">
+                        <button id="scanner-manual-search-btn" class="btn">Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <p>Loading cards from Sorcery API...</p>
+        </div>
+    </div>
+
+    <!-- Tesseract.js for OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <script src="recommended-decks.js"></script>
+    <script src="collection-tracker.js"></script>
+    <script src="price-service.js"></script>
+    <script src="gamification.js"></script>
+    <script src="nocodb-service.js"></script>
+    <script src="card-scanner.js"></script>
+    <script src="brazilian-stores.js"></script>
+    <script src="i18n.js"></script>
+    <script src="rulebook-pt.js"></script>
+    <script src="faq-pt.js"></script>
+    <script src="deck-guides-pt.js"></script>
+    <!-- New Feature Modules -->
+    <script src="variant-tracker.js"></script>
+    <script src="keyword-parser.js"></script>
+    <script src="set-progress.js"></script>
+    <script src="threshold-calculator.js"></script>
+    <script src="dust-tracker.js"></script>
+    <script src="artist-gallery.js"></script>
+    <script src="promo-tracker.js"></script>
+    <script src="release-timeline.js"></script>
+    <script src="chase-cards-prices.js"></script>
+    <script src="tcg-prices.js"></script>
+    <script src="flavor-text.js"></script>
+    <script src="rules-quiz.js"></script>
+    <script src="news-service.js"></script>
+    <script src="app.js?v=19"></script>
+    <script src="offline-manager.js"></script>
+    <script>
+        // Initialize Lucide icons after DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('/service-worker.js');
+                    console.log('SW registered:', registration.scope);
+
+                    // Check for updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New version available
+                                if (typeof showUpdateAvailable === 'function') {
+                                    showUpdateAvailable();
+                                }
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.error('SW registration failed:', error);
+                }
+            });
+
+            // Handle SW messages
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data.type === 'DATA_UPDATED') {
+                    console.log('Data updated:', event.data.url);
+                    // Reload cards if database was updated
+                    if (event.data.url.includes('cards-database.json')) {
+                        if (typeof loadCardsDatabase === 'function') {
+                            loadCardsDatabase();
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!-- Offline Indicator (shows when connection is lost) -->
+    <div id="offline-indicator" class="offline-indicator hidden">
+        <i data-lucide="wifi-off"></i>
+        <span>Sem conexao</span>
+    </div>
+</body>
+</html>

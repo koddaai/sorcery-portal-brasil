@@ -1,0 +1,61 @@
+{
+  "news": [
+    {
+      "id": "news-gothic-expansion",
+      "title_en": "Gothic Expansion Now Available",
+      "title_pt": "Expansao Gothic Disponivel",
+      "excerpt_en": "The Gothic expansion brings vampires, werewolves, and dark magic to Sorcery: Contested Realm.",
+      "summary_pt": "A expansao Gothic traz vampiros, lobisomens e magia sombria para Sorcery: Contested Realm.",
+      "link": "https://sorcerytcg.com/news/gothic-expansion-now-available",
+      "image": "https://sorcerytcg.com/images/gothic-banner.jpg",
+      "date": "2025-04-01",
+      "category": "Expansao"
+    },
+    {
+      "id": "news-organized-play-2026",
+      "title_en": "Organized Play 2026 Program Announced",
+      "title_pt": "Programa Organized Play 2026 Anunciado",
+      "excerpt_en": "Four tiers of competition for all players: Gothic Store Kits, Cornerstone Championships, Grand Contests, and Avatar of the Realm.",
+      "summary_pt": "Quatro niveis de competicao: Gothic Store Kits, Cornerstone Championships, Grand Contests e Avatar of the Realm.",
+      "link": "https://sorcerytcg.com/organized-play",
+      "image": null,
+      "date": "2025-03-15",
+      "category": "OP"
+    },
+    {
+      "id": "news-pedro-ferreira",
+      "title_en": "Welcome to Sorcery, Pedro G. Ferreira!",
+      "title_pt": "Bem-vindo ao Sorcery, Pedro G. Ferreira!",
+      "excerpt_en": "Traditional illustrator from Porto, Portugal joins the Sorcery artist roster with stunning Gothic artwork.",
+      "summary_pt": "Ilustrador tradicional de Porto, Portugal, se junta ao time de artistas do Sorcery com arte gotica impressionante.",
+      "link": "https://sorcerytcg.com/news/welcome-to-sorcery-pedro-g-ferreira",
+      "image": null,
+      "date": "2025-02-20",
+      "category": "Artista"
+    },
+    {
+      "id": "news-beta-reprint",
+      "title_en": "Beta Unlimited Reprint Coming Soon",
+      "title_pt": "Reimpressao Beta Unlimited em Breve",
+      "excerpt_en": "Due to high demand, a Beta Unlimited reprint is scheduled for Q2 2025.",
+      "summary_pt": "Devido a alta demanda, uma reimpressao do Beta Unlimited esta programada para Q2 2025.",
+      "link": "https://sorcerytcg.com/news/beta-reprint",
+      "image": null,
+      "date": "2025-02-10",
+      "category": "Produto"
+    },
+    {
+      "id": "news-curiosa-update",
+      "title_en": "Curiosa.io Major Update",
+      "title_pt": "Grande Atualizacao do Curiosa.io",
+      "excerpt_en": "The official deckbuilder receives new features including collection tracking and improved search.",
+      "summary_pt": "O deckbuilder oficial recebe novos recursos incluindo rastreamento de colecao e busca aprimorada.",
+      "link": "https://curiosa.io",
+      "image": null,
+      "date": "2025-01-25",
+      "category": "Ferramenta"
+    }
+  ],
+  "lastUpdated": "2025-04-09T12:00:00.000Z",
+  "source": "https://sorcerytcg.com/news"
+}

@@ -1,0 +1,357 @@
+// ============================================
+// SORCERY: CONTESTED REALM - FAQ PT-BR
+// Perguntas Frequentes traduzidas
+// ============================================
+
+const FAQ_PT = {
+    version: "Abril 2026",
+
+    categories: [
+        // ============================================
+        // REGRAS BÁSICAS
+        // ============================================
+        {
+            id: "basics",
+            title: "Regras Básicas",
+            icon: "book-open",
+            questions: [
+                {
+                    q: "Quantos cards posso ter no meu deck?",
+                    a: "Seu <strong>Spellbook</strong> (deck principal) deve ter exatamente <strong>60 cards</strong>, incluindo 1 Avatar. Seu <strong>Atlas</strong> (deck de Sites) pode ter até <strong>30 cards</strong>."
+                },
+                {
+                    q: "Quantas cópias de um card posso ter?",
+                    a: "Máximo de <strong>4 cópias</strong> de qualquer card pelo nome. Sites básicos (sem habilidades especiais) não têm limite."
+                },
+                {
+                    q: "Posso jogar mais de um Site por turno?",
+                    a: "Não. Você só pode jogar <strong>1 Site</strong> por turno, durante sua Fase de Início."
+                },
+                {
+                    q: "Quantos cards compro por turno?",
+                    a: "Você compra <strong>1 card</strong> do Spellbook no início de cada turno. O jogador que começa também compra no primeiro turno."
+                },
+                {
+                    q: "Qual o limite de cards na mão?",
+                    a: "O limite é <strong>7 cards</strong>. Se você tiver mais de 7 no final do seu turno, deve descartar até ter 7."
+                },
+                {
+                    q: "O que acontece se meu Spellbook acabar?",
+                    a: "Se você precisar comprar um card e seu Spellbook estiver vazio, você <strong>perde o jogo</strong>."
+                }
+            ]
+        },
+
+        // ============================================
+        // THRESHOLD E MANA
+        // ============================================
+        {
+            id: "resources",
+            title: "Threshold e Mana",
+            icon: "zap",
+            questions: [
+                {
+                    q: "Qual a diferença entre Threshold e Mana?",
+                    a: "<strong>Threshold</strong> é um requisito permanente - representa seu domínio sobre os elementos. Nunca diminui.<br><br><strong>Mana</strong> é um recurso que você gasta. É gerado virando Sites e é perdido no fim do turno."
+                },
+                {
+                    q: "Como ganho Threshold?",
+                    a: "Cada <strong>Site</strong> que você joga aumenta seu Threshold do elemento correspondente em +1. Sites com dois elementos aumentam ambos."
+                },
+                {
+                    q: "Threshold pode diminuir?",
+                    a: "<strong>Não.</strong> Mesmo se um Site for destruído, seu Threshold permanece. É um valor permanente que só aumenta."
+                },
+                {
+                    q: "O que é Affinity?",
+                    a: "<strong>Affinity</strong> reduz o custo de mana de um card baseado no seu Threshold. Por exemplo, um card com custo 5 e 'Affinity: Fire' custa 1 a menos para cada ponto de Threshold de Fogo que você tem."
+                },
+                {
+                    q: "Posso guardar mana para o próximo turno?",
+                    a: "<strong>Não.</strong> Mana não utilizado é perdido no final do turno. Use ou perca!"
+                },
+                {
+                    q: "Posso usar mana de qualquer elemento para pagar custos?",
+                    a: "<strong>Sim.</strong> A cor do mana não importa para pagar custos. Threshold é o requisito de cor - mana é genérico."
+                }
+            ]
+        },
+
+        // ============================================
+        // COMBATE
+        // ============================================
+        {
+            id: "combat",
+            title: "Combate",
+            icon: "swords",
+            questions: [
+                {
+                    q: "Quando posso atacar?",
+                    a: "Durante sua <strong>Fase Principal</strong>, você pode atacar com criaturas que:<br>• Não têm Summoning Sickness<br>• Não estão viradas<br>• Não têm Defender"
+                },
+                {
+                    q: "O que é Summoning Sickness?",
+                    a: "Criaturas recém-jogadas não podem <strong>atacar, mover, ou virar para pagar custos</strong> até o início do seu próximo turno. Elas ainda podem <strong>bloquear</strong>."
+                },
+                {
+                    q: "Como funciona o bloqueio?",
+                    a: "Quando uma criatura ataca, o defensor pode designar uma criatura desvirada na mesma região para bloquear. A criatura bloqueadora <strong>intercepta todo o dano</strong>."
+                },
+                {
+                    q: "Posso atacar criaturas em outras regiões?",
+                    a: "Normalmente não. Você ataca criaturas/Avatar na mesma região. Criaturas com <strong>Ranged</strong> podem atacar em regiões adjacentes."
+                },
+                {
+                    q: "Como funciona First Strike?",
+                    a: "Criaturas com <strong>First Strike</strong> causam seu dano de combate primeiro. Se a criatura oponente morrer, ela não causa dano de volta."
+                },
+                {
+                    q: "O que Lethal faz?",
+                    a: "<strong>Lethal</strong> significa que qualquer quantidade de dano (1 ou mais) causado por essa criatura é suficiente para destruir outra criatura, independente da Defesa."
+                },
+                {
+                    q: "Stealth pode ser bloqueado?",
+                    a: "<strong>Não.</strong> Criaturas com Stealth não podem ser bloqueadas. O dano vai direto ao alvo."
+                },
+                {
+                    q: "Airborne pode ser bloqueado por criaturas terrestres?",
+                    a: "<strong>Não.</strong> Apenas criaturas com Airborne podem bloquear outras criaturas com Airborne."
+                }
+            ]
+        },
+
+        // ============================================
+        // MOVIMENTO
+        // ============================================
+        {
+            id: "movement",
+            title: "Movimento",
+            icon: "move",
+            questions: [
+                {
+                    q: "Quantas vezes posso mover uma criatura por turno?",
+                    a: "Cada criatura pode mover <strong>uma vez</strong> por turno, para uma região <strong>adjacente</strong>."
+                },
+                {
+                    q: "Criaturas recém-jogadas podem mover?",
+                    a: "<strong>Não.</strong> Summoning Sickness impede movimento. A criatura só pode mover no seu próximo turno."
+                },
+                {
+                    q: "Airborne ignora terreno?",
+                    a: "<strong>Sim.</strong> Criaturas com Airborne podem voar sobre obstáculos terrestres e não são afetadas por terreno difícil."
+                },
+                {
+                    q: "O que é Burrowing?",
+                    a: "<strong>Burrowing</strong> permite que a criatura entre em regiões subterrâneas (Underground) e se mova pelo subsolo."
+                },
+                {
+                    q: "Posso mover e atacar no mesmo turno?",
+                    a: "<strong>Sim.</strong> Você pode mover uma criatura e depois atacar com ela, ou atacar primeiro e depois mover outra criatura. Cada ação é separada."
+                }
+            ]
+        },
+
+        // ============================================
+        // HABILIDADES
+        // ============================================
+        {
+            id: "abilities",
+            title: "Habilidades",
+            icon: "sparkles",
+            questions: [
+                {
+                    q: "Posso usar habilidades no turno do oponente?",
+                    a: "Apenas habilidades com <strong>Burst</strong> podem ser usadas no turno do oponente. Habilidades básicas como Defender e Intercept também funcionam."
+                },
+                {
+                    q: "Quando Genesis acontece?",
+                    a: "<strong>Genesis</strong> é acionado quando a criatura <strong>entra no Realm</strong> (campo de batalha). Acontece tanto ao jogar o card quanto ao ser invocado por outro efeito."
+                },
+                {
+                    q: "Quando Death acontece?",
+                    a: "<strong>Death</strong> é acionado quando a criatura vai para o Cemetery. O efeito resolve <strong>antes</strong> do card ir para o cemitério."
+                },
+                {
+                    q: "Ward protege contra tudo?",
+                    a: "<strong>Não.</strong> Ward protege contra efeitos que <strong>miram</strong> a criatura (magias e habilidades do oponente). Não protege contra efeitos que afetam 'todas as criaturas' ou dano de combate."
+                },
+                {
+                    q: "O que quebra Ward?",
+                    a: "Ward é <strong>quebrado permanentemente</strong> se a criatura for mirada, receber dano, ou ser destruída por qualquer fonte do oponente."
+                },
+                {
+                    q: "Como funciona Awaken?",
+                    a: "<strong>Awaken</strong> é acionado no início de cada um dos seus turnos enquanto a criatura está em jogo. É uma habilidade recorrente."
+                },
+                {
+                    q: "Posso ativar a mesma habilidade múltiplas vezes?",
+                    a: "<strong>Sim</strong>, desde que você pague o custo cada vez. Se a habilidade requer virar a criatura, você só pode usar uma vez até desvirá-la."
+                }
+            ]
+        },
+
+        // ============================================
+        // ZONAS DE JOGO
+        // ============================================
+        {
+            id: "zones",
+            title: "Zonas de Jogo",
+            icon: "layout",
+            questions: [
+                {
+                    q: "Posso ver o Cemetery do oponente?",
+                    a: "<strong>Sim.</strong> O Cemetery (cemitério) é uma zona pública. Ambos os jogadores podem ver os cards lá a qualquer momento."
+                },
+                {
+                    q: "Posso ver cards no Void?",
+                    a: "<strong>Sim.</strong> O Void (exílio) também é público. Cards no Void normalmente não podem ser recuperados."
+                },
+                {
+                    q: "O que é a Storyline?",
+                    a: "A <strong>Storyline</strong> é a pilha onde magias e habilidades aguardam resolução. Funciona como 'último a entrar, primeiro a sair' (LIFO)."
+                },
+                {
+                    q: "Posso olhar meu Atlas?",
+                    a: "<strong>Não.</strong> O Atlas é uma zona oculta. Você joga Sites do topo sem ver o que vem a seguir."
+                }
+            ]
+        },
+
+        // ============================================
+        // INTERAÇÕES DE CARDS
+        // ============================================
+        {
+            id: "interactions",
+            title: "Interações de Cards",
+            icon: "git-merge",
+            questions: [
+                {
+                    q: "O que acontece quando dois efeitos conflitam?",
+                    a: "Use a <strong>Regra de Prata</strong>: texto específico de cards tem precedência sobre regras gerais. Se dois cards conflitam, 'não pode' sempre vence 'pode'."
+                },
+                {
+                    q: "Tokens acionam Genesis?",
+                    a: "<strong>Sim.</strong> Tokens que entram no Realm acionam Genesis normalmente, pois estão 'entrando' no campo de batalha."
+                },
+                {
+                    q: "O que significa jogar um card 'de graça'?",
+                    a: "Significa que você não paga o custo de <strong>mana</strong>. Porém, requisitos de <strong>Threshold</strong> ainda se aplicam."
+                },
+                {
+                    q: "Auras vão para o Cemetery quando a criatura morre?",
+                    a: "<strong>Sim.</strong> Quando o permanente anexado é destruído, a Aura vai para o Cemetery."
+                },
+                {
+                    q: "Posso mover Artifacts entre criaturas?",
+                    a: "Depende do Artifact. Alguns podem ser re-equipados pagando um custo. Verifique o texto do card específico."
+                }
+            ]
+        },
+
+        // ============================================
+        // FORMATOS
+        // ============================================
+        {
+            id: "formats",
+            title: "Formatos de Jogo",
+            icon: "trophy",
+            questions: [
+                {
+                    q: "Qual a diferença entre Draft e Sealed?",
+                    a: "<strong>Draft:</strong> Você escolhe cards passando boosters entre jogadores.<br><strong>Sealed:</strong> Você abre boosters e usa apenas esses cards, sem passar."
+                },
+                {
+                    q: "Quantos cards no deck de Limitado?",
+                    a: "Em Draft e Sealed, o deck mínimo é de <strong>40 cards</strong> (ao invés de 60 do Constructed)."
+                },
+                {
+                    q: "Posso usar qualquer Avatar em Limitado?",
+                    a: "Você deve usar um Avatar que você abriu nos boosters. Se não abrir nenhum, pergunte ao juiz sobre regras do evento."
+                },
+                {
+                    q: "Existe banlist em Sorcery?",
+                    a: "Consulte o site oficial <a href='https://sorcerytcg.com/formats' target='_blank'>sorcerytcg.com/formats</a> para a lista de cards restritos ou banidos mais atual."
+                }
+            ]
+        }
+    ]
+};
+
+// Função para renderizar o FAQ
+function renderFAQ() {
+    const container = document.getElementById('faq-content');
+    if (!container) return;
+
+    container.innerHTML = FAQ_PT.categories.map(category => `
+        <div class="faq-category" id="faq-${category.id}">
+            <div class="faq-category-header">
+                <i data-lucide="${category.icon}"></i>
+                <h3>${category.title}</h3>
+            </div>
+            <div class="faq-questions">
+                ${category.questions.map((item, index) => `
+                    <div class="faq-item" data-index="${index}">
+                        <button class="faq-question" onclick="toggleFAQ(this)">
+                            <span>${item.q}</span>
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>${item.a}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    // Re-init Lucide icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+// Toggle FAQ item
+function toggleFAQ(button) {
+    const item = button.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+
+    // Close all others in the same category
+    const category = item.closest('.faq-category');
+    category.querySelectorAll('.faq-item.open').forEach(openItem => {
+        openItem.classList.remove('open');
+    });
+
+    // Toggle this one
+    if (!wasOpen) {
+        item.classList.add('open');
+    }
+}
+
+// Search FAQ
+function searchFAQ(query) {
+    const items = document.querySelectorAll('.faq-item');
+    const q = query.toLowerCase();
+
+    items.forEach(item => {
+        const question = item.querySelector('.faq-question span').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+        if (question.includes(q) || answer.includes(q)) {
+            item.style.display = '';
+            if (q) item.classList.add('open'); // Auto-expand matches
+        } else {
+            item.style.display = 'none';
+        }
+    });
+
+    // Show/hide categories based on visible items
+    document.querySelectorAll('.faq-category').forEach(cat => {
+        const visibleItems = cat.querySelectorAll('.faq-item:not([style*="display: none"])');
+        cat.style.display = visibleItems.length ? '' : 'none';
+    });
+}
+
+// Export
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { FAQ_PT, renderFAQ, toggleFAQ, searchFAQ };
+}
