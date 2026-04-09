@@ -5284,16 +5284,36 @@ body {
 }
 
 .link-more {
-    color: var(--accent-gold);
+    color: var(--text-secondary);
     text-decoration: none;
-    font-size: 0.875rem;
-    display: flex;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-1);
+    gap: var(--space-2);
+    padding: 0.5rem 1rem;
+    background: var(--bg-surface-2);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-full);
+    transition: all var(--duration-normal) var(--ease-out-expo);
+    cursor: pointer;
+}
+
+.link-more svg {
+    width: 14px;
+    height: 14px;
+    transition: transform var(--duration-normal) var(--ease-out-expo);
 }
 
 .link-more:hover {
-    text-decoration: underline;
+    color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.15);
+}
+
+.link-more:hover svg {
+    transform: translateX(3px);
 }
 
 /* News Grid - Landing Page */

@@ -153,10 +153,36 @@ function extractArticleData(html, url) {
 }
 
 /**
+ * Terms that should NOT be translated (game mechanics, product names, etc.)
+ */
+const PRESERVE_TERMS = [
+    // Game name and core terms
+    'Sorcery', 'Sorcery TCG', 'Contested Realm',
+    // Collections/Sets
+    'Alpha', 'Beta', 'Gothic', 'Arthurian', 'Wonderlands',
+    // Game mechanics
+    'Dust', 'Aura', 'Minion', 'Avatar', 'Relic', 'Magic', 'Site', 'Artifact',
+    'Ordinary', 'Exceptional', 'Elite', 'Unique',
+    // Product types
+    'Precon', 'Precons', 'Booster', 'Boosters', 'Starter Kit', 'Bundle',
+    // Card variants
+    'Foil', 'Rainbow Foil', 'Standard',
+    // Events/Programs
+    'Championship', 'Store Championship', 'Organized Play', 'OP Kit',
+    // Platforms
+    'Curiosa', 'Curiosa.io', 'TCGPlayer',
+    // Common card terms
+    'Spellcaster', 'Threshold', 'Rubble'
+];
+
+/**
  * Translate and summarize news using OpenAI
  */
 async function translateNews(newsItem) {
     const prompt = `Traduza esta notícia sobre Sorcery TCG para português brasileiro.
+
+IMPORTANTE: Os seguintes termos NÃO devem ser traduzidos (são nomes próprios, mecânicas do jogo ou produtos):
+${PRESERVE_TERMS.join(', ')}
 
 Título: ${newsItem.title_en}
 
@@ -164,9 +190,11 @@ Conteúdo: ${newsItem.content_en || 'Sem conteúdo disponível'}
 
 Responda em JSON:
 {
-  "title_pt": "título traduzido",
-  "summary_pt": "resumo detalhado em português (3-4 frases, máximo 300 caracteres, informativo e engajante)"
+  "title_pt": "título traduzido (preservando os termos acima em inglês)",
+  "summary_pt": "resumo detalhado em português (3-4 frases, máximo 300 caracteres, informativo e engajante, preservando os termos acima em inglês)"
 }
+
+Exemplo correto: "Dust em Sorcery: Contested Realm" (NÃO "Poeira em Feitiçaria: Reino Contestável")
 
 Se o conteúdo estiver vazio, crie um resumo baseado no título.`;
 
