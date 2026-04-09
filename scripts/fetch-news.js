@@ -40,26 +40,60 @@ async function fetchPage(url) {
 }
 
 /**
- * Get news URLs from sitemap
+ * Get news URLs from sitemap, prioritizing recent ones
  */
 async function getNewsUrlsFromSitemap() {
     console.log('[Fetch] Getting news URLs from sitemap...');
     const xml = await fetchPage(SITEMAP_URL);
 
-    // Extract news URLs
+    // Extract all news URLs with their lastmod dates if available
     const newsUrls = [];
-    const matches = xml.matchAll(/<loc>([^<]*\/news\/[^<]+)<\/loc>/g);
+    const urlBlocks = xml.split('<url>');
 
-    for (const match of matches) {
-        const url = match[1];
+    for (const block of urlBlocks) {
+        const locMatch = block.match(/<loc>([^<]*\/news\/[^<]+)<\/loc>/);
+        if (!locMatch) continue;
+
+        const url = locMatch[1];
         // Skip the main news page
-        if (url !== `${BASE_URL}/news` && url !== `${BASE_URL}/news/`) {
-            newsUrls.push(url);
-        }
+        if (url === `${BASE_URL}/news` || url === `${BASE_URL}/news/`) continue;
+
+        // Try to get lastmod date
+        const lastmodMatch = block.match(/<lastmod>([^<]+)<\/lastmod>/);
+        const lastmod = lastmodMatch ? lastmodMatch[1] : null;
+
+        // Calculate priority score
+        let priority = 0;
+        const urlLower = url.toLowerCase();
+
+        // Prioritize URLs with recent years
+        if (urlLower.includes('2026')) priority += 100;
+        else if (urlLower.includes('2025')) priority += 50;
+        else if (urlLower.includes('2024')) priority += 25;
+
+        // Prioritize certain keywords that indicate recent/important news
+        if (urlLower.includes('grand-contest')) priority += 30;
+        if (urlLower.includes('championship')) priority += 20;
+        if (urlLower.includes('gothic')) priority += 15;
+        if (urlLower.includes('dust')) priority += 15;
+        if (urlLower.includes('organized-play')) priority += 10;
+
+        newsUrls.push({ url, lastmod, priority });
     }
 
+    // Sort by priority (highest first), then by lastmod date if available
+    newsUrls.sort((a, b) => {
+        if (b.priority !== a.priority) return b.priority - a.priority;
+        if (a.lastmod && b.lastmod) return b.lastmod.localeCompare(a.lastmod);
+        return 0;
+    });
+
     console.log(`[Fetch] Found ${newsUrls.length} news URLs`);
-    return newsUrls.slice(0, MAX_NEWS * 2); // Get more to filter later
+    console.log(`[Fetch] Top 5 prioritized URLs:`);
+    newsUrls.slice(0, 5).forEach(n => console.log(`  - ${n.url} (priority: ${n.priority})`));
+
+    // Return URLs only, take more to ensure we get recent ones
+    return newsUrls.slice(0, MAX_NEWS * 3).map(n => n.url);
 }
 
 /**
