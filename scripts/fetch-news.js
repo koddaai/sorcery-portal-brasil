@@ -1,7 +1,7 @@
 /**
  * Sorcery TCG News Fetcher & Translator
  *
- * Fetches news from sorcerytcg.com and translates to Portuguese using OpenAI
+ * Fetches real news from sorcerytcg.com sitemap and translates to Portuguese
  */
 
 import * as cheerio from 'cheerio';
@@ -13,21 +13,22 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const NEWS_URL = 'https://sorcerytcg.com/news';
+const SITEMAP_URL = 'https://sorcerytcg.com/sitemap.xml';
+const BASE_URL = 'https://sorcerytcg.com';
 const OUTPUT_FILE = path.join(__dirname, '..', 'news-database.json');
-const MAX_NEWS = 20; // Keep last 20 news items
+const MAX_NEWS = 15;
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 });
 
 /**
- * Fetch HTML from URL
+ * Fetch page content
  */
 async function fetchPage(url) {
     const response = await fetch(url, {
         headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; SorceryPortalBR/1.0)'
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
         }
     });
 
@@ -39,75 +40,135 @@ async function fetchPage(url) {
 }
 
 /**
- * Parse news from Sorcery TCG website
+ * Get news URLs from sitemap
  */
-async function parseNews(html) {
-    const $ = cheerio.load(html);
-    const newsItems = [];
+async function getNewsUrlsFromSitemap() {
+    console.log('[Fetch] Getting news URLs from sitemap...');
+    const xml = await fetchPage(SITEMAP_URL);
 
-    // Try to find news articles - adjust selectors based on actual site structure
-    // Common patterns: article, .news-item, .post, etc.
-    $('article, .news-item, .post-card, [class*="news"], [class*="article"]').each((i, el) => {
-        const $el = $(el);
+    // Extract news URLs
+    const newsUrls = [];
+    const matches = xml.matchAll(/<loc>([^<]*\/news\/[^<]+)<\/loc>/g);
 
-        // Try various selectors for title
-        const title = $el.find('h1, h2, h3, h4, [class*="title"]').first().text().trim();
-
-        // Try various selectors for link
-        let link = $el.find('a').first().attr('href') || $el.attr('href');
-        if (link && !link.startsWith('http')) {
-            link = `https://sorcerytcg.com${link.startsWith('/') ? '' : '/'}${link}`;
+    for (const match of matches) {
+        const url = match[1];
+        // Skip the main news page
+        if (url !== `${BASE_URL}/news` && url !== `${BASE_URL}/news/`) {
+            newsUrls.push(url);
         }
+    }
 
-        // Try various selectors for excerpt/summary
-        const excerpt = $el.find('p, [class*="excerpt"], [class*="summary"], [class*="desc"]').first().text().trim();
-
-        // Try to find image
-        let image = $el.find('img').first().attr('src');
-        if (image && !image.startsWith('http')) {
-            image = `https://sorcerytcg.com${image.startsWith('/') ? '' : '/'}${image}`;
-        }
-
-        // Try to find date
-        const dateText = $el.find('time, [class*="date"], [datetime]').first().text().trim()
-            || $el.find('[datetime]').attr('datetime');
-
-        // Try to find category/badge
-        const category = $el.find('[class*="badge"], [class*="category"], [class*="tag"]').first().text().trim();
-
-        if (title && link) {
-            newsItems.push({
-                title_en: title,
-                excerpt_en: excerpt || '',
-                link,
-                image: image || null,
-                date: dateText || new Date().toISOString().split('T')[0],
-                category: category || 'News'
-            });
-        }
-    });
-
-    // Remove duplicates by link
-    const uniqueNews = [...new Map(newsItems.map(item => [item.link, item])).values()];
-
-    return uniqueNews.slice(0, MAX_NEWS);
+    console.log(`[Fetch] Found ${newsUrls.length} news URLs`);
+    return newsUrls.slice(0, MAX_NEWS * 2); // Get more to filter later
 }
 
 /**
- * Translate news item to Portuguese using OpenAI
+ * Extract article data from HTML
+ */
+function extractArticleData(html, url) {
+    const $ = cheerio.load(html);
+
+    // Check if it's a 404 page
+    if (html.includes('This page could not be found') || html.includes('404')) {
+        return null;
+    }
+
+    // Try to find title
+    let title = '';
+    title = $('h1').first().text().trim();
+    if (!title) title = $('title').text().replace(' | Sorcery TCG', '').trim();
+
+    // Try to find date - look for common date patterns
+    let date = '';
+    const datePatterns = [
+        /(\w+ \d{1,2},? \d{4})/,
+        /(\d{4}-\d{2}-\d{2})/,
+        /(\d{1,2}\/\d{1,2}\/\d{4})/
+    ];
+
+    const htmlText = html;
+    for (const pattern of datePatterns) {
+        const match = htmlText.match(pattern);
+        if (match) {
+            date = match[1];
+            break;
+        }
+    }
+
+    // If no date found, try to extract from URL or set as recent
+    if (!date) {
+        date = new Date().toISOString().split('T')[0];
+    }
+
+    // Find main image from Sanity CDN
+    let image = null;
+    const imageMatches = html.matchAll(/https:\/\/cdn\.sanity\.io\/images\/vg9ve3gy\/production\/[a-z0-9-]+\.(png|jpg|jpeg|webp)/gi);
+    for (const match of imageMatches) {
+        const imgUrl = match[0];
+        // Skip small images (icons, avatars)
+        if (!imgUrl.includes('160x160') && !imgUrl.includes('icon')) {
+            image = imgUrl;
+            break;
+        }
+    }
+
+    // Extract text content
+    let content = '';
+    $('article p, main p, .content p, [class*="article"] p, [class*="content"] p').each((i, el) => {
+        const text = $(el).text().trim();
+        if (text.length > 20) {
+            content += text + ' ';
+        }
+    });
+
+    // If no content found, try body text
+    if (!content) {
+        content = $('body').text()
+            .replace(/\s+/g, ' ')
+            .substring(0, 1000);
+    }
+
+    // Extract category/tag from URL
+    let category = 'News';
+    const urlLower = url.toLowerCase();
+    if (urlLower.includes('gothic')) category = 'Gothic';
+    else if (urlLower.includes('artist') || urlLower.includes('welcome')) category = 'Artista';
+    else if (urlLower.includes('how-to-play') || urlLower.includes('gameplay')) category = 'Guia';
+    else if (urlLower.includes('event') || urlLower.includes('contest') || urlLower.includes('championship')) category = 'Evento';
+    else if (urlLower.includes('store') || urlLower.includes('kit')) category = 'OP';
+    else if (urlLower.includes('expansion') || urlLower.includes('beta') || urlLower.includes('alpha')) category = 'Produto';
+
+    // Get slug from URL
+    const slug = url.split('/news/')[1] || '';
+
+    return {
+        title_en: title,
+        content_en: content.trim().substring(0, 1500),
+        link: url,
+        image,
+        date,
+        category,
+        slug
+    };
+}
+
+/**
+ * Translate and summarize news using OpenAI
  */
 async function translateNews(newsItem) {
-    const prompt = `Translate the following news item about Sorcery TCG (a trading card game) to Brazilian Portuguese.
-Keep the tone informative and engaging. If there's no excerpt, create a brief summary (1-2 sentences) based on the title.
+    const prompt = `Traduza esta notícia sobre Sorcery TCG para português brasileiro.
 
-Title: ${newsItem.title_en}
-Excerpt: ${newsItem.excerpt_en || 'No excerpt available'}
+Título: ${newsItem.title_en}
 
-Respond in JSON format:
+Conteúdo: ${newsItem.content_en || 'Sem conteúdo disponível'}
+
+Responda em JSON:
 {
-  "title_pt": "translated title",
-  "summary_pt": "translated/created summary (max 150 chars)"
-}`;
+  "title_pt": "título traduzido",
+  "summary_pt": "resumo detalhado em português (3-4 frases, máximo 300 caracteres, informativo e engajante)"
+}
+
+Se o conteúdo estiver vazio, crie um resumo baseado no título.`;
 
     try {
         const response = await openai.chat.completions.create({
@@ -124,14 +185,28 @@ Respond in JSON format:
             summary_pt: result.summary_pt
         };
     } catch (error) {
-        console.error(`Failed to translate: ${newsItem.title_en}`, error.message);
-        // Fallback: use original
+        console.error(`[Fetch] Translation failed: ${newsItem.title_en}`, error.message);
         return {
             ...newsItem,
             title_pt: newsItem.title_en,
-            summary_pt: newsItem.excerpt_en || newsItem.title_en
+            summary_pt: newsItem.content_en?.substring(0, 300) || newsItem.title_en
         };
     }
+}
+
+/**
+ * Parse date string to ISO format
+ */
+function parseDate(dateStr) {
+    if (!dateStr) return new Date().toISOString().split('T')[0];
+
+    // Try to parse various formats
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime())) {
+        return date.toISOString().split('T')[0];
+    }
+
+    return new Date().toISOString().split('T')[0];
 }
 
 /**
@@ -144,7 +219,7 @@ function loadExistingNews() {
             return JSON.parse(data);
         }
     } catch (error) {
-        console.error('Failed to load existing news:', error.message);
+        console.error('[Fetch] Failed to load existing news:', error.message);
     }
     return { news: [], lastUpdated: null };
 }
@@ -153,86 +228,79 @@ function loadExistingNews() {
  * Main function
  */
 async function main() {
-    console.log('=== Sorcery News Fetcher ===');
-    console.log(`Fetching news from ${NEWS_URL}...`);
+    console.log('=== Sorcery News Fetcher v2 ===');
+    console.log(`Output: ${OUTPUT_FILE}`);
 
     try {
-        // Fetch and parse news
-        const html = await fetchPage(NEWS_URL);
-        const newsItems = await parseNews(html);
+        // Get news URLs from sitemap
+        const newsUrls = await getNewsUrlsFromSitemap();
 
-        console.log(`Found ${newsItems.length} news items`);
-
-        if (newsItems.length === 0) {
-            console.log('No news found. The website structure might have changed.');
-            console.log('Creating sample news for testing...');
-
-            // Create sample news for initial setup
-            const sampleNews = [
-                {
-                    title_en: 'Gothic Expansion Released',
-                    excerpt_en: 'The Gothic expansion brings vampires, werewolves, and dark magic to Sorcery.',
-                    link: 'https://sorcerytcg.com/news/gothic',
-                    image: null,
-                    date: '2025-03-15',
-                    category: 'Expansion'
-                },
-                {
-                    title_en: 'Organized Play 2026 Announced',
-                    excerpt_en: 'Four tiers of competition for all players: Store Kits, Cornerstone, Grand Contests, and Avatar of the Realm.',
-                    link: 'https://sorcerytcg.com/organized-play',
-                    image: null,
-                    date: '2025-03-01',
-                    category: 'OP'
-                }
-            ];
-
-            newsItems.push(...sampleNews);
+        if (newsUrls.length === 0) {
+            console.log('[Fetch] No news URLs found in sitemap');
+            return;
         }
 
         // Load existing news
         const existing = loadExistingNews();
         const existingLinks = new Set(existing.news.map(n => n.link));
 
-        // Find new items that need translation
-        const newItems = newsItems.filter(item => !existingLinks.has(item.link));
-        console.log(`${newItems.length} new items to translate`);
+        // Fetch and parse each news article
+        const allNews = [];
+        let newCount = 0;
 
-        // Translate new items
-        const translatedNew = [];
-        for (const item of newItems) {
-            console.log(`Translating: ${item.title_en.substring(0, 50)}...`);
-            const translated = await translateNews(item);
-            translatedNew.push(translated);
+        for (const url of newsUrls) {
+            // Check if we already have this news
+            if (existingLinks.has(url)) {
+                console.log(`[Fetch] Skipping (exists): ${url.split('/news/')[1]}`);
+                const existingItem = existing.news.find(n => n.link === url);
+                if (existingItem) allNews.push(existingItem);
+                continue;
+            }
 
-            // Small delay to avoid rate limiting
-            await new Promise(resolve => setTimeout(resolve, 500));
+            console.log(`[Fetch] Fetching: ${url.split('/news/')[1]}`);
+
+            try {
+                const html = await fetchPage(url);
+                const data = extractArticleData(html, url);
+
+                if (data && data.title_en) {
+                    // Translate
+                    console.log(`[Fetch] Translating: ${data.title_en.substring(0, 40)}...`);
+                    const translated = await translateNews(data);
+                    translated.id = `news-${Date.now()}-${newCount}`;
+                    translated.date = parseDate(translated.date);
+                    allNews.push(translated);
+                    newCount++;
+
+                    // Delay to avoid rate limiting
+                    await new Promise(r => setTimeout(r, 800));
+                }
+            } catch (err) {
+                console.error(`[Fetch] Error fetching ${url}:`, err.message);
+            }
+
+            // Limit total news
+            if (allNews.length >= MAX_NEWS) break;
         }
 
-        // Merge: new items first, then existing
-        const allNews = [...translatedNew, ...existing.news]
-            .slice(0, MAX_NEWS)
-            .sort((a, b) => new Date(b.date) - new Date(a.date));
+        // Sort by date (newest first)
+        allNews.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // Generate IDs
-        allNews.forEach((item, index) => {
-            if (!item.id) {
-                item.id = `news-${Date.now()}-${index}`;
-            }
-        });
+        // Keep only MAX_NEWS
+        const finalNews = allNews.slice(0, MAX_NEWS);
 
         // Save
         const output = {
-            news: allNews,
+            news: finalNews,
             lastUpdated: new Date().toISOString(),
-            source: NEWS_URL
+            source: SITEMAP_URL
         };
 
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2));
-        console.log(`Saved ${allNews.length} news items to ${OUTPUT_FILE}`);
+        console.log(`\n[Fetch] Done! Saved ${finalNews.length} news items (${newCount} new)`);
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('[Fetch] Fatal error:', error);
         process.exit(1);
     }
 }

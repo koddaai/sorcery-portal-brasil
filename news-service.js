@@ -110,14 +110,19 @@ class NewsService {
         const classes = {
             'expansao': 'badge-expansion',
             'expansion': 'badge-expansion',
+            'gothic': 'badge-gothic',
             'op': 'badge-op',
             'organized play': 'badge-op',
-            'artista': 'badge-artist',
-            'artist': 'badge-artist',
-            'produto': 'badge-product',
-            'product': 'badge-product',
-            'ferramenta': 'badge-tool',
-            'tool': 'badge-tool'
+            'evento': 'badge-evento',
+            'event': 'badge-evento',
+            'artista': 'badge-artista',
+            'artist': 'badge-artista',
+            'produto': 'badge-produto',
+            'product': 'badge-produto',
+            'guia': 'badge-guia',
+            'guide': 'badge-guia',
+            'ferramenta': 'badge-ferramenta',
+            'tool': 'badge-ferramenta'
         };
         return classes[category.toLowerCase()] || 'badge-news';
     }
@@ -126,31 +131,47 @@ class NewsService {
      * Render news card HTML
      */
     renderCard(news, options = {}) {
-        const { compact = false, showImage = true } = options;
+        const { compact = false } = options;
         const icon = this.getCategoryIcon(news.category);
         const badgeClass = this.getCategoryClass(news.category);
 
+        // Compact card for landing page
         if (compact) {
             return `
-                <a href="#" class="news-card news-card-compact" data-news-id="${news.id}" onclick="newsService.openNewsDetail('${news.id}'); return false;">
-                    <div class="news-badge ${badgeClass}">${news.category}</div>
-                    <h4>${news.title_pt}</h4>
-                    <p>${news.summary_pt}</p>
+                <a href="${news.link}" target="_blank" class="news-card news-card-compact">
+                    ${news.image ? `
+                        <div class="news-card-image">
+                            <img src="${news.image}" alt="${news.title_pt}" loading="lazy" onerror="this.parentElement.classList.add('no-image')">
+                        </div>
+                    ` : `
+                        <div class="news-card-image no-image">
+                            <i data-lucide="${icon}"></i>
+                        </div>
+                    `}
+                    <div class="news-card-body">
+                        <div class="news-badge ${badgeClass}">${news.category}</div>
+                        <h4>${news.title_pt}</h4>
+                        <p>${news.summary_pt}</p>
+                    </div>
                 </a>
             `;
         }
 
+        // Full card for news view
         return `
-            <article class="news-card-full" data-news-id="${news.id}">
-                ${showImage && news.image ? `
+            <article class="news-card-full">
+                ${news.image ? `
                     <div class="news-image">
-                        <img src="${news.image}" alt="${news.title_pt}" loading="lazy">
+                        <img src="${news.image}" alt="${news.title_pt}" loading="lazy" onerror="this.style.display='none'">
                     </div>
-                ` : ''}
+                ` : `
+                    <div class="news-image-placeholder">
+                        <i data-lucide="${icon}"></i>
+                    </div>
+                `}
                 <div class="news-content">
                     <div class="news-meta">
                         <span class="news-badge ${badgeClass}">
-                            <i data-lucide="${icon}"></i>
                             ${news.category}
                         </span>
                         <span class="news-date">
@@ -159,11 +180,11 @@ class NewsService {
                         </span>
                     </div>
                     <h3>${news.title_pt}</h3>
-                    <p>${news.summary_pt}</p>
+                    <p class="news-summary">${news.summary_pt}</p>
                     <div class="news-actions">
-                        <a href="${news.link}" target="_blank" class="btn ghost btn-sm">
+                        <a href="${news.link}" target="_blank" class="btn primary btn-sm">
                             <i data-lucide="external-link"></i>
-                            Ver Original
+                            Ler Mais
                         </a>
                     </div>
                 </div>
