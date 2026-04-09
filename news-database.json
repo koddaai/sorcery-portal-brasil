@@ -12,6 +12,17 @@
       "category": "Expansao"
     },
     {
+      "title_en": "Gothic Expansion Released",
+      "excerpt_en": "The Gothic expansion brings vampires, werewolves, and dark magic to Sorcery.",
+      "link": "https://sorcerytcg.com/news/gothic",
+      "image": null,
+      "date": "2025-03-15",
+      "category": "Expansion",
+      "title_pt": "Expansão Gótica Lançada",
+      "summary_pt": "A expansão Gótica traz vampiros, lobisomens e magia sombria para Sorcery.",
+      "id": "news-1775765531071-1"
+    },
+    {
       "id": "news-organized-play-2026",
       "title_en": "Organized Play 2026 Program Announced",
       "title_pt": "Programa Organized Play 2026 Anunciado",
@@ -56,6 +67,6 @@
       "category": "Ferramenta"
     }
   ],
-  "lastUpdated": "2025-04-09T12:00:00.000Z",
+  "lastUpdated": "2026-04-09T20:12:11.071Z",
   "source": "https://sorcerytcg.com/news"
 }
