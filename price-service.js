@@ -808,6 +808,85 @@ class PriceService {
 
         return report;
     }
+
+    /**
+     * Calculate collection value with detailed breakdown by set, rarity, element, type
+     * Used for value tracking charts and analytics
+     */
+    calculateValueBreakdown(collection, allCards) {
+        const breakdown = {
+            bySet: {},
+            byRarity: {},
+            byElement: {},
+            byType: {},
+            total: 0
+        };
+
+        for (const [cardName, data] of Object.entries(collection)) {
+            const qty = typeof data === 'object' ? data.qty : 1;
+            const cardData = allCards.find(c => c.name === cardName);
+
+            if (!cardData) continue;
+
+            // Get price (real or estimated)
+            const price = this.getPrice(cardName) || this.getEstimatedPrice(cardData);
+            const value = price * qty;
+            breakdown.total += value;
+
+            // By Set
+            const setName = cardData.sets?.[0]?.name || 'Unknown';
+            if (!breakdown.bySet[setName]) breakdown.bySet[setName] = 0;
+            breakdown.bySet[setName] += value;
+
+            // By Rarity
+            const rarity = cardData.guardian?.rarity || 'Unknown';
+            if (!breakdown.byRarity[rarity]) breakdown.byRarity[rarity] = 0;
+            breakdown.byRarity[rarity] += value;
+
+            // By Element
+            const element = cardData.guardian?.element || 'Colorless';
+            if (!breakdown.byElement[element]) breakdown.byElement[element] = 0;
+            breakdown.byElement[element] += value;
+
+            // By Type
+            const type = cardData.guardian?.types?.[0] || cardData.types?.[0] || 'Unknown';
+            if (!breakdown.byType[type]) breakdown.byType[type] = 0;
+            breakdown.byType[type] += value;
+        }
+
+        // Sort each breakdown by value (descending)
+        const sortObject = (obj) => {
+            return Object.fromEntries(
+                Object.entries(obj).sort(([,a], [,b]) => b - a)
+            );
+        };
+
+        return {
+            bySet: sortObject(breakdown.bySet),
+            byRarity: sortObject(breakdown.byRarity),
+            byElement: sortObject(breakdown.byElement),
+            byType: sortObject(breakdown.byType),
+            total: breakdown.total
+        };
+    }
+
+    /**
+     * Get collection value with breakdown for value tracking
+     * Enhanced version that includes breakdown data
+     */
+    getCollectionValueForTracking(collection, allCards) {
+        const baseValue = this.calculateCollectionValue(collection, allCards);
+        const breakdown = this.calculateValueBreakdown(collection, allCards);
+
+        return {
+            ...baseValue,
+            totalValue: parseFloat(baseValue.totalValue),
+            estimatedValue: parseFloat(baseValue.estimatedValue),
+            combinedValue: parseFloat(baseValue.combinedValue),
+            averageCardValue: parseFloat(baseValue.averageCardValue),
+            breakdown: breakdown
+        };
+    }
 }
 
 // Price Alerts Manager

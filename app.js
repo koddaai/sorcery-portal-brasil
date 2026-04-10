@@ -1946,7 +1946,16 @@ function findCardBySlug(slug) {
 // Handle deep link from URL hash
 function handleDeepLink() {
     const hash = window.location.hash;
+    const urlParams = new URLSearchParams(window.location.search);
 
+    // Check for profile deep link first (via query param)
+    const profileToken = urlParams.get('profile') || urlParams.get('u');
+    if (profileToken) {
+        loadPublicProfile(profileToken);
+        return;
+    }
+
+    // Handle card deep links (via hash)
     if (hash.startsWith('#card/')) {
         const slug = hash.replace('#card/', '');
         const result = findCardBySlug(slug);
@@ -1955,6 +1964,273 @@ function handleDeepLink() {
             // Open modal without updating hash (already set)
             openCardModal(result.card.name, false);
         }
+    }
+}
+
+// ============================================
+// PUBLIC PROFILE FUNCTIONS
+// ============================================
+
+// Load and display a public profile
+async function loadPublicProfile(identifier) {
+    showView('profile');
+
+    // Show loading state
+    const profileName = document.getElementById('public-profile-name');
+    const profileBio = document.getElementById('public-profile-bio');
+    const profileNotFound = document.getElementById('profile-not-found');
+    const statsSections = document.querySelectorAll('.profile-stat-card, .profile-section');
+
+    profileName.textContent = 'Carregando...';
+    profileBio.textContent = '';
+    profileNotFound.classList.add('hidden');
+    statsSections.forEach(s => s.style.display = '');
+
+    try {
+        // Fetch the public profile
+        const profile = await profileService.getPublicProfile(identifier);
+
+        if (!profile) {
+            // Profile not found or private
+            profileName.textContent = '';
+            profileNotFound.classList.remove('hidden');
+            statsSections.forEach(s => s.style.display = 'none');
+            lucide.createIcons();
+            return;
+        }
+
+        // Display profile info
+        profileName.textContent = profile.displayName;
+        profileBio.textContent = profile.bio || '';
+
+        // Fetch collection data
+        const collectionData = await profileService.getPublicCollectionData(profile.userId, profile.privacySettings);
+
+        if (collectionData) {
+            // Total cards
+            document.getElementById('profile-total-cards').textContent = collectionData.totalCards || 0;
+
+            // Completion percentage
+            if (profile.privacySettings.showCompletionStats && collectionData.completionPercent !== undefined) {
+                document.getElementById('profile-completion').textContent = collectionData.completionPercent + '%';
+                document.getElementById('profile-stat-completion').style.display = '';
+            } else {
+                document.getElementById('profile-stat-completion').style.display = 'none';
+            }
+
+            // Collection value
+            if (profile.privacySettings.showCollectionValue && collectionData.totalValue !== undefined) {
+                document.getElementById('profile-value').textContent = '$' + collectionData.totalValue.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                document.getElementById('profile-stat-value').style.display = '';
+            } else {
+                document.getElementById('profile-stat-value').style.display = 'none';
+            }
+
+            // Set completion
+            if (profile.privacySettings.showCompletionStats && collectionData.setCompletion) {
+                document.getElementById('profile-sets-section').style.display = '';
+                renderProfileSetProgress(collectionData.setCompletion);
+            } else {
+                document.getElementById('profile-sets-section').style.display = 'none';
+            }
+
+            // Top cards
+            if (profile.privacySettings.showTopCards && collectionData.topCards) {
+                document.getElementById('profile-top-cards-section').style.display = '';
+                renderProfileTopCards(collectionData.topCards);
+            } else {
+                document.getElementById('profile-top-cards-section').style.display = 'none';
+            }
+        }
+
+        // Decks count and list
+        if (profile.privacySettings.showDeckLists) {
+            const decks = await nocoDBService.getPublicDecks(profile.userId);
+            document.getElementById('profile-decks-count').textContent = decks.length;
+            document.getElementById('profile-stat-decks').style.display = '';
+            document.getElementById('profile-decks-section').style.display = '';
+            renderProfileDecks(decks);
+        } else {
+            document.getElementById('profile-stat-decks').style.display = 'none';
+            document.getElementById('profile-decks-section').style.display = 'none';
+        }
+
+        lucide.createIcons();
+
+    } catch (error) {
+        console.error('[Profile] Error loading public profile:', error);
+        profileName.textContent = '';
+        profileNotFound.classList.remove('hidden');
+        statsSections.forEach(s => s.style.display = 'none');
+        lucide.createIcons();
+    }
+}
+
+// Render set progress for public profile
+function renderProfileSetProgress(setCompletion) {
+    const container = document.getElementById('profile-sets-progress');
+    container.innerHTML = '';
+
+    for (const [setName, data] of Object.entries(setCompletion)) {
+        const item = document.createElement('div');
+        item.className = 'set-progress-item';
+        item.innerHTML = `
+            <div class="set-name">${setName}</div>
+            <div class="set-progress-bar">
+                <div class="progress-fill" style="width: ${data.percent}%"></div>
+            </div>
+            <div class="set-progress-stats">
+                <span>${data.owned}/${data.total}</span>
+                <span>${data.percent}%</span>
+            </div>
+        `;
+        container.appendChild(item);
+    }
+}
+
+// Render top cards for public profile
+function renderProfileTopCards(topCards) {
+    const container = document.getElementById('profile-top-cards');
+    container.innerHTML = '';
+
+    topCards.slice(0, 10).forEach((card, index) => {
+        const item = document.createElement('div');
+        item.className = 'top-card-item';
+        item.onclick = () => openCardModal(card.name);
+        item.innerHTML = `
+            <span class="top-card-rank">${index + 1}</span>
+            <div class="top-card-info">
+                <span class="top-card-name">${card.name}</span>
+            </div>
+            <span class="top-card-value">$${card.value.toFixed(2)}</span>
+        `;
+        container.appendChild(item);
+    });
+
+    if (topCards.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary);">Nenhum card com valor registrado</p>';
+    }
+}
+
+// Render public decks for public profile
+function renderProfileDecks(decks) {
+    const container = document.getElementById('profile-public-decks');
+    container.innerHTML = '';
+
+    if (decks.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary);">Nenhum deck publico</p>';
+        return;
+    }
+
+    decks.forEach(deck => {
+        const cards = JSON.parse(deck.cards_json || '[]');
+        const item = document.createElement('div');
+        item.className = 'public-deck-card';
+        item.innerHTML = `
+            <div class="public-deck-header">
+                <span class="public-deck-avatar">${deck.avatar || '🎴'}</span>
+                <span class="public-deck-name">${deck.deck_name}</span>
+            </div>
+            <div class="public-deck-stats">
+                <span>${cards.length} cards</span>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+// ============================================
+// PROFILE SETTINGS MODAL
+// ============================================
+
+// Open profile settings modal
+function openProfileSettings() {
+    if (!nocoDBService.isLoggedIn()) {
+        alert('Voce precisa estar logado para configurar seu perfil.');
+        return;
+    }
+
+    const modal = document.getElementById('profile-modal');
+    const profile = profileService.getProfile();
+
+    if (profile) {
+        // Fill in current values
+        document.getElementById('profile-display-name').value = profile.displayName || '';
+        document.getElementById('profile-bio').value = profile.bio || '';
+        document.getElementById('bio-char-count').textContent = (profile.bio || '').length;
+        document.getElementById('profile-is-public').checked = profile.isPublic || false;
+        document.getElementById('profile-show-value').checked = profile.privacySettings?.showCollectionValue ?? true;
+        document.getElementById('profile-show-completion').checked = profile.privacySettings?.showCompletionStats ?? true;
+        document.getElementById('profile-show-top-cards').checked = profile.privacySettings?.showTopCards ?? true;
+        document.getElementById('profile-show-decks').checked = profile.privacySettings?.showDeckLists ?? false;
+
+        // Set share URL
+        const shareUrl = profileService.getShareUrl();
+        document.getElementById('profile-share-url').value = shareUrl || '';
+        document.getElementById('profile-share-section').style.display = profile.isPublic ? '' : 'none';
+    }
+
+    modal.classList.remove('hidden');
+    lucide.createIcons();
+}
+
+// Save profile settings
+async function saveProfileSettings() {
+    const displayName = document.getElementById('profile-display-name').value.trim();
+    const bio = document.getElementById('profile-bio').value.trim();
+    const isPublic = document.getElementById('profile-is-public').checked;
+
+    const privacySettings = {
+        showCollectionValue: document.getElementById('profile-show-value').checked,
+        showCompletionStats: document.getElementById('profile-show-completion').checked,
+        showTopCards: document.getElementById('profile-show-top-cards').checked,
+        showDeckLists: document.getElementById('profile-show-decks').checked
+    };
+
+    profileService.updateProfile({
+        displayName: displayName,
+        bio: bio,
+        isPublic: isPublic
+    });
+
+    profileService.updatePrivacy(privacySettings);
+
+    // Sync to cloud
+    const synced = await profileService.syncProfileToCloud();
+    if (synced) {
+        console.log('[Profile] Settings synced to cloud');
+    }
+
+    // Update share URL visibility
+    document.getElementById('profile-share-section').style.display = isPublic ? '' : 'none';
+    document.getElementById('profile-share-url').value = profileService.getShareUrl() || '';
+
+    // Show success feedback
+    const btn = document.getElementById('save-profile-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i data-lucide="check"></i> Salvo!';
+    btn.style.background = 'var(--success)';
+    lucide.createIcons();
+
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+        lucide.createIcons();
+    }, 2000);
+}
+
+// Copy profile share URL
+async function copyProfileUrl() {
+    const success = await profileService.copyShareUrl();
+    const btn = document.getElementById('copy-profile-url');
+
+    if (success) {
+        btn.innerHTML = '<i data-lucide="check"></i>';
+        lucide.createIcons();
+        setTimeout(() => {
+            btn.innerHTML = '<i data-lucide="copy"></i>';
+            lucide.createIcons();
+        }, 2000);
     }
 }
 
@@ -3501,10 +3777,23 @@ function updateStatsWithPrices() {
             collectionObj[cardName] = { qty: 1 };
         });
 
-        const valueData = priceService.calculateCollectionValue(collectionObj, allCards);
+        // Use enhanced method for tracking if available
+        const valueData = typeof priceService.getCollectionValueForTracking === 'function'
+            ? priceService.getCollectionValueForTracking(collectionObj, allCards)
+            : priceService.calculateCollectionValue(collectionObj, allCards);
 
-        document.getElementById('collection-value').textContent = '$' + valueData.combinedValue;
-        document.getElementById('average-card-value').textContent = '$' + valueData.averageCardValue;
+        const combinedValue = parseFloat(valueData.combinedValue) || 0;
+        const avgValue = parseFloat(valueData.averageCardValue) || 0;
+
+        document.getElementById('collection-value').textContent = '$' + combinedValue.toFixed(2);
+        document.getElementById('average-card-value').textContent = '$' + avgValue.toFixed(2);
+
+        // BRL values
+        const brlRate = priceService.getBRLRate();
+        const brlValueEl = document.getElementById('collection-value-brl');
+        if (brlValueEl) {
+            brlValueEl.textContent = 'R$ ' + (combinedValue * brlRate).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        }
 
         // Calculate wishlist value
         let wishlistValue = 0;
@@ -3519,6 +3808,11 @@ function updateStatsWithPrices() {
 
         // Render most valuable cards in collection
         renderValuableCards(valueData.topCards);
+
+        // Value Tracking Integration
+        if (typeof valueTracker !== 'undefined') {
+            updateValueTracking(valueData, brlRate);
+        }
     }
 
     // Render achievements
@@ -3527,6 +3821,151 @@ function updateStatsWithPrices() {
     // Render investment analytics
     renderInvestmentAnalytics();
 }
+
+// Value Tracking Integration
+function updateValueTracking(valueData, brlRate) {
+    // Take a snapshot if needed
+    valueTracker.takeSnapshot(valueData, brlRate);
+
+    // Get current period from active button
+    const activePeriod = document.querySelector('.period-btn.active');
+    const days = activePeriod ? parseInt(activePeriod.dataset.period) : 7;
+
+    // Get trend data
+    const trend = valueTracker.getValueTrend(days);
+
+    // Update trend indicator
+    const trendIndicator = document.getElementById('value-trend-indicator');
+    const trendPercent = document.getElementById('value-trend-percent');
+
+    if (trendIndicator && trendPercent) {
+        trendIndicator.className = 'value-trend ' + trend.trend;
+
+        const icon = trend.trend === 'up' ? 'trending-up' : trend.trend === 'down' ? 'trending-down' : 'minus';
+        const sign = trend.changePercent >= 0 ? '+' : '';
+
+        trendIndicator.innerHTML = `
+            <i data-lucide="${icon}"></i>
+            <span>${sign}${trend.changePercent.toFixed(1)}%</span>
+        `;
+
+        // Reinitialize Lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
+    // Update change amount
+    const changeAmountEl = document.getElementById('value-change-amount');
+    const changePeriodEl = document.getElementById('value-change-period');
+
+    if (changeAmountEl) {
+        const sign = trend.change >= 0 ? '+' : '';
+        changeAmountEl.textContent = sign + '$' + trend.change.toFixed(2);
+        changeAmountEl.style.color = trend.trend === 'up' ? '#22c55e' : trend.trend === 'down' ? '#ef4444' : 'inherit';
+    }
+
+    if (changePeriodEl) {
+        changePeriodEl.textContent = `Change (${days}D)`;
+    }
+
+    // Render sparkline chart
+    renderValueSparkline(days);
+
+    // Check for price changes
+    renderPriceChanges();
+}
+
+// Render Value Sparkline Chart
+function renderValueSparkline(days = 7) {
+    const chartData = valueTracker.getChartData(days);
+
+    if (chartData.length < 2) {
+        // Not enough data yet
+        return;
+    }
+
+    const chartRenderer = new ValueChartRenderer('value-sparkline-chart');
+    chartRenderer.drawSparkline(chartData, {
+        color: '#d4af37',
+        fillColor: 'rgba(212, 175, 55, 0.1)',
+        lineWidth: 2
+    });
+}
+
+// Render Price Changes
+function renderPriceChanges() {
+    const changes = valueTracker.detectPriceChanges(0.20); // 20% threshold
+    const section = document.getElementById('price-alerts-section');
+    const list = document.getElementById('price-changes-list');
+
+    if (!section || !list) return;
+
+    if (changes.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+
+    section.style.display = 'block';
+
+    list.innerHTML = changes.slice(0, 5).map(change => `
+        <div class="price-change-item ${change.trend}">
+            <div class="price-change-card">
+                <span class="card-name">${change.name}</span>
+            </div>
+            <div class="price-change-values">
+                <span class="price-change-old">$${change.previousValue.toFixed(2)}</span>
+                <span class="price-change-new">$${change.currentValue.toFixed(2)}</span>
+                <span class="price-change-percent ${change.trend}">
+                    ${change.changePercent >= 0 ? '+' : ''}${change.changePercent.toFixed(1)}%
+                </span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Period selector event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const days = parseInt(this.dataset.period);
+            if (typeof valueTracker !== 'undefined') {
+                const trend = valueTracker.getValueTrend(days);
+
+                // Update trend indicator
+                const trendIndicator = document.getElementById('value-trend-indicator');
+                if (trendIndicator) {
+                    trendIndicator.className = 'value-trend ' + trend.trend;
+                    const icon = trend.trend === 'up' ? 'trending-up' : trend.trend === 'down' ? 'trending-down' : 'minus';
+                    const sign = trend.changePercent >= 0 ? '+' : '';
+                    trendIndicator.innerHTML = `
+                        <i data-lucide="${icon}"></i>
+                        <span>${sign}${trend.changePercent.toFixed(1)}%</span>
+                    `;
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }
+
+                // Update change amount
+                const changeAmountEl = document.getElementById('value-change-amount');
+                const changePeriodEl = document.getElementById('value-change-period');
+                if (changeAmountEl) {
+                    const sign = trend.change >= 0 ? '+' : '';
+                    changeAmountEl.textContent = sign + '$' + trend.change.toFixed(2);
+                    changeAmountEl.style.color = trend.trend === 'up' ? '#22c55e' : trend.trend === 'down' ? '#ef4444' : 'inherit';
+                }
+                if (changePeriodEl) {
+                    changePeriodEl.textContent = `Change (${days}D)`;
+                }
+
+                // Redraw chart
+                renderValueSparkline(days);
+            }
+        });
+    });
+});
 
 // Render Most Valuable Cards
 function renderValuableCards(topCards) {
@@ -3865,6 +4304,30 @@ function setupAuthEventListeners() {
         closeModal('photo-modal');
     });
 
+    // Profile modal close
+    document.querySelector('#profile-modal .close-modal')?.addEventListener('click', () => {
+        closeModal('profile-modal');
+    });
+
+    // Profile bio character counter
+    document.getElementById('profile-bio')?.addEventListener('input', (e) => {
+        document.getElementById('bio-char-count').textContent = e.target.value.length;
+    });
+
+    // Profile public toggle - show/hide share section
+    document.getElementById('profile-is-public')?.addEventListener('change', (e) => {
+        const shareSection = document.getElementById('profile-share-section');
+        if (shareSection) {
+            shareSection.style.display = e.target.checked ? '' : 'none';
+        }
+    });
+
+    // Save profile button
+    document.getElementById('save-profile-btn')?.addEventListener('click', saveProfileSettings);
+
+    // Copy profile URL button
+    document.getElementById('copy-profile-url')?.addEventListener('click', copyProfileUrl);
+
     // Login form
     document.getElementById('login-form')?.addEventListener('submit', handleLogin);
 
@@ -3932,11 +4395,19 @@ async function handleLogin(e) {
     const errorEl = document.getElementById('login-error');
 
     try {
-        await nocoDBService.login(email, password);
+        const user = await nocoDBService.login(email, password);
         closeModal('auth-modal');
         updateAuthUI();
         showNotification('Welcome back!');
-        
+
+        // Initialize profile
+        if (typeof profileService !== 'undefined') {
+            await profileService.loadProfileFromCloud(user.id);
+            if (!profileService.getProfile()) {
+                await profileService.initProfile(user.id, user.displayName);
+            }
+        }
+
         // Clear form
         e.target.reset();
     } catch (error) {
@@ -3963,11 +4434,16 @@ async function handleRegister(e) {
     }
 
     try {
-        await nocoDBService.register(email, password, name);
+        const user = await nocoDBService.register(email, password, name);
         closeModal('auth-modal');
         updateAuthUI();
         showNotification('Account created! Welcome to Sorcery Collection Manager!');
-        
+
+        // Initialize profile for new user
+        if (typeof profileService !== 'undefined') {
+            await profileService.initProfile(user.id, name);
+        }
+
         // Clear form
         e.target.reset();
     } catch (error) {

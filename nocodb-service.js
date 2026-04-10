@@ -16,7 +16,8 @@ class NocoDBService {
             wishlist: 'wishlist',
             tradeBinder: 'trade_binder',
             decks: 'decks',
-            cardPhotos: 'card_photos'
+            cardPhotos: 'card_photos',
+            profiles: 'profiles'
         };
 
         this.currentUser = null;
@@ -575,6 +576,122 @@ class NocoDBService {
     // Get current user
     getCurrentUser() {
         return this.currentUser;
+    }
+
+    // ==========================================
+    // PROFILE MANAGEMENT
+    // ==========================================
+
+    // Create a new profile
+    async createProfile(profileData) {
+        try {
+            const response = await fetch(this.getTableUrl(this.tables.profiles), {
+                method: 'POST',
+                headers: this.getHeaders(),
+                body: JSON.stringify(profileData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.msg || 'Failed to create profile');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Create profile error:', error);
+            throw error;
+        }
+    }
+
+    // Update an existing profile
+    async updateProfile(profileId, updateData) {
+        try {
+            const response = await fetch(`${this.getTableUrl(this.tables.profiles)}/${profileId}`, {
+                method: 'PATCH',
+                headers: this.getHeaders(),
+                body: JSON.stringify(updateData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.msg || 'Failed to update profile');
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Update profile error:', error);
+            throw error;
+        }
+    }
+
+    // Get profile by user ID
+    async getProfileByUserId(userId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.profiles)}?where=(user_id,eq,${userId})&limit=1`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            return data.list && data.list.length > 0 ? data.list[0] : null;
+        } catch (error) {
+            console.error('Get profile by user ID error:', error);
+            return null;
+        }
+    }
+
+    // Get profile by share token
+    async getProfileByToken(token) {
+        try {
+            const url = `${this.getTableUrl(this.tables.profiles)}?where=(share_token,eq,${token})&limit=1`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            return data.list && data.list.length > 0 ? data.list[0] : null;
+        } catch (error) {
+            console.error('Get profile by token error:', error);
+            return null;
+        }
+    }
+
+    // Get profile by slug
+    async getProfileBySlug(slug) {
+        try {
+            const url = `${this.getTableUrl(this.tables.profiles)}?where=(profile_slug,eq,${slug})&limit=1`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            return data.list && data.list.length > 0 ? data.list[0] : null;
+        } catch (error) {
+            console.error('Get profile by slug error:', error);
+            return null;
+        }
+    }
+
+    // Get public collection for a user (for public profiles)
+    async getPublicCollection(userId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.collection)}?where=(user_id,eq,${userId})&limit=1000`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            return data.list || [];
+        } catch (error) {
+            console.error('Get public collection error:', error);
+            return [];
+        }
+    }
+
+    // Get public decks for a user
+    async getPublicDecks(userId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.decks)}?where=(user_id,eq,${userId})&limit=100`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            return data.list || [];
+        } catch (error) {
+            console.error('Get public decks error:', error);
+            return [];
+        }
     }
 }
 

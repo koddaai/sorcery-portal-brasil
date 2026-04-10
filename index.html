@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=22">
+    <link rel="stylesheet" href="styles.css?v=24">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -67,6 +67,9 @@
                     <div id="user-logged-in" class="user-status hidden">
                         <button id="sync-btn" class="header-icon-btn" title="Sincronizar">
                             <i data-lucide="cloud"></i>
+                        </button>
+                        <button id="profile-settings-btn" class="header-icon-btn" title="Configuracoes de Perfil" onclick="openProfileSettings()">
+                            <i data-lucide="user-cog"></i>
                         </button>
                         <div class="user-avatar">
                             <span id="user-display-name"></span>
@@ -660,14 +663,36 @@
                     </div>
                 </div>
 
-                <!-- Collection Value Section -->
+                <!-- Collection Value Section with Trend -->
                 <div class="stats-breakdown value-section">
-                    <h3>Collection Value (Estimated)</h3>
-                    <p class="subtitle">Based on rarity estimates. Import real prices via CSV for accurate values.</p>
+                    <div class="section-header-flex">
+                        <div>
+                            <h3>Collection Value</h3>
+                            <p class="subtitle">Track your portfolio value over time</p>
+                        </div>
+                        <div class="period-selector">
+                            <button class="period-btn active" data-period="7">7D</button>
+                            <button class="period-btn" data-period="30">30D</button>
+                            <button class="period-btn" data-period="90">90D</button>
+                        </div>
+                    </div>
+
                     <div class="value-grid">
-                        <div class="value-card">
-                            <div class="value-amount" id="collection-value">$0.00</div>
+                        <div class="value-card value-card-main">
+                            <div class="value-header-row">
+                                <div class="value-amount-dual">
+                                    <span id="collection-value" class="value-usd">$0.00</span>
+                                    <span id="collection-value-brl" class="value-brl">R$ 0,00</span>
+                                </div>
+                                <div id="value-trend-indicator" class="value-trend neutral">
+                                    <i data-lucide="minus"></i>
+                                    <span id="value-trend-percent">0%</span>
+                                </div>
+                            </div>
                             <div class="value-label">Total Value</div>
+                            <div class="value-chart-container">
+                                <canvas id="value-sparkline-chart" width="280" height="60"></canvas>
+                            </div>
                         </div>
                         <div class="value-card">
                             <div class="value-amount" id="average-card-value">$0.00</div>
@@ -677,6 +702,22 @@
                             <div class="value-amount" id="wishlist-value">$0.00</div>
                             <div class="value-label">Wishlist Value</div>
                         </div>
+                        <div class="value-card">
+                            <div class="value-amount" id="value-change-amount">$0.00</div>
+                            <div class="value-label" id="value-change-period">Change (7D)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Changes Alert -->
+                <div class="stats-breakdown price-alerts-section" id="price-alerts-section" style="display: none;">
+                    <h3>
+                        <i data-lucide="bell"></i>
+                        Significant Price Changes
+                    </h3>
+                    <p class="subtitle">Cards with price changes above 20%</p>
+                    <div id="price-changes-list" class="price-changes-list">
+                        <!-- Will be populated by JS -->
                     </div>
                 </div>
 
@@ -1698,6 +1739,86 @@
                     <!-- Will be populated by news-service.js -->
                 </div>
             </section>
+
+            <!-- Public Profile View -->
+            <section id="profile-view" class="view">
+                <div class="profile-view-container">
+                    <!-- Profile Header -->
+                    <div class="profile-header-section">
+                        <div class="profile-avatar-large">
+                            <i data-lucide="user-circle"></i>
+                        </div>
+                        <div class="profile-header-info">
+                            <h1 id="public-profile-name">Loading...</h1>
+                            <p id="public-profile-bio" class="profile-bio"></p>
+                        </div>
+                    </div>
+
+                    <!-- Profile Stats Grid -->
+                    <div class="profile-stats-grid">
+                        <div class="profile-stat-card" id="profile-stat-collection">
+                            <div class="stat-icon"><i data-lucide="layers"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="profile-total-cards">0</span>
+                                <span class="stat-label">Cards na Colecao</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card" id="profile-stat-completion">
+                            <div class="stat-icon"><i data-lucide="pie-chart"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="profile-completion">0%</span>
+                                <span class="stat-label">Completo</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card" id="profile-stat-value">
+                            <div class="stat-icon"><i data-lucide="trending-up"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="profile-value">$0</span>
+                                <span class="stat-label">Valor Estimado</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card" id="profile-stat-decks">
+                            <div class="stat-icon"><i data-lucide="layout-grid"></i></div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="profile-decks-count">0</span>
+                                <span class="stat-label">Decks</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Set Completion Section -->
+                    <div class="profile-section" id="profile-sets-section">
+                        <h3><i data-lucide="book-open"></i> Progresso por Set</h3>
+                        <div id="profile-sets-progress" class="sets-progress-grid">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Top Cards Section -->
+                    <div class="profile-section" id="profile-top-cards-section">
+                        <h3><i data-lucide="crown"></i> Cards Mais Valiosos</h3>
+                        <div id="profile-top-cards" class="top-cards-list">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Decks Section -->
+                    <div class="profile-section" id="profile-decks-section">
+                        <h3><i data-lucide="layout-grid"></i> Decks Publicos</h3>
+                        <div id="profile-public-decks" class="public-decks-grid">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Profile Not Found -->
+                    <div id="profile-not-found" class="profile-not-found hidden">
+                        <i data-lucide="user-x"></i>
+                        <h2>Perfil nao encontrado</h2>
+                        <p>Este perfil nao existe ou foi configurado como privado.</p>
+                        <button class="btn primary" onclick="showView('home')">Voltar ao Inicio</button>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Card Detail Modal -->
@@ -1874,6 +1995,106 @@
             </div>
         </div>
 
+        <!-- Profile Settings Modal -->
+        <div id="profile-modal" class="modal hidden">
+            <div class="modal-content profile-modal-content">
+                <button class="close-modal">&times;</button>
+                <h3><i data-lucide="user-cog"></i> Configuracoes de Perfil</h3>
+                <p class="subtitle">Configure seu perfil publico e compartilhe sua colecao</p>
+
+                <!-- Profile Info Section -->
+                <div class="profile-form-section">
+                    <h4>Informacoes do Perfil</h4>
+                    <div class="form-group">
+                        <label for="profile-display-name">Nome de Exibicao</label>
+                        <input type="text" id="profile-display-name" maxlength="50" placeholder="Seu nome de colecionador">
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-bio">Bio</label>
+                        <textarea id="profile-bio" maxlength="500" rows="3" placeholder="Conte um pouco sobre voce e sua colecao..."></textarea>
+                        <span class="char-count"><span id="bio-char-count">0</span>/500</span>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings Section -->
+                <div class="profile-form-section">
+                    <h4>Configuracoes de Privacidade</h4>
+                    <div class="privacy-toggle-group">
+                        <div class="privacy-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="profile-is-public">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="toggle-info">
+                                <span class="toggle-label">Perfil Publico</span>
+                                <span class="toggle-desc">Permitir que outros vejam seu perfil atraves do link</span>
+                            </div>
+                        </div>
+                        <div class="privacy-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="profile-show-value" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="toggle-info">
+                                <span class="toggle-label">Mostrar Valor da Colecao</span>
+                                <span class="toggle-desc">Exibir o valor total estimado</span>
+                            </div>
+                        </div>
+                        <div class="privacy-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="profile-show-completion" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="toggle-info">
+                                <span class="toggle-label">Mostrar Estatisticas</span>
+                                <span class="toggle-desc">Exibir progresso e completude</span>
+                            </div>
+                        </div>
+                        <div class="privacy-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="profile-show-top-cards" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="toggle-info">
+                                <span class="toggle-label">Mostrar Top Cards</span>
+                                <span class="toggle-desc">Exibir cards mais valiosos</span>
+                            </div>
+                        </div>
+                        <div class="privacy-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="profile-show-decks">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <div class="toggle-info">
+                                <span class="toggle-label">Mostrar Decks</span>
+                                <span class="toggle-desc">Permitir visualizacao das suas listas de deck</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Section -->
+                <div class="profile-form-section" id="profile-share-section">
+                    <h4>Compartilhar Perfil</h4>
+                    <div class="share-url-container">
+                        <input type="text" id="profile-share-url" readonly>
+                        <button id="copy-profile-url" class="btn icon-btn" title="Copiar Link">
+                            <i data-lucide="copy"></i>
+                        </button>
+                    </div>
+                    <p class="share-hint">Seu link unico para compartilhar com amigos</p>
+                </div>
+
+                <!-- Save Button -->
+                <div class="profile-form-actions">
+                    <button id="save-profile-btn" class="btn primary btn-full">
+                        <i data-lucide="save"></i>
+                        Salvar Configuracoes
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Photo Upload Modal -->
         <div id="photo-modal" class="modal hidden">
             <div class="modal-content photo-modal-content">
@@ -2014,8 +2235,10 @@
     <script src="recommended-decks.js"></script>
     <script src="collection-tracker.js"></script>
     <script src="price-service.js"></script>
+    <script src="value-tracker.js"></script>
     <script src="gamification.js"></script>
     <script src="nocodb-service.js"></script>
+    <script src="profile-service.js"></script>
     <script src="card-scanner.js"></script>
     <script src="brazilian-stores.js"></script>
     <script src="i18n.js"></script>
@@ -2036,7 +2259,7 @@
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
-    <script src="app.js?v=19"></script>
+    <script src="app.js?v=21"></script>
     <script src="offline-manager.js"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
