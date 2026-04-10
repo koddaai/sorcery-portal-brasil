@@ -3984,15 +3984,14 @@ function copyDeckList(deck) {
 
 // Search card by name (opens card modal)
 function searchCardByName(cardName) {
-    // Close deck modal
-    document.getElementById('deck-detail-modal').classList.add('hidden');
-
-    // Find card in database
+    // Find card in database and open modal
     const card = allCards.find(c => c.name.toLowerCase() === cardName.toLowerCase());
     if (card) {
-        showCardDetails(card);
+        // Open card modal (deck modal stays behind)
+        openCardModal(card.name, false);
     } else {
-        // Navigate to cards view with search
+        // Card not found - close deck modal and search
+        document.getElementById('deck-detail-modal').classList.add('hidden');
         showView('cards');
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
