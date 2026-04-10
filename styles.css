@@ -9014,6 +9014,7 @@ body {
 /* Profile Modal */
 .profile-modal-content {
     max-width: 540px;
+    padding: var(--space-8) var(--space-6) var(--space-6);
 }
 
 .profile-modal-content h3 {
@@ -9021,19 +9022,23 @@ body {
     align-items: center;
     gap: var(--space-3);
     font-family: 'Cinzel', serif;
-    font-size: 1.5rem;
+    font-size: 1.375rem;
     color: var(--accent-gold);
     margin-bottom: var(--space-2);
+    margin-top: 0;
+    padding-right: var(--space-8);
 }
 
 .profile-modal-content h3 svg {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
 }
 
 .profile-modal-content > .subtitle {
     color: var(--text-secondary);
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-5);
+    font-size: 0.9375rem;
 }
 
 /* Profile Form Sections */

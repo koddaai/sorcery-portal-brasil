@@ -2118,7 +2118,7 @@ function renderProfileDecks(decks) {
     container.innerHTML = '';
 
     if (decks.length === 0) {
-        container.innerHTML = '<p style="color: var(--text-secondary);">Nenhum deck publico</p>';
+        container.innerHTML = '<p style="color: var(--text-secondary);">Nenhum deck público</p>';
         return;
     }
 
@@ -2146,7 +2146,7 @@ function renderProfileDecks(decks) {
 // Open profile settings modal
 function openProfileSettings() {
     if (!nocoDBService.isLoggedIn()) {
-        alert('Voce precisa estar logado para configurar seu perfil.');
+        alert('Você precisa estar logado para configurar seu perfil.');
         return;
     }
 

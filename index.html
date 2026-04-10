@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=24">
+    <link rel="stylesheet" href="styles.css?v=25">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -68,7 +68,7 @@
                         <button id="sync-btn" class="header-icon-btn" title="Sincronizar">
                             <i data-lucide="cloud"></i>
                         </button>
-                        <button id="profile-settings-btn" class="header-icon-btn" title="Configuracoes de Perfil" onclick="openProfileSettings()">
+                        <button id="profile-settings-btn" class="header-icon-btn" title="Configurações de Perfil" onclick="openProfileSettings()">
                             <i data-lucide="user-cog"></i>
                         </button>
                         <div class="user-avatar">
@@ -1760,7 +1760,7 @@
                             <div class="stat-icon"><i data-lucide="layers"></i></div>
                             <div class="stat-content">
                                 <span class="stat-value" id="profile-total-cards">0</span>
-                                <span class="stat-label">Cards na Colecao</span>
+                                <span class="stat-label">Cards na Coleção</span>
                             </div>
                         </div>
                         <div class="profile-stat-card" id="profile-stat-completion">
@@ -1804,7 +1804,7 @@
 
                     <!-- Decks Section -->
                     <div class="profile-section" id="profile-decks-section">
-                        <h3><i data-lucide="layout-grid"></i> Decks Publicos</h3>
+                        <h3><i data-lucide="layout-grid"></i> Decks Públicos</h3>
                         <div id="profile-public-decks" class="public-decks-grid">
                             <!-- Will be populated by JS -->
                         </div>
@@ -1813,8 +1813,8 @@
                     <!-- Profile Not Found -->
                     <div id="profile-not-found" class="profile-not-found hidden">
                         <i data-lucide="user-x"></i>
-                        <h2>Perfil nao encontrado</h2>
-                        <p>Este perfil nao existe ou foi configurado como privado.</p>
+                        <h2>Perfil não encontrado</h2>
+                        <p>Este perfil não existe ou foi configurado como privado.</p>
                         <button class="btn primary" onclick="showView('home')">Voltar ao Inicio</button>
                     </div>
                 </div>
@@ -1999,26 +1999,26 @@
         <div id="profile-modal" class="modal hidden">
             <div class="modal-content profile-modal-content">
                 <button class="close-modal">&times;</button>
-                <h3><i data-lucide="user-cog"></i> Configuracoes de Perfil</h3>
-                <p class="subtitle">Configure seu perfil publico e compartilhe sua colecao</p>
+                <h3><i data-lucide="user-cog"></i> Configurações de Perfil</h3>
+                <p class="subtitle">Configure seu perfil público e compartilhe sua coleção</p>
 
                 <!-- Profile Info Section -->
                 <div class="profile-form-section">
-                    <h4>Informacoes do Perfil</h4>
+                    <h4>Informações do Perfil</h4>
                     <div class="form-group">
-                        <label for="profile-display-name">Nome de Exibicao</label>
+                        <label for="profile-display-name">Nome de Exibição</label>
                         <input type="text" id="profile-display-name" maxlength="50" placeholder="Seu nome de colecionador">
                     </div>
                     <div class="form-group">
                         <label for="profile-bio">Bio</label>
-                        <textarea id="profile-bio" maxlength="500" rows="3" placeholder="Conte um pouco sobre voce e sua colecao..."></textarea>
+                        <textarea id="profile-bio" maxlength="500" rows="3" placeholder="Conte um pouco sobre você e sua coleção..."></textarea>
                         <span class="char-count"><span id="bio-char-count">0</span>/500</span>
                     </div>
                 </div>
 
                 <!-- Privacy Settings Section -->
                 <div class="profile-form-section">
-                    <h4>Configuracoes de Privacidade</h4>
+                    <h4>Configurações de Privacidade</h4>
                     <div class="privacy-toggle-group">
                         <div class="privacy-toggle">
                             <label class="toggle-switch">
@@ -2026,8 +2026,8 @@
                                 <span class="toggle-slider"></span>
                             </label>
                             <div class="toggle-info">
-                                <span class="toggle-label">Perfil Publico</span>
-                                <span class="toggle-desc">Permitir que outros vejam seu perfil atraves do link</span>
+                                <span class="toggle-label">Perfil Público</span>
+                                <span class="toggle-desc">Permitir que outros vejam seu perfil através do link</span>
                             </div>
                         </div>
                         <div class="privacy-toggle">
@@ -2036,7 +2036,7 @@
                                 <span class="toggle-slider"></span>
                             </label>
                             <div class="toggle-info">
-                                <span class="toggle-label">Mostrar Valor da Colecao</span>
+                                <span class="toggle-label">Mostrar Valor da Coleção</span>
                                 <span class="toggle-desc">Exibir o valor total estimado</span>
                             </div>
                         </div>
@@ -2046,7 +2046,7 @@
                                 <span class="toggle-slider"></span>
                             </label>
                             <div class="toggle-info">
-                                <span class="toggle-label">Mostrar Estatisticas</span>
+                                <span class="toggle-label">Mostrar Estatísticas</span>
                                 <span class="toggle-desc">Exibir progresso e completude</span>
                             </div>
                         </div>
@@ -2067,7 +2067,7 @@
                             </label>
                             <div class="toggle-info">
                                 <span class="toggle-label">Mostrar Decks</span>
-                                <span class="toggle-desc">Permitir visualizacao das suas listas de deck</span>
+                                <span class="toggle-desc">Permitir visualização das suas listas de deck</span>
                             </div>
                         </div>
                     </div>
@@ -2082,14 +2082,14 @@
                             <i data-lucide="copy"></i>
                         </button>
                     </div>
-                    <p class="share-hint">Seu link unico para compartilhar com amigos</p>
+                    <p class="share-hint">Seu link único para compartilhar com amigos</p>
                 </div>
 
                 <!-- Save Button -->
                 <div class="profile-form-actions">
                     <button id="save-profile-btn" class="btn primary btn-full">
                         <i data-lucide="save"></i>
-                        Salvar Configuracoes
+                        Salvar Configurações
                     </button>
                 </div>
             </div>
@@ -2259,7 +2259,7 @@
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
-    <script src="app.js?v=21"></script>
+    <script src="app.js?v=22"></script>
     <script src="offline-manager.js"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
@@ -2311,7 +2311,7 @@
     <!-- Offline Indicator (shows when connection is lost) -->
     <div id="offline-indicator" class="offline-indicator hidden">
         <i data-lucide="wifi-off"></i>
-        <span>Sem conexao</span>
+        <span>Sem conexão</span>
     </div>
 </body>
 </html>
