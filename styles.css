@@ -7984,11 +7984,16 @@ body {
     position: relative;
 }
 
-.primer-content {
+.guides-content .primer-content {
     display: none;
 }
 
-.primer-content.active {
+.guides-content .primer-content.active {
+    display: block;
+}
+
+/* Primer in deck detail modal - always visible when section is shown */
+.deck-primer-section .primer-content {
     display: block;
 }
 

@@ -602,6 +602,194 @@ const DECK_GUIDES = {
                 { deck: "Mirror", difficulty: "Habilidade", winrate: "50%", tips: "Quem resolver Kraken primeiro ganha." }
             ],
             budgetVersion: "Diluvian Kraken é essencial. Economize nas lands - mono-Water pode usar só básicas."
+        },
+        {
+            id: "dank-magic",
+            name: "Dank Magic (Necromancer Combo)",
+            tier: "S",
+            elements: ["Air", "Earth"],
+            avatar: "Necromancer",
+            difficulty: "Alto",
+            playstyle: "Combo-Midrange",
+            description: "Deck campeão do SorceryCon 2026. Combina recursão de Necromancer com criaturas value de Air/Earth.",
+            overview: `
+                <p><strong>Dank Magic</strong> é o deck que venceu o maior torneio de Sorcery até hoje. A estratégia combina a habilidade do Necromancer de trazer criaturas do cemitério com o poder de Air e Earth.</p>
+                <p>O nome "Dank" vem do estilo de jogo - húmido e sombrio, usando o cemitério como segunda mão.</p>
+            `,
+            keyCards: [
+                { name: "Grim Reaper", copies: 4, role: "Core - Finisher evasivo recursivo" },
+                { name: "Devil's Egg", copies: 4, role: "Core - Value engine" },
+                { name: "Skeleton Army", copies: 4, role: "Core - Go-wide recursivo" },
+                { name: "Raise Dead", copies: 4, role: "Core - Recursão" },
+                { name: "Phase Assassin", copies: 3, role: "Core - Evasão e remoção" },
+                { name: "Bone Dragon", copies: 2, role: "Bomba - Finisher aéreo" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Desenvolver Sites. Devil's Egg e criaturas small. Encher o cemitério.",
+                mid: "Turnos 4-6: Necromancer ability. Raise Dead em targets de valor. Skeleton Army para pressão.",
+                late: "Turnos 7+: Loop de recursão. Grim Reaper e Bone Dragon fecham o jogo."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3 lands (ambos elementos) + recursão + ameaça = KEEP</li>
+                    <li>2 lands + Devil's Egg + curva = KEEP</li>
+                    <li>3 lands + Grim Reaper + interação = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Só recursão sem targets = MULLIGAN</li>
+                    <li>Só um elemento = geralmente MULLIGAN</li>
+                    <li>Mão muito lenta sem early game = MULLIGAN vs aggro</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Fury Road", difficulty: "Equilibrado", winrate: "50%", tips: "Skeleton Army bloqueia bem. Sobreviva até o mid game." },
+                { deck: "Water Control", difficulty: "Favorável", winrate: "60%", tips: "Recursão ignora counters. Pressione com evasivos." },
+                { deck: "Air Frog", difficulty: "Equilibrado", winrate: "50%", tips: "Ambos têm evasão. Quem tiver mais card advantage ganha." }
+            ],
+            budgetVersion: "Bone Dragon pode ser substituído por mais Skeleton Army. Grim Reaper é essencial."
+        },
+        {
+            id: "fire-burn",
+            name: "Fire Burn (Mono-Fire Aggro)",
+            tier: "A",
+            elements: ["Fire"],
+            avatar: "Flamecaller",
+            difficulty: "Fácil",
+            playstyle: "Aggro-Burn",
+            description: "O deck mais direto do formato. Criaturas agressivas + burn = oponente morto rapidamente.",
+            overview: `
+                <p><strong>Fire Burn</strong> é o deck perfeito para quem quer jogos rápidos e decisivos. A filosofia é simples: se move, queime. Se não move, queime mais rápido.</p>
+                <p>Mono-Fire significa consistência máxima - você nunca terá problemas de mana.</p>
+            `,
+            keyCards: [
+                { name: "Lightning Bolt", copies: 4, role: "Core - O melhor burn do jogo" },
+                { name: "Fireball", copies: 4, role: "Core - Flexível: criatura ou face" },
+                { name: "Colicky Dragonettes", copies: 4, role: "Core - 2-drop agressivo" },
+                { name: "Blaze", copies: 4, role: "Core - Mobilidade + dano" },
+                { name: "Flame Imp", copies: 4, role: "Core - 1-drop com dano" },
+                { name: "Fire Elemental", copies: 3, role: "Flex - Corpo grande com haste" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Criaturas agressivas. Atacar SEMPRE. Bolt em blockers.",
+                mid: "Turnos 4-5: Calcular dano total. Fireball fecha jogos. Blaze para últimos pontos.",
+                late: "Turnos 6+: Se chegou aqui, provavelmente perdeu. All-in no burn restante."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>2-3 lands + 1-drop + burn = KEEP sempre</li>
+                    <li>2 lands + curva agressiva = KEEP</li>
+                    <li>3 lands + muito burn = KEEP (vai fechar)</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>4+ lands = MULLIGAN (deck não precisa)</li>
+                    <li>Só burn sem criaturas = MULLIGAN (precisa de clock)</li>
+                    <li>Mão lenta = MULLIGAN (você é o aggro)</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Water Control", difficulty: "Favorável", winrate: "60%", tips: "Rápido demais para eles. Burn ignora blockers." },
+                { deck: "Earth Giants", difficulty: "Desfavorável", winrate: "40%", tips: "Criaturas deles são grandes demais. Corra." },
+                { deck: "Fury Road", difficulty: "Equilibrado", winrate: "50%", tips: "Race! Quem for mais rápido ganha." }
+            ],
+            budgetVersion: "Este deck já é budget! Lightning Bolt e Fireball são as únicas cartas 'caras'."
+        },
+        {
+            id: "archimago",
+            name: "Archimago Spellslinger",
+            tier: "A",
+            elements: ["Air", "Fire"],
+            avatar: "Archimago",
+            difficulty: "Alto",
+            playstyle: "Tempo-Control",
+            description: "Deck técnico que usa a habilidade do Archimago para ganhar vantagem com cada spell castada.",
+            overview: `
+                <p><strong>Archimago</strong> é o deck para jogadores que amam spells. Cada magia que você joga ativa a habilidade do avatar, criando vantagem incremental.</p>
+                <p>Air oferece evasão e card draw, Fire oferece remoção e dano direto. Juntos, controlam o jogo.</p>
+            `,
+            keyCards: [
+                { name: "Lightning Bolt", copies: 4, role: "Core - Remoção eficiente" },
+                { name: "Chain Lightning", copies: 4, role: "Core - Multi-target" },
+                { name: "Frost Bolt", copies: 4, role: "Core - Tempo" },
+                { name: "Grim Reaper", copies: 4, role: "Core - Finisher evasivo" },
+                { name: "Phase Assassin", copies: 3, role: "Core - Evasão + utilidade" },
+                { name: "Fireball", copies: 3, role: "Flex - Finisher" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Sites de ambos elementos. Remover ameaças com bolts. Archimago triggers.",
+                mid: "Turnos 4-6: Criaturas evasivas. Manter controle do board. Acumular vantagem.",
+                late: "Turnos 7+: Fechar com evasivos ou burn direto. Archimago gerou valor suficiente."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3 lands (ambos elementos) + spells mix = KEEP</li>
+                    <li>2 lands + remoção + ameaça = KEEP</li>
+                    <li>3 lands + Grim Reaper + proteção = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Só um elemento = MULLIGAN</li>
+                    <li>Só criaturas sem spells = MULLIGAN (perde sinergia)</li>
+                    <li>Só spells sem win condition = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Fury Road", difficulty: "Equilibrado", winrate: "50%", tips: "Removal pesado early. Evasivos fecham." },
+                { deck: "Water Control", difficulty: "Desfavorável", winrate: "45%", tips: "Eles têm mais controle. Seja proativo." },
+                { deck: "Earth Giants", difficulty: "Favorável", winrate: "60%", tips: "Evasivos ignoram blockers. Bolt nas ameaças." }
+            ],
+            budgetVersion: "Grim Reaper é insubstituível. Chain Lightning pode virar mais Frost Bolt."
+        },
+        {
+            id: "iron-savior",
+            name: "Iron Savior",
+            tier: "S",
+            elements: ["Fire", "Water"],
+            avatar: "Savior",
+            difficulty: "Médio",
+            playstyle: "Midrange-Tempo",
+            description: "Deck campeão do Portland SCG Con. Combina a proteção do Savior com a agressividade de Fire e controle de Water.",
+            overview: `
+                <p><strong>Iron Savior</strong> é um deck midrange que usa o Savior para proteger suas criaturas enquanto pressiona o oponente.</p>
+                <p>A combinação Fire/Water dá acesso a burn E freeze, controlando o ritmo do jogo perfeitamente.</p>
+            `,
+            keyCards: [
+                { name: "Lightning Bolt", copies: 4, role: "Core - Remoção/Burn" },
+                { name: "Frost Bolt", copies: 4, role: "Core - Tempo" },
+                { name: "Colicky Dragonettes", copies: 4, role: "Core - Pressão early" },
+                { name: "Skirmishers of Mu", copies: 4, role: "Core - Value midrange" },
+                { name: "Fire Elemental", copies: 3, role: "Core - Ameaça resiliente" },
+                { name: "Geyser", copies: 2, role: "Flex - Board control" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Criaturas eficientes. Bolt/Frost em ameaças. Estabelecer board.",
+                mid: "Turnos 4-6: Savior protege ameaças. Skirmishers geram valor. Pressão constante.",
+                late: "Turnos 7+: Burn fecha jogos. Savior mantém criaturas vivas para atacar."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3 lands + mix de criaturas e spells = KEEP</li>
+                    <li>2 lands + curva eficiente = KEEP</li>
+                    <li>3 lands + Skirmishers + interação = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Só um elemento de mana = MULLIGAN</li>
+                    <li>Muita interação sem ameaças = MULLIGAN</li>
+                    <li>5+ lands = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Fury Road", difficulty: "Favorável", winrate: "55%", tips: "Savior protege. Frost Bolt atrasa eles." },
+                { deck: "Water Control", difficulty: "Equilibrado", winrate: "50%", tips: "Pressione early. Não deixe estabilizar." },
+                { deck: "Air Frog", difficulty: "Equilibrado", winrate: "50%", tips: "Ambos têm tempo plays. Jogo de skill." }
+            ],
+            budgetVersion: "Skirmishers of Mu é key. Fire Elemental pode ser Flame Imp extra."
         }
     ],
 
