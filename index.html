@@ -89,6 +89,10 @@
                         <i data-lucide="layers"></i>
                         <span>Cards</span>
                     </button>
+                    <button class="nav-btn" data-view="art">
+                        <i data-lucide="brush"></i>
+                        <span>Artistas</span>
+                    </button>
                     <button class="nav-btn" data-view="collection">
                         <i data-lucide="folder-heart"></i>
                         <span>Coleção</span>
@@ -97,43 +101,10 @@
                         <i data-lucide="layout-grid"></i>
                         <span>Decks</span>
                     </button>
-                    <button class="nav-btn" data-view="art">
-                        <i data-lucide="brush"></i>
-                        <span>Arte</span>
-                    </button>
                 </div>
 
                 <!-- Dropdown Menus -->
                 <div class="nav-dropdowns">
-                    <!-- Ferramentas Dropdown -->
-                    <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger">
-                            <i data-lucide="wrench"></i>
-                            <span>Ferramentas</span>
-                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
-                        </button>
-                        <div class="nav-dropdown-menu">
-                            <button class="nav-dropdown-item" data-view="wishlist">
-                                <i data-lucide="heart"></i> Wishlist
-                            </button>
-                            <button class="nav-dropdown-item" data-view="trade">
-                                <i data-lucide="repeat"></i> Trade Binder
-                            </button>
-                            <button class="nav-dropdown-item" data-view="precons">
-                                <i data-lucide="package"></i> Precons
-                            </button>
-                            <button class="nav-dropdown-item" data-view="stats">
-                                <i data-lucide="bar-chart-3"></i> Estatísticas
-                            </button>
-                            <button class="nav-dropdown-item" data-view="dust">
-                                <i data-lucide="sparkles"></i> Dust Tracker
-                            </button>
-                            <button class="nav-dropdown-item" data-view="promos">
-                                <i data-lucide="gift"></i> Promos
-                            </button>
-                        </div>
-                    </div>
-
                     <!-- Aprender Dropdown -->
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-trigger">
@@ -163,6 +134,35 @@
                         </div>
                     </div>
 
+                    <!-- Ferramentas Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="nav-dropdown-trigger">
+                            <i data-lucide="wrench"></i>
+                            <span>Ferramentas</span>
+                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+                        </button>
+                        <div class="nav-dropdown-menu">
+                            <button class="nav-dropdown-item" data-view="wishlist">
+                                <i data-lucide="heart"></i> Wishlist
+                            </button>
+                            <button class="nav-dropdown-item" data-view="trade">
+                                <i data-lucide="repeat"></i> Trade Binder
+                            </button>
+                            <button class="nav-dropdown-item" data-view="precons">
+                                <i data-lucide="package"></i> Precons
+                            </button>
+                            <button class="nav-dropdown-item" data-view="stats">
+                                <i data-lucide="bar-chart-3"></i> Estatísticas
+                            </button>
+                            <button class="nav-dropdown-item" data-view="dust">
+                                <i data-lucide="sparkles"></i> Dust Tracker
+                            </button>
+                            <button class="nav-dropdown-item" data-view="promos">
+                                <i data-lucide="gift"></i> Promos
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Comunidade Dropdown -->
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-trigger">
@@ -187,7 +187,7 @@
                                 <i data-lucide="calendar"></i> Timeline
                             </button>
                             <button class="nav-dropdown-item" data-view="news">
-                                <i data-lucide="newspaper"></i> Noticias
+                                <i data-lucide="newspaper"></i> Notícias
                             </button>
                         </div>
                     </div>
@@ -213,7 +213,7 @@
                         <div class="hero-actions">
                             <button class="btn primary btn-lg" onclick="showView('cards')">
                                 <i data-lucide="layers"></i>
-                                <span data-i18n="exploreCards">Explorar Cards</span>
+                                <span data-i18n="exploreCards">Conheça as Cartas</span>
                             </button>
                             <button class="btn btn-lg ghost" onclick="showView('rulebook')">
                                 <i data-lucide="book-open"></i>

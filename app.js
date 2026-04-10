@@ -447,6 +447,11 @@ function setupEventListeners() {
         toggleQRCode(cardName);
     });
 
+    // Deck Builder buttons
+    document.getElementById('save-deck-btn')?.addEventListener('click', saveDeckFromBuilder);
+    document.getElementById('cancel-deck-btn')?.addEventListener('click', closeDeckBuilder);
+    document.querySelector('#deck-builder-modal .close-modal')?.addEventListener('click', closeDeckBuilder);
+
     // Trade binder search
     document.getElementById('trade-search')?.addEventListener('input', debounce(renderTradeBinder, 300));
 
@@ -3201,6 +3206,52 @@ function renderDecks() {
 // Open Deck Builder
 function openDeckBuilder() {
     document.getElementById('deck-builder-modal').classList.remove('hidden');
+}
+
+// Close Deck Builder
+function closeDeckBuilder() {
+    document.getElementById('deck-builder-modal').classList.add('hidden');
+    // Clear the builder
+    document.getElementById('deck-name-input').value = '';
+    document.getElementById('deck-spellbook').innerHTML = '';
+    document.getElementById('deck-atlas').innerHTML = '';
+    document.getElementById('spellbook-count').textContent = '0';
+    document.getElementById('atlas-count').textContent = '0';
+    document.getElementById('deck-total-value').textContent = '$0.00';
+}
+
+// Save Deck from Builder
+function saveDeckFromBuilder() {
+    const deck = getCurrentDeckFromBuilder();
+
+    if (!deck.name || deck.name === 'Untitled') {
+        alert('Por favor, dê um nome ao seu deck.');
+        return;
+    }
+
+    if (deck.spellbook.length === 0 && deck.atlas.length === 0) {
+        alert('Seu deck está vazio. Adicione algumas cartas primeiro.');
+        return;
+    }
+
+    // Check if we're editing an existing deck
+    const existingIndex = decks.findIndex(d => d.name === deck.name);
+
+    if (existingIndex >= 0) {
+        decks[existingIndex] = deck;
+    } else {
+        decks.push(deck);
+    }
+
+    // Save to localStorage
+    saveLocalData();
+
+    // Close modal and refresh deck list
+    closeDeckBuilder();
+    renderDecks();
+
+    // Show success message
+    console.log('[Decks] Deck saved:', deck.name);
 }
 
 // View Deck Details

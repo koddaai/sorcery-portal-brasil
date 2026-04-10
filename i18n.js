@@ -22,7 +22,7 @@ const translations = {
 
         // Home Page
         heroSubtitle: 'O jogo de cartas colecionáveis com arte pintada à mão por mestres da fantasia',
-        exploreCards: 'Explorar Cards',
+        exploreCards: 'Conheça as Cartas',
         howToPlay: 'Como Jogar',
         gothicExpansion: 'Expansão Gothic Disponível',
         featureCollection: 'Gerencie sua Coleção',
@@ -183,7 +183,7 @@ const translations = {
 
         // Home Page
         heroSubtitle: 'The collectible card game with hand-painted art by fantasy masters',
-        exploreCards: 'Explore Cards',
+        exploreCards: 'Discover the Cards',
         howToPlay: 'How to Play',
         gothicExpansion: 'Gothic Expansion Available',
         featureCollection: 'Manage Your Collection',
@@ -344,7 +344,7 @@ const translations = {
 
         // Home Page
         heroSubtitle: 'El juego de cartas coleccionables con arte pintado a mano por maestros de la fantasía',
-        exploreCards: 'Explorar Cartas',
+        exploreCards: 'Conoce las Cartas',
         howToPlay: 'Cómo Jugar',
         gothicExpansion: 'Expansión Gothic Disponible',
         featureCollection: 'Gestiona tu Colección',
