@@ -11092,6 +11092,30 @@ input:checked + .toggle-slider:before {
     color: var(--accent-gold);
 }
 
+/* Filter Legend */
+.filter-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-subtle);
+}
+
+.filter-legend span {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+.filter-legend svg {
+    width: 12px;
+    height: 12px;
+    opacity: 0.7;
+}
+
 /* Results Info */
 .deck-results-info {
     display: flex;
@@ -11690,6 +11714,201 @@ input:checked + .toggle-slider:before {
     color: var(--accent-gold);
     font-weight: 500;
     min-width: 100px;
+}
+
+/* Primer Section */
+.deck-primer-section {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-top: var(--space-4);
+    border: 1px solid var(--accent-gold);
+    box-shadow: var(--shadow-glow);
+}
+
+.deck-primer-section h3 {
+    color: var(--accent-gold);
+}
+
+.primer-content {
+    margin-top: var(--space-4);
+}
+
+.primer-overview {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-4);
+}
+
+.primer-overview p {
+    margin-bottom: var(--space-2);
+}
+
+.primer-subsection {
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.primer-subsection h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+}
+
+.primer-subsection h4 svg {
+    width: 16px;
+    height: 16px;
+    color: var(--accent-gold);
+}
+
+/* Key Cards List */
+.key-cards-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+}
+
+.key-cards-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-surface-3);
+    border-radius: var(--radius-sm);
+}
+
+.key-card-copies {
+    color: var(--accent-gold);
+    font-weight: 600;
+    min-width: 30px;
+}
+
+.key-card-name {
+    color: var(--text-primary);
+    cursor: pointer;
+    flex: 1;
+}
+
+.key-card-name:hover {
+    color: var(--accent-gold);
+    text-decoration: underline;
+}
+
+.key-card-role {
+    color: var(--text-tertiary);
+    font-size: 0.8rem;
+}
+
+/* Gameplan */
+.gameplan-phases {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.gameplan-phase {
+    padding: var(--space-3);
+    background: var(--bg-surface-3);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-gold);
+}
+
+.phase-label {
+    display: inline-block;
+    font-weight: 600;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-1);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gameplan-phase p {
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Mulligan Guide */
+.mulligan-guide {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.mulligan-guide h5 {
+    color: var(--text-primary);
+    margin: var(--space-3) 0 var(--space-2);
+    font-size: 0.9rem;
+}
+
+.mulligan-guide ul {
+    margin: 0 0 var(--space-2);
+    padding-left: var(--space-4);
+}
+
+.mulligan-guide li {
+    margin-bottom: var(--space-1);
+}
+
+/* Matchups */
+.matchups-list {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.matchup-item {
+    padding: var(--space-3);
+    background: var(--bg-surface-3);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--text-tertiary);
+}
+
+.matchup-item.favorável {
+    border-color: var(--success);
+}
+
+.matchup-item.equilibrado {
+    border-color: var(--warning);
+}
+
+.matchup-item.desfavorável {
+    border-color: var(--error);
+}
+
+.matchup-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+}
+
+.matchup-deck {
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.matchup-difficulty {
+    font-size: 0.75rem;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.1);
+}
+
+.matchup-winrate {
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+.matchup-tips {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
 }
 
 /* Actions */

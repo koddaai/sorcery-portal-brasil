@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=30">
+    <link rel="stylesheet" href="styles.css?v=31">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -634,18 +634,28 @@
                         <div class="filter-group">
                             <label><i data-lucide="filter"></i> Filtros</label>
                             <div class="quick-filters">
-                                <button class="quick-filter-btn" data-filter="precon" title="Decks Pré-Construídos">
+                                <button class="quick-filter-btn" data-filter="precon" title="Decks Pré-Construídos Oficiais">
                                     <i data-lucide="package"></i> Precon
                                 </button>
-                                <button class="quick-filter-btn" data-filter="beginner" title="Bom para Iniciantes">
+                                <button class="quick-filter-btn" data-filter="beginner" title="Recomendado para Iniciantes">
                                     <i data-lucide="sparkles"></i> Iniciante
                                 </button>
-                                <button class="quick-filter-btn" data-filter="tournament" title="Campeões de Torneio">
+                                <button class="quick-filter-btn" data-filter="tournament" title="Vencedores de Torneios">
                                     <i data-lucide="trophy"></i> Torneio
                                 </button>
-                                <button class="quick-filter-btn" data-filter="community" title="Decks da Comunidade">
+                                <button class="quick-filter-btn" data-filter="community" title="Criados pela Comunidade">
                                     <i data-lucide="users"></i> Comunidade
                                 </button>
+                                <button class="quick-filter-btn" data-filter="primer" title="Com Guia Detalhado">
+                                    <i data-lucide="book-open"></i> Primer
+                                </button>
+                            </div>
+                            <div class="filter-legend">
+                                <span><i data-lucide="package"></i> Precon: Decks oficiais das caixas</span>
+                                <span><i data-lucide="sparkles"></i> Iniciante: Facil de aprender</span>
+                                <span><i data-lucide="trophy"></i> Torneio: Top em campeonatos</span>
+                                <span><i data-lucide="users"></i> Comunidade: Criados por jogadores</span>
+                                <span><i data-lucide="book-open"></i> Primer: Com guia completo</span>
                             </div>
                         </div>
                     </div>
@@ -2178,6 +2188,34 @@
                     <ul id="deck-detail-changelog"></ul>
                 </div>
 
+                <!-- Primer Section -->
+                <div class="deck-detail-section deck-primer-section" id="deck-detail-primer-section" style="display: none;">
+                    <h3><i data-lucide="book-open"></i> Guia do Deck (Primer)</h3>
+                    <div class="primer-content">
+                        <div class="primer-overview" id="primer-overview"></div>
+
+                        <div class="primer-subsection">
+                            <h4><i data-lucide="target"></i> Key Cards</h4>
+                            <ul id="primer-key-cards" class="key-cards-list"></ul>
+                        </div>
+
+                        <div class="primer-subsection">
+                            <h4><i data-lucide="calendar"></i> Gameplan</h4>
+                            <div class="gameplan-phases" id="primer-gameplan"></div>
+                        </div>
+
+                        <div class="primer-subsection">
+                            <h4><i data-lucide="shuffle"></i> Mulligan Guide</h4>
+                            <div id="primer-mulligan" class="mulligan-guide"></div>
+                        </div>
+
+                        <div class="primer-subsection">
+                            <h4><i data-lucide="swords"></i> Matchups</h4>
+                            <div id="primer-matchups" class="matchups-list"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="deck-detail-actions">
                     <a id="deck-detail-external-link" href="#" target="_blank" class="btn btn-primary">
                         <i data-lucide="external-link"></i> Ver no Curiosa.io
@@ -2537,7 +2575,7 @@
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
-    <script src="app.js?v=28"></script>
+    <script src="app.js?v=29"></script>
     <script src="offline-manager.js"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

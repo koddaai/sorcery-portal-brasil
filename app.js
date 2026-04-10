@@ -3805,7 +3805,8 @@ const deckBrowserState = {
     preconOnly: false,
     beginnerOnly: false,
     tournamentOnly: false,
-    communityOnly: false
+    communityOnly: false,
+    primerOnly: false
 };
 
 // Get all decks combined
@@ -3879,6 +3880,10 @@ function filterDecks(decks) {
         }
 
         if (deckBrowserState.communityOnly && deck.isPrecon) {
+            return false;
+        }
+
+        if (deckBrowserState.primerOnly && !deck.primer) {
             return false;
         }
 
@@ -4101,6 +4106,77 @@ function openDeckDetail(deckId) {
         `).join('');
     } else {
         changelogSection.style.display = 'none';
+    }
+
+    // Primer Section
+    const primerSection = document.getElementById('deck-detail-primer-section');
+    if (deck.primer && typeof DECK_GUIDES !== 'undefined' && DECK_GUIDES.deckPrimers) {
+        const primer = DECK_GUIDES.deckPrimers.find(p => p.id === deck.primer);
+        if (primer) {
+            primerSection.style.display = 'block';
+
+            // Overview
+            document.getElementById('primer-overview').innerHTML = primer.overview || '';
+
+            // Key Cards
+            const keyCardsEl = document.getElementById('primer-key-cards');
+            if (primer.keyCards && primer.keyCards.length > 0) {
+                keyCardsEl.innerHTML = primer.keyCards.map(card => `
+                    <li>
+                        <span class="key-card-copies">${card.copies}x</span>
+                        <span class="key-card-name" onclick="searchCardByName('${card.name.replace(/'/g, "\\'")}')">${card.name}</span>
+                        <span class="key-card-role">${card.role}</span>
+                    </li>
+                `).join('');
+            } else {
+                keyCardsEl.innerHTML = '';
+            }
+
+            // Gameplan
+            const gameplanEl = document.getElementById('primer-gameplan');
+            if (primer.gameplan) {
+                gameplanEl.innerHTML = `
+                    <div class="gameplan-phase">
+                        <span class="phase-label">Early Game</span>
+                        <p>${primer.gameplan.early || ''}</p>
+                    </div>
+                    <div class="gameplan-phase">
+                        <span class="phase-label">Mid Game</span>
+                        <p>${primer.gameplan.mid || ''}</p>
+                    </div>
+                    <div class="gameplan-phase">
+                        <span class="phase-label">Late Game</span>
+                        <p>${primer.gameplan.late || ''}</p>
+                    </div>
+                `;
+            } else {
+                gameplanEl.innerHTML = '';
+            }
+
+            // Mulligan Guide
+            document.getElementById('primer-mulligan').innerHTML = primer.mulliganGuide || '';
+
+            // Matchups
+            const matchupsEl = document.getElementById('primer-matchups');
+            if (primer.matchups && primer.matchups.length > 0) {
+                matchupsEl.innerHTML = primer.matchups.map(m => `
+                    <div class="matchup-item ${m.difficulty.toLowerCase().replace(' ', '-')}">
+                        <div class="matchup-header">
+                            <span class="matchup-deck">${m.deck}</span>
+                            <span class="matchup-difficulty">${m.difficulty}</span>
+                            <span class="matchup-winrate">${m.winrate}</span>
+                        </div>
+                        <p class="matchup-tips">${m.tips}</p>
+                    </div>
+                `).join('');
+            } else {
+                matchupsEl.innerHTML = '';
+            }
+        } else {
+            primerSection.style.display = 'none';
+        }
+    } else {
+        primerSection.style.display = 'none';
     }
 
     // External link
@@ -4472,7 +4548,8 @@ function renderCommunityDecks() {
                        deckBrowserState.preconOnly ||
                        deckBrowserState.beginnerOnly ||
                        deckBrowserState.tournamentOnly ||
-                       deckBrowserState.communityOnly;
+                       deckBrowserState.communityOnly ||
+                       deckBrowserState.primerOnly;
 
     if (clearBtn) {
         clearBtn.classList.toggle('hidden', !hasFilters);
@@ -4551,6 +4628,8 @@ function setupDeckBrowser() {
                 deckBrowserState.tournamentOnly = btn.classList.contains('active');
             } else if (filter === 'community') {
                 deckBrowserState.communityOnly = btn.classList.contains('active');
+            } else if (filter === 'primer') {
+                deckBrowserState.primerOnly = btn.classList.contains('active');
             }
 
             renderCommunityDecks();
@@ -4569,6 +4648,7 @@ function setupDeckBrowser() {
         deckBrowserState.beginnerOnly = false;
         deckBrowserState.tournamentOnly = false;
         deckBrowserState.communityOnly = false;
+        deckBrowserState.primerOnly = false;
 
         // Reset UI
         document.querySelectorAll('.element-btn').forEach(b => b.classList.remove('active'));
