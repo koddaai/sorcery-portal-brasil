@@ -1483,32 +1483,35 @@ function getCardKeywordSummary(card, options = {}) {
 }
 
 // ============================================
-// EXPORTS
+// EXPORTS (for CommonJS/Node.js environments)
 // ============================================
 
-module.exports = {
-  // Constants
-  SORCERY_KEYWORDS,
+// Classes and functions are already available globally in browser
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    // Constants
+    SORCERY_KEYWORDS,
 
-  // Classes
-  KeywordParser,
+    // Classes
+    KeywordParser,
 
-  // Card filtering functions
-  filterCardsByKeyword,
-  filterCardsByKeywords,
-  filterCardsByKeywordType,
-  getKeywordStats,
-  getMostCommonKeywords,
-  getKeywordDistribution,
+    // Card filtering functions
+    filterCardsByKeyword,
+    filterCardsByKeywords,
+    filterCardsByKeywordType,
+    getKeywordStats,
+    getMostCommonKeywords,
+    getKeywordDistribution,
 
-  // Errata detection functions
-  detectErrata,
-  getErrataCards,
-  formatErrataDiff,
-  generateErrataReport,
+    // Errata detection functions
+    detectErrata,
+    getErrataCards,
+    formatErrataDiff,
+    generateErrataReport,
 
-  // Utility functions
-  createKeywordIndex,
-  searchByKeyword,
-  getCardKeywordSummary
-};
+    // Utility functions
+    createKeywordIndex,
+    searchByKeyword,
+    getCardKeywordSummary
+  };
+}

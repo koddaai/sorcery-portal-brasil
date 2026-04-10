@@ -1138,27 +1138,11 @@ function getThresholdCalculatorStyles() {
 }
 
 // ============================================================================
-// Exports
+// Exports (for browser global + CommonJS)
 // ============================================================================
 
-// Export for ES modules
-export {
-  ThresholdCalculator,
-  parseThreshold,
-  getElementColor,
-  getElementIcon,
-  renderThresholdChart,
-  renderSiteSuggestion,
-  renderManaCurve,
-  renderWarnings,
-  renderElementPie,
-  renderAnalysisDashboard,
-  getThresholdCalculatorStyles,
-  ELEMENT_COLORS,
-  ELEMENT_ICONS
-};
-
-// Export for CommonJS (if needed)
+// Classes and functions are already available globally in browser
+// Export for CommonJS/Node.js environments (if needed)
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     ThresholdCalculator,

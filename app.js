@@ -3421,34 +3421,64 @@ function updateDeckAnalysis(deck) {
 
     // Convert deck to the format expected by calculator
     const deckCards = [];
+    const spellbookCards = [];
+    const atlasCards = [];
 
-    [...(deck.spellbook || []), ...(deck.atlas || [])].forEach(entry => {
+    (deck.spellbook || []).forEach(entry => {
         const card = allCards.find(c => c.name === entry.name);
         if (card) {
             for (let i = 0; i < (entry.qty || 1); i++) {
                 deckCards.push(card);
+                spellbookCards.push(card);
             }
         }
     });
 
-    // Analyze deck
-    const analysis = calculator.analyzeDeck(deckCards);
+    (deck.atlas || []).forEach(entry => {
+        const card = allCards.find(c => c.name === entry.name);
+        if (card) {
+            for (let i = 0; i < (entry.qty || 1); i++) {
+                deckCards.push(card);
+                atlasCards.push(card);
+            }
+        }
+    });
 
-    // Render threshold requirements
-    renderThresholdRequirements(analysis.thresholds);
+    // Analyze deck (pass allCards as second argument)
+    const analysis = calculator.analyzeDeck(deckCards, allCards);
 
-    // Render mana curve
-    renderManaCurve(analysis.manaCurve);
+    // Render threshold requirements (property is 'requirements', not 'thresholds')
+    renderThresholdRequirements(analysis.requirements || {});
 
-    // Render element distribution
-    renderElementDistribution(analysis.elementBreakdown);
+    // Render mana curve with spellbook cards only (Sites don't have mana cost)
+    renderManaCurve(analysis.manaCurve || {}, spellbookCards.length);
+
+    // Render element distribution (property is 'cardsByElement', not 'elementBreakdown')
+    renderElementDistribution(analysis.cardsByElement || {});
 
     // Render site suggestions
-    const siteSuggestions = calculator.suggestSiteDistribution(analysis.thresholds, deck.atlas?.length || 0);
+    const siteSuggestions = calculator.suggestSiteDistribution(
+        analysis.requirements || {},
+        atlasCards.length || 25
+    );
     renderSiteSuggestions(siteSuggestions);
 
-    // Validate deck and show messages
-    const validation = calculator.validateDeck(deckCards);
+    // Render deck summary stats
+    renderDeckSummary(analysis, spellbookCards.length, atlasCards.length);
+
+    // Validate deck
+    const currentSites = {
+        fire: 0, water: 0, earth: 0, air: 0
+    };
+    atlasCards.forEach(card => {
+        const elements = card.elements?.toLowerCase() || '';
+        if (elements.includes('fire')) currentSites.fire++;
+        if (elements.includes('water')) currentSites.water++;
+        if (elements.includes('earth')) currentSites.earth++;
+        if (elements.includes('air')) currentSites.air++;
+    });
+
+    const validation = calculator.validateDeck(deckCards, currentSites, allCards);
     renderValidationMessages(validation);
 }
 
@@ -3485,27 +3515,50 @@ function renderThresholdRequirements(thresholds) {
     `;
 }
 
-function renderManaCurve(manaCurve) {
+function renderManaCurve(manaCurve, totalSpellbookCards) {
     const el = document.getElementById('mana-curve-chart');
     if (!el) return;
 
-    // Create simple bar chart
-    const maxCount = Math.max(...Object.values(manaCurve), 1);
+    // Create enhanced bar chart
     const costs = [0, 1, 2, 3, 4, 5, 6, '7+'];
+    const counts = costs.map(cost => {
+        if (cost === '7+') {
+            return Object.entries(manaCurve)
+                .filter(([k]) => parseInt(k) >= 7)
+                .reduce((sum, [, v]) => sum + v, 0);
+        }
+        return manaCurve[cost] || 0;
+    });
+    const maxCount = Math.max(...counts, 1);
+    const totalCards = counts.reduce((a, b) => a + b, 0);
+    const avgCost = totalCards > 0
+        ? costs.reduce((sum, cost, i) => {
+            const numCost = cost === '7+' ? 7 : cost;
+            return sum + (numCost * counts[i]);
+        }, 0) / totalCards
+        : 0;
 
     el.innerHTML = `
+        <div class="mana-curve-stats">
+            <div class="curve-stat">
+                <span class="stat-value">${totalSpellbookCards || totalCards}</span>
+                <span class="stat-label">Spellbook</span>
+            </div>
+            <div class="curve-stat highlight">
+                <span class="stat-value">${avgCost.toFixed(1)}</span>
+                <span class="stat-label">Avg Cost</span>
+            </div>
+        </div>
         <div class="mana-curve-bars">
-            ${costs.map(cost => {
-                const key = cost === '7+' ? '7' : cost;
-                const count = cost === '7+'
-                    ? Object.entries(manaCurve)
-                        .filter(([k, v]) => parseInt(k) >= 7)
-                        .reduce((sum, [k, v]) => sum + v, 0)
-                    : (manaCurve[key] || 0);
+            ${costs.map((cost, i) => {
+                const count = counts[i];
                 const height = (count / maxCount) * 80;
+                const percentage = totalCards > 0 ? Math.round((count / totalCards) * 100) : 0;
                 return `
                     <div class="curve-bar-container">
-                        <div class="curve-bar" style="height: ${height}px" title="${count} cards">
+                        <div class="curve-bar ${count > 0 ? 'has-cards' : ''}"
+                             style="height: ${Math.max(height, 4)}px"
+                             title="${count} cards (${percentage}%)">
                             <span class="curve-count">${count > 0 ? count : ''}</span>
                         </div>
                         <span class="curve-label">${cost}</span>
@@ -3513,60 +3566,141 @@ function renderManaCurve(manaCurve) {
                 `;
             }).join('')}
         </div>
+        <div class="curve-legend">
+            <span class="legend-label">Mana Cost Distribution</span>
+        </div>
     `;
 }
 
-function renderElementDistribution(breakdown) {
+function renderElementDistribution(cardsByElement) {
     const el = document.getElementById('element-distribution');
     if (!el) return;
 
-    const elements = ['Fire', 'Water', 'Earth', 'Air'];
-    const total = elements.reduce((sum, e) => sum + (breakdown[e] || 0), 0);
-    const colors = { Fire: '#ef4444', Water: '#3b82f6', Earth: '#22c55e', Air: '#a855f7' };
+    const elements = ['fire', 'water', 'earth', 'air'];
+    const displayNames = { fire: 'Fire', water: 'Water', earth: 'Earth', air: 'Air' };
+    const colors = { fire: '#ef4444', water: '#3b82f6', earth: '#22c55e', air: '#a855f7' };
+    const icons = {
+        fire: '<img src="assets/elements/fire.png" alt="Fire" class="element-icon-img">',
+        water: '<img src="assets/elements/water.png" alt="Water" class="element-icon-img">',
+        earth: '<img src="assets/elements/earth.png" alt="Earth" class="element-icon-img">',
+        air: '<img src="assets/elements/air.png" alt="Air" class="element-icon-img">'
+    };
+
+    // cardsByElement format: { fire: [{name, cost, threshold, quantity}], ... }
+    const counts = {};
+    elements.forEach(e => {
+        const cards = cardsByElement[e] || [];
+        counts[e] = cards.reduce((sum, c) => sum + (c.quantity || 1), 0);
+    });
+
+    // Also count multi-element and neutral
+    const multiCards = cardsByElement.multi || [];
+    const neutralCards = cardsByElement.neutral || [];
+    const multiCount = multiCards.reduce((sum, c) => sum + (c.quantity || 1), 0);
+    const neutralCount = neutralCards.reduce((sum, c) => sum + (c.quantity || 1), 0);
+
+    const total = elements.reduce((sum, e) => sum + counts[e], 0) + multiCount + neutralCount;
 
     if (total === 0) {
-        el.innerHTML = '<p class="text-secondary">No cards with elements</p>';
+        el.innerHTML = '<p class="text-secondary">Add cards to see element distribution</p>';
         return;
     }
 
     el.innerHTML = `
         <div class="element-breakdown">
             ${elements.map(element => {
-                const count = breakdown[element] || 0;
+                const count = counts[element];
                 const percent = Math.round((count / total) * 100);
                 return `
                     <div class="element-row">
-                        <span class="element-name ${element.toLowerCase()}">${element}</span>
+                        <span class="element-icon">${icons[element]}</span>
+                        <span class="element-name ${element}">${displayNames[element]}</span>
                         <div class="element-bar">
                             <div class="element-fill" style="width: ${percent}%; background: ${colors[element]}"></div>
                         </div>
-                        <span class="element-percent">${percent}%</span>
+                        <span class="element-count">${count}</span>
+                        <span class="element-percent">(${percent}%)</span>
                     </div>
                 `;
             }).join('')}
+            ${multiCount > 0 ? `
+                <div class="element-row multi">
+                    <span class="element-icon"><i data-lucide="layers"></i></span>
+                    <span class="element-name">Multi</span>
+                    <div class="element-bar">
+                        <div class="element-fill" style="width: ${Math.round((multiCount / total) * 100)}%; background: #9966cc"></div>
+                    </div>
+                    <span class="element-count">${multiCount}</span>
+                    <span class="element-percent">(${Math.round((multiCount / total) * 100)}%)</span>
+                </div>
+            ` : ''}
+            ${neutralCount > 0 ? `
+                <div class="element-row neutral">
+                    <span class="element-icon"><i data-lucide="circle"></i></span>
+                    <span class="element-name">Neutral</span>
+                    <div class="element-bar">
+                        <div class="element-fill" style="width: ${Math.round((neutralCount / total) * 100)}%; background: #888"></div>
+                    </div>
+                    <span class="element-count">${neutralCount}</span>
+                    <span class="element-percent">(${Math.round((neutralCount / total) * 100)}%)</span>
+                </div>
+            ` : ''}
         </div>
     `;
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 function renderSiteSuggestions(suggestions) {
     const el = document.getElementById('site-suggestions');
     if (!el) return;
 
-    if (!suggestions || suggestions.length === 0) {
+    // suggestions format: { fire: 5, water: 3, earth: 0, air: 2, dualSites: {...}, total: 25 }
+    if (!suggestions) {
         el.innerHTML = '<p class="text-secondary">Add cards to get site suggestions</p>';
         return;
     }
 
+    const elements = ['fire', 'water', 'earth', 'air'];
+    const displayNames = { fire: 'Fire', water: 'Water', earth: 'Earth', air: 'Air' };
+    const icons = {
+        fire: '<img src="assets/elements/fire.png" alt="Fire" class="element-icon-img">',
+        water: '<img src="assets/elements/water.png" alt="Water" class="element-icon-img">',
+        earth: '<img src="assets/elements/earth.png" alt="Earth" class="element-icon-img">',
+        air: '<img src="assets/elements/air.png" alt="Air" class="element-icon-img">'
+    };
+
+    const activeSuggestions = elements.filter(e => suggestions[e] > 0);
+
+    if (activeSuggestions.length === 0) {
+        el.innerHTML = '<p class="text-secondary">Add cards with threshold requirements</p>';
+        return;
+    }
+
     el.innerHTML = `
-        <div class="site-suggestion-list">
-            ${suggestions.map(s => `
-                <div class="site-suggestion ${s.element.toLowerCase()}">
-                    <span class="site-element">${s.element}</span>
-                    <span class="site-count">${s.count} sites</span>
+        <div class="site-suggestion-grid">
+            ${activeSuggestions.map(element => `
+                <div class="site-suggestion ${element}">
+                    <span class="site-icon">${icons[element]}</span>
+                    <span class="site-element">${displayNames[element]}</span>
+                    <span class="site-count">${suggestions[element]}</span>
                 </div>
             `).join('')}
         </div>
-        <p class="suggestion-note">Based on your threshold requirements</p>
+        ${suggestions.dualSites && Object.keys(suggestions.dualSites).length > 0 ? `
+            <div class="dual-sites-section">
+                <p class="dual-label">Dual Sites:</p>
+                ${Object.entries(suggestions.dualSites).map(([key, count]) => {
+                    const [el1, el2] = key.split('-');
+                    return `
+                        <span class="dual-site-badge">
+                            ${icons[el1]}${icons[el2]} x${count}
+                        </span>
+                    `;
+                }).join('')}
+            </div>
+        ` : ''}
+        <p class="suggestion-total">Total: ${suggestions.total || activeSuggestions.reduce((s, e) => s + suggestions[e], 0)} sites</p>
     `;
 }
 
@@ -3595,6 +3729,50 @@ function renderValidationMessages(validation) {
                 <span>${warn}</span>
             </div>
         `).join('')}
+    `;
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function renderDeckSummary(analysis, spellbookCount, atlasCount) {
+    const el = document.getElementById('deck-summary-stats');
+    if (!el) return;
+
+    const totalCards = spellbookCount + atlasCount;
+    const isValidSpellbook = spellbookCount >= 40 && spellbookCount <= 60;
+    const isValidAtlas = atlasCount >= 20 && atlasCount <= 30;
+
+    el.innerHTML = `
+        <div class="deck-summary-grid">
+            <div class="summary-card ${isValidSpellbook ? 'valid' : 'invalid'}">
+                <div class="summary-icon"><i data-lucide="book-open"></i></div>
+                <div class="summary-info">
+                    <span class="summary-value">${spellbookCount}/60</span>
+                    <span class="summary-label">Spellbook</span>
+                </div>
+            </div>
+            <div class="summary-card ${isValidAtlas ? 'valid' : 'invalid'}">
+                <div class="summary-icon"><i data-lucide="map"></i></div>
+                <div class="summary-info">
+                    <span class="summary-value">${atlasCount}/30</span>
+                    <span class="summary-label">Atlas</span>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon"><i data-lucide="layers"></i></div>
+                <div class="summary-info">
+                    <span class="summary-value">${totalCards}</span>
+                    <span class="summary-label">Total</span>
+                </div>
+            </div>
+            <div class="summary-card highlight">
+                <div class="summary-icon"><i data-lucide="zap"></i></div>
+                <div class="summary-info">
+                    <span class="summary-value">${analysis.averageCost?.toFixed(1) || '0.0'}</span>
+                    <span class="summary-label">Avg Cost</span>
+                </div>
+            </div>
+        </div>
     `;
 
     if (typeof lucide !== 'undefined') lucide.createIcons();

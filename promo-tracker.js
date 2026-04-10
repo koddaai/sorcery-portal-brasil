@@ -1213,29 +1213,10 @@ function injectPromoTrackerStyles() {
 }
 
 // =============================================================================
-// EXPORTS
+// EXPORTS (for CommonJS/Node.js environments)
 // =============================================================================
 
-// For ES modules
-export {
-  PROMO_CATEGORIES,
-  RARITY_ORDER,
-  RARITY_COLORS,
-  ICON_MAP,
-  PromoTracker,
-  getOwnedPromos,
-  getMissingPromos,
-  getPromoValue,
-  renderPromoCategoryCards,
-  renderPromoChecklist,
-  renderPromoCard,
-  renderPromoStats,
-  renderRarityBadge,
-  PROMO_TRACKER_STYLES,
-  injectPromoTrackerStyles
-};
-
-// For CommonJS
+// Classes and functions are already available globally in browser
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     PROMO_CATEGORIES,

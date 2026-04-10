@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=28">
+    <link rel="stylesheet" href="styles.css?v=29">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -690,21 +690,24 @@
                                     <i data-lucide="chevron-down" class="toggle-icon" id="analysis-toggle-icon"></i>
                                 </div>
                                 <div class="analysis-content" id="deck-analysis-content">
+                                    <!-- Deck Summary Stats -->
+                                    <div id="deck-summary-stats"></div>
+
                                     <div class="analysis-grid">
                                         <div class="analysis-card">
-                                            <h5>Threshold Requirements</h5>
-                                            <div id="threshold-requirements"></div>
-                                        </div>
-                                        <div class="analysis-card">
-                                            <h5>Mana Curve</h5>
+                                            <h5><i data-lucide="gauge"></i> Curva de Mana</h5>
                                             <div id="mana-curve-chart"></div>
                                         </div>
                                         <div class="analysis-card">
-                                            <h5>Element Distribution</h5>
+                                            <h5><i data-lucide="zap"></i> Threshold</h5>
+                                            <div id="threshold-requirements"></div>
+                                        </div>
+                                        <div class="analysis-card">
+                                            <h5><i data-lucide="pie-chart"></i> Elementos</h5>
                                             <div id="element-distribution"></div>
                                         </div>
                                         <div class="analysis-card">
-                                            <h5>Site Suggestions</h5>
+                                            <h5><i data-lucide="map"></i> Sites Sugeridos</h5>
                                             <div id="site-suggestions"></div>
                                         </div>
                                     </div>
@@ -2519,19 +2522,19 @@
     <script src="deck-guides-pt.js"></script>
     <!-- New Feature Modules -->
     <script src="variant-tracker.js"></script>
-    <script src="keyword-parser.js"></script>
+    <script src="keyword-parser.js?v=2"></script>
     <script src="set-progress.js"></script>
-    <script src="threshold-calculator.js"></script>
+    <script src="threshold-calculator.js?v=2"></script>
     <script src="dust-tracker.js"></script>
     <script src="artist-gallery.js"></script>
-    <script src="promo-tracker.js"></script>
+    <script src="promo-tracker.js?v=2"></script>
     <script src="release-timeline.js"></script>
     <script src="chase-cards-prices.js"></script>
     <script src="tcg-prices.js"></script>
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
-    <script src="app.js?v=25"></script>
+    <script src="app.js?v=26"></script>
     <script src="offline-manager.js"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

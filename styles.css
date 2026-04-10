@@ -3618,9 +3618,249 @@ body {
     margin-top: 2px;
 }
 
+/* Deck Summary Stats */
+#deck-summary-stats {
+    margin-bottom: 1.5rem;
+}
+
+.deck-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-surface-1);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summary-card.valid {
+    border-color: rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.05);
+}
+
+.summary-card.invalid {
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.summary-card.highlight {
+    border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+}
+
+.summary-card.valid .summary-icon { color: #22c55e; }
+.summary-card.invalid .summary-icon { color: #ef4444; }
+.summary-card.highlight .summary-icon { color: var(--accent-gold); }
+
+.summary-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.summary-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Mana Curve Enhanced */
+.mana-curve-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.curve-stat {
+    text-align: center;
+}
+
+.curve-stat .stat-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.curve-stat.highlight .stat-value {
+    color: var(--accent-gold);
+}
+
+.curve-stat .stat-label {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.curve-bar.has-cards {
+    background: linear-gradient(180deg, var(--accent-gold), rgba(212, 175, 55, 0.5));
+}
+
+.curve-legend {
+    text-align: center;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+.legend-label {
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Element Distribution Enhanced */
+.element-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+}
+
+.element-row .element-icon {
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.element-row .element-icon .element-icon-img {
+    width: 18px;
+    height: 18px;
+}
+
+.element-count {
+    min-width: 24px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+/* Site Suggestions Enhanced */
+.site-suggestion-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.site-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--bg-surface-1);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid;
+}
+
+.site-suggestion .site-icon {
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.site-suggestion .site-icon .element-icon-img {
+    width: 18px;
+    height: 18px;
+}
+
+.site-suggestion .site-count {
+    margin-left: auto;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.dual-sites-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.dual-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.dual-site-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: linear-gradient(135deg, rgba(155, 102, 204, 0.2), rgba(102, 155, 204, 0.2));
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.dual-site-badge .element-icon-img {
+    width: 14px;
+    height: 14px;
+}
+
+.suggestion-total {
+    margin: 0;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Analysis Card Headers */
+.analysis-card h5 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.analysis-card h5 i {
+    width: 16px;
+    height: 16px;
+    color: var(--accent-gold);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .deck-summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .site-suggestion-grid {
         grid-template-columns: 1fr;
     }
 }
