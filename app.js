@@ -3435,7 +3435,12 @@ function renderThresholdRequirements(thresholds) {
     if (!el) return;
 
     const elements = ['fire', 'water', 'earth', 'air'];
-    const elementIcons = { fire: '🔥', water: '💧', earth: '🌿', air: '💨' };
+    const elementIcons = {
+        fire: '<img src="assets/elements/fire.png" alt="Fire" class="element-icon-img">',
+        water: '<img src="assets/elements/water.png" alt="Water" class="element-icon-img">',
+        earth: '<img src="assets/elements/earth.png" alt="Earth" class="element-icon-img">',
+        air: '<img src="assets/elements/air.png" alt="Air" class="element-icon-img">'
+    };
     const maxThreshold = Math.max(...elements.map(e => thresholds[e] || 0), 1);
 
     el.innerHTML = `
@@ -3707,7 +3712,7 @@ function renderDeckCard(deck) {
     const tierLabel = deck.type === 'tournament' ? deck.tournament : deck.tier;
 
     return `
-        <div class="deck-card-enhanced" onclick="window.open('${deck.url}', '_blank')">
+        <div class="deck-card-enhanced" data-deck-id="${deck.id}" onclick="openDeckDetail('${deck.id}')">
             <div class="deck-card-header">
                 <span class="deck-tier-badge ${tierClass}">${tierLabel}</span>
                 ${deck.estimatedPrice ? `<span class="deck-price-badge">$${deck.estimatedPrice}</span>` : ''}
@@ -3726,7 +3731,7 @@ function renderDeckCard(deck) {
             <div class="deck-card-elements">
                 ${deck.elements.map(e => `
                     <span class="element-badge ${e.toLowerCase()}">
-                        ${getElementEmoji(e)} ${e}
+                        ${getElementIcon(e)} ${e}
                     </span>
                 `).join('')}
             </div>
@@ -3751,10 +3756,216 @@ function renderDeckCard(deck) {
     `;
 }
 
-// Get element emoji
-function getElementEmoji(element) {
-    const emojis = { Fire: '🔥', Water: '💧', Earth: '🌿', Air: '💨' };
-    return emojis[element] || '✦';
+// Get element icon
+function getElementIcon(element) {
+    const icons = {
+        Fire: '<img src="assets/elements/fire.png" alt="Fire" class="element-icon-img">',
+        Water: '<img src="assets/elements/water.png" alt="Water" class="element-icon-img">',
+        Earth: '<img src="assets/elements/earth.png" alt="Earth" class="element-icon-img">',
+        Air: '<img src="assets/elements/air.png" alt="Air" class="element-icon-img">'
+    };
+    return icons[element] || '<span class="element-icon-fallback">✦</span>';
+}
+
+// Open deck detail modal
+function openDeckDetail(deckId) {
+    const allDecks = getAllCommunityDecks();
+    const deck = allDecks.find(d => d.id === deckId);
+
+    if (!deck) {
+        console.error('Deck not found:', deckId);
+        return;
+    }
+
+    const modal = document.getElementById('deck-detail-modal');
+    if (!modal) return;
+
+    // Populate header
+    document.getElementById('deck-detail-name').textContent = deck.name;
+    document.getElementById('deck-detail-author').textContent = deck.author || '';
+
+    // Tier badge
+    const tierBadge = document.getElementById('deck-detail-tier');
+    const tierClass = deck.type === 'tournament' ? 'tournament' : `tier-${deck.tier}`;
+    const tierLabel = deck.type === 'tournament' ? deck.tournament : `Tier ${deck.tier}`;
+    tierBadge.className = `tier-badge ${tierClass}`;
+    tierBadge.textContent = tierLabel;
+
+    // Format badge
+    document.getElementById('deck-detail-format').textContent = deck.format || 'Constructed';
+
+    // Stats
+    document.getElementById('deck-detail-views').textContent = deck.views?.toLocaleString() || '0';
+    document.getElementById('deck-detail-likes').textContent = deck.likes?.toString() || '0';
+    document.getElementById('deck-detail-price').textContent = deck.estimatedPrice ? `$${deck.estimatedPrice}` : '-';
+
+    // Elements
+    const elementsContainer = document.getElementById('deck-detail-elements');
+    elementsContainer.innerHTML = deck.elements.map(e => `
+        <span class="element-badge ${e.toLowerCase()}">
+            ${getElementIcon(e)} ${e}
+        </span>
+    `).join('');
+
+    // Strategy
+    document.getElementById('deck-detail-strategy').textContent =
+        deck.strategy || deck.description || 'Estratégia não disponível.';
+
+    // Decklist
+    const renderCardList = (cards) => {
+        if (!cards || cards.length === 0) {
+            return '<li class="no-cards">Nenhuma carta</li>';
+        }
+        return cards.map(card => `
+            <li>
+                <span class="card-name" onclick="searchCardByName('${card.name}')">${card.name}</span>
+                <span class="card-qty">×${card.qty}</span>
+            </li>
+        `).join('');
+    };
+
+    // Calculate card counts
+    const countCards = (cards) => cards ? cards.reduce((sum, c) => sum + (c.qty || 1), 0) : 0;
+
+    const avatarCount = deck.decklist?.avatar ? 1 : (deck.avatar ? 1 : 0);
+    const minionsCount = countCards(deck.decklist?.minions);
+    const spellsCount = countCards(deck.decklist?.spells);
+    const artifactsCount = countCards(deck.decklist?.artifacts);
+    const sitesCount = countCards(deck.decklist?.sites);
+    const spellbookTotal = minionsCount + spellsCount + artifactsCount;
+
+    // Avatar section
+    const avatarList = document.getElementById('deck-detail-avatar');
+    if (deck.decklist?.avatar) {
+        avatarList.innerHTML = `<li><span class="card-name avatar-card" onclick="searchCardByName('${deck.decklist.avatar}')">${deck.decklist.avatar}</span></li>`;
+    } else if (deck.avatar) {
+        avatarList.innerHTML = `<li><span class="card-name avatar-card" onclick="searchCardByName('${deck.avatar}')">${deck.avatar}</span></li>`;
+    } else {
+        avatarList.innerHTML = '<li class="no-cards">Avatar não especificado</li>';
+    }
+    document.getElementById('deck-avatar-count').textContent = `(${avatarCount})`;
+
+    // Spellbook counts
+    document.getElementById('deck-spellbook-count').textContent = `(${spellbookTotal})`;
+    document.getElementById('deck-minions-count').textContent = minionsCount > 0 ? `(${minionsCount})` : '';
+    document.getElementById('deck-spells-count').textContent = spellsCount > 0 ? `(${spellsCount})` : '';
+    document.getElementById('deck-artifacts-count').textContent = artifactsCount > 0 ? `(${artifactsCount})` : '';
+
+    // Atlas count
+    document.getElementById('deck-atlas-count').textContent = `(${sitesCount})`;
+
+    document.getElementById('deck-detail-minions').innerHTML =
+        deck.decklist ? renderCardList(deck.decklist.minions) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+    document.getElementById('deck-detail-spells').innerHTML =
+        deck.decklist ? renderCardList(deck.decklist.spells) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+    document.getElementById('deck-detail-sites').innerHTML =
+        deck.decklist ? renderCardList(deck.decklist.sites) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+    document.getElementById('deck-detail-artifacts').innerHTML =
+        deck.decklist ? renderCardList(deck.decklist.artifacts) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+
+    // Changelog
+    const changelogSection = document.getElementById('deck-detail-changelog-section');
+    const changelogList = document.getElementById('deck-detail-changelog');
+    if (deck.changelog && deck.changelog.length > 0) {
+        changelogSection.style.display = 'block';
+        changelogList.innerHTML = deck.changelog.map(entry => `
+            <li>
+                <span class="changelog-date">${entry.date}</span>
+                <span>${entry.note}</span>
+            </li>
+        `).join('');
+    } else {
+        changelogSection.style.display = 'none';
+    }
+
+    // External link
+    document.getElementById('deck-detail-external-link').href = deck.url;
+
+    // Copy button
+    const copyBtn = document.getElementById('deck-detail-copy');
+    copyBtn.onclick = () => copyDeckList(deck);
+
+    // Show modal
+    modal.classList.remove('hidden');
+
+    // Reinitialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+// Copy deck list to clipboard
+function copyDeckList(deck) {
+    if (!deck.decklist) {
+        // If no decklist, copy key cards
+        const keyCardsList = deck.keyCards ? deck.keyCards.join('\n') : '';
+        const text = `${deck.name}\nby ${deck.author}\n\nKey Cards:\n${keyCardsList}\n\nVer lista completa: ${deck.url}`;
+        navigator.clipboard.writeText(text).then(() => {
+            showNotification('Lista copiada!', 'success');
+        });
+        return;
+    }
+
+    const formatSection = (title, cards) => {
+        if (!cards || cards.length === 0) return '';
+        const total = cards.reduce((sum, c) => sum + (c.qty || 1), 0);
+        return `${title} (${total}):\n${cards.map(c => `${c.qty}x ${c.name}`).join('\n')}\n`;
+    };
+
+    const avatar = deck.decklist?.avatar || deck.avatar || 'N/A';
+    const minionsCount = deck.decklist?.minions?.reduce((s, c) => s + c.qty, 0) || 0;
+    const spellsCount = deck.decklist?.spells?.reduce((s, c) => s + c.qty, 0) || 0;
+    const artifactsCount = deck.decklist?.artifacts?.reduce((s, c) => s + c.qty, 0) || 0;
+    const sitesCount = deck.decklist?.sites?.reduce((s, c) => s + c.qty, 0) || 0;
+    const spellbookTotal = minionsCount + spellsCount + artifactsCount;
+
+    const text = [
+        `${deck.name}`,
+        `by ${deck.author || deck.player || 'Unknown'}`,
+        '',
+        `== AVATAR (1) ==`,
+        `1x ${avatar}`,
+        '',
+        `== SPELLBOOK (${spellbookTotal}) ==`,
+        formatSection('Minions', deck.decklist.minions),
+        formatSection('Magic', deck.decklist.spells),
+        formatSection('Artifacts', deck.decklist.artifacts),
+        `== ATLAS (${sitesCount}) ==`,
+        formatSection('Sites', deck.decklist.sites),
+        `Fonte: ${deck.url}`
+    ].join('\n');
+
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Lista copiada para clipboard!', 'success');
+    });
+}
+
+// Search card by name (opens card modal)
+function searchCardByName(cardName) {
+    // Close deck modal
+    document.getElementById('deck-detail-modal').classList.add('hidden');
+
+    // Find card in database
+    const card = allCards.find(c => c.name.toLowerCase() === cardName.toLowerCase());
+    if (card) {
+        showCardDetails(card);
+    } else {
+        // Navigate to cards view with search
+        showView('cards');
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.value = cardName;
+            applyFilters();
+        }
+    }
+}
+
+// Close deck detail modal
+function closeDeckDetailModal() {
+    const modal = document.getElementById('deck-detail-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
 }
 
 // Render community decks
@@ -4629,6 +4840,29 @@ function setupAuthEventListeners() {
     // Profile modal close
     document.querySelector('#profile-modal .close-modal')?.addEventListener('click', () => {
         closeModal('profile-modal');
+    });
+
+    // Deck detail modal close
+    document.querySelector('#deck-detail-modal .close-modal')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeModal('deck-detail-modal');
+    });
+
+    // Deck detail modal - close on backdrop click
+    document.getElementById('deck-detail-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'deck-detail-modal') {
+            closeModal('deck-detail-modal');
+        }
+    });
+
+    // Close modals on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal('deck-detail-modal');
+            closeModal('card-modal');
+            closeModal('auth-modal');
+            closeModal('profile-modal');
+        }
     });
 
     // Profile bio character counter

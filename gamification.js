@@ -110,7 +110,7 @@ class GamificationSystem {
             id: 'fire-adept',
             name: 'Fire Adept',
             description: 'Collect 25 Fire element cards',
-            icon: '🔥',
+            icon: '<img src="assets/elements/fire.png" alt="Fire" class="element-icon-img">',
             category: 'elements',
             check: (stats) => stats.fireCards >= 25
         },
@@ -118,7 +118,7 @@ class GamificationSystem {
             id: 'water-adept',
             name: 'Water Adept',
             description: 'Collect 25 Water element cards',
-            icon: '💧',
+            icon: '<img src="assets/elements/water.png" alt="Water" class="element-icon-img">',
             category: 'elements',
             check: (stats) => stats.waterCards >= 25
         },
@@ -126,7 +126,7 @@ class GamificationSystem {
             id: 'earth-adept',
             name: 'Earth Adept',
             description: 'Collect 25 Earth element cards',
-            icon: '🌿',
+            icon: '<img src="assets/elements/earth.png" alt="Earth" class="element-icon-img">',
             category: 'elements',
             check: (stats) => stats.earthCards >= 25
         },
@@ -134,7 +134,7 @@ class GamificationSystem {
             id: 'air-adept',
             name: 'Air Adept',
             description: 'Collect 25 Air element cards',
-            icon: '💨',
+            icon: '<img src="assets/elements/air.png" alt="Air" class="element-icon-img">',
             category: 'elements',
             check: (stats) => stats.airCards >= 25
         },

@@ -569,19 +569,19 @@
                             <label><i data-lucide="flame"></i> Elemento</label>
                             <div class="element-filters">
                                 <button class="element-btn active" data-element="all" title="Todos">
-                                    <span class="element-icon all">✦</span>
+                                    <i data-lucide="layers" class="all-elements-icon"></i>
                                 </button>
                                 <button class="element-btn" data-element="Fire" title="Fire">
-                                    <span class="element-icon fire">🔥</span>
+                                    <img src="assets/elements/fire.png" alt="Fire" class="element-icon-img">
                                 </button>
                                 <button class="element-btn" data-element="Water" title="Water">
-                                    <span class="element-icon water">💧</span>
+                                    <img src="assets/elements/water.png" alt="Water" class="element-icon-img">
                                 </button>
                                 <button class="element-btn" data-element="Earth" title="Earth">
-                                    <span class="element-icon earth">🌿</span>
+                                    <img src="assets/elements/earth.png" alt="Earth" class="element-icon-img">
                                 </button>
                                 <button class="element-btn" data-element="Air" title="Air">
-                                    <span class="element-icon air">💨</span>
+                                    <img src="assets/elements/air.png" alt="Air" class="element-icon-img">
                                 </button>
                             </div>
                         </div>
@@ -1998,6 +1998,91 @@
                             <p class="qr-code-hint">Scan to open this card</p>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deck Detail Modal -->
+        <div id="deck-detail-modal" class="modal hidden">
+            <div class="modal-content deck-detail-modal-content">
+                <button class="close-modal">&times;</button>
+
+                <div class="deck-detail-header">
+                    <div class="deck-detail-badges">
+                        <span id="deck-detail-tier" class="tier-badge"></span>
+                        <span id="deck-detail-format" class="format-badge"></span>
+                    </div>
+                    <h2 id="deck-detail-name"></h2>
+                    <p id="deck-detail-author" class="deck-detail-author"></p>
+                </div>
+
+                <div class="deck-detail-stats">
+                    <div class="stat-item">
+                        <i data-lucide="eye"></i>
+                        <span id="deck-detail-views">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i data-lucide="heart"></i>
+                        <span id="deck-detail-likes">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i data-lucide="dollar-sign"></i>
+                        <span id="deck-detail-price">$0</span>
+                    </div>
+                </div>
+
+                <div class="deck-detail-elements" id="deck-detail-elements"></div>
+
+                <div class="deck-detail-section">
+                    <h3><i data-lucide="target"></i> Estratégia</h3>
+                    <p id="deck-detail-strategy"></p>
+                </div>
+
+                <!-- Avatar Section -->
+                <div class="deck-detail-section deck-section-avatar">
+                    <h3><i data-lucide="user"></i> Avatar <span id="deck-avatar-count" class="section-count">(1)</span></h3>
+                    <ul id="deck-detail-avatar" class="avatar-list"></ul>
+                </div>
+
+                <!-- Spellbook Section -->
+                <div class="deck-detail-section deck-section-spellbook">
+                    <h3><i data-lucide="book-open"></i> Spellbook <span id="deck-spellbook-count" class="section-count">(60)</span></h3>
+                    <div class="decklist-grid">
+                        <div class="decklist-column">
+                            <h4><i data-lucide="users"></i> Minions <span id="deck-minions-count" class="type-count"></span></h4>
+                            <ul id="deck-detail-minions"></ul>
+                        </div>
+                        <div class="decklist-column">
+                            <h4><i data-lucide="sparkles"></i> Magic <span id="deck-spells-count" class="type-count"></span></h4>
+                            <ul id="deck-detail-spells"></ul>
+                        </div>
+                        <div class="decklist-column">
+                            <h4><i data-lucide="gem"></i> Artifacts <span id="deck-artifacts-count" class="type-count"></span></h4>
+                            <ul id="deck-detail-artifacts"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Atlas Section -->
+                <div class="deck-detail-section deck-section-atlas">
+                    <h3><i data-lucide="map"></i> Atlas <span id="deck-atlas-count" class="section-count">(30)</span></h3>
+                    <div class="decklist-column atlas-column">
+                        <ul id="deck-detail-sites"></ul>
+                    </div>
+                </div>
+
+                <div class="deck-detail-section" id="deck-detail-changelog-section">
+                    <h3><i data-lucide="history"></i> Changelog</h3>
+                    <ul id="deck-detail-changelog"></ul>
+                </div>
+
+                <div class="deck-detail-actions">
+                    <a id="deck-detail-external-link" href="#" target="_blank" class="btn btn-primary">
+                        <i data-lucide="external-link"></i> Ver no Curiosa.io
+                    </a>
+                    <button id="deck-detail-copy" class="btn btn-secondary">
+                        <i data-lucide="copy"></i> Copiar Lista
+                    </button>
                 </div>
             </div>
         </div>

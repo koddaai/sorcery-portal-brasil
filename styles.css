@@ -5340,11 +5340,57 @@ body {
     box-shadow: var(--shadow-lg);
 }
 
+/* Element icon images - various sizes for different contexts */
 .element-icon-img {
     width: 48px;
     height: 48px;
     margin-bottom: var(--space-3);
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Element icons in filter buttons */
+.element-btn .element-icon-img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0;
+}
+
+/* Element icons in deck card badges */
+.element-badge .element-icon-img {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 0;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+/* Element icons in threshold bars */
+.threshold-icon .element-icon-img {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 0;
+}
+
+/* Element icons in rulebook */
+.elements-grid h4 .element-icon-img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+/* Element icons in achievements */
+.achievement-icon .element-icon-img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0;
+}
+
+/* Element icon fallback */
+.element-icon-fallback {
+    font-size: 1rem;
+    color: var(--text-secondary);
 }
 
 .element-card-home h3 {
@@ -9662,6 +9708,17 @@ input:checked + .toggle-slider:before {
     box-shadow: 0 0 12px rgba(212,175,55,0.3);
 }
 
+/* All elements icon */
+.all-elements-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--text-secondary);
+}
+
+.element-btn.active .all-elements-icon {
+    color: var(--accent-gold);
+}
+
 /* Tier Filters */
 .tier-filters {
     display: flex;
@@ -10051,5 +10108,341 @@ input:checked + .toggle-slider:before {
 
     .community-decks-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ===================================
+   DECK DETAIL MODAL
+   =================================== */
+
+.deck-detail-modal-content {
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: var(--space-6);
+}
+
+.deck-detail-header {
+    text-align: center;
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.deck-detail-badges {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+
+.deck-detail-header h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.75rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.deck-detail-author {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.deck-detail-stats {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+}
+
+.deck-detail-stats .stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--text-secondary);
+}
+
+.deck-detail-stats .stat-item svg {
+    width: 18px;
+    height: 18px;
+    color: var(--accent-gold);
+}
+
+.deck-detail-stats .stat-item span {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.deck-detail-elements {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+}
+
+.deck-detail-section {
+    margin-bottom: var(--space-5);
+}
+
+.deck-detail-section h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.deck-detail-section h3 svg {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-gold);
+}
+
+.deck-detail-section > p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* Decklist Grid */
+.decklist-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+}
+
+.decklist-column {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+}
+
+.decklist-column h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.9rem;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.decklist-column h4 svg {
+    width: 16px;
+    height: 16px;
+}
+
+.decklist-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.decklist-column li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.decklist-column li:last-child {
+    border-bottom: none;
+}
+
+.decklist-column li .card-name {
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: color var(--duration-fast);
+}
+
+.decklist-column li .card-name:hover {
+    color: var(--accent-gold);
+}
+
+.decklist-column li .card-qty {
+    color: var(--accent-gold);
+    font-weight: 600;
+    min-width: 24px;
+    text-align: right;
+}
+
+/* Section count badges */
+.section-count {
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-size: 0.9em;
+}
+
+.type-count {
+    color: var(--text-tertiary);
+    font-weight: 400;
+    font-size: 0.85em;
+}
+
+/* Avatar Section */
+.deck-section-avatar {
+    background: linear-gradient(135deg, rgba(212,175,55,0.08) 0%, transparent 50%);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.avatar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.avatar-list li {
+    padding: var(--space-2) 0;
+}
+
+.avatar-card {
+    color: var(--accent-gold) !important;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.avatar-card:hover {
+    text-shadow: 0 0 10px rgba(212,175,55,0.5);
+}
+
+/* Spellbook Section */
+.deck-section-spellbook {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.deck-section-spellbook h3 {
+    border-bottom: none;
+    margin-bottom: var(--space-4);
+}
+
+/* Atlas Section */
+.deck-section-atlas {
+    background: linear-gradient(135deg, rgba(139,90,43,0.1) 0%, transparent 50%);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.atlas-column {
+    width: 100%;
+    max-width: none;
+}
+
+.atlas-column ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-2);
+}
+
+.atlas-column li {
+    border-bottom: none;
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3) !important;
+}
+
+/* Changelog */
+#deck-detail-changelog {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#deck-detail-changelog li {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+#deck-detail-changelog li:last-child {
+    border-bottom: none;
+}
+
+#deck-detail-changelog li .changelog-date {
+    color: var(--accent-gold);
+    font-weight: 500;
+    min-width: 100px;
+}
+
+/* Actions */
+.deck-detail-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding-top: var(--space-4);
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.deck-detail-actions .btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.deck-detail-actions .btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Format badge */
+.format-badge {
+    background: rgba(100, 100, 100, 0.3);
+    color: var(--text-secondary);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Tier badge in modal */
+.deck-detail-badges .tier-badge {
+    padding: var(--space-1) var(--space-3);
+    font-size: 0.85rem;
+}
+
+/* Mobile responsive for deck detail */
+@media (max-width: 768px) {
+    .deck-detail-modal-content {
+        padding: var(--space-4);
+    }
+
+    .decklist-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .deck-detail-stats {
+        flex-direction: column;
+        gap: var(--space-3);
+        align-items: center;
+    }
+
+    .deck-detail-actions {
+        flex-direction: column;
+    }
+
+    .deck-detail-actions .btn {
+        width: 100%;
+        justify-content: center;
     }
 }

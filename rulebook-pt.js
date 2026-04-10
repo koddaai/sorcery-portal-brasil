@@ -121,19 +121,19 @@ const RULEBOOK_PT = {
 
                 <div class="elements-grid">
                     <div class="element fire">
-                        <h4>🔥 Fogo (Fire)</h4>
+                        <h4><img src="assets/elements/fire.png" alt="Fire" class="element-icon-img"> Fogo (Fire)</h4>
                         <p>Agressividade, dano direto, destruição. Ideal para estratégias ofensivas e remoção de ameaças.</p>
                     </div>
                     <div class="element water">
-                        <h4>💧 Água (Water)</h4>
+                        <h4><img src="assets/elements/water.png" alt="Water" class="element-icon-img"> Água (Water)</h4>
                         <p>Controle, compra de cards, manipulação. Excelente para controlar o ritmo do jogo.</p>
                     </div>
                     <div class="element earth">
-                        <h4>🏔️ Terra (Earth)</h4>
+                        <h4><img src="assets/elements/earth.png" alt="Earth" class="element-icon-img"> Terra (Earth)</h4>
                         <p>Resistência, crescimento, criaturas poderosas. Estratégias de midrange e ramp.</p>
                     </div>
                     <div class="element air">
-                        <h4>💨 Ar (Air)</h4>
+                        <h4><img src="assets/elements/air.png" alt="Air" class="element-icon-img"> Ar (Air)</h4>
                         <p>Evasão, velocidade, versatilidade. Cards flexíveis e difíceis de bloquear.</p>
                     </div>
                 </div>
