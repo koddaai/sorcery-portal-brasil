@@ -4110,8 +4110,10 @@ function openDeckDetail(deckId) {
 
     // Primer Section
     const primerSection = document.getElementById('deck-detail-primer-section');
+    console.log('Deck primer check:', { deckId: deck.id, primer: deck.primer, hasDeckGuides: typeof DECK_GUIDES !== 'undefined', hasPrimers: typeof DECK_GUIDES !== 'undefined' && DECK_GUIDES.deckPrimers });
     if (deck.primer && typeof DECK_GUIDES !== 'undefined' && DECK_GUIDES.deckPrimers) {
         const primer = DECK_GUIDES.deckPrimers.find(p => p.id === deck.primer);
+        console.log('Found primer:', primer);
         if (primer) {
             primerSection.style.display = 'block';
 
