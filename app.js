@@ -3804,7 +3804,8 @@ const deckBrowserState = {
     cardSearch: '',
     primerOnly: false,
     beginnerOnly: false,
-    tournamentOnly: false
+    tournamentOnly: false,
+    preconOnly: false
 };
 
 // Get all decks combined
@@ -3874,6 +3875,10 @@ function filterDecks(decks) {
         }
 
         if (deckBrowserState.tournamentOnly && deck.type !== 'tournament') {
+            return false;
+        }
+
+        if (deckBrowserState.preconOnly && !deck.isPrecon) {
             return false;
         }
 
@@ -4543,6 +4548,8 @@ function setupDeckBrowser() {
                 deckBrowserState.beginnerOnly = btn.classList.contains('active');
             } else if (filter === 'tournament') {
                 deckBrowserState.tournamentOnly = btn.classList.contains('active');
+            } else if (filter === 'precon') {
+                deckBrowserState.preconOnly = btn.classList.contains('active');
             }
 
             renderCommunityDecks();
@@ -4560,6 +4567,7 @@ function setupDeckBrowser() {
         deckBrowserState.primerOnly = false;
         deckBrowserState.beginnerOnly = false;
         deckBrowserState.tournamentOnly = false;
+        deckBrowserState.preconOnly = false;
 
         // Reset UI
         document.querySelectorAll('.element-btn').forEach(b => b.classList.remove('active'));

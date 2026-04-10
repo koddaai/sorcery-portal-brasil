@@ -22,7 +22,41 @@ const RECOMMENDED_DECKS = [
         tier: 'S',
         estimatedPrice: 150,
         keyCards: ['Fury', 'Blaze', 'Fireball', 'Bosk Troll', 'Colicky Dragonettes'],
-        strategy: 'Aggro implacável que não dá chance ao oponente de estabilizar. Fury Road significa só uma direção: para frente.'
+        strategy: 'Aggro implacável que não dá chance ao oponente de estabilizar. Fury Road significa só uma direção: para frente.',
+        decklist: {
+            avatar: 'Sorcerer',
+            minions: [
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Sacred Scarabs', qty: 4 },
+                { name: 'Quarrelsome Kobolds', qty: 4 },
+                { name: 'Bosk Troll', qty: 4 },
+                { name: 'Border Militia', qty: 4 },
+                { name: 'Autumn Unicorn', qty: 3 },
+                { name: 'Wicked Witch', qty: 2 },
+                { name: 'Petrosian Cavalry', qty: 2 }
+            ],
+            spells: [
+                { name: 'Blaze', qty: 4 },
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Fireball', qty: 3 },
+                { name: 'Fury', qty: 3 },
+                { name: 'Landslide', qty: 2 },
+                { name: 'Entangle', qty: 2 }
+            ],
+            sites: [
+                { name: 'Volcanic Springs', qty: 4 },
+                { name: 'Magma Cavern', qty: 4 },
+                { name: 'Scorched Earth', qty: 3 },
+                { name: 'Fertile Earth', qty: 3 },
+                { name: 'Mountain Peaks', qty: 3 },
+                { name: 'Gnome Hollows', qty: 2 },
+                { name: 'Rift Valley', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Ruby', qty: 2 },
+                { name: 'Emerald', qty: 2 }
+            ]
+        }
     },
     {
         id: 'scatter-the-frog',
@@ -39,7 +73,40 @@ const RECOMMENDED_DECKS = [
         tier: 'S',
         estimatedPrice: 180,
         keyCards: ['Scatter', 'Frog', 'Sir Agravaine', 'Boudicca', 'Blink'],
-        strategy: 'Combo deck que usa Scatter para multiplicar Frogs e dominar o board.'
+        strategy: 'Combo deck que usa Scatter para multiplicar Frogs e dominar o board.',
+        decklist: {
+            avatar: 'Druid',
+            minions: [
+                { name: 'Frog', qty: 4 },
+                { name: 'Sir Agravaine', qty: 4 },
+                { name: 'Boudicca', qty: 3 },
+                { name: 'Phase Assassin', qty: 4 },
+                { name: 'Merfolk Scout', qty: 3 },
+                { name: 'Grim Reaper', qty: 3 },
+                { name: 'Storm Elemental', qty: 2 }
+            ],
+            spells: [
+                { name: 'Scatter', qty: 4 },
+                { name: 'Blink', qty: 4 },
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Frost Bolt', qty: 3 },
+                { name: 'Chain Lightning', qty: 2 },
+                { name: 'Grapple Shot', qty: 2 }
+            ],
+            sites: [
+                { name: 'Coral Reef', qty: 4 },
+                { name: 'Observatory', qty: 4 },
+                { name: 'Stormcloud', qty: 3 },
+                { name: 'Tidal Pool', qty: 3 },
+                { name: 'Hidden Grotto', qty: 2 },
+                { name: 'Perilous Bridge', qty: 2 },
+                { name: 'Gnome Hollows', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Sapphire', qty: 2 },
+                { name: 'Amethyst', qty: 2 }
+            ]
+        }
     },
     {
         id: 'furious-witchs-road',
@@ -56,7 +123,40 @@ const RECOMMENDED_DECKS = [
         tier: 'S',
         estimatedPrice: 165,
         keyCards: ['Witch', 'Fury', 'Blaze', 'Bosk Troll'],
-        strategy: 'Combina a agressividade de Fury Road com as habilidades únicas da Witch.'
+        strategy: 'Combina a agressividade de Fury Road com as habilidades únicas da Witch.',
+        decklist: {
+            avatar: 'Witch',
+            minions: [
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Sacred Scarabs', qty: 4 },
+                { name: 'Bosk Troll', qty: 4 },
+                { name: 'Wicked Witch', qty: 4 },
+                { name: 'Border Militia', qty: 4 },
+                { name: 'Autumn Unicorn', qty: 3 },
+                { name: 'Quarrelsome Kobolds', qty: 2 }
+            ],
+            spells: [
+                { name: 'Blaze', qty: 4 },
+                { name: 'Fury', qty: 4 },
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Fireball', qty: 3 },
+                { name: 'Landslide', qty: 2 },
+                { name: 'Hex', qty: 2 }
+            ],
+            sites: [
+                { name: 'Volcanic Springs', qty: 4 },
+                { name: 'Magma Cavern', qty: 4 },
+                { name: 'Scorched Earth', qty: 3 },
+                { name: 'Fertile Earth', qty: 3 },
+                { name: 'Witches\' Coven', qty: 2 },
+                { name: 'Mountain Peaks', qty: 2 },
+                { name: 'Gnome Hollows', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Ruby', qty: 2 },
+                { name: 'Emerald', qty: 2 }
+            ]
+        }
     },
     {
         id: 'sorcerycon-2026-1st-dank',
@@ -73,7 +173,40 @@ const RECOMMENDED_DECKS = [
         tier: 'S',
         estimatedPrice: 200,
         keyCards: ['Necromancer', 'Grim Reaper', 'Devil\'s Egg', 'Mismanaged Mortuary'],
-        strategy: 'Necromonsters - eficiência combinada com flexibilidade de movimento.'
+        strategy: 'Necromonsters - eficiência combinada com flexibilidade de movimento.',
+        decklist: {
+            avatar: 'Necromancer',
+            minions: [
+                { name: 'Grim Reaper', qty: 4 },
+                { name: 'Devil\'s Egg', qty: 4 },
+                { name: 'Skeleton Army', qty: 4 },
+                { name: 'Phase Assassin', qty: 3 },
+                { name: 'Bosk Troll', qty: 3 },
+                { name: 'Gravedigger', qty: 3 },
+                { name: 'Bone Dragon', qty: 2 }
+            ],
+            spells: [
+                { name: 'Raise Dead', qty: 4 },
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Blink', qty: 3 },
+                { name: 'Entangle', qty: 3 },
+                { name: 'Mismanaged Mortuary', qty: 3 },
+                { name: 'Dark Ritual', qty: 2 }
+            ],
+            sites: [
+                { name: 'Observatory', qty: 4 },
+                { name: 'Haunted Cemetery', qty: 4 },
+                { name: 'Fertile Earth', qty: 3 },
+                { name: 'Mountain Peaks', qty: 3 },
+                { name: 'Stormcloud', qty: 3 },
+                { name: 'Gnome Hollows', qty: 2 },
+                { name: 'Crypt', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Amethyst', qty: 2 },
+                { name: 'Emerald', qty: 2 }
+            ]
+        }
     },
     {
         id: 'iron-savior-scg-1st',
@@ -90,7 +223,39 @@ const RECOMMENDED_DECKS = [
         tier: 'S',
         estimatedPrice: 190,
         keyCards: ['Savior', 'Geyser', 'Blaze', 'Fireball'],
-        strategy: 'Steam Savior que controla o jogo enquanto pressiona com o Savior.'
+        strategy: 'Steam Savior que controla o jogo enquanto pressiona com o Savior.',
+        decklist: {
+            avatar: 'Savior',
+            minions: [
+                { name: 'Diluvian Kraken', qty: 3 },
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Merfolk Scout', qty: 4 },
+                { name: 'Steam Elemental', qty: 3 },
+                { name: 'Phoenix', qty: 2 },
+                { name: 'Mermaid', qty: 3 }
+            ],
+            spells: [
+                { name: 'Geyser', qty: 4 },
+                { name: 'Blaze', qty: 4 },
+                { name: 'Fireball', qty: 4 },
+                { name: 'Frost Bolt', qty: 4 },
+                { name: 'Lightning Bolt', qty: 3 },
+                { name: 'Freeze', qty: 2 }
+            ],
+            sites: [
+                { name: 'Volcanic Springs', qty: 4 },
+                { name: 'Coral Reef', qty: 4 },
+                { name: 'Tidal Pool', qty: 3 },
+                { name: 'Magma Cavern', qty: 3 },
+                { name: 'Hot Springs', qty: 3 },
+                { name: 'Gnome Hollows', qty: 2 },
+                { name: 'Hidden Grotto', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Ruby', qty: 2 },
+                { name: 'Sapphire', qty: 2 }
+            ]
+        }
     },
     {
         id: 'terminate-extreme-prejudice',
@@ -107,7 +272,38 @@ const RECOMMENDED_DECKS = [
         tier: 'S',
         estimatedPrice: 145,
         keyCards: ['Persecutor', 'Blaze', 'Fireball', 'Landslide', 'Incinerate'],
-        strategy: 'Terminate com extremo prejuízo. Aggro puro que não perdoa erros.'
+        strategy: 'Terminate com extremo prejuízo. Aggro puro que não perdoa erros.',
+        decklist: {
+            avatar: 'Persecutor',
+            minions: [
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Sacred Scarabs', qty: 4 },
+                { name: 'Quarrelsome Kobolds', qty: 4 },
+                { name: 'Fire Imp', qty: 4 },
+                { name: 'Flame Spirit', qty: 3 },
+                { name: 'Phoenix', qty: 2 },
+                { name: 'Pyromaniac', qty: 2 }
+            ],
+            spells: [
+                { name: 'Blaze', qty: 4 },
+                { name: 'Fireball', qty: 4 },
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Incinerate', qty: 4 },
+                { name: 'Landslide', qty: 3 },
+                { name: 'Fury', qty: 2 }
+            ],
+            sites: [
+                { name: 'Volcanic Springs', qty: 4 },
+                { name: 'Magma Cavern', qty: 4 },
+                { name: 'Scorched Earth', qty: 4 },
+                { name: 'Fire Pit', qty: 4 },
+                { name: 'Inferno', qty: 3 },
+                { name: 'Gnome Hollows', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Ruby', qty: 4 }
+            ]
+        }
     },
     {
         id: 'drown-in-deep',
@@ -124,7 +320,37 @@ const RECOMMENDED_DECKS = [
         tier: 'A',
         estimatedPrice: 175,
         keyCards: ['Diluvian Kraken', 'Frost Bolt', 'Geyser', 'Blink'],
-        strategy: 'Controle puro de Water. Afogue seus oponentes em card advantage.'
+        strategy: 'Controle puro de Water. Afogue seus oponentes em card advantage.',
+        decklist: {
+            avatar: 'Waveshaper',
+            minions: [
+                { name: 'Diluvian Kraken', qty: 4 },
+                { name: 'Mermaid', qty: 4 },
+                { name: 'Polar Explorers', qty: 4 },
+                { name: 'Merfolk Scout', qty: 3 },
+                { name: 'Sea Serpent', qty: 3 },
+                { name: 'Water Elemental', qty: 2 }
+            ],
+            spells: [
+                { name: 'Frost Bolt', qty: 4 },
+                { name: 'Geyser', qty: 4 },
+                { name: 'Freeze', qty: 4 },
+                { name: 'Blink', qty: 3 },
+                { name: 'Tidal Wave', qty: 3 },
+                { name: 'Whirlpool', qty: 2 }
+            ],
+            sites: [
+                { name: 'Coral Reef', qty: 4 },
+                { name: 'Tidal Pool', qty: 4 },
+                { name: 'Deep Ocean', qty: 4 },
+                { name: 'Hidden Grotto', qty: 3 },
+                { name: 'Underwater Cavern', qty: 3 },
+                { name: 'Gnome Hollows', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Sapphire', qty: 4 }
+            ]
+        }
     },
     {
         id: 'archimago-gothic-update',
@@ -141,7 +367,38 @@ const RECOMMENDED_DECKS = [
         tier: 'A',
         estimatedPrice: 160,
         keyCards: ['Archimago', 'Lightning Bolt', 'Chain Lightning', 'Fireball', 'Disintegrate'],
-        strategy: 'Controle flexível que se adapta a qualquer matchup.'
+        strategy: 'Controle flexível que se adapta a qualquer matchup.',
+        decklist: {
+            avatar: 'Archimago',
+            minions: [
+                { name: 'Phase Assassin', qty: 4 },
+                { name: 'Grim Reaper', qty: 3 },
+                { name: 'Storm Elemental', qty: 3 },
+                { name: 'Phoenix', qty: 3 },
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Air Elemental', qty: 2 }
+            ],
+            spells: [
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Chain Lightning', qty: 4 },
+                { name: 'Fireball', qty: 4 },
+                { name: 'Disintegrate', qty: 3 },
+                { name: 'Blink', qty: 3 },
+                { name: 'Blaze', qty: 3 }
+            ],
+            sites: [
+                { name: 'Observatory', qty: 4 },
+                { name: 'Stormcloud', qty: 4 },
+                { name: 'Volcanic Springs', qty: 3 },
+                { name: 'Magma Cavern', qty: 3 },
+                { name: 'Perilous Bridge', qty: 3 },
+                { name: 'Gnome Hollows', qty: 2 }
+            ],
+            artifacts: [
+                { name: 'Amethyst', qty: 2 },
+                { name: 'Ruby', qty: 2 }
+            ]
+        }
     },
     {
         id: 'sorcerycon-3rd-jsala',
@@ -1500,6 +1757,377 @@ const TOURNAMENT_DECKS = [
         estimatedPrice: 155,
         description: 'Battlemage usado no Sorcery Fest.',
         keyCards: ['Battlemage', 'Lightning Bolt', 'Blink', 'Chain Lightning', 'Grapple Shot']
+    },
+
+    // ============================================
+    // PRECONSTRUCTED DECKS - BETA EDITION
+    // The Four Elements
+    // ============================================
+    {
+        id: 'precon-beta-air',
+        name: 'Air Elemental Precon',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Beta',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial de Air do set Beta. Foco em minions móveis e magia de dano à distância.',
+        avatar: 'Sparkmage',
+        elements: ['Air'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 25,
+        keyCards: ['Lucky Charm', 'Lightning Bolt', 'Headless Haunt', 'Phase Assassin', 'Blink'],
+        strategy: 'Deck de tempo que usa criaturas evasivas e remoção instantânea para controlar o ritmo do jogo.',
+        decklist: {
+            avatar: 'Sparkmage',
+            minions: [
+                { name: 'Headless Haunt', qty: 4 },
+                { name: 'Phase Assassin', qty: 3 },
+                { name: 'Storm Elemental', qty: 3 },
+                { name: 'Air Elemental', qty: 2 },
+                { name: 'Wisp', qty: 4 },
+                { name: 'Cloud Dancer', qty: 2 }
+            ],
+            spells: [
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Blink', qty: 3 },
+                { name: 'Lucky Charm', qty: 3 },
+                { name: 'Chain Lightning', qty: 2 },
+                { name: 'Gust', qty: 2 },
+                { name: 'Zephyr', qty: 2 }
+            ],
+            sites: [
+                { name: 'Observatory', qty: 4 },
+                { name: 'Stormcloud', qty: 4 },
+                { name: 'Perilous Bridge', qty: 4 },
+                { name: 'Gnome Hollows', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Amethyst', qty: 2 }
+            ]
+        }
+    },
+    {
+        id: 'precon-beta-earth',
+        name: 'Earth Elemental Precon',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Beta',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial de Earth do set Beta. Força bruta e inundação de board com minions.',
+        avatar: 'Geomancer',
+        elements: ['Earth'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 25,
+        keyCards: ['Autumn Unicorn', 'Border Militia', 'Ordinary Village', 'Bosk Troll', 'Landslide'],
+        strategy: 'Deck de midrange que joga criaturas maiores que o oponente em cada estágio do jogo.',
+        decklist: {
+            avatar: 'Geomancer',
+            minions: [
+                { name: 'Border Militia', qty: 4 },
+                { name: 'Bosk Troll', qty: 4 },
+                { name: 'Autumn Unicorn', qty: 4 },
+                { name: 'Slumbering Giantess', qty: 2 },
+                { name: 'Earth Elemental', qty: 2 },
+                { name: 'Giant Spider', qty: 2 }
+            ],
+            spells: [
+                { name: 'Landslide', qty: 3 },
+                { name: 'Entangle', qty: 4 },
+                { name: 'Earthbind', qty: 3 },
+                { name: 'Regenerate', qty: 2 },
+                { name: 'Reclaim', qty: 2 }
+            ],
+            sites: [
+                { name: 'Ordinary Village', qty: 4 },
+                { name: 'Fertile Earth', qty: 4 },
+                { name: 'Mountain Peaks', qty: 4 },
+                { name: 'Gnome Hollows', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Emerald', qty: 2 }
+            ]
+        }
+    },
+    {
+        id: 'precon-beta-fire',
+        name: 'Fire Elemental Precon',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Beta',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial de Fire do set Beta. Dano colateral e agressividade implacável.',
+        avatar: 'Flamecaller',
+        elements: ['Fire'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 25,
+        keyCards: ['Sacred Scarabs', 'Colicky Dragonettes', 'Blaze', 'Fireball', 'Incinerate'],
+        strategy: 'Aggro puro que busca vencer rapidamente com dano direto e criaturas eficientes.',
+        decklist: {
+            avatar: 'Flamecaller',
+            minions: [
+                { name: 'Sacred Scarabs', qty: 4 },
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Quarrelsome Kobolds', qty: 4 },
+                { name: 'Fire Imp', qty: 3 },
+                { name: 'Fire Elemental', qty: 2 },
+                { name: 'Flame Spirit', qty: 2 }
+            ],
+            spells: [
+                { name: 'Blaze', qty: 4 },
+                { name: 'Fireball', qty: 3 },
+                { name: 'Incinerate', qty: 3 },
+                { name: 'Fury', qty: 2 },
+                { name: 'Scorch', qty: 2 }
+            ],
+            sites: [
+                { name: 'Volcanic Springs', qty: 4 },
+                { name: 'Magma Cavern', qty: 4 },
+                { name: 'Scorched Earth', qty: 4 },
+                { name: 'Gnome Hollows', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Ruby', qty: 2 }
+            ]
+        }
+    },
+    {
+        id: 'precon-beta-water',
+        name: 'Water Elemental Precon',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Beta',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial de Water do set Beta. Defesa com vantagem de território.',
+        avatar: 'Waveshaper',
+        elements: ['Water'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 25,
+        keyCards: ['Brobdingnag Bullfrog', 'Tufted Turtles', 'Diluvian Kraken', 'Frost Bolt', 'Geyser'],
+        strategy: 'Controle defensivo que usa vantagem de território para dominar o late game.',
+        decklist: {
+            avatar: 'Waveshaper',
+            minions: [
+                { name: 'Brobdingnag Bullfrog', qty: 4 },
+                { name: 'Tufted Turtles', qty: 4 },
+                { name: 'Mermaid', qty: 3 },
+                { name: 'Diluvian Kraken', qty: 2 },
+                { name: 'Water Elemental', qty: 2 },
+                { name: 'Merfolk Scout', qty: 3 }
+            ],
+            spells: [
+                { name: 'Frost Bolt', qty: 4 },
+                { name: 'Geyser', qty: 3 },
+                { name: 'Freeze', qty: 3 },
+                { name: 'Tidal Wave', qty: 2 },
+                { name: 'Whirlpool', qty: 2 }
+            ],
+            sites: [
+                { name: 'Coral Reef', qty: 4 },
+                { name: 'Tidal Pool', qty: 4 },
+                { name: 'Deep Ocean', qty: 4 },
+                { name: 'Gnome Hollows', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Sapphire', qty: 2 }
+            ]
+        }
+    },
+
+    // ============================================
+    // PRECONSTRUCTED DECKS - GOTHIC EDITION
+    // The Prophets of Doom
+    // ============================================
+    {
+        id: 'precon-gothic-necromancer',
+        name: 'Necromancer - Prophets of Doom',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Gothic',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial do Necromancer do set Gothic. Recursão e exército de mortos-vivos.',
+        avatar: 'Necromancer',
+        elements: ['Air', 'Earth'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 30,
+        keyCards: ['Grim Reaper', 'Skeleton Army', 'Raise Dead', 'Gravedigger', 'Bone Dragon'],
+        strategy: 'Sacrifique e traga de volta. Crie um exército interminável de mortos-vivos.',
+        decklist: {
+            avatar: 'Necromancer',
+            minions: [
+                { name: 'Skeleton Army', qty: 4 },
+                { name: 'Grim Reaper', qty: 3 },
+                { name: 'Gravedigger', qty: 4 },
+                { name: 'Bone Dragon', qty: 2 },
+                { name: 'Zombie', qty: 4 },
+                { name: 'Ghost', qty: 2 }
+            ],
+            spells: [
+                { name: 'Raise Dead', qty: 4 },
+                { name: 'Dark Ritual', qty: 3 },
+                { name: 'Entangle', qty: 3 },
+                { name: 'Lightning Bolt', qty: 2 },
+                { name: 'Blink', qty: 2 }
+            ],
+            sites: [
+                { name: 'Haunted Cemetery', qty: 4 },
+                { name: 'Crypt', qty: 4 },
+                { name: 'Observatory', qty: 4 },
+                { name: 'Mountain Peaks', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Skull', qty: 2 }
+            ]
+        }
+    },
+    {
+        id: 'precon-gothic-harbinger',
+        name: 'Harbinger - Prophets of Doom',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Gothic',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial do Harbinger do set Gothic. Tempo e evasão com toque sombrio.',
+        avatar: 'Harbinger',
+        elements: ['Air', 'Water'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 30,
+        keyCards: ['Phase Assassin', 'Grim Reaper', 'Frost Bolt', 'Blink', 'Chain Lightning'],
+        strategy: 'Controle o ritmo do jogo com criaturas evasivas e remoção eficiente.',
+        decklist: {
+            avatar: 'Harbinger',
+            minions: [
+                { name: 'Phase Assassin', qty: 4 },
+                { name: 'Grim Reaper', qty: 3 },
+                { name: 'Daperyll Vampire', qty: 3 },
+                { name: 'Storm Elemental', qty: 2 },
+                { name: 'Merfolk Scout', qty: 4 },
+                { name: 'Specter', qty: 2 }
+            ],
+            spells: [
+                { name: 'Frost Bolt', qty: 4 },
+                { name: 'Lightning Bolt', qty: 4 },
+                { name: 'Blink', qty: 3 },
+                { name: 'Chain Lightning', qty: 2 },
+                { name: 'Freeze', qty: 2 }
+            ],
+            sites: [
+                { name: 'Observatory', qty: 4 },
+                { name: 'Stormcloud', qty: 4 },
+                { name: 'Coral Reef', qty: 4 },
+                { name: 'Hidden Grotto', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Amethyst', qty: 2 }
+            ]
+        }
+    },
+    {
+        id: 'precon-gothic-savior',
+        name: 'Savior - Prophets of Doom',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Gothic',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial do Savior do set Gothic. Proteção e redenção com poder angelical.',
+        avatar: 'Savior',
+        elements: ['Fire', 'Water'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 30,
+        keyCards: ['Angel', 'Phoenix', 'Geyser', 'Blaze', 'Heal'],
+        strategy: 'Equilibre agressão e defesa com anjos e magias de proteção.',
+        decklist: {
+            avatar: 'Savior',
+            minions: [
+                { name: 'Angel', qty: 4 },
+                { name: 'Phoenix', qty: 3 },
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Mermaid', qty: 3 },
+                { name: 'Steam Elemental', qty: 2 },
+                { name: 'Guardian Angel', qty: 2 }
+            ],
+            spells: [
+                { name: 'Blaze', qty: 4 },
+                { name: 'Geyser', qty: 3 },
+                { name: 'Frost Bolt', qty: 3 },
+                { name: 'Heal', qty: 2 },
+                { name: 'Fireball', qty: 2 }
+            ],
+            sites: [
+                { name: 'Volcanic Springs', qty: 4 },
+                { name: 'Coral Reef', qty: 4 },
+                { name: 'Hot Springs', qty: 4 },
+                { name: 'Cathedral', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Holy Grail', qty: 2 }
+            ]
+        }
+    },
+    {
+        id: 'precon-gothic-persecutor',
+        name: 'Persecutor - Prophets of Doom',
+        author: 'Official',
+        url: 'https://curiosa.io/precons',
+        set: 'Gothic',
+        format: 'Constructed',
+        isPrecon: true,
+        description: 'Precon oficial do Persecutor do set Gothic. Destruição implacável e dano massivo.',
+        avatar: 'Persecutor',
+        elements: ['Fire', 'Earth'],
+        tier: 'Precon',
+        views: 0,
+        likes: 0,
+        estimatedPrice: 30,
+        keyCards: ['Demon', 'Sacred Scarabs', 'Blaze', 'Fireball', 'Landslide'],
+        strategy: 'Destrua tudo em seu caminho. Dano direto e criaturas agressivas.',
+        decklist: {
+            avatar: 'Persecutor',
+            minions: [
+                { name: 'Demon', qty: 4 },
+                { name: 'Sacred Scarabs', qty: 4 },
+                { name: 'Colicky Dragonettes', qty: 4 },
+                { name: 'Bosk Troll', qty: 3 },
+                { name: 'Fire Imp', qty: 2 },
+                { name: 'Hell Hound', qty: 2 }
+            ],
+            spells: [
+                { name: 'Blaze', qty: 4 },
+                { name: 'Fireball', qty: 4 },
+                { name: 'Landslide', qty: 3 },
+                { name: 'Entangle', qty: 2 },
+                { name: 'Incinerate', qty: 2 }
+            ],
+            sites: [
+                { name: 'Volcanic Springs', qty: 4 },
+                { name: 'Magma Cavern', qty: 4 },
+                { name: 'Fertile Earth', qty: 4 },
+                { name: 'Inferno', qty: 4 }
+            ],
+            artifacts: [
+                { name: 'Ruby', qty: 2 }
+            ]
+        }
     }
 ];
 
