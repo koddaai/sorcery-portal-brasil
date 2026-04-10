@@ -10553,10 +10553,17 @@ input:checked + .toggle-slider:before {
 }
 
 .decklist-column li .card-qty {
+    position: static;
+    background: transparent;
     color: var(--accent-gold);
     font-weight: 600;
-    min-width: 16px;
-    text-align: center;
+    min-width: 20px;
+    width: auto;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.9rem;
+    text-align: left;
 }
 
 .decklist-column li .card-name {
