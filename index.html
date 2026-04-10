@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=25">
+    <link rel="stylesheet" href="styles.css?v=26">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -179,6 +179,9 @@
                             </button>
                             <button class="nav-dropdown-item" data-view="meta">
                                 <i data-lucide="trophy"></i> Meta & Tier List
+                            </button>
+                            <button class="nav-dropdown-item" data-view="top-cards">
+                                <i data-lucide="trending-up"></i> Top Cards
                             </button>
                             <button class="nav-dropdown-item" data-view="art">
                                 <i data-lucide="brush"></i> A Arte & Artistas
@@ -543,7 +546,10 @@
             <section id="decks-view" class="view">
                 <div class="decks-header">
                     <h2>My Decks</h2>
-                    <button id="new-deck-btn" class="btn primary">+ New Deck</button>
+                    <div class="deck-header-actions">
+                        <button id="import-deck-btn" class="btn secondary"><i data-lucide="download"></i> Importar Deck</button>
+                        <button id="new-deck-btn" class="btn primary">+ New Deck</button>
+                    </div>
                 </div>
                 <div id="decks-list" class="decks-list">
                     <!-- Decks will be listed here -->
@@ -711,6 +717,64 @@
                         <div class="modal-footer">
                             <button id="save-deck-btn" class="btn primary">Save Deck</button>
                             <button id="cancel-deck-btn" class="btn">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Import Deck Modal -->
+                <div id="import-deck-modal" class="modal hidden">
+                    <div class="modal-content import-deck-modal">
+                        <div class="modal-header">
+                            <h2><i data-lucide="download"></i> Importar Deck</h2>
+                            <button class="close-modal">&times;</button>
+                        </div>
+                        <div class="import-deck-content">
+                            <div class="import-tabs">
+                                <button class="import-tab active" data-tab="url">
+                                    <i data-lucide="link"></i> Via URL
+                                </button>
+                                <button class="import-tab" data-tab="text">
+                                    <i data-lucide="file-text"></i> Via Texto
+                                </button>
+                            </div>
+
+                            <!-- URL Import Tab -->
+                            <div class="import-tab-content active" id="import-url-tab">
+                                <div class="import-section">
+                                    <label>Cole a URL do deck do Curiosa.io</label>
+                                    <input type="text" id="import-deck-url" placeholder="https://curiosa.io/decks/..." class="import-input">
+                                    <p class="import-hint">Exemplo: https://curiosa.io/decks/cm6xsgyny000jjx03c7jrcgwa</p>
+                                </div>
+                                <div class="import-preview" id="import-url-preview">
+                                    <!-- Preview will appear here -->
+                                </div>
+                            </div>
+
+                            <!-- Text Import Tab -->
+                            <div class="import-tab-content" id="import-text-tab">
+                                <div class="import-section">
+                                    <label>Nome do Deck</label>
+                                    <input type="text" id="import-deck-name" placeholder="Meu Deck Importado" class="import-input">
+                                </div>
+                                <div class="import-section">
+                                    <label>Cole a lista de cartas (formato: "4 Lightning Bolt" ou "4x Lightning Bolt")</label>
+                                    <textarea id="import-deck-text" placeholder="4 Lightning Bolt
+4 Blink
+3 Chain Lightning
+1 Grim Reaper
+..." class="import-textarea" rows="12"></textarea>
+                                </div>
+                                <div class="import-stats" id="import-text-stats">
+                                    <span id="import-cards-found">0 cartas encontradas</span>
+                                    <span id="import-cards-missing">0 não encontradas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="import-deck-submit" class="btn primary" disabled>
+                                <i data-lucide="download"></i> Importar Deck
+                            </button>
+                            <button id="import-deck-cancel" class="btn">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -1127,6 +1191,38 @@
                             <p>Evasão, tempo, spells versáteis</p>
                         </div>
                     </div>
+                </div>
+            </section>
+
+            <!-- Top Cards View -->
+            <section id="top-cards-view" class="view">
+                <div class="section-header">
+                    <h2><i data-lucide="trending-up"></i> Top Cards</h2>
+                    <p class="subtitle">As cartas mais usadas em decks competitivos</p>
+                </div>
+
+                <!-- This Week -->
+                <div class="top-cards-week-section">
+                    <h3><i data-lucide="calendar"></i> Esta Semana</h3>
+                    <div id="top-cards-this-week" class="week-cards-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="top-cards-section">
+                    <h3><i data-lucide="bar-chart-2"></i> Por Elemento</h3>
+                    <div id="top-cards-filters" class="top-cards-filters">
+                        <!-- Populated by JS -->
+                    </div>
+                    <div id="top-cards-list" class="top-cards-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Source -->
+                <div class="top-cards-source">
+                    <p>Dados baseados em 20,000+ decks. Fonte: <a href="https://sorcerycard.io/top" target="_blank">sorcerycard.io</a></p>
                 </div>
             </section>
 
@@ -2408,6 +2504,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <script src="recommended-decks.js"></script>
+    <script src="top-cards.js"></script>
     <script src="collection-tracker.js"></script>
     <script src="price-service.js"></script>
     <script src="value-tracker.js"></script>
@@ -2434,7 +2531,7 @@
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
-    <script src="app.js?v=22"></script>
+    <script src="app.js?v=23"></script>
     <script src="offline-manager.js"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

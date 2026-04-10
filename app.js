@@ -471,6 +471,27 @@ function setupEventListeners() {
 
     // Deck builder
     document.getElementById('new-deck-btn')?.addEventListener('click', openDeckBuilder);
+
+    // Import deck
+    document.getElementById('import-deck-btn')?.addEventListener('click', openImportDeckModal);
+    document.getElementById('import-deck-cancel')?.addEventListener('click', () => closeModal('import-deck-modal'));
+    document.getElementById('import-deck-submit')?.addEventListener('click', submitImportDeck);
+
+    // Import tabs
+    document.querySelectorAll('.import-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchImportTab(tab.dataset.tab));
+    });
+
+    // Import URL input
+    document.getElementById('import-deck-url')?.addEventListener('input', debounce(handleImportUrlInput, 500));
+
+    // Import text input
+    document.getElementById('import-deck-text')?.addEventListener('input', debounce(handleImportTextInput, 300));
+
+    // Close import modal on backdrop click
+    document.getElementById('import-deck-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'import-deck-modal') closeModal('import-deck-modal');
+    });
 }
 
 // Switch View
@@ -518,6 +539,7 @@ function switchView(viewName) {
     if (viewName === 'dust') initDustView();
     if (viewName === 'promos') initPromosView();
     if (viewName === 'news') initNewsView();
+    if (viewName === 'top-cards') initTopCardsView();
 
     // Re-initialize Lucide icons for dynamic content
     if (typeof lucide !== 'undefined') {
@@ -3966,6 +3988,261 @@ function closeDeckDetailModal() {
     if (modal) {
         modal.classList.add('hidden');
     }
+}
+
+// ============================================
+// IMPORT DECK FUNCTIONALITY
+// ============================================
+
+let importedDeckData = null;
+
+function openImportDeckModal() {
+    const modal = document.getElementById('import-deck-modal');
+    if (!modal) return;
+
+    // Reset form
+    document.getElementById('import-deck-url').value = '';
+    document.getElementById('import-deck-name').value = '';
+    document.getElementById('import-deck-text').value = '';
+    document.getElementById('import-url-preview').innerHTML = '';
+    document.getElementById('import-cards-found').textContent = '0 cartas encontradas';
+    document.getElementById('import-cards-missing').textContent = '0 não encontradas';
+    document.getElementById('import-deck-submit').disabled = true;
+    importedDeckData = null;
+
+    // Reset to URL tab
+    switchImportTab('url');
+
+    modal.classList.remove('hidden');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function switchImportTab(tabName) {
+    document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.import-tab-content').forEach(c => c.classList.remove('active'));
+
+    document.querySelector(`.import-tab[data-tab="${tabName}"]`)?.classList.add('active');
+    document.getElementById(`import-${tabName}-tab`)?.classList.add('active');
+
+    // Reset submit button when switching tabs
+    document.getElementById('import-deck-submit').disabled = true;
+    importedDeckData = null;
+}
+
+async function handleImportUrlInput(e) {
+    const url = e.target.value.trim();
+    const previewEl = document.getElementById('import-url-preview');
+    const submitBtn = document.getElementById('import-deck-submit');
+
+    if (!url) {
+        previewEl.innerHTML = '';
+        submitBtn.disabled = true;
+        return;
+    }
+
+    // Validate Curiosa.io URL
+    const curiosaMatch = url.match(/curiosa\.io\/decks\/([a-zA-Z0-9]+)/);
+    if (!curiosaMatch) {
+        previewEl.innerHTML = '<p style="color: var(--warning);">URL inválida. Use uma URL do Curiosa.io (ex: https://curiosa.io/decks/...)</p>';
+        submitBtn.disabled = true;
+        return;
+    }
+
+    const deckId = curiosaMatch[1];
+    previewEl.innerHTML = '<div class="loading"><i data-lucide="loader-2" class="spinning"></i> Buscando deck...</div>';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+
+    // Try to find the deck in our recommended decks
+    const allDecks = getAllCommunityDecks();
+    const foundDeck = allDecks.find(d => d.url?.includes(deckId));
+
+    if (foundDeck) {
+        importedDeckData = {
+            type: 'curiosa',
+            deck: foundDeck
+        };
+
+        previewEl.innerHTML = `
+            <div class="preview-deck-name">${foundDeck.name}</div>
+            <div class="preview-deck-author">por ${foundDeck.author || foundDeck.player || 'Desconhecido'}</div>
+            <div class="preview-stats">
+                <span class="preview-stat"><i data-lucide="layers"></i> ${foundDeck.decklist ? 'Lista completa disponível' : 'Lista parcial'}</span>
+                <span class="preview-stat"><i data-lucide="dollar-sign"></i> $${foundDeck.estimatedPrice || '?'}</span>
+                ${foundDeck.elements ? `<span class="preview-stat">${foundDeck.elements.map(e => getElementIcon(e)).join(' ')}</span>` : ''}
+            </div>
+        `;
+        submitBtn.disabled = false;
+    } else {
+        previewEl.innerHTML = `
+            <p style="color: var(--warning);">Deck não encontrado em nossa base de dados.</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Use a aba "Via Texto" para importar manualmente copiando a lista de cartas do Curiosa.io.</p>
+        `;
+        submitBtn.disabled = true;
+    }
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function handleImportTextInput(e) {
+    const text = e.target.value.trim();
+    const foundEl = document.getElementById('import-cards-found');
+    const missingEl = document.getElementById('import-cards-missing');
+    const submitBtn = document.getElementById('import-deck-submit');
+
+    if (!text) {
+        foundEl.textContent = '0 cartas encontradas';
+        missingEl.textContent = '0 não encontradas';
+        submitBtn.disabled = true;
+        importedDeckData = null;
+        return;
+    }
+
+    const parsed = parseDecklist(text);
+    foundEl.textContent = `${parsed.found.length} cartas encontradas`;
+    missingEl.textContent = `${parsed.missing.length} não encontradas`;
+
+    if (parsed.found.length > 0) {
+        importedDeckData = {
+            type: 'text',
+            cards: parsed.found,
+            missing: parsed.missing
+        };
+        submitBtn.disabled = false;
+    } else {
+        importedDeckData = null;
+        submitBtn.disabled = true;
+    }
+}
+
+function parseDecklist(text) {
+    const lines = text.split('\n').filter(l => l.trim());
+    const found = [];
+    const missing = [];
+
+    for (const line of lines) {
+        // Skip section headers
+        if (line.match(/^(Avatar|Spellbook|Atlas|Minions|Magic|Artifacts|Sites|Auras):/i)) continue;
+        if (line.match(/^#+/)) continue;
+        if (line.match(/^-+$/)) continue;
+
+        // Parse "4 Lightning Bolt" or "4x Lightning Bolt" or "Lightning Bolt x4"
+        let match = line.match(/^(\d+)x?\s+(.+)$/i) || line.match(/^(.+)\s+x(\d+)$/i);
+
+        if (match) {
+            const qty = parseInt(match[1]) || parseInt(match[2]) || 1;
+            const cardName = (match[2] || match[1]).trim();
+
+            // Find card in database
+            const card = allCards.find(c =>
+                c.name.toLowerCase() === cardName.toLowerCase() ||
+                c.name.toLowerCase().includes(cardName.toLowerCase())
+            );
+
+            if (card) {
+                found.push({ name: card.name, qty, card });
+            } else {
+                missing.push({ name: cardName, qty });
+            }
+        } else if (line.trim()) {
+            // Single card without quantity
+            const cardName = line.trim();
+            const card = allCards.find(c =>
+                c.name.toLowerCase() === cardName.toLowerCase()
+            );
+
+            if (card) {
+                found.push({ name: card.name, qty: 1, card });
+            } else {
+                missing.push({ name: cardName, qty: 1 });
+            }
+        }
+    }
+
+    return { found, missing };
+}
+
+function submitImportDeck() {
+    if (!importedDeckData) return;
+
+    const deckName = document.getElementById('import-deck-name')?.value.trim() || 'Deck Importado';
+
+    if (importedDeckData.type === 'curiosa' && importedDeckData.deck) {
+        // Import from Curiosa deck
+        const sourceDeck = importedDeckData.deck;
+        const newDeck = {
+            id: Date.now().toString(),
+            name: sourceDeck.name + ' (Importado)',
+            avatar: sourceDeck.decklist?.avatar || sourceDeck.avatar || '',
+            cards: [],
+            createdAt: new Date().toISOString()
+        };
+
+        // Convert decklist to cards array
+        if (sourceDeck.decklist) {
+            const addCards = (cards, type) => {
+                if (!cards) return;
+                cards.forEach(c => {
+                    const card = allCards.find(ac => ac.name.toLowerCase() === c.name.toLowerCase());
+                    if (card) {
+                        for (let i = 0; i < c.qty; i++) {
+                            newDeck.cards.push({ name: card.name, type });
+                        }
+                    }
+                });
+            };
+
+            addCards(sourceDeck.decklist.minions, 'minion');
+            addCards(sourceDeck.decklist.spells, 'spell');
+            addCards(sourceDeck.decklist.artifacts, 'artifact');
+            addCards(sourceDeck.decklist.sites, 'site');
+        }
+
+        decks.push(newDeck);
+        saveToStorage();
+        renderDecks();
+        showNotification(`Deck "${newDeck.name}" importado com sucesso!`, 'success');
+    } else if (importedDeckData.type === 'text') {
+        // Import from text
+        const newDeck = {
+            id: Date.now().toString(),
+            name: deckName,
+            avatar: '',
+            cards: [],
+            createdAt: new Date().toISOString()
+        };
+
+        importedDeckData.cards.forEach(c => {
+            const cardType = c.card?.guardian?.type?.toLowerCase() || 'unknown';
+            for (let i = 0; i < c.qty; i++) {
+                newDeck.cards.push({ name: c.name, type: cardType });
+            }
+        });
+
+        decks.push(newDeck);
+        saveToStorage();
+        renderDecks();
+
+        let message = `Deck "${deckName}" importado com ${importedDeckData.cards.length} cartas!`;
+        if (importedDeckData.missing.length > 0) {
+            message += ` (${importedDeckData.missing.length} cartas não encontradas)`;
+        }
+        showNotification(message, 'success');
+    }
+
+    closeModal('import-deck-modal');
+}
+
+// Debounce helper
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 // Render community decks
