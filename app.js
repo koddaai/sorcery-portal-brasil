@@ -3802,10 +3802,10 @@ const deckBrowserState = {
     avatarFilter: 'all',
     sortBy: 'views',
     cardSearch: '',
-    primerOnly: false,
+    preconOnly: false,
     beginnerOnly: false,
     tournamentOnly: false,
-    preconOnly: false
+    communityOnly: false
 };
 
 // Get all decks combined
@@ -3866,7 +3866,7 @@ function filterDecks(decks) {
         }
 
         // Quick filters
-        if (deckBrowserState.primerOnly && !deck.isPrimer) {
+        if (deckBrowserState.preconOnly && !deck.isPrecon) {
             return false;
         }
 
@@ -3878,7 +3878,7 @@ function filterDecks(decks) {
             return false;
         }
 
-        if (deckBrowserState.preconOnly && !deck.isPrecon) {
+        if (deckBrowserState.communityOnly && deck.isPrecon) {
             return false;
         }
 
@@ -4469,9 +4469,10 @@ function renderCommunityDecks() {
                        deckBrowserState.tierFilter !== 'all' ||
                        deckBrowserState.avatarFilter !== 'all' ||
                        deckBrowserState.cardSearch ||
-                       deckBrowserState.primerOnly ||
+                       deckBrowserState.preconOnly ||
                        deckBrowserState.beginnerOnly ||
-                       deckBrowserState.tournamentOnly;
+                       deckBrowserState.tournamentOnly ||
+                       deckBrowserState.communityOnly;
 
     if (clearBtn) {
         clearBtn.classList.toggle('hidden', !hasFilters);
@@ -4542,14 +4543,14 @@ function setupDeckBrowser() {
             const filter = btn.dataset.filter;
             btn.classList.toggle('active');
 
-            if (filter === 'primer') {
-                deckBrowserState.primerOnly = btn.classList.contains('active');
+            if (filter === 'precon') {
+                deckBrowserState.preconOnly = btn.classList.contains('active');
             } else if (filter === 'beginner') {
                 deckBrowserState.beginnerOnly = btn.classList.contains('active');
             } else if (filter === 'tournament') {
                 deckBrowserState.tournamentOnly = btn.classList.contains('active');
-            } else if (filter === 'precon') {
-                deckBrowserState.preconOnly = btn.classList.contains('active');
+            } else if (filter === 'community') {
+                deckBrowserState.communityOnly = btn.classList.contains('active');
             }
 
             renderCommunityDecks();
@@ -4564,10 +4565,10 @@ function setupDeckBrowser() {
         deckBrowserState.avatarFilter = 'all';
         deckBrowserState.sortBy = 'views';
         deckBrowserState.cardSearch = '';
-        deckBrowserState.primerOnly = false;
+        deckBrowserState.preconOnly = false;
         deckBrowserState.beginnerOnly = false;
         deckBrowserState.tournamentOnly = false;
-        deckBrowserState.preconOnly = false;
+        deckBrowserState.communityOnly = false;
 
         // Reset UI
         document.querySelectorAll('.element-btn').forEach(b => b.classList.remove('active'));
