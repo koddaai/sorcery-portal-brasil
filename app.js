@@ -3586,51 +3586,322 @@ function debounce(func, wait) {
     };
 }
 
-// Render recommended decks
-function renderRecommendedDecks() {
-    const recommendedListEl = document.getElementById('recommended-decks-list');
-    const tournamentListEl = document.getElementById('tournament-decks-list');
+// ============================================
+// COMMUNITY DECK BROWSER
+// ============================================
 
-    if (recommendedListEl && typeof RECOMMENDED_DECKS !== 'undefined') {
-        recommendedListEl.innerHTML = RECOMMENDED_DECKS
-            .sort((a, b) => b.views - a.views)
-            .slice(0, 8)
-            .map(deck => `
-                <div class="deck-card recommended" onclick="window.open('${deck.url}', '_blank')">
-                    <div class="deck-tier tier-${deck.tier}">${deck.tier}</div>
-                    <h3>${deck.name}</h3>
-                    <div class="deck-card-meta">
-                        <span>${deck.author}</span>
-                        <span>${deck.views} views</span>
-                        <span>${deck.likes} likes</span>
-                    </div>
-                    <p class="deck-description">${deck.description}</p>
-                    <div class="deck-elements">
-                        ${deck.elements.map(e => `<span class="badge ${e.toLowerCase()}">${e}</span>`).join('')}
-                    </div>
-                    ${deck.isPrimer ? '<span class="primer-badge">Primer</span>' : ''}
-                </div>
-            `).join('');
+// Deck browser state
+const deckBrowserState = {
+    elementFilter: 'all',
+    tierFilter: 'all',
+    avatarFilter: 'all',
+    sortBy: 'views',
+    cardSearch: '',
+    primerOnly: false,
+    beginnerOnly: false,
+    tournamentOnly: false
+};
+
+// Get all decks combined
+function getAllCommunityDecks() {
+    const decks = [];
+
+    if (typeof RECOMMENDED_DECKS !== 'undefined') {
+        decks.push(...RECOMMENDED_DECKS.map(d => ({ ...d, type: 'community' })));
     }
 
-    if (tournamentListEl && typeof TOURNAMENT_DECKS !== 'undefined') {
-        tournamentListEl.innerHTML = TOURNAMENT_DECKS.map(deck => `
-            <div class="deck-card tournament" onclick="window.open('${deck.url}', '_blank')">
-                <div class="tournament-badge">${deck.tournament}</div>
-                <h3>${deck.name}</h3>
-                <div class="deck-card-meta">
-                    <span>Player: ${deck.player}</span>
-                </div>
-                <p class="deck-description">${deck.description}</p>
-                <div class="deck-elements">
-                    ${deck.elements.map(e => `<span class="badge ${e.toLowerCase()}">${e}</span>`).join('')}
-                </div>
-                <div class="key-cards">
-                    <strong>Key Cards:</strong> ${deck.keyCards.slice(0, 4).join(', ')}...
-                </div>
+    if (typeof TOURNAMENT_DECKS !== 'undefined') {
+        decks.push(...TOURNAMENT_DECKS.map(d => ({
+            ...d,
+            type: 'tournament',
+            author: d.player ? `Player: ${d.player}` : 'Championship'
+        })));
+    }
+
+    return decks;
+}
+
+// Filter decks based on current state
+function filterDecks(decks) {
+    return decks.filter(deck => {
+        // Element filter
+        if (deckBrowserState.elementFilter !== 'all') {
+            if (!deck.elements.includes(deckBrowserState.elementFilter)) {
+                return false;
+            }
+        }
+
+        // Tier filter
+        if (deckBrowserState.tierFilter !== 'all') {
+            if (deck.tier !== deckBrowserState.tierFilter) {
+                return false;
+            }
+        }
+
+        // Avatar filter
+        if (deckBrowserState.avatarFilter !== 'all') {
+            if (deck.avatar !== deckBrowserState.avatarFilter) {
+                return false;
+            }
+        }
+
+        // Card search
+        if (deckBrowserState.cardSearch) {
+            const searchLower = deckBrowserState.cardSearch.toLowerCase();
+            const hasCard = deck.keyCards?.some(card =>
+                card.toLowerCase().includes(searchLower)
+            );
+            const matchesName = deck.name.toLowerCase().includes(searchLower);
+            const matchesDesc = deck.description?.toLowerCase().includes(searchLower);
+
+            if (!hasCard && !matchesName && !matchesDesc) {
+                return false;
+            }
+        }
+
+        // Quick filters
+        if (deckBrowserState.primerOnly && !deck.isPrimer) {
+            return false;
+        }
+
+        if (deckBrowserState.beginnerOnly && !deck.beginner) {
+            return false;
+        }
+
+        if (deckBrowserState.tournamentOnly && deck.type !== 'tournament') {
+            return false;
+        }
+
+        return true;
+    });
+}
+
+// Sort decks
+function sortDecks(decks) {
+    const sorted = [...decks];
+
+    switch (deckBrowserState.sortBy) {
+        case 'views':
+            sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
+            break;
+        case 'likes':
+            sorted.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+            break;
+        case 'price-low':
+            sorted.sort((a, b) => (a.estimatedPrice || 0) - (b.estimatedPrice || 0));
+            break;
+        case 'price-high':
+            sorted.sort((a, b) => (b.estimatedPrice || 0) - (a.estimatedPrice || 0));
+            break;
+        case 'name':
+            sorted.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+    }
+
+    return sorted;
+}
+
+// Render deck card
+function renderDeckCard(deck) {
+    const tierClass = deck.type === 'tournament' ? 'tournament' : `tier-${deck.tier}`;
+    const tierLabel = deck.type === 'tournament' ? deck.tournament : deck.tier;
+
+    return `
+        <div class="deck-card-enhanced" onclick="window.open('${deck.url}', '_blank')">
+            <div class="deck-card-header">
+                <span class="deck-tier-badge ${tierClass}">${tierLabel}</span>
+                ${deck.estimatedPrice ? `<span class="deck-price-badge">$${deck.estimatedPrice}</span>` : ''}
             </div>
-        `).join('');
+
+            <h4>${deck.name}</h4>
+
+            <div class="deck-card-meta-row">
+                <span><i data-lucide="user"></i> ${deck.author || ''}</span>
+                ${deck.views ? `<span><i data-lucide="eye"></i> ${deck.views.toLocaleString()}</span>` : ''}
+                ${deck.likes ? `<span><i data-lucide="heart"></i> ${deck.likes}</span>` : ''}
+            </div>
+
+            <p class="deck-card-description">${deck.description || ''}</p>
+
+            <div class="deck-card-elements">
+                ${deck.elements.map(e => `
+                    <span class="element-badge ${e.toLowerCase()}">
+                        ${getElementEmoji(e)} ${e}
+                    </span>
+                `).join('')}
+            </div>
+
+            <div class="deck-card-footer">
+                <div class="deck-badges">
+                    ${deck.isPrimer ? '<span class="deck-badge"><i data-lucide="book-open"></i> Primer</span>' : ''}
+                    ${deck.beginner ? '<span class="deck-badge"><i data-lucide="sparkles"></i> Iniciante</span>' : ''}
+                </div>
+                <span class="deck-avatar-badge">${deck.avatar || 'Custom'}</span>
+            </div>
+
+            ${deck.keyCards?.length ? `
+                <div class="deck-key-cards">
+                    <div class="deck-key-cards-label">Key Cards</div>
+                    <div class="deck-key-cards-list">
+                        ${deck.keyCards.slice(0, 4).map(card => `<span class="key-card-tag">${card}</span>`).join('')}
+                    </div>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
+// Get element emoji
+function getElementEmoji(element) {
+    const emojis = { Fire: '🔥', Water: '💧', Earth: '🌿', Air: '💨' };
+    return emojis[element] || '✦';
+}
+
+// Render community decks
+function renderCommunityDecks() {
+    const gridEl = document.getElementById('community-decks-grid');
+    const countEl = document.getElementById('deck-results-count');
+    const clearBtn = document.getElementById('clear-deck-filters');
+
+    if (!gridEl) return;
+
+    const allDecks = getAllCommunityDecks();
+    const filtered = filterDecks(allDecks);
+    const sorted = sortDecks(filtered);
+
+    // Update count
+    if (countEl) {
+        countEl.textContent = `${sorted.length} deck${sorted.length !== 1 ? 's' : ''} encontrado${sorted.length !== 1 ? 's' : ''}`;
     }
+
+    // Show/hide clear button
+    const hasFilters = deckBrowserState.elementFilter !== 'all' ||
+                       deckBrowserState.tierFilter !== 'all' ||
+                       deckBrowserState.avatarFilter !== 'all' ||
+                       deckBrowserState.cardSearch ||
+                       deckBrowserState.primerOnly ||
+                       deckBrowserState.beginnerOnly ||
+                       deckBrowserState.tournamentOnly;
+
+    if (clearBtn) {
+        clearBtn.classList.toggle('hidden', !hasFilters);
+    }
+
+    // Render cards
+    if (sorted.length === 0) {
+        gridEl.innerHTML = `
+            <div class="no-decks-found">
+                <i data-lucide="search-x"></i>
+                <h4>Nenhum deck encontrado</h4>
+                <p>Tente ajustar os filtros ou limpar a busca</p>
+            </div>
+        `;
+    } else {
+        gridEl.innerHTML = sorted.map(renderDeckCard).join('');
+    }
+
+    // Reinitialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+// Setup deck browser event listeners
+function setupDeckBrowser() {
+    // Element filter buttons
+    document.querySelectorAll('.element-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.element-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            deckBrowserState.elementFilter = btn.dataset.element;
+            renderCommunityDecks();
+        });
+    });
+
+    // Tier filter buttons
+    document.querySelectorAll('.tier-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            deckBrowserState.tierFilter = btn.dataset.tier;
+            renderCommunityDecks();
+        });
+    });
+
+    // Avatar filter
+    document.getElementById('deck-avatar-filter')?.addEventListener('change', (e) => {
+        deckBrowserState.avatarFilter = e.target.value;
+        renderCommunityDecks();
+    });
+
+    // Sort select
+    document.getElementById('deck-sort')?.addEventListener('change', (e) => {
+        deckBrowserState.sortBy = e.target.value;
+        renderCommunityDecks();
+    });
+
+    // Card search
+    document.getElementById('deck-card-filter')?.addEventListener('input', debounce((e) => {
+        deckBrowserState.cardSearch = e.target.value;
+        renderCommunityDecks();
+    }, 300));
+
+    // Quick filter buttons
+    document.querySelectorAll('.quick-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            btn.classList.toggle('active');
+
+            if (filter === 'primer') {
+                deckBrowserState.primerOnly = btn.classList.contains('active');
+            } else if (filter === 'beginner') {
+                deckBrowserState.beginnerOnly = btn.classList.contains('active');
+            } else if (filter === 'tournament') {
+                deckBrowserState.tournamentOnly = btn.classList.contains('active');
+            }
+
+            renderCommunityDecks();
+        });
+    });
+
+    // Clear filters button
+    document.getElementById('clear-deck-filters')?.addEventListener('click', () => {
+        // Reset state
+        deckBrowserState.elementFilter = 'all';
+        deckBrowserState.tierFilter = 'all';
+        deckBrowserState.avatarFilter = 'all';
+        deckBrowserState.sortBy = 'views';
+        deckBrowserState.cardSearch = '';
+        deckBrowserState.primerOnly = false;
+        deckBrowserState.beginnerOnly = false;
+        deckBrowserState.tournamentOnly = false;
+
+        // Reset UI
+        document.querySelectorAll('.element-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.element-btn[data-element="all"]')?.classList.add('active');
+
+        document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.tier-btn[data-tier="all"]')?.classList.add('active');
+
+        document.querySelectorAll('.quick-filter-btn').forEach(b => b.classList.remove('active'));
+
+        const avatarSelect = document.getElementById('deck-avatar-filter');
+        if (avatarSelect) avatarSelect.value = 'all';
+
+        const sortSelect = document.getElementById('deck-sort');
+        if (sortSelect) sortSelect.value = 'views';
+
+        const searchInput = document.getElementById('deck-card-filter');
+        if (searchInput) searchInput.value = '';
+
+        renderCommunityDecks();
+    });
+}
+
+// Legacy function for backwards compatibility
+function renderRecommendedDecks() {
+    renderCommunityDecks();
+    setupDeckBrowser();
 }
 
 // Setup export/import

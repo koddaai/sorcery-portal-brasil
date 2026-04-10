@@ -16,7 +16,9 @@ const RECOMMENDED_DECKS = [
         description: 'Um dos decks mais populares da comunidade com atualização para Gothic.',
         avatar: 'Custom',
         elements: ['Air', 'Earth'],
-        tier: 'S'
+        tier: 'S',
+        estimatedPrice: 85,
+        keyCards: ['Grim Reaper', 'Phase Assassin', 'Autumn Unicorn', 'Rolling Boulder', 'Ordinary Village']
     },
     {
         id: 'a-giant-pita',
@@ -30,7 +32,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck agressivo focado em criaturas grandes.',
         avatar: 'Geomancer',
         elements: ['Earth'],
-        tier: 'S'
+        tier: 'S',
+        estimatedPrice: 72,
+        keyCards: ['Slumbering Giantess', 'Bosk Troll', 'Border Militia', 'Landslide', 'Entangle']
     },
     {
         id: 'dark-depths',
@@ -44,7 +48,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck competitivo que chegou ao Top 32 na Ira\'s League.',
         avatar: 'Custom',
         elements: ['Water', 'Air'],
-        tier: 'A'
+        tier: 'A',
+        estimatedPrice: 95,
+        keyCards: ['Daperyll Vampire', 'Chain Lightning', 'Blink', 'Skirmishers of Mu', 'Chaos Twister']
     },
     {
         id: 'boots-walking',
@@ -58,7 +64,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck brasileiro popular com estratégia única.',
         avatar: 'Custom',
         elements: ['Fire', 'Earth'],
-        tier: 'A'
+        tier: 'A',
+        estimatedPrice: 68,
+        keyCards: ['Blaze', 'Fireball', 'Colicky Dragonettes', 'Autumn Unicorn', 'Sacred Scarabs']
     },
     {
         id: 'village-idiots',
@@ -72,7 +80,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck focado em sinergias de Village.',
         avatar: 'Geomancer',
         elements: ['Earth'],
-        tier: 'A'
+        tier: 'A',
+        estimatedPrice: 45,
+        keyCards: ['Ordinary Village', 'Border Militia', 'Bosk Troll', 'Entangle']
     },
     {
         id: 'haphephobia',
@@ -86,7 +96,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck com estratégia de controle.',
         avatar: 'Custom',
         elements: ['Air', 'Water'],
-        tier: 'A'
+        tier: 'A',
+        estimatedPrice: 78,
+        keyCards: ['Lightning Bolt', 'Blink', 'Chain Lightning', 'Grapple Shot']
     },
     {
         id: 'grasp-of-undeath',
@@ -100,7 +112,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck de Undead/Necromancer para Gothic.',
         avatar: 'Necromancer',
         elements: ['Air', 'Earth'],
-        tier: 'B'
+        tier: 'B',
+        estimatedPrice: 55,
+        keyCards: ['Grim Reaper', 'Devil\'s Egg', 'Phase Assassin', 'Rolling Boulder']
     },
     {
         id: 'faerie-flood',
@@ -114,7 +128,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck focado em Faeries com flood de criaturas.',
         avatar: 'Custom',
         elements: ['Air', 'Water'],
-        tier: 'B'
+        tier: 'B',
+        estimatedPrice: 42,
+        keyCards: ['Skirmishers of Mu', 'Blink', 'Chain Lightning']
     },
     {
         id: 'undead-geomancer',
@@ -128,7 +144,9 @@ const RECOMMENDED_DECKS = [
         description: 'Combinação de Earth com mecânicas Undead.',
         avatar: 'Geomancer',
         elements: ['Earth', 'Air'],
-        tier: 'B'
+        tier: 'B',
+        estimatedPrice: 52,
+        keyCards: ['Bosk Troll', 'Grim Reaper', 'Autumn Unicorn', 'Devil\'s Egg']
     },
     {
         id: 'persecute-angels',
@@ -142,7 +160,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck temático de Persecutor com Angels.',
         avatar: 'Persecutor',
         elements: ['Fire', 'Air'],
-        tier: 'B'
+        tier: 'B',
+        estimatedPrice: 65,
+        keyCards: ['Angel\'s Egg', 'Blaze', 'Lightning Bolt', 'Fireball']
     },
     {
         id: 'wrath-of-amoeba',
@@ -156,7 +176,9 @@ const RECOMMENDED_DECKS = [
         description: 'Deck com estratégia de tokens/swarm.',
         avatar: 'Custom',
         elements: ['Water'],
-        tier: 'B'
+        tier: 'B',
+        estimatedPrice: 38,
+        keyCards: ['Skirmishers of Mu', 'Blink']
     },
     {
         id: 'flamecaller-burn',
@@ -171,7 +193,9 @@ const RECOMMENDED_DECKS = [
         avatar: 'Flamecaller',
         elements: ['Fire'],
         tier: 'B',
-        beginner: true
+        beginner: true,
+        estimatedPrice: 35,
+        keyCards: ['Blaze', 'Fireball', 'Incinerate', 'Sacred Scarabs']
     },
     {
         id: 'archimago-burn',
@@ -185,7 +209,9 @@ const RECOMMENDED_DECKS = [
         description: 'Variação de burn com Archimago.',
         avatar: 'Custom',
         elements: ['Fire'],
-        tier: 'B'
+        tier: 'B',
+        estimatedPrice: 40,
+        keyCards: ['Blaze', 'Fireball', 'Lightning Bolt']
     }
 ];
 
@@ -200,7 +226,11 @@ const TOURNAMENT_DECKS = [
         avatar: 'Sorcerer',
         elements: ['Earth', 'Fire'],
         description: 'Deck hiper-agressivo de Earth/Fire que utiliza o Sorcerer como motor de draw.',
-        keyCards: ['Colicky Dragonettes', 'Slumbering Giantess', 'Bosk Troll', 'Autumn Unicorns', 'Blaze']
+        keyCards: ['Colicky Dragonettes', 'Slumbering Giantess', 'Bosk Troll', 'Autumn Unicorns', 'Blaze'],
+        estimatedPrice: 110,
+        tier: 'S',
+        views: 5000,
+        likes: 150
     },
     {
         id: 'gencon-champion',
@@ -211,7 +241,11 @@ const TOURNAMENT_DECKS = [
         avatar: 'Druid',
         elements: ['Water', 'Fire'],
         description: 'Deck Water/Fire "Hot Springs" que utiliza Pond para flexibilidade.',
-        keyCards: ['Redcap Powries', 'Monstrous Lion', 'Wyvern', 'Sir Agravaine', 'Morgana le Fay', 'Geyser']
+        keyCards: ['Redcap Powries', 'Monstrous Lion', 'Wyvern', 'Sir Agravaine', 'Morgana le Fay', 'Geyser'],
+        estimatedPrice: 125,
+        tier: 'S',
+        views: 4500,
+        likes: 120
     }
 ];
 

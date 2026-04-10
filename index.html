@@ -549,19 +549,109 @@
                     <!-- Decks will be listed here -->
                 </div>
 
-                <div class="recommended-section">
-                    <h3>Recommended Community Decks</h3>
-                    <p class="subtitle">Popular decks from Curiosa.io community</p>
-                    <div id="recommended-decks-list" class="decks-list">
-                        <!-- Recommended decks will be loaded here -->
+                <!-- Community Decks Browser -->
+                <div class="community-decks-browser">
+                    <div class="browser-header">
+                        <h3><i data-lucide="library"></i> Explorar Decks da Comunidade</h3>
+                        <p class="subtitle">Decks populares do Curiosa.io e campeões de torneios</p>
                     </div>
-                </div>
 
-                <div class="recommended-section">
-                    <h3>Tournament Winners</h3>
-                    <p class="subtitle">Championship-winning decklists</p>
-                    <div id="tournament-decks-list" class="decks-list">
-                        <!-- Tournament decks will be loaded here -->
+                    <!-- Filters Bar -->
+                    <div class="deck-filters">
+                        <!-- Search by Card -->
+                        <div class="filter-group search-group">
+                            <label><i data-lucide="search"></i> Buscar por Carta</label>
+                            <input type="text" id="deck-card-filter" placeholder="Ex: Lightning Bolt, Autumn Unicorn..." class="search-input">
+                        </div>
+
+                        <!-- Element Filter -->
+                        <div class="filter-group">
+                            <label><i data-lucide="flame"></i> Elemento</label>
+                            <div class="element-filters">
+                                <button class="element-btn active" data-element="all" title="Todos">
+                                    <span class="element-icon all">✦</span>
+                                </button>
+                                <button class="element-btn" data-element="Fire" title="Fire">
+                                    <span class="element-icon fire">🔥</span>
+                                </button>
+                                <button class="element-btn" data-element="Water" title="Water">
+                                    <span class="element-icon water">💧</span>
+                                </button>
+                                <button class="element-btn" data-element="Earth" title="Earth">
+                                    <span class="element-icon earth">🌿</span>
+                                </button>
+                                <button class="element-btn" data-element="Air" title="Air">
+                                    <span class="element-icon air">💨</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tier Filter -->
+                        <div class="filter-group">
+                            <label><i data-lucide="trophy"></i> Tier</label>
+                            <div class="tier-filters">
+                                <button class="tier-btn active" data-tier="all">Todos</button>
+                                <button class="tier-btn" data-tier="S">S</button>
+                                <button class="tier-btn" data-tier="A">A</button>
+                                <button class="tier-btn" data-tier="B">B</button>
+                            </div>
+                        </div>
+
+                        <!-- Avatar Filter -->
+                        <div class="filter-group">
+                            <label><i data-lucide="user"></i> Avatar</label>
+                            <select id="deck-avatar-filter" class="filter-select">
+                                <option value="all">Todos os Avatars</option>
+                                <option value="Custom">Custom</option>
+                                <option value="Geomancer">Geomancer</option>
+                                <option value="Necromancer">Necromancer</option>
+                                <option value="Flamecaller">Flamecaller</option>
+                                <option value="Sorcerer">Sorcerer</option>
+                                <option value="Druid">Druid</option>
+                                <option value="Persecutor">Persecutor</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort -->
+                        <div class="filter-group">
+                            <label><i data-lucide="arrow-up-down"></i> Ordenar</label>
+                            <select id="deck-sort" class="filter-select">
+                                <option value="views">Mais Vistos</option>
+                                <option value="likes">Mais Curtidos</option>
+                                <option value="price-low">Menor Preço</option>
+                                <option value="price-high">Maior Preço</option>
+                                <option value="name">Nome A-Z</option>
+                            </select>
+                        </div>
+
+                        <!-- Quick Filters -->
+                        <div class="filter-group">
+                            <label><i data-lucide="filter"></i> Filtros</label>
+                            <div class="quick-filters">
+                                <button class="quick-filter-btn" data-filter="primer" title="Apenas com Primer">
+                                    <i data-lucide="book-open"></i> Primer
+                                </button>
+                                <button class="quick-filter-btn" data-filter="beginner" title="Bom para Iniciantes">
+                                    <i data-lucide="sparkles"></i> Iniciante
+                                </button>
+                                <button class="quick-filter-btn" data-filter="tournament" title="Campeões">
+                                    <i data-lucide="medal"></i> Torneio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Info -->
+                    <div class="deck-results-info">
+                        <span id="deck-results-count">0 decks encontrados</span>
+                        <button id="clear-deck-filters" class="btn-link hidden">
+                            <i data-lucide="x"></i> Limpar Filtros
+                        </button>
+                    </div>
+
+                    <!-- Deck Grid -->
+                    <div id="community-decks-grid" class="community-decks-grid">
+                        <!-- Decks will be rendered here -->
                     </div>
                 </div>
 
