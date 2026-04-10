@@ -3834,16 +3834,36 @@ function openDeckDetail(deckId) {
         deck.strategy || deck.description || 'Estratégia não disponível.';
 
     // Decklist
-    const renderCardList = (cards) => {
+    const getCardElements = (cardName) => {
+        if (typeof allCards === 'undefined' || !allCards.length) return [];
+        const card = allCards.find(c => c.name === cardName);
+        if (!card || !card.elements) return [];
+        return card.elements.split('/').map(e => e.trim()).filter(e => e);
+    };
+
+    const renderElementIcons = (elements) => {
+        if (!elements || elements.length === 0) return '';
+        return elements.map(el =>
+            `<img src="assets/elements/${el.toLowerCase()}.png" alt="${el}" class="element-icon-img tiny">`
+        ).join('');
+    };
+
+    const renderCardList = (cards, showElements = false) => {
         if (!cards || cards.length === 0) {
             return '<li class="no-cards">Nenhuma carta</li>';
         }
-        return cards.map(card => `
-            <li>
-                <span class="card-name" onclick="searchCardByName('${card.name}')">${card.name}</span>
-                <span class="card-qty">×${card.qty}</span>
-            </li>
-        `).join('');
+        return cards.map(card => {
+            const qty = card.qty || 1;
+            const elements = showElements ? getCardElements(card.name) : [];
+            const elementIcons = renderElementIcons(elements);
+            return `
+                <li>
+                    <span class="card-qty">${qty}</span>
+                    <span class="card-name" onclick="searchCardByName('${card.name.replace(/'/g, "\\'")}')">${card.name}</span>
+                    ${elementIcons}
+                </li>
+            `;
+        }).join('');
     };
 
     // Calculate card counts
@@ -3877,13 +3897,13 @@ function openDeckDetail(deckId) {
     document.getElementById('deck-atlas-count').textContent = `(${sitesCount})`;
 
     document.getElementById('deck-detail-minions').innerHTML =
-        deck.decklist ? renderCardList(deck.decklist.minions) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+        deck.decklist ? renderCardList(deck.decklist.minions, true) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
     document.getElementById('deck-detail-spells').innerHTML =
-        deck.decklist ? renderCardList(deck.decklist.spells) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+        deck.decklist ? renderCardList(deck.decklist.spells, true) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
     document.getElementById('deck-detail-sites').innerHTML =
-        deck.decklist ? renderCardList(deck.decklist.sites) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+        deck.decklist ? renderCardList(deck.decklist.sites, false) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
     document.getElementById('deck-detail-artifacts').innerHTML =
-        deck.decklist ? renderCardList(deck.decklist.artifacts) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
+        deck.decklist ? renderCardList(deck.decklist.artifacts, false) : '<li class="no-cards">Lista completa no Curiosa.io</li>';
 
     // Changelog
     const changelogSection = document.getElementById('deck-detail-changelog-section');
