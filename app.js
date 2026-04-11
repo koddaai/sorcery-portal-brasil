@@ -2,15 +2,430 @@
 // SORCERY COLLECTION MANAGER - MAIN APP
 // ============================================
 
+// ============================================
+// CONSTANTS
+// ============================================
+
+// UI Timings (ms)
+const TOAST_DURATION_DEFAULT = 4000;
+const TOAST_DURATION_ERROR = 6000;
+const TOAST_ANIMATION_MS = 200;
+const NOTIFICATION_SHOW_DELAY = 100;
+const NOTIFICATION_HIDE_DELAY = 500;
+const CARD_HIGHLIGHT_DURATION = 600;
+
+// Limits and Counts
+const PREVIEW_CARDS_LIMIT = 50;
+const ARTISTS_PREVIEW_LIMIT = 100;
+const ARTIST_SAMPLE_CARDS = 3;
+const TOP_CARDS_DISPLAY = 10;
+const PRICE_CHANGES_DISPLAY = 5;
+const DECK_KEY_CARDS_DISPLAY = 4;
+
+// Deck Validation
+const SPELLBOOK_MIN = 40;
+const SPELLBOOK_MAX = 60;
+const ATLAS_MIN = 20;
+const ATLAS_MAX = 30;
+
+// Completion Thresholds (%)
+const COMPLETION_LOW = 25;
+const COMPLETION_MEDIUM = 50;
+const COMPLETION_HIGH = 75;
+const COMPLETION_FULL = 100;
+
+// Image Processing
+const MAX_IMAGE_SIZE = 800;
+const QR_CODE_SIZE = 150;
+
 // Global State
 let allCards = [];
 let filteredCards = [];
-let collection = new Set();
+let collection = new Map(); // Map<cardName, quantity> for tracking card counts
 let wishlist = new Set();
 let tradeBinder = new Set();
+let tradeWants = new Set(); // Cards the user is looking for in trades
 let decks = [];
 let ownedPrecons = new Set();
 let activeKeywordFilters = new Set();
+
+// ============================================
+// LOADING STATE UTILITIES
+// ============================================
+
+// Show loading state on a button
+function setButtonLoading(button, isLoading, loadingText = 'Carregando...') {
+    if (!button) return;
+
+    if (isLoading) {
+        button.dataset.originalText = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = `<i data-lucide="loader-2" class="spin"></i> ${loadingText}`;
+        refreshIcons(button);
+    } else {
+        button.disabled = false;
+        if (button.dataset.originalText) {
+            button.innerHTML = button.dataset.originalText;
+            delete button.dataset.originalText;
+            refreshIcons(button);
+        }
+    }
+}
+
+// Show loading overlay on a container
+function showContainerLoading(container, message = 'Carregando...') {
+    if (!container) return;
+
+    // Remove existing overlay if any
+    hideContainerLoading(container);
+
+    const overlay = document.createElement('div');
+    overlay.className = 'loading-overlay';
+    overlay.innerHTML = `
+        <div class="loading-spinner">
+            <i data-lucide="loader-2" class="spin"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    container.style.position = 'relative';
+    container.appendChild(overlay);
+    refreshIcons(overlay);
+}
+
+// Hide loading overlay from a container
+function hideContainerLoading(container) {
+    if (!container) return;
+    const overlay = container.querySelector('.loading-overlay');
+    if (overlay) overlay.remove();
+}
+
+// Show inline loading message
+function showInlineLoading(element, message = 'Carregando...') {
+    if (!element) return;
+    element.dataset.originalContent = element.innerHTML;
+    element.innerHTML = `<span class="inline-loading"><i data-lucide="loader-2" class="spin"></i> ${message}</span>`;
+    refreshIcons(element);
+}
+
+// Hide inline loading and restore content
+function hideInlineLoading(element) {
+    if (!element || !element.dataset.originalContent) return;
+    element.innerHTML = element.dataset.originalContent;
+    delete element.dataset.originalContent;
+    refreshIcons(element);
+}
+
+// ============================================
+// TOAST NOTIFICATIONS
+// ============================================
+
+// Ensure toast container exists
+function getToastContainer() {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    return container;
+}
+
+// Show toast notification
+function showToast(message, type = 'info', title = '', duration = TOAST_DURATION_DEFAULT) {
+    const container = getToastContainer();
+
+    const icons = {
+        success: 'check-circle',
+        error: 'x-circle',
+        warning: 'alert-triangle',
+        info: 'info'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+        <i data-lucide="${icons[type] || 'info'}"></i>
+        <div class="toast-content">
+            ${title ? `<div class="toast-title">${title}</div>` : ''}
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" aria-label="Fechar">
+            <i data-lucide="x"></i>
+        </button>
+    `;
+
+    // Close handler
+    const closeToast = () => {
+        toast.classList.add('toast-exit');
+        setTimeout(() => toast.remove(), 200);
+    };
+
+    toast.querySelector('.toast-close').addEventListener('click', closeToast);
+
+    // Auto close
+    if (duration > 0) {
+        setTimeout(closeToast, duration);
+    }
+
+    container.appendChild(toast);
+    refreshIcons(toast);
+
+    return toast;
+}
+
+// Convenience methods
+function showSuccessToast(message, title = '') {
+    return showToast(message, 'success', title);
+}
+
+function showErrorToast(message, title = 'Erro') {
+    return showToast(message, 'error', title, TOAST_DURATION_ERROR);
+}
+
+function showWarningToast(message, title = '') {
+    return showToast(message, 'warning', title);
+}
+
+function showInfoToast(message, title = '') {
+    return showToast(message, 'info', title);
+}
+
+// ============================================
+// ACCESSIBILITY UTILITIES
+// ============================================
+
+// Focus trap state
+let activeFocusTrap = null;
+let lastFocusedElement = null;
+
+// Get all focusable elements within a container
+function getFocusableElements(container) {
+    const focusableSelectors = [
+        'button:not([disabled]):not([tabindex="-1"])',
+        'input:not([disabled]):not([tabindex="-1"])',
+        'select:not([disabled]):not([tabindex="-1"])',
+        'textarea:not([disabled]):not([tabindex="-1"])',
+        'a[href]:not([tabindex="-1"])',
+        '[tabindex]:not([tabindex="-1"])'
+    ].join(', ');
+
+    return Array.from(container.querySelectorAll(focusableSelectors))
+        .filter(el => el.offsetParent !== null); // Only visible elements
+}
+
+// Trap focus within a modal
+function trapFocus(modal) {
+    // Store currently focused element to restore later
+    lastFocusedElement = document.activeElement;
+
+    const focusableElements = getFocusableElements(modal);
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    // Focus first element
+    firstElement.focus();
+
+    // Create trap handler
+    const trapHandler = (e) => {
+        if (e.key !== 'Tab') return;
+
+        const focusable = getFocusableElements(modal);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    };
+
+    modal.addEventListener('keydown', trapHandler);
+    activeFocusTrap = { modal, handler: trapHandler };
+}
+
+// Release focus trap and restore focus
+function releaseFocusTrap() {
+    if (activeFocusTrap) {
+        activeFocusTrap.modal.removeEventListener('keydown', activeFocusTrap.handler);
+        activeFocusTrap = null;
+    }
+
+    // Restore focus to last focused element
+    if (lastFocusedElement && lastFocusedElement.focus) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+    }
+}
+
+// Open modal with focus trap
+function openModalWithTrap(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    modal.classList.remove('hidden');
+
+    // Small delay to ensure modal is visible before trapping focus
+    requestAnimationFrame(() => {
+        trapFocus(modal);
+    });
+}
+
+// Close modal and release focus trap
+function closeModalWithTrap(modalId) {
+    const modal = modalId ? document.getElementById(modalId) : null;
+
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+
+    releaseFocusTrap();
+}
+
+// ============================================
+// DROPDOWN KEYBOARD NAVIGATION
+// ============================================
+
+// Initialize dropdown accessibility
+function initDropdownAccessibility() {
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+
+    dropdowns.forEach(dropdown => {
+        const trigger = dropdown.querySelector('.nav-dropdown-trigger');
+        const menu = dropdown.querySelector('.nav-dropdown-menu');
+        const items = menu.querySelectorAll('.nav-dropdown-item');
+
+        // Click to toggle (for touch devices)
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isOpen = dropdown.classList.contains('open');
+
+            // Close all other dropdowns
+            document.querySelectorAll('.nav-dropdown.open').forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('open');
+                    d.querySelector('.nav-dropdown-trigger').setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Toggle current
+            dropdown.classList.toggle('open');
+            trigger.setAttribute('aria-expanded', !isOpen);
+
+            if (!isOpen && items.length > 0) {
+                items[0].focus();
+            }
+        });
+
+        // Keyboard navigation on trigger
+        trigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                dropdown.classList.add('open');
+                trigger.setAttribute('aria-expanded', 'true');
+                if (items.length > 0) items[0].focus();
+            } else if (e.key === 'Escape') {
+                closeDropdown(dropdown);
+            }
+        });
+
+        // Keyboard navigation within menu
+        items.forEach((item, index) => {
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const next = items[index + 1] || items[0];
+                    next.focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prev = items[index - 1] || items[items.length - 1];
+                    prev.focus();
+                } else if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closeDropdown(dropdown);
+                    trigger.focus();
+                } else if (e.key === 'Tab') {
+                    closeDropdown(dropdown);
+                }
+            });
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.nav-dropdown')) {
+            document.querySelectorAll('.nav-dropdown.open').forEach(d => {
+                closeDropdown(d);
+            });
+        }
+    });
+}
+
+// Close a dropdown
+function closeDropdown(dropdown) {
+    dropdown.classList.remove('open');
+    dropdown.querySelector('.nav-dropdown-trigger').setAttribute('aria-expanded', 'false');
+}
+
+// ============================================
+// MOBILE MENU
+// ============================================
+
+// Initialize mobile menu
+function initMobileMenu() {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const closeBtn = document.getElementById('mobile-menu-close');
+    const overlay = menu?.querySelector('.mobile-menu-overlay');
+
+    if (!menuBtn || !menu) return;
+
+    // Open menu
+    menuBtn.addEventListener('click', () => {
+        menu.classList.add('open');
+        menuBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden'; // Prevent scroll
+        trapFocus(menu.querySelector('.mobile-menu-content'));
+    });
+
+    // Close menu
+    const closeMobileMenu = () => {
+        menu.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        releaseFocusTrap();
+    };
+
+    closeBtn?.addEventListener('click', closeMobileMenu);
+    overlay?.addEventListener('click', closeMobileMenu);
+
+    // Close on escape
+    menu.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeMobileMenu();
+            menuBtn.focus();
+        }
+    });
+
+    // Handle menu item clicks
+    menu.querySelectorAll('.mobile-nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const view = item.dataset.view;
+            if (view) {
+                switchView(view);
+                closeMobileMenu();
+
+                // Update active state
+                menu.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            }
+        });
+    });
+}
 
 // Precon card lists (from Curiosa.io official lists)
 const PRECONS = {
@@ -250,13 +665,286 @@ const wishlistGridEl = document.getElementById('wishlist-grid');
 const resultsCountEl = document.getElementById('results-count');
 const cardModal = document.getElementById('card-modal');
 
+// ============================================
+// VIRTUAL SCROLLING / INFINITE SCROLL
+// ============================================
+const CARDS_PER_BATCH = 48; // Load 48 cards at a time (4 rows of 12 or 6 rows of 8)
+let currentCardIndex = 0;
+let isLoadingMoreCards = false;
+let cardsObserver = null;
+
+// ============================================
+// SEARCH OPTIMIZATION
+// ============================================
+const SEARCH_DEBOUNCE_MS = 150; // Fast debounce for responsive search
+const FUZZY_THRESHOLD = 0.6; // Minimum similarity score (0-1) for fuzzy matches
+let searchIndex = null; // Pre-computed search index for O(1) lookups
+
+// ============================================
+// FUZZY SEARCH
+// ============================================
+
+// Calculate Levenshtein distance between two strings
+function levenshteinDistance(str1, str2) {
+    const m = str1.length;
+    const n = str2.length;
+
+    // Create distance matrix
+    const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+    // Initialize first row and column
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+
+    // Fill in the rest
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+            dp[i][j] = Math.min(
+                dp[i - 1][j] + 1,      // deletion
+                dp[i][j - 1] + 1,      // insertion
+                dp[i - 1][j - 1] + cost // substitution
+            );
+        }
+    }
+
+    return dp[m][n];
+}
+
+// Calculate similarity score (0-1) between two strings
+function similarityScore(str1, str2) {
+    const maxLen = Math.max(str1.length, str2.length);
+    if (maxLen === 0) return 1;
+    const distance = levenshteinDistance(str1, str2);
+    return 1 - (distance / maxLen);
+}
+
+// Fuzzy search cards
+function fuzzySearchCards(query, cards, threshold = FUZZY_THRESHOLD) {
+    if (!query || query.length < 2) return cards;
+
+    const normalizedQuery = query.toLowerCase().trim();
+    const results = [];
+
+    cards.forEach(card => {
+        const normalizedName = card.name.toLowerCase();
+
+        // Exact substring match (highest priority)
+        if (normalizedName.includes(normalizedQuery)) {
+            results.push({ card, score: 1, matchType: 'exact' });
+            return;
+        }
+
+        // Check if query matches start of any word in the name
+        const words = normalizedName.split(/\s+/);
+        const startsWithWord = words.some(word => word.startsWith(normalizedQuery));
+        if (startsWithWord) {
+            results.push({ card, score: 0.95, matchType: 'word-start' });
+            return;
+        }
+
+        // Fuzzy match on full name
+        const score = similarityScore(normalizedQuery, normalizedName);
+        if (score >= threshold) {
+            results.push({ card, score, matchType: 'fuzzy' });
+            return;
+        }
+
+        // Fuzzy match on individual words
+        const wordScores = words.map(word => similarityScore(normalizedQuery, word));
+        const bestWordScore = Math.max(...wordScores);
+        if (bestWordScore >= threshold) {
+            results.push({ card, score: bestWordScore * 0.9, matchType: 'fuzzy-word' });
+        }
+    });
+
+    // Sort by score (highest first)
+    results.sort((a, b) => b.score - a.score);
+
+    return results.map(r => r.card);
+}
+
+// Check if fuzzy search should be used (when exact search returns few results)
+function shouldUseFuzzySearch(query, exactResults) {
+    if (!query || query.length < 3) return false;
+    // Use fuzzy if exact search returned very few results
+    return exactResults.length < 3;
+}
+
+// ============================================
+// LUCIDE ICONS OPTIMIZATION
+// ============================================
+let lucideUpdatePending = false;
+let lucideUpdateContainer = null;
+
+// Optimized icon refresh - debounces multiple calls
+function refreshIcons(container = null) {
+    if (typeof lucide === 'undefined') return;
+
+    // If specific container requested, store it
+    if (container && !lucideUpdateContainer) {
+        lucideUpdateContainer = container;
+    } else if (!container) {
+        // Full page update requested, clear specific container
+        lucideUpdateContainer = null;
+    }
+
+    // Skip if update already pending
+    if (lucideUpdatePending) return;
+
+    lucideUpdatePending = true;
+
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
+        if (lucideUpdateContainer) {
+            // Update only specific container
+            const nodes = lucideUpdateContainer.querySelectorAll('[data-lucide]');
+            if (nodes.length > 0) {
+                lucide.createIcons({ nodes });
+            }
+        } else {
+            // Full page update
+            refreshIcons();
+        }
+        lucideUpdatePending = false;
+        lucideUpdateContainer = null;
+    });
+}
+
+// ============================================
+// INDEXEDDB CACHE FOR CARDS
+// ============================================
+const CARDS_DB_NAME = 'sorcery-cards-cache';
+const CARDS_DB_VERSION = 1;
+const CARDS_STORE_NAME = 'cards';
+const CARDS_CACHE_KEY = 'all-cards';
+const CARDS_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+// Open IndexedDB for cards cache
+function openCardsDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(CARDS_DB_NAME, CARDS_DB_VERSION);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(CARDS_STORE_NAME)) {
+                db.createObjectStore(CARDS_STORE_NAME);
+            }
+        };
+    });
+}
+
+// Get cards from cache
+async function getCardsFromCache() {
+    try {
+        const db = await openCardsDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(CARDS_STORE_NAME, 'readonly');
+            const store = tx.objectStore(CARDS_STORE_NAME);
+            const request = store.get(CARDS_CACHE_KEY);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                const cached = request.result;
+                if (cached && cached.timestamp && Date.now() - cached.timestamp < CARDS_CACHE_TTL) {
+                    resolve(cached.cards);
+                } else {
+                    resolve(null);
+                }
+            };
+        });
+    } catch (e) {
+        return null;
+    }
+}
+
+// Save cards to cache
+async function saveCardsToCache(cards) {
+    try {
+        const db = await openCardsDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(CARDS_STORE_NAME, 'readwrite');
+            const store = tx.objectStore(CARDS_STORE_NAME);
+            const request = store.put({ cards, timestamp: Date.now() }, CARDS_CACHE_KEY);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve();
+        });
+    } catch (e) {
+        // Silently fail - cache is optional
+    }
+}
+
+// Build search index for fast card lookups
+function buildSearchIndex() {
+    searchIndex = new Map();
+    allCards.forEach((card, index) => {
+        const normalizedName = card.name.toLowerCase();
+        searchIndex.set(normalizedName, index);
+        // Also index partial prefixes for autocomplete-style search
+        for (let i = 2; i <= normalizedName.length; i++) {
+            const prefix = normalizedName.slice(0, i);
+            if (!searchIndex.has(`prefix:${prefix}`)) {
+                searchIndex.set(`prefix:${prefix}`, []);
+            }
+            searchIndex.get(`prefix:${prefix}`).push(index);
+        }
+    });
+}
+
+// Optimized debounce with leading edge option
+function debounce(func, wait, options = {}) {
+    let timeout;
+    let lastArgs;
+    const { leading = false } = options;
+
+    return function executedFunction(...args) {
+        lastArgs = args;
+        const callNow = leading && !timeout;
+
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            timeout = null;
+            if (!leading) {
+                func.apply(this, lastArgs);
+            }
+        }, wait);
+
+        if (callNow) {
+            func.apply(this, args);
+        }
+    };
+}
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', async () => {
+    // IMPORTANT: Initialize auth FIRST before anything else
+    initAuthUI();
+
+    // Now load user-specific data
     loadFromStorage();
+    loadUserDecks();
+
     await loadCards();
     setupEventListeners();
-    renderCards();
+    initDropdownAccessibility(); // Keyboard navigation for dropdowns
+    initMobileMenu(); // Mobile hamburger menu
+    restoreFilterState(); // Restore saved filter state
+    loadPriceAlerts(); // Load price alerts
+    loadTradeWants(); // Load trade wants
+    applyFilters(); // Apply restored filters
     updateStats();
+
+    // Check price alerts after a delay (let prices load)
+    setTimeout(checkPriceAlerts, 3000);
+
+    // Handle trade links
+    const tradeParam = urlParams.get('trade');
+    if (tradeParam) {
+        setTimeout(() => handleTradeLink(tradeParam), 500);
+    }
+
+    // Load community decks from server (in background)
+    loadCommunityDecks();
 
     // Handle deep links
     handleDeepLink();
@@ -265,62 +953,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('hashchange', handleDeepLink);
 });
 
-// Load cards from API or local file
+// Load cards from API, cache, or local file
 async function loadCards() {
     try {
-        // Try API first
-        let response;
-        try {
-            response = await fetch('https://api.sorcerytcg.com/api/cards');
-            if (!response.ok) throw new Error('API error');
-            allCards = await response.json();
-        } catch (apiError) {
-            console.log('API failed, trying local file...');
-            // Try local file
-            response = await fetch('cards-database.json');
-            const data = await response.json();
-            // Convert from organized format to flat array
-            allCards = [];
-            for (const setName in data.sets) {
-                const setData = data.sets[setName];
-                setData.cards.forEach(card => {
-                    // Check if card already exists
-                    const existing = allCards.find(c => c.name === card.name);
-                    if (!existing) {
-                        allCards.push({
-                            name: card.name,
-                            guardian: {
-                                type: card.type,
-                                rarity: card.rarity,
-                                cost: card.cost,
-                                attack: card.attack,
-                                defence: card.defence,
-                                rulesText: card.rulesText
-                            },
-                            elements: card.elements,
-                            subTypes: card.subTypes,
-                            sets: [{
-                                name: setName,
-                                variants: card.variants
-                            }]
-                        });
-                    } else {
-                        // Add set to existing card
-                        if (!existing.sets.find(s => s.name === setName)) {
-                            existing.sets.push({
-                                name: setName,
-                                variants: card.variants
-                            });
-                        }
-                    }
-                });
-            }
+        // Try IndexedDB cache first for instant load
+        const cachedCards = await getCardsFromCache();
+        if (cachedCards && cachedCards.length > 0) {
+            allCards = cachedCards;
+            filteredCards = [...allCards];
+            buildSearchIndex();
+            loadingEl.classList.add('hidden');
+            // Refresh cache in background
+            refreshCardsInBackground();
+            return;
         }
-        filteredCards = [...allCards];
-        loadingEl.classList.add('hidden');
-        console.log(`Loaded ${allCards.length} cards`);
+
+        // No cache - load from network
+        await loadCardsFromNetwork();
     } catch (error) {
-        console.error('Error loading cards:', error);
         loadingEl.innerHTML = `
             <p>Error loading cards. Please refresh the page.</p>
             <p style="color: var(--text-secondary); margin-top: 1rem;">${error.message}</p>
@@ -328,35 +978,484 @@ async function loadCards() {
     }
 }
 
-// Load data from localStorage
-function loadFromStorage() {
-    const savedCollection = localStorage.getItem('sorcery-collection');
-    const savedWishlist = localStorage.getItem('sorcery-wishlist');
-    const savedTradeBinder = localStorage.getItem('sorcery-trade-binder');
-    const savedDecks = localStorage.getItem('sorcery-decks');
-    const savedPrecons = localStorage.getItem('sorcery-precons');
+// Load cards from network (API or local file)
+async function loadCardsFromNetwork() {
+    let response;
+    try {
+        response = await fetch('https://api.sorcerytcg.com/api/cards');
+        if (!response.ok) throw new Error('API error');
+        allCards = await response.json();
+    } catch (apiError) {
+        // API failed, try local file as fallback
+        response = await fetch('cards-database.json');
+        const data = await response.json();
+        // Convert from organized format to flat array
+        allCards = [];
+        for (const setName in data.sets) {
+            const setData = data.sets[setName];
+            setData.cards.forEach(card => {
+                // Check if card already exists
+                const existing = allCards.find(c => c.name === card.name);
+                if (!existing) {
+                    allCards.push({
+                        name: card.name,
+                        guardian: {
+                            type: card.type,
+                            rarity: card.rarity,
+                            cost: card.cost,
+                            attack: card.attack,
+                            defence: card.defence,
+                            rulesText: card.rulesText
+                        },
+                        elements: card.elements,
+                        subTypes: card.subTypes,
+                        sets: [{
+                            name: setName,
+                            variants: card.variants
+                        }]
+                    });
+                } else {
+                    // Add set to existing card
+                    if (!existing.sets.find(s => s.name === setName)) {
+                        existing.sets.push({
+                            name: setName,
+                            variants: card.variants
+                        });
+                    }
+                }
+            });
+        }
+    }
+    filteredCards = [...allCards];
+    buildSearchIndex();
+    loadingEl.classList.add('hidden');
+    // Save to cache for next load
+    saveCardsToCache(allCards);
+}
 
-    if (savedCollection) collection = new Set(JSON.parse(savedCollection));
-    if (savedWishlist) wishlist = new Set(JSON.parse(savedWishlist));
-    if (savedTradeBinder) tradeBinder = new Set(JSON.parse(savedTradeBinder));
-    if (savedDecks) decks = JSON.parse(savedDecks);
-    if (savedPrecons) {
-        ownedPrecons = new Set(JSON.parse(savedPrecons));
-        // Update precon checkboxes
-        ownedPrecons.forEach(preconId => {
-            const checkbox = document.getElementById(`precon-${preconId}`);
-            if (checkbox) checkbox.checked = true;
-        });
+// Refresh cards in background (when loaded from cache)
+async function refreshCardsInBackground() {
+    try {
+        const response = await fetch('https://api.sorcerytcg.com/api/cards');
+        if (response.ok) {
+            const freshCards = await response.json();
+            // Only update if data changed
+            if (JSON.stringify(freshCards) !== JSON.stringify(allCards)) {
+                allCards = freshCards;
+                filteredCards = [...allCards];
+                buildSearchIndex();
+                saveCardsToCache(allCards);
+                renderCards(); // Re-render with fresh data
+            }
+        }
+    } catch (e) {
+        // Silently fail - cached data is still usable
     }
 }
 
-// Save data to localStorage
+// Get current user ID for per-user storage
+function getCurrentUserId() {
+    // Try nocoDBService first
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        return nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
+    }
+    // Try localStorage session
+    const session = localStorage.getItem('sorcery-session');
+    if (session) {
+        try {
+            const user = JSON.parse(session);
+            return user.id || user.Id;
+        } catch (e) {}
+    }
+    return null;
+}
+
+// Load data from localStorage (per-user if logged in)
+function loadFromStorage() {
+    const userId = getCurrentUserId();
+
+    // If logged in, load user-specific data
+    if (userId) {
+        const savedCollection = localStorage.getItem(`sorcery-collection-${userId}`);
+        const savedWishlist = localStorage.getItem(`sorcery-wishlist-${userId}`);
+        const savedTradeBinder = localStorage.getItem(`sorcery-trade-binder-${userId}`);
+
+        // Load collection with full data support (backwards compatible)
+        // New format: Map<cardName, {qty, addedAt}>
+        collection = new Map();
+        if (savedCollection) {
+            const parsed = JSON.parse(savedCollection);
+            const now = new Date().toISOString();
+
+            if (Array.isArray(parsed)) {
+                // Old format: array of card names
+                parsed.forEach(cardName => {
+                    if (typeof cardName === 'string') {
+                        collection.set(cardName, { qty: 1, addedAt: now });
+                    } else if (cardName && cardName.name) {
+                        collection.set(cardName.name, { qty: cardName.qty || 1, addedAt: now });
+                    }
+                });
+            } else if (typeof parsed === 'object') {
+                Object.entries(parsed).forEach(([name, data]) => {
+                    if (typeof data === 'number') {
+                        // Old format: {cardName: qty}
+                        collection.set(name, { qty: data, addedAt: now });
+                    } else if (typeof data === 'object' && data !== null) {
+                        // New format: {cardName: {qty, addedAt}}
+                        collection.set(name, {
+                            qty: data.qty || 1,
+                            addedAt: data.addedAt || now
+                        });
+                    }
+                });
+            }
+        }
+
+        wishlist = savedWishlist ? new Set(JSON.parse(savedWishlist)) : new Set();
+        tradeBinder = savedTradeBinder ? new Set(JSON.parse(savedTradeBinder)) : new Set();
+    } else {
+        // Not logged in - start with empty collections
+        collection = new Map();
+        wishlist = new Set();
+        tradeBinder = new Set();
+    }
+
+    // Precons per-user (if logged in)
+    if (userId) {
+        const savedPrecons = localStorage.getItem(`sorcery-precons-${userId}`);
+        if (savedPrecons) {
+            ownedPrecons = new Set(JSON.parse(savedPrecons));
+            ownedPrecons.forEach(preconId => {
+                const checkbox = document.getElementById(`precon-${preconId}`);
+                if (checkbox) checkbox.checked = true;
+            });
+        }
+    }
+}
+
+// Save data to localStorage (per-user if logged in)
 function saveToStorage() {
-    localStorage.setItem('sorcery-collection', JSON.stringify([...collection]));
-    localStorage.setItem('sorcery-wishlist', JSON.stringify([...wishlist]));
-    localStorage.setItem('sorcery-trade-binder', JSON.stringify([...tradeBinder]));
-    localStorage.setItem('sorcery-decks', JSON.stringify(decks));
-    localStorage.setItem('sorcery-precons', JSON.stringify([...ownedPrecons]));
+    const userId = getCurrentUserId();
+
+    if (userId) {
+        // Save collection as object {cardName: {qty, addedAt}}
+        const collectionObj = {};
+        collection.forEach((data, name) => {
+            collectionObj[name] = {
+                qty: typeof data === 'object' ? data.qty : data,
+                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString()
+            };
+        });
+        localStorage.setItem(`sorcery-collection-${userId}`, JSON.stringify(collectionObj));
+        localStorage.setItem(`sorcery-wishlist-${userId}`, JSON.stringify([...wishlist]));
+        localStorage.setItem(`sorcery-trade-binder-${userId}`, JSON.stringify([...tradeBinder]));
+        localStorage.setItem(`sorcery-precons-${userId}`, JSON.stringify([...ownedPrecons]));
+    }
+    // Save user-specific decks
+    saveUserDecks();
+}
+
+// Load decks for current user
+function loadUserDecks() {
+    if (typeof nocoDBService === 'undefined' || !nocoDBService.isLoggedIn()) {
+        decks = [];
+        return;
+    }
+    const userId = nocoDBService.currentUser?.Id || nocoDBService.currentUser?.id;
+    if (!userId) {
+        decks = [];
+        return;
+    }
+    const savedDecks = localStorage.getItem(`sorcery-decks-${userId}`);
+    decks = savedDecks ? JSON.parse(savedDecks) : [];
+}
+
+// Save decks for current user
+function saveUserDecks() {
+    if (typeof nocoDBService === 'undefined' || !nocoDBService.isLoggedIn()) return;
+    const userId = nocoDBService.currentUser?.Id || nocoDBService.currentUser?.id;
+    if (!userId) return;
+    localStorage.setItem(`sorcery-decks-${userId}`, JSON.stringify(decks));
+}
+
+// ============================================
+// COLLECTION QUANTITY HELPERS
+// ============================================
+
+// Check if card is in collection
+function hasCard(cardName) {
+    const data = collection.get(cardName);
+    if (!data) return false;
+    const qty = typeof data === 'object' ? data.qty : data;
+    return qty > 0;
+}
+
+// Get quantity of a card in collection
+function getCardQuantity(cardName) {
+    const data = collection.get(cardName);
+    if (!data) return 0;
+    return typeof data === 'object' ? data.qty : data;
+}
+
+// Get card data (qty and addedAt)
+function getCardData(cardName) {
+    const data = collection.get(cardName);
+    if (!data) return null;
+    if (typeof data === 'object') return data;
+    return { qty: data, addedAt: new Date().toISOString() };
+}
+
+// Add cards to collection (accumulates quantity)
+function addToCollection(cardName, quantity = 1, showFeedback = true) {
+    const existing = collection.get(cardName);
+    const currentQty = existing ? (typeof existing === 'object' ? existing.qty : existing) : 0;
+    const addedAt = existing && typeof existing === 'object' ? existing.addedAt : new Date().toISOString();
+    const newQty = currentQty + quantity;
+
+    collection.set(cardName, {
+        qty: newQty,
+        addedAt: addedAt
+    });
+    // Remove from wishlist if added to collection
+    wishlist.delete(cardName);
+    saveToStorage();
+
+    // Visual feedback
+    if (showFeedback) {
+        highlightCardInGrid(cardName, 'added');
+        if (quantity === 1) {
+            showSuccessToast(`${cardName} adicionado à coleção (${newQty}x)`);
+        } else {
+            showSuccessToast(`${quantity}x ${cardName} adicionados (total: ${newQty})`);
+        }
+    }
+}
+
+// Remove cards from collection (decrements quantity)
+function removeFromCollection(cardName, quantity = 1, showFeedback = true) {
+    const existing = collection.get(cardName);
+    if (!existing) return;
+
+    const currentQty = typeof existing === 'object' ? existing.qty : existing;
+    const addedAt = typeof existing === 'object' ? existing.addedAt : new Date().toISOString();
+    const newQty = currentQty - quantity;
+
+    if (newQty <= 0) {
+        collection.delete(cardName);
+        if (showFeedback) {
+            highlightCardInGrid(cardName, 'removed');
+            showInfoToast(`${cardName} removido da coleção`);
+        }
+    } else {
+        collection.set(cardName, { qty: newQty, addedAt: addedAt });
+        if (showFeedback) {
+            highlightCardInGrid(cardName, 'updated');
+            showInfoToast(`${cardName} atualizado (${newQty}x restantes)`);
+        }
+    }
+    saveToStorage();
+}
+
+// Set exact quantity for a card
+function setCardQuantity(cardName, quantity, showFeedback = true) {
+    const existing = collection.get(cardName);
+    const wasInCollection = existing && (typeof existing === 'object' ? existing.qty > 0 : existing > 0);
+
+    if (quantity <= 0) {
+        collection.delete(cardName);
+        if (showFeedback && wasInCollection) {
+            highlightCardInGrid(cardName, 'removed');
+            showInfoToast(`${cardName} removido da coleção`);
+        }
+    } else {
+        const addedAt = existing && typeof existing === 'object' ? existing.addedAt : new Date().toISOString();
+        collection.set(cardName, { qty: quantity, addedAt: addedAt });
+        if (showFeedback) {
+            highlightCardInGrid(cardName, wasInCollection ? 'updated' : 'added');
+            showSuccessToast(`${cardName} atualizado para ${quantity}x`);
+        }
+    }
+    // Remove from wishlist if added to collection
+    if (quantity > 0) {
+        wishlist.delete(cardName);
+    }
+    saveToStorage();
+}
+
+// Highlight card in grid with animation
+function highlightCardInGrid(cardName, type = 'added') {
+    const cardEl = document.querySelector(`.card-item[data-card-name="${cardName}"]`);
+    if (!cardEl) return;
+
+    // Remove existing highlight classes
+    cardEl.classList.remove('card-highlight-added', 'card-highlight-removed', 'card-highlight-updated');
+
+    // Add new highlight class
+    cardEl.classList.add(`card-highlight-${type}`);
+
+    // Remove after animation
+    setTimeout(() => {
+        cardEl.classList.remove(`card-highlight-${type}`);
+    }, CARD_HIGHLIGHT_DURATION);
+}
+
+// Get total card count in collection
+function getTotalCardCount() {
+    let total = 0;
+    collection.forEach(data => {
+        total += typeof data === 'object' ? data.qty : data;
+    });
+    return total;
+}
+
+// Get unique card count in collection
+function getUniqueCardCount() {
+    return collection.size;
+}
+
+// Get card price (helper for sorting)
+function getCardPrice(cardName) {
+    if (typeof priceService === 'undefined') return 0;
+    const card = allCards.find(c => c.name === cardName);
+    if (!card) return 0;
+    return priceService.getPrice(cardName) || priceService.getEstimatedPrice(card) || 0;
+}
+
+// Get total value of a card in collection (price * qty)
+function getCardTotalValue(cardName) {
+    const qty = getCardQuantity(cardName);
+    const price = getCardPrice(cardName);
+    return price * qty;
+}
+
+// ============================================
+// ADD CARDS MODAL FUNCTIONS
+// ============================================
+
+let addCardsModalCard = null; // Track which card is being added
+
+// Open the add cards modal
+function openAddCardsModal() {
+    const modal = document.getElementById('add-cards-modal');
+    if (!modal) return;
+
+    modal.classList.remove('hidden');
+
+    // Clear and focus search
+    const searchInput = document.getElementById('add-cards-search');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+
+    // Trap focus for accessibility
+    requestAnimationFrame(() => {
+        trapFocus(modal);
+        if (searchInput) searchInput.focus();
+    });
+
+    // Reset filters
+    const elementFilter = document.getElementById('add-cards-element-filter');
+    const typeFilter = document.getElementById('add-cards-type-filter');
+    if (elementFilter) elementFilter.value = '';
+    if (typeFilter) typeFilter.value = '';
+
+    // Show initial results (empty or all)
+    filterAddCardsResults();
+
+    // Initialize Lucide icons
+    refreshIcons();
+}
+
+// Close the add cards modal
+function closeAddCardsModal() {
+    const modal = document.getElementById('add-cards-modal');
+    if (modal) modal.classList.add('hidden');
+    releaseFocusTrap();
+}
+
+// Filter and display results in the add cards modal
+function filterAddCardsResults() {
+    const searchInput = document.getElementById('add-cards-search');
+    const elementFilter = document.getElementById('add-cards-element-filter');
+    const typeFilter = document.getElementById('add-cards-type-filter');
+    const resultsContainer = document.getElementById('add-cards-results');
+    const resultsCount = document.getElementById('add-cards-results-count');
+
+    if (!resultsContainer) return;
+
+    const searchTerm = searchInput?.value.toLowerCase().trim() || '';
+    const elementValue = elementFilter?.value || '';
+    const typeValue = typeFilter?.value || '';
+
+    // Filter cards
+    let filtered = allCards.filter(card => {
+        // Search filter
+        if (searchTerm && !card.name.toLowerCase().includes(searchTerm)) {
+            return false;
+        }
+
+        // Element filter
+        if (elementValue && !(card.elements || '').includes(elementValue)) {
+            return false;
+        }
+
+        // Type filter
+        if (typeValue && card.guardian?.type !== typeValue) {
+            return false;
+        }
+
+        return true;
+    });
+
+    // Limit to 50 results for performance
+    const displayCards = filtered.slice(0, 50);
+
+    // Update count
+    if (resultsCount) {
+        resultsCount.textContent = filtered.length;
+    }
+
+    // Render results
+    resultsContainer.innerHTML = displayCards.map(card => {
+        const imageSlug = getCardImageSlug(card);
+        const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
+        const qty = getCardQuantity(card.name);
+
+        return `
+            <div class="add-card-item" onclick="openCardQuantityModal('${card.name.replace(/'/g, "\\'")}')">
+                ${qty > 0 ? `<span class="add-card-item-qty">${qty}x</span>` : ''}
+                <img src="${imageUrl}" alt="${card.name}" onerror="this.src='placeholder.png'">
+                <div class="add-card-item-info">
+                    <div class="add-card-item-name">${card.name}</div>
+                    <div class="add-card-item-type">${card.guardian?.type || ''}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Show message if no results
+    if (displayCards.length === 0 && searchTerm) {
+        resultsContainer.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <p>Nenhuma carta encontrada para "${searchTerm}"</p>
+            </div>
+        `;
+    } else if (displayCards.length === 0) {
+        resultsContainer.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <p>Digite o nome de uma carta para buscar</p>
+            </div>
+        `;
+    }
+}
+
+// Open card detail from add cards modal - just opens the regular card modal
+function openCardQuantityModal(cardName) {
+    // Close the add cards modal first
+    closeAddCardsModal();
+    // Open the full card detail modal
+    openCardModal(cardName);
 }
 
 // Setup Event Listeners
@@ -377,8 +1476,8 @@ function setupEventListeners() {
         });
     });
 
-    // Filters
-    document.getElementById('search-input').addEventListener('input', debounce(applyFilters, 300));
+    // Filters - use optimized debounce with fast response
+    document.getElementById('search-input').addEventListener('input', debounce(applyFilters, SEARCH_DEBOUNCE_MS, { leading: true }));
     document.getElementById('set-filter').addEventListener('change', applyFilters);
     document.getElementById('type-filter').addEventListener('change', applyFilters);
     document.getElementById('element-filter').addEventListener('change', applyFilters);
@@ -388,9 +1487,31 @@ function setupEventListeners() {
     initKeywordFilter();
 
     // Collection search and filters
-    document.getElementById('collection-search')?.addEventListener('input', debounce(renderCollection, 300));
+    document.getElementById('collection-search')?.addEventListener('input', debounce(renderCollection, SEARCH_DEBOUNCE_MS, { leading: true }));
     document.getElementById('collection-set-filter')?.addEventListener('change', renderCollection);
-    document.getElementById('collection-finish-filter')?.addEventListener('change', renderCollection);
+    document.getElementById('collection-type-filter')?.addEventListener('change', renderCollection);
+    document.getElementById('collection-element-filter')?.addEventListener('change', renderCollection);
+    document.getElementById('collection-rarity-filter')?.addEventListener('change', renderCollection);
+    document.getElementById('collection-sort')?.addEventListener('change', renderCollection);
+
+    // Collection tabs (Cards / Decks)
+    document.querySelectorAll('.collection-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.dataset.tab;
+            // Update active tab
+            document.querySelectorAll('.collection-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            // Show/hide tab content
+            document.querySelectorAll('#collection-content .tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`collection-${tabName}-tab`)?.classList.add('active');
+            // Render decks if switching to decks tab
+            if (tabName === 'decks') {
+                renderUserDecks();
+            }
+        });
+    });
 
     // Modal close
     document.querySelectorAll('.close-modal').forEach(btn => {
@@ -400,6 +1521,23 @@ function setupEventListeners() {
     // Close modal on outside click
     cardModal.addEventListener('click', (e) => {
         if (e.target === cardModal) closeModal();
+    });
+
+    // Close any modal with ESC key (accessibility)
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            // Close card modal
+            if (!cardModal.classList.contains('hidden')) {
+                closeModal();
+                releaseFocusTrap();
+                return;
+            }
+            // Close any other open modal
+            document.querySelectorAll('.modal:not(.hidden)').forEach(modal => {
+                modal.classList.add('hidden');
+            });
+            releaseFocusTrap();
+        }
     });
 
     // Precon checkboxes
@@ -432,11 +1570,11 @@ function setupEventListeners() {
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i data-lucide="check"></i> Copied!';
             btn.classList.add('success');
-            if (typeof lucide !== 'undefined') lucide.createIcons();
+            refreshIcons();
             setTimeout(() => {
                 btn.innerHTML = originalHTML;
                 btn.classList.remove('success');
-                if (typeof lucide !== 'undefined') lucide.createIcons();
+                refreshIcons();
             }, 2000);
         }
     });
@@ -453,7 +1591,8 @@ function setupEventListeners() {
     document.querySelector('#deck-builder-modal .close-modal')?.addEventListener('click', closeDeckBuilder);
 
     // Trade binder search
-    document.getElementById('trade-search')?.addEventListener('input', debounce(renderTradeBinder, 300));
+    document.getElementById('trade-search')?.addEventListener('input', debounce(renderTradeOffering, SEARCH_DEBOUNCE_MS, { leading: true }));
+    document.getElementById('trade-want-search')?.addEventListener('input', debounce(renderTradeLookingFor, SEARCH_DEBOUNCE_MS, { leading: true }));
 
     // Price import/export
     document.getElementById('import-prices-btn')?.addEventListener('click', () => {
@@ -522,7 +1661,7 @@ function switchView(viewName) {
     if (viewName === 'collection') renderCollection();
     if (viewName === 'wishlist') renderWishlist();
     if (viewName === 'stats') updateStatsWithPrices();
-    if (viewName === 'decks') renderDecks();
+    if (viewName === 'decks') renderCommunityDecks();
     if (viewName === 'trade') renderTradeBinder();
     if (viewName === 'locator') initLocatorView();
     if (viewName === 'codex') initCodexView();
@@ -530,7 +1669,7 @@ function switchView(viewName) {
     if (viewName === 'faq') initFAQView();
     if (viewName === 'lore') initLoreView();
     if (viewName === 'quiz') initQuizView();
-    if (viewName === 'guides') initGuidesView();
+    // guides view removed
     if (viewName === 'community') initCommunityView();
     if (viewName === 'meta') initMetaView();
     if (viewName === 'art') initArtView();
@@ -542,9 +1681,7 @@ function switchView(viewName) {
     if (viewName === 'top-cards') initTopCardsView();
 
     // Re-initialize Lucide icons for dynamic content
-    if (typeof lucide !== 'undefined') {
-        setTimeout(() => lucide.createIcons(), 50);
-    }
+    refreshIcons();
 }
 
 // Global function for onclick handlers in HTML
@@ -627,9 +1764,7 @@ function renderLocatorStores(filter = {}) {
     `).join('');
 
     // Re-init icons
-    if (typeof lucide !== 'undefined') {
-        setTimeout(() => lucide.createIcons(), 50);
-    }
+    refreshIcons();
 }
 
 // Select store in locator
@@ -657,9 +1792,7 @@ function selectStore(index) {
                 </a>
             </div>
         `;
-        if (typeof lucide !== 'undefined') {
-            setTimeout(() => lucide.createIcons(), 50);
-        }
+        refreshIcons();
     }
 }
 
@@ -714,9 +1847,7 @@ function initFAQView() {
         renderFAQ();
     }
     // Re-init Lucide icons
-    if (typeof lucide !== 'undefined') {
-        setTimeout(() => lucide.createIcons(), 50);
-    }
+    refreshIcons();
 }
 
 // Initialize Quiz View
@@ -726,9 +1857,7 @@ function initQuizView() {
     }
 
     // Refresh lucide icons
-    if (typeof lucide !== 'undefined') {
-        setTimeout(() => lucide.createIcons(), 50);
-    }
+    refreshIcons();
 }
 
 // Initialize Lore / Flavor Text View
@@ -750,7 +1879,7 @@ function initLoreView() {
             flavorTextExplorer.search(searchInput.value);
             flavorTextExplorer.render();
         }
-    }, 300));
+    }, SEARCH_DEBOUNCE_MS, { leading: true }));
 
     elementFilter?.addEventListener('change', () => {
         if (typeof flavorTextExplorer !== 'undefined') {
@@ -760,9 +1889,7 @@ function initLoreView() {
     });
 
     // Refresh lucide icons
-    if (typeof lucide !== 'undefined') {
-        setTimeout(() => lucide.createIcons(), 50);
-    }
+    refreshIcons();
 }
 
 // Initialize Deck Guides View
@@ -819,7 +1946,7 @@ function initArtView() {
     // Setup search filters
     setupArtSearchFilters();
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 // Build artist data from cards
@@ -981,7 +2108,7 @@ function renderArtGallery(artists, highlightCard = '') {
         </div>
     `;
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 // Artist bio/info database - Portuguese translations with links and photos
@@ -1365,7 +2492,7 @@ function showArtistCards(artistName) {
         </div>
     `;
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 
     // Scroll to top of container
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1430,7 +2557,7 @@ function initTimelineView() {
         `;
     }
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 // Initialize Dust Tracker View
@@ -1457,7 +2584,7 @@ function initDustView() {
         `;
     }
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 // Initialize Promos View
@@ -1477,7 +2604,7 @@ function initPromosView() {
         container.innerHTML = '<p class="empty-state">Carregando tracker de promos...</p>';
     }
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 // Initialize News View
@@ -1514,7 +2641,7 @@ function initPromoTabs(tracker) {
 
             const stats = tracker.getPromoStats(allCards, collection);
             container.innerHTML = renderPromoStats(stats) + renderPromoGrid(cards);
-            if (typeof lucide !== 'undefined') lucide.createIcons();
+            refreshIcons();
         });
     });
 }
@@ -1626,9 +2753,7 @@ function initCodexNavigation() {
             });
 
             // Re-init icons
-            if (typeof lucide !== 'undefined') {
-                setTimeout(() => lucide.createIcons(), 50);
-            }
+            refreshIcons();
         });
     });
 }
@@ -1692,20 +2817,373 @@ function renderTierList() {
     });
 }
 
+// ============================================
+// ============================================
+// PRICE ALERTS SYSTEM
+// ============================================
+
+const PRICE_ALERTS_KEY = 'sorcery-price-alerts';
+let priceAlerts = new Map(); // Map<cardName, { targetPrice, direction, createdAt }>
+
+// Load price alerts from storage
+function loadPriceAlerts() {
+    try {
+        const userId = getCurrentUserId();
+        const key = userId ? `${PRICE_ALERTS_KEY}-${userId}` : PRICE_ALERTS_KEY;
+        const stored = localStorage.getItem(key);
+        if (stored) {
+            const data = JSON.parse(stored);
+            priceAlerts = new Map(Object.entries(data));
+        }
+    } catch (e) {
+        priceAlerts = new Map();
+    }
+}
+
+// Save price alerts to storage
+function savePriceAlerts() {
+    try {
+        const userId = getCurrentUserId();
+        const key = userId ? `${PRICE_ALERTS_KEY}-${userId}` : PRICE_ALERTS_KEY;
+        const data = Object.fromEntries(priceAlerts);
+        localStorage.setItem(key, JSON.stringify(data));
+    } catch (e) {
+        // Silently fail
+    }
+}
+
+// Set a price alert for a card
+function setPriceAlert(cardName, targetPrice, direction = 'below') {
+    priceAlerts.set(cardName, {
+        targetPrice: parseFloat(targetPrice),
+        direction, // 'below' or 'above'
+        createdAt: new Date().toISOString()
+    });
+    savePriceAlerts();
+    showSuccessToast(`Alerta criado: ${cardName} ${direction === 'below' ? 'abaixo de' : 'acima de'} $${targetPrice}`);
+}
+
+// Remove a price alert
+function removePriceAlert(cardName) {
+    if (priceAlerts.has(cardName)) {
+        priceAlerts.delete(cardName);
+        savePriceAlerts();
+        showInfoToast(`Alerta removido: ${cardName}`);
+    }
+}
+
+// Check all price alerts and notify if conditions are met
+function checkPriceAlerts() {
+    if (typeof priceService === 'undefined' || priceAlerts.size === 0) return;
+
+    const triggeredAlerts = [];
+
+    priceAlerts.forEach((alert, cardName) => {
+        const currentPrice = priceService.getPrice(cardName);
+        if (!currentPrice) return;
+
+        const { targetPrice, direction } = alert;
+
+        if (direction === 'below' && currentPrice <= targetPrice) {
+            triggeredAlerts.push({
+                cardName,
+                currentPrice,
+                targetPrice,
+                direction,
+                message: `${cardName} está a $${currentPrice.toFixed(2)} (abaixo de $${targetPrice})`
+            });
+        } else if (direction === 'above' && currentPrice >= targetPrice) {
+            triggeredAlerts.push({
+                cardName,
+                currentPrice,
+                targetPrice,
+                direction,
+                message: `${cardName} está a $${currentPrice.toFixed(2)} (acima de $${targetPrice})`
+            });
+        }
+    });
+
+    // Show notifications for triggered alerts
+    if (triggeredAlerts.length > 0) {
+        showPriceAlertNotifications(triggeredAlerts);
+    }
+
+    return triggeredAlerts;
+}
+
+// Show price alert notifications
+function showPriceAlertNotifications(alerts) {
+    alerts.forEach(alert => {
+        showToast(alert.message, 'warning', 'Alerta de Preço', 8000);
+    });
+}
+
+// Get all active price alerts
+function getAllPriceAlerts() {
+    const alerts = [];
+    priceAlerts.forEach((alert, cardName) => {
+        const currentPrice = typeof priceService !== 'undefined' ? priceService.getPrice(cardName) : null;
+        alerts.push({
+            cardName,
+            ...alert,
+            currentPrice
+        });
+    });
+    return alerts;
+}
+
+// Open price alert modal for a card
+function openPriceAlertModal(cardName) {
+    const modal = document.getElementById('price-alert-modal');
+    if (!modal) return;
+
+    const currentPrice = typeof priceService !== 'undefined' ? priceService.getPrice(cardName) : 0;
+    const existingAlert = priceAlerts.get(cardName);
+
+    document.getElementById('alert-card-name').textContent = cardName;
+    document.getElementById('alert-current-price').textContent = currentPrice ? `$${currentPrice.toFixed(2)}` : 'N/A';
+    document.getElementById('alert-target-price').value = existingAlert?.targetPrice || (currentPrice ? (currentPrice * 0.9).toFixed(2) : '');
+    document.getElementById('alert-direction').value = existingAlert?.direction || 'below';
+
+    // Store card name for form submission
+    modal.dataset.cardName = cardName;
+
+    // Show/hide remove button
+    const removeBtn = document.getElementById('remove-alert-btn');
+    if (removeBtn) {
+        removeBtn.style.display = existingAlert ? 'block' : 'none';
+    }
+
+    modal.classList.remove('hidden');
+    trapFocus(modal);
+}
+
+// Close price alert modal
+function closePriceAlertModal() {
+    const modal = document.getElementById('price-alert-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        releaseFocusTrap();
+    }
+}
+window.closePriceAlertModal = closePriceAlertModal;
+window.openPriceAlertModal = openPriceAlertModal;
+window.handlePriceAlertSubmit = handlePriceAlertSubmit;
+window.removePriceAlert = removePriceAlert;
+window.renderPriceAlerts = renderPriceAlerts;
+
+// Handle price alert form submission
+function handlePriceAlertSubmit(e) {
+    e.preventDefault();
+
+    const modal = document.getElementById('price-alert-modal');
+    const cardName = modal?.dataset.cardName;
+    const targetPrice = parseFloat(document.getElementById('alert-target-price').value);
+    const direction = document.getElementById('alert-direction').value;
+
+    if (!cardName || isNaN(targetPrice) || targetPrice <= 0) {
+        showErrorToast('Preencha um preço válido maior que zero');
+        return;
+    }
+
+    // Validate logic - warn if alert would trigger immediately
+    const currentPrice = typeof priceService !== 'undefined' ? priceService.getPrice(cardName) : null;
+    if (currentPrice) {
+        if (direction === 'below' && currentPrice <= targetPrice) {
+            showWarningToast(`Preço atual ($${currentPrice.toFixed(2)}) já está abaixo de $${targetPrice.toFixed(2)}. O alerta disparará imediatamente.`);
+        } else if (direction === 'above' && currentPrice >= targetPrice) {
+            showWarningToast(`Preço atual ($${currentPrice.toFixed(2)}) já está acima de $${targetPrice.toFixed(2)}. O alerta disparará imediatamente.`);
+        }
+    }
+
+    setPriceAlert(cardName, targetPrice, direction);
+    showSuccessToast(`Alerta de preço configurado para ${cardName}`);
+    closePriceAlertModal();
+    renderPriceAlerts(); // Update alerts list if visible
+}
+
+// Render price alerts list
+function renderPriceAlerts() {
+    const container = document.getElementById('price-alerts-list');
+    if (!container) return;
+
+    const alerts = getAllPriceAlerts();
+
+    if (alerts.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i data-lucide="bell-off"></i>
+                <p>Nenhum alerta de preço configurado</p>
+                <p class="subtitle">Adicione alertas nos cards da sua wishlist</p>
+            </div>
+        `;
+        refreshIcons(container);
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="alerts-grid">
+            ${alerts.map(alert => `
+                <div class="alert-card" data-card="${alert.cardName}">
+                    <div class="alert-info">
+                        <span class="alert-card-name">${alert.cardName}</span>
+                        <div class="alert-details">
+                            <span class="alert-condition">
+                                ${alert.direction === 'below' ? '↓ Abaixo de' : '↑ Acima de'}
+                                <strong>$${alert.targetPrice.toFixed(2)}</strong>
+                            </span>
+                            <span class="alert-current">
+                                Atual: ${alert.currentPrice ? `$${alert.currentPrice.toFixed(2)}` : 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-icon" onclick="openPriceAlertModal('${alert.cardName}')" aria-label="Editar alerta">
+                            <i data-lucide="edit-2"></i>
+                        </button>
+                        <button class="btn btn-icon btn-danger" onclick="removePriceAlert('${alert.cardName}'); renderPriceAlerts();" aria-label="Remover alerta">
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    refreshIcons(container);
+}
+
+// Toggle price alerts section collapse
+function togglePriceAlertsSection() {
+    const section = document.getElementById('price-alerts-section');
+    if (!section) return;
+
+    section.classList.toggle('collapsed');
+}
+window.togglePriceAlertsSection = togglePriceAlertsSection;
+
+// FILTER STATE PERSISTENCE
+// ============================================
+
+const FILTER_STATE_KEY = 'sorcery-filter-state';
+
+// Save current filter state
+function saveFilterState() {
+    const state = {
+        cards: {
+            search: document.getElementById('search-input')?.value || '',
+            set: document.getElementById('set-filter')?.value || '',
+            type: document.getElementById('type-filter')?.value || '',
+            element: document.getElementById('element-filter')?.value || '',
+            rarity: document.getElementById('rarity-filter')?.value || ''
+        },
+        collection: {
+            search: document.getElementById('collection-search')?.value || '',
+            set: document.getElementById('collection-set-filter')?.value || '',
+            type: document.getElementById('collection-type-filter')?.value || '',
+            element: document.getElementById('collection-element-filter')?.value || '',
+            rarity: document.getElementById('collection-rarity-filter')?.value || '',
+            sort: document.getElementById('collection-sort')?.value || ''
+        }
+    };
+
+    try {
+        sessionStorage.setItem(FILTER_STATE_KEY, JSON.stringify(state));
+    } catch (e) {
+        // Silently fail - filter persistence is optional
+    }
+}
+
+// Restore filter state from storage
+function restoreFilterState() {
+    try {
+        const stored = sessionStorage.getItem(FILTER_STATE_KEY);
+        if (!stored) return;
+
+        const state = JSON.parse(stored);
+
+        // Restore cards filters
+        if (state.cards) {
+            const searchInput = document.getElementById('search-input');
+            const setFilter = document.getElementById('set-filter');
+            const typeFilter = document.getElementById('type-filter');
+            const elementFilter = document.getElementById('element-filter');
+            const rarityFilter = document.getElementById('rarity-filter');
+
+            if (searchInput && state.cards.search) searchInput.value = state.cards.search;
+            if (setFilter && state.cards.set) setFilter.value = state.cards.set;
+            if (typeFilter && state.cards.type) typeFilter.value = state.cards.type;
+            if (elementFilter && state.cards.element) elementFilter.value = state.cards.element;
+            if (rarityFilter && state.cards.rarity) rarityFilter.value = state.cards.rarity;
+        }
+
+        // Restore collection filters
+        if (state.collection) {
+            const collSearch = document.getElementById('collection-search');
+            const collSet = document.getElementById('collection-set-filter');
+            const collType = document.getElementById('collection-type-filter');
+            const collElement = document.getElementById('collection-element-filter');
+            const collRarity = document.getElementById('collection-rarity-filter');
+            const collSort = document.getElementById('collection-sort');
+
+            if (collSearch && state.collection.search) collSearch.value = state.collection.search;
+            if (collSet && state.collection.set) collSet.value = state.collection.set;
+            if (collType && state.collection.type) collType.value = state.collection.type;
+            if (collElement && state.collection.element) collElement.value = state.collection.element;
+            if (collRarity && state.collection.rarity) collRarity.value = state.collection.rarity;
+            if (collSort && state.collection.sort) collSort.value = state.collection.sort;
+        }
+    } catch (e) {
+        // Silently fail
+    }
+}
+
 // Apply Filters
 function applyFilters() {
-    const search = document.getElementById('search-input').value.toLowerCase();
+    const search = document.getElementById('search-input').value.toLowerCase().trim();
     const setFilter = document.getElementById('set-filter').value;
     const typeFilter = document.getElementById('type-filter').value;
     const elementFilter = document.getElementById('element-filter').value;
     const rarityFilter = document.getElementById('rarity-filter').value;
 
+    // Save filter state
+    saveFilterState();
+
     // Get keyword parser instance if available
     const parser = typeof KeywordParser !== 'undefined' ? new KeywordParser() : null;
 
-    filteredCards = allCards.filter(card => {
-        // Search
-        if (search && !card.name.toLowerCase().includes(search)) return false;
+    // Determine search mode (exact or fuzzy)
+    let candidateCards = allCards;
+    let usedFuzzySearch = false;
+
+    if (search && search.length >= 2) {
+        // First try exact/prefix search via index
+        if (searchIndex) {
+            const prefixKey = `prefix:${search}`;
+            const indices = searchIndex.get(prefixKey);
+            if (indices && indices.length > 0) {
+                candidateCards = indices.map(i => allCards[i]);
+            } else {
+                // Try substring match
+                candidateCards = allCards.filter(card =>
+                    card.name.toLowerCase().includes(search)
+                );
+            }
+        } else {
+            candidateCards = allCards.filter(card =>
+                card.name.toLowerCase().includes(search)
+            );
+        }
+
+        // If few results with exact search, try fuzzy search
+        if (shouldUseFuzzySearch(search, candidateCards)) {
+            candidateCards = fuzzySearchCards(search, allCards);
+            usedFuzzySearch = true;
+        }
+    }
+
+    filteredCards = candidateCards.filter(card => {
+        // Search (already filtered above for length >= 2)
+        if (search && search.length < 2 && !card.name.toLowerCase().includes(search)) return false;
 
         // Set filter
         if (setFilter) {
@@ -1741,6 +3219,16 @@ function applyFilters() {
 
         return true;
     });
+
+    // Update results count with fuzzy indicator
+    const resultsCountEl = document.getElementById('results-count');
+    if (resultsCountEl) {
+        let countText = `${filteredCards.length} cards`;
+        if (usedFuzzySearch && filteredCards.length > 0) {
+            countText += ' (busca aproximada)';
+        }
+        resultsCountEl.textContent = countText;
+    }
 
     renderCards();
 }
@@ -1859,24 +3347,91 @@ function clearAllKeywordFilters() {
     applyFilters();
 }
 
-// Render Cards
+// Render Cards with infinite scroll
 function renderCards() {
     resultsCountEl.textContent = `${filteredCards.length} cards`;
 
-    cardsGridEl.innerHTML = filteredCards.map(card => createCardHTML(card)).join('');
+    // Reset state
+    currentCardIndex = 0;
+    cardsGridEl.innerHTML = '';
 
-    // Add click listeners
-    cardsGridEl.querySelectorAll('.card-item').forEach(el => {
-        el.addEventListener('click', () => {
-            const cardName = el.dataset.cardName;
-            openCardModal(cardName);
+    // Remove existing observer
+    if (cardsObserver) {
+        cardsObserver.disconnect();
+    }
+
+    // Render first batch
+    renderCardsBatch();
+
+    // Setup infinite scroll observer
+    setupCardsObserver();
+}
+
+// Render a batch of cards
+function renderCardsBatch() {
+    if (isLoadingMoreCards || currentCardIndex >= filteredCards.length) return;
+
+    isLoadingMoreCards = true;
+
+    const batch = filteredCards.slice(currentCardIndex, currentCardIndex + CARDS_PER_BATCH);
+    const fragment = document.createDocumentFragment();
+
+    batch.forEach(card => {
+        const div = document.createElement('div');
+        div.innerHTML = createCardHTML(card);
+        const cardEl = div.firstElementChild;
+
+        // Add click listener
+        cardEl.addEventListener('click', () => {
+            openCardModal(card.name);
         });
+
+        fragment.appendChild(cardEl);
     });
+
+    cardsGridEl.appendChild(fragment);
+    currentCardIndex += batch.length;
+    isLoadingMoreCards = false;
+
+    // Update Lucide icons for new cards
+    refreshIcons(cardsGridEl);
+}
+
+// Setup Intersection Observer for infinite scroll
+function setupCardsObserver() {
+    // Create sentinel element
+    let sentinel = document.getElementById('cards-sentinel');
+    if (!sentinel) {
+        sentinel = document.createElement('div');
+        sentinel.id = 'cards-sentinel';
+        sentinel.style.height = '1px';
+        sentinel.style.width = '100%';
+    }
+
+    // Ensure sentinel is at the end
+    if (sentinel.parentElement !== cardsGridEl.parentElement) {
+        cardsGridEl.parentElement.appendChild(sentinel);
+    }
+
+    // Create observer
+    cardsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && currentCardIndex < filteredCards.length) {
+                renderCardsBatch();
+            }
+        });
+    }, {
+        root: null,
+        rootMargin: '200px', // Load more before reaching the end
+        threshold: 0
+    });
+
+    cardsObserver.observe(sentinel);
 }
 
 // Create Card HTML
 function createCardHTML(card) {
-    const inCollection = collection.has(card.name);
+    const inCollection = hasCard(card.name);
     const inWishlist = wishlist.has(card.name);
     const imageSlug = getCardImageSlug(card);
     const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
@@ -2022,7 +3577,7 @@ async function loadPublicProfile(identifier) {
             profileName.textContent = '';
             profileNotFound.classList.remove('hidden');
             statsSections.forEach(s => s.style.display = 'none');
-            lucide.createIcons();
+            refreshIcons();
             return;
         }
 
@@ -2082,14 +3637,14 @@ async function loadPublicProfile(identifier) {
             document.getElementById('profile-decks-section').style.display = 'none';
         }
 
-        lucide.createIcons();
+        refreshIcons();
 
     } catch (error) {
         console.error('[Profile] Error loading public profile:', error);
         profileName.textContent = '';
         profileNotFound.classList.remove('hidden');
         statsSections.forEach(s => s.style.display = 'none');
-        lucide.createIcons();
+        refreshIcons();
     }
 }
 
@@ -2198,7 +3753,10 @@ function openProfileSettings() {
     }
 
     modal.classList.remove('hidden');
-    lucide.createIcons();
+    refreshIcons();
+
+    // Trap focus for accessibility
+    requestAnimationFrame(() => trapFocus(modal));
 }
 
 // Save profile settings
@@ -2223,10 +3781,7 @@ async function saveProfileSettings() {
     profileService.updatePrivacy(privacySettings);
 
     // Sync to cloud
-    const synced = await profileService.syncProfileToCloud();
-    if (synced) {
-        console.log('[Profile] Settings synced to cloud');
-    }
+    await profileService.syncProfileToCloud();
 
     // Update share URL visibility
     document.getElementById('profile-share-section').style.display = isPublic ? '' : 'none';
@@ -2237,12 +3792,12 @@ async function saveProfileSettings() {
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i data-lucide="check"></i> Salvo!';
     btn.style.background = 'var(--success)';
-    lucide.createIcons();
+    refreshIcons();
 
     setTimeout(() => {
         btn.innerHTML = originalText;
         btn.style.background = '';
-        lucide.createIcons();
+        refreshIcons();
     }, 2000);
 }
 
@@ -2253,10 +3808,10 @@ async function copyProfileUrl() {
 
     if (success) {
         btn.innerHTML = '<i data-lucide="check"></i>';
-        lucide.createIcons();
+        refreshIcons();
         setTimeout(() => {
             btn.innerHTML = '<i data-lucide="copy"></i>';
-            lucide.createIcons();
+            refreshIcons();
         }, 2000);
     }
 }
@@ -2307,13 +3862,19 @@ function updatePriceTableCurrency(cardName, cardData, currency) {
     const priceData = tcgPriceService.getCardPrices(cardName, cardData);
     const sets = Object.keys(priceData.prices);
 
-    sets.forEach(setName => {
+    // Get all price tables
+    const priceTables = document.querySelectorAll('.price-table');
+
+    priceTables.forEach((table, index) => {
+        if (index >= sets.length) return;
+
+        const setName = sets[index];
         const setPrices = priceData.prices[setName];
 
         ['Standard', 'Foil', 'Rainbow'].forEach(finish => {
             if (setPrices[finish]) {
                 const p = setPrices[finish];
-                const row = document.querySelector(`.finish-row.${finish.toLowerCase()}`);
+                const row = table.querySelector(`.finish-row.${finish.toLowerCase()}`);
                 if (row) {
                     const cells = row.querySelectorAll('td');
                     if (cells.length >= 4) {
@@ -2473,30 +4034,56 @@ function openCardModal(cardName, updateHash = true) {
     const wishlistBtn = document.getElementById('add-to-wishlist-btn');
     const tradeBtn = document.getElementById('add-to-trade-btn');
 
-    if (collection.has(cardName)) {
-        collectionBtn.innerHTML = '<span class="icon">✓</span> In Collection';
-        collectionBtn.classList.add('in-collection');
-    } else {
-        collectionBtn.innerHTML = '<span class="icon">+</span> Add to Collection';
-        collectionBtn.classList.remove('in-collection');
+    if (collectionBtn) {
+        if (hasCard(cardName)) {
+            const qty = getCardQuantity(cardName);
+            collectionBtn.innerHTML = `<i data-lucide="check"></i> ${qty}x na Coleção`;
+            collectionBtn.classList.add('in-collection');
+        } else {
+            collectionBtn.innerHTML = '<i data-lucide="plus"></i> Coleção';
+            collectionBtn.classList.remove('in-collection');
+        }
+        refreshIcons(collectionBtn);
     }
 
-    if (wishlist.has(cardName)) {
-        wishlistBtn.innerHTML = '<span class="icon">✓</span> In Wishlist';
-        wishlistBtn.classList.add('in-wishlist');
-    } else {
-        wishlistBtn.innerHTML = '<span class="icon">♥</span> Add to Wishlist';
-        wishlistBtn.classList.remove('in-wishlist');
+    if (wishlistBtn) {
+        if (wishlist.has(cardName)) {
+            wishlistBtn.innerHTML = '<i data-lucide="heart"></i> Na Wishlist';
+            wishlistBtn.classList.add('in-wishlist');
+        } else {
+            wishlistBtn.innerHTML = '<i data-lucide="heart"></i> Wishlist';
+            wishlistBtn.classList.remove('in-wishlist');
+        }
+        refreshIcons(wishlistBtn);
     }
 
     if (tradeBtn) {
         if (tradeBinder.has(cardName)) {
-            tradeBtn.innerHTML = '<span class="icon">✓</span> In Trade Binder';
+            tradeBtn.innerHTML = '<i data-lucide="check"></i> Nas Trocas';
             tradeBtn.classList.add('in-trade');
         } else {
-            tradeBtn.innerHTML = '<span class="icon">↔</span> Add to Trade';
+            tradeBtn.innerHTML = '<i data-lucide="repeat"></i> Trocas';
             tradeBtn.classList.remove('in-trade');
         }
+        refreshIcons(tradeBtn);
+    }
+
+    // Price alert button
+    const priceAlertBtn = document.getElementById('price-alert-btn');
+    if (priceAlertBtn) {
+        const existingAlert = priceAlerts.get(cardName);
+        if (existingAlert) {
+            priceAlertBtn.innerHTML = `<i data-lucide="bell-ring"></i> $${existingAlert.targetPrice.toFixed(0)}`;
+            priceAlertBtn.classList.add('has-alert');
+        } else {
+            priceAlertBtn.innerHTML = '<i data-lucide="bell"></i> Alerta';
+            priceAlertBtn.classList.remove('has-alert');
+        }
+        // Clone to remove old listeners
+        const newBtn = priceAlertBtn.cloneNode(true);
+        priceAlertBtn.parentNode.replaceChild(newBtn, priceAlertBtn);
+        newBtn.addEventListener('click', () => openPriceAlertModal(cardName));
+        refreshIcons(newBtn);
     }
 
     // Render variant selector
@@ -2509,12 +4096,18 @@ function openCardModal(cardName, updateHash = true) {
     document.getElementById('qr-code-container')?.classList.add('hidden');
 
     cardModal.classList.remove('hidden');
+
+    // Trap focus for accessibility
+    requestAnimationFrame(() => trapFocus(cardModal));
 }
 
 // Close Modal
 function closeModal() {
     cardModal.classList.add('hidden');
     document.getElementById('deck-builder-modal')?.classList.add('hidden');
+
+    // Release focus trap
+    releaseFocusTrap();
 
     // Clear URL hash if it's a card deep link
     if (window.location.hash.startsWith('#card/')) {
@@ -2603,9 +4196,7 @@ function renderVariantSelector(card) {
     variantSelector.style.display = 'block';
 
     // Re-init Lucide
-    if (typeof lucide !== 'undefined') {
-        setTimeout(() => lucide.createIcons(), 50);
-    }
+    refreshIcons();
 }
 
 // Render variant list by finish type
@@ -2618,26 +4209,64 @@ function renderVariantList(finish, variantsByFinish, cardName) {
         return;
     }
 
-    variantList.innerHTML = variants.map(v => `
-        <div class="variant-item" data-slug="${v.slug}">
-            <div class="variant-info">
-                <span class="variant-set">${v.setName}</span>
-                <span class="variant-product">${(v.product || 'Booster').replace(/_/g, ' ')}</span>
+    // Sets that are rare - start at 0
+    const rareSets = ['Alpha', 'Promotional'];
+
+    variantList.innerHTML = variants.map((v, index) => {
+        const inputId = `qty-${finish}-${index}`;
+        // Alpha and Promotional start at 0, others at 1
+        const defaultQty = rareSets.includes(v.setName) ? 0 : 1;
+        return `
+            <div class="variant-item" data-slug="${v.slug}">
+                <div class="variant-info">
+                    <span class="variant-set">${v.setName}</span>
+                    <span class="variant-product">${(v.product || 'Booster').replace(/_/g, ' ')}</span>
+                </div>
+                <div class="variant-add-controls">
+                    <div class="variant-qty-selector">
+                        <button class="qty-btn-sm" onclick="adjustVariantQty('${inputId}', -1)">-</button>
+                        <input type="number" id="${inputId}" class="variant-qty-input" value="${defaultQty}" min="0" max="99">
+                        <button class="qty-btn-sm" onclick="adjustVariantQty('${inputId}', 1)">+</button>
+                    </div>
+                    <button class="btn-add-variant" onclick="addVariantWithQty('${cardName}', '${v.slug}', '${finish}', '${inputId}')" ${defaultQty === 0 ? 'disabled' : ''}>
+                        Adicionar
+                    </button>
+                </div>
             </div>
-            <button class="btn-add-variant" onclick="addVariantToCollection('${cardName}', '${v.slug}', '${finish}')">
-                <i data-lucide="plus"></i>
-            </button>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     // Re-init Lucide
-    if (typeof lucide !== 'undefined') {
-        setTimeout(() => lucide.createIcons(), 50);
+    refreshIcons();
+}
+
+// Adjust quantity in variant selector
+function adjustVariantQty(inputId, delta) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    let value = parseInt(input.value) || 0;
+    value = Math.max(0, Math.min(99, value + delta));
+    input.value = value;
+
+    // Enable/disable the add button based on quantity
+    const variantItem = input.closest('.variant-item');
+    const addBtn = variantItem?.querySelector('.btn-add-variant');
+    if (addBtn) {
+        addBtn.disabled = value === 0;
     }
 }
 
-// Add variant to collection
-function addVariantToCollection(cardName, slug, finish) {
+// Add variant with specified quantity
+function addVariantWithQty(cardName, slug, finish, inputId) {
+    const input = document.getElementById(inputId);
+    const qty = parseInt(input?.value) || 0;
+
+    // Don't add if quantity is 0
+    if (qty === 0) {
+        showWarningToast('Selecione uma quantidade maior que 0');
+        return;
+    }
+
     // Check if user is logged in
     if (typeof nocoDBService !== 'undefined' && !nocoDBService.isLoggedIn()) {
         showNotification('Faça login para adicionar cards à coleção');
@@ -2647,18 +4276,43 @@ function addVariantToCollection(cardName, slug, finish) {
 
     if (typeof VariantTracker !== 'undefined') {
         const tracker = new VariantTracker();
-        tracker.addToCollection(cardName, slug, finish, 1);
+        tracker.addToCollection(cardName, slug, finish, qty);
 
-        // Also add to legacy collection for compatibility
-        collection.add(cardName);
-        saveToStorage();
+        // Also add to main collection for compatibility (no toast, we show custom one)
+        addToCollection(cardName, qty, false);
 
         // Refresh modal
         const card = allCards.find(c => c.name === cardName);
         if (card) renderVariantSelector(card);
 
         // Show feedback
-        showToast(`${finish} adicionado à coleção!`);
+        const totalQty = getCardQuantity(cardName);
+        showSuccessToast(`${qty}x ${finish} adicionado! Total: ${totalQty}x`);
+    }
+}
+
+// Add variant to collection
+function addVariantToCollection(cardName, slug, finish) {
+    // Check if user is logged in
+    if (typeof nocoDBService !== 'undefined' && !nocoDBService.isLoggedIn()) {
+        showWarningToast('Faça login para adicionar cards à coleção');
+        openAuthModal('login');
+        return;
+    }
+
+    if (typeof VariantTracker !== 'undefined') {
+        const tracker = new VariantTracker();
+        tracker.addToCollection(cardName, slug, finish, 1);
+
+        // Also add to legacy collection for compatibility (no toast, we show custom one)
+        addToCollection(cardName, 1, false);
+
+        // Refresh modal
+        const card = allCards.find(c => c.name === cardName);
+        if (card) renderVariantSelector(card);
+
+        // Show feedback
+        showSuccessToast(`${finish} adicionado à coleção!`);
     }
 }
 
@@ -2759,10 +4413,10 @@ function renderSetProgressSection() {
 
         // Determine color based on percentage
         let colorClass = 'default';
-        if (percent >= 100) colorClass = 'complete';
-        else if (percent >= 75) colorClass = 'high';
-        else if (percent >= 50) colorClass = 'medium';
-        else if (percent >= 25) colorClass = 'low';
+        if (percent >= COMPLETION_FULL) colorClass = 'complete';
+        else if (percent >= COMPLETION_HIGH) colorClass = 'high';
+        else if (percent >= COMPLETION_MEDIUM) colorClass = 'medium';
+        else if (percent >= COMPLETION_LOW) colorClass = 'low';
 
         html += `
             <div class="set-progress-card" data-set="${setName}">
@@ -2812,7 +4466,7 @@ function renderSetProgressSection() {
 
     // Reinitialize Lucide icons
     if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+        refreshIcons();
     }
 }
 
@@ -2872,7 +4526,7 @@ function showMissingCards(setName) {
 
     modal.classList.add('active');
     if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+        refreshIcons();
     }
 }
 
@@ -2913,10 +4567,10 @@ function filterMissingCards(setName) {
     }
 }
 
-// Toggle Collection
+// Toggle Collection (simple toggle for quick add/remove from cards view)
 function toggleCollection(cardName) {
     // Check login for adding (not for removing)
-    if (!collection.has(cardName)) {
+    if (!hasCard(cardName)) {
         if (typeof nocoDBService !== 'undefined' && !nocoDBService.isLoggedIn()) {
             showNotification('Faça login para adicionar cards à coleção');
             openAuthModal('login');
@@ -2924,13 +4578,11 @@ function toggleCollection(cardName) {
         }
     }
 
-    if (collection.has(cardName)) {
-        collection.delete(cardName);
+    if (hasCard(cardName)) {
+        removeFromCollection(cardName, getCardQuantity(cardName)); // Remove all copies
     } else {
-        collection.add(cardName);
-        wishlist.delete(cardName); // Remove from wishlist if added to collection
+        addToCollection(cardName, 1); // Add 1 copy
     }
-    saveToStorage();
     renderCards();
     openCardModal(cardName); // Refresh modal
 }
@@ -2946,10 +4598,13 @@ function toggleWishlist(cardName) {
         }
     }
 
-    if (wishlist.has(cardName)) {
+    const wasInWishlist = wishlist.has(cardName);
+    if (wasInWishlist) {
         wishlist.delete(cardName);
+        showToast(`${cardName} removido da wishlist`, 'info');
     } else {
         wishlist.add(cardName);
+        showSuccessToast(`${cardName} adicionado à wishlist`);
     }
     saveToStorage();
     renderCards();
@@ -2963,12 +4618,13 @@ function handlePreconChange(event) {
 
     if (checkbox.checked) {
         ownedPrecons.add(preconId);
-        // Add precon cards to collection
+        // Add precon cards to collection with their quantities (no individual feedback)
         const precon = PRECONS[preconId];
         if (precon) {
             precon.cards.forEach(card => {
-                collection.add(card.name);
+                addToCollection(card.name, card.qty || 1, false);
             });
+            showSuccessToast(`${precon.name} adicionado à coleção!`, `${precon.cards.length} cards`);
         }
     } else {
         ownedPrecons.delete(preconId);
@@ -2980,17 +4636,58 @@ function handlePreconChange(event) {
     updateStats();
 }
 
+// Check if user is logged in - Use the same method as the header
+function checkUserLoggedIn() {
+    if (typeof nocoDBService !== 'undefined') {
+        return nocoDBService.isLoggedIn();
+    }
+    return false;
+}
+
 // Render Collection
 function renderCollection() {
+    const loginPrompt = document.getElementById('collection-login-prompt');
+    const collectionContent = document.getElementById('collection-content');
+
+    // Check if user is logged in
+    const isLoggedIn = checkUserLoggedIn();
+
+    if (!isLoggedIn) {
+        // Show login prompt, hide collection content
+        if (loginPrompt) loginPrompt.classList.remove('hidden');
+        if (collectionContent) collectionContent.classList.add('hidden');
+
+        // Initialize Lucide icons for the prompt
+        if (typeof lucide !== 'undefined') {
+            refreshIcons();
+        }
+        return;
+    }
+
+    // User is logged in - show collection content
+    if (loginPrompt) loginPrompt.classList.add('hidden');
+    if (collectionContent) collectionContent.classList.remove('hidden');
+
+    // Save filter state
+    saveFilterState();
+
+    // Load user decks for the decks tab
+    loadUserDecks();
+
+    // Get all filter values
     const search = document.getElementById('collection-search')?.value.toLowerCase() || '';
     const setFilter = document.getElementById('collection-set-filter')?.value || '';
-    const finishFilter = document.getElementById('collection-finish-filter')?.value || '';
+    const typeFilter = document.getElementById('collection-type-filter')?.value || '';
+    const elementFilter = document.getElementById('collection-element-filter')?.value || '';
+    const rarityFilter = document.getElementById('collection-rarity-filter')?.value || '';
+    const sortOption = document.getElementById('collection-sort')?.value || 'name-asc';
 
     // Get variant tracker if available
     const variantTracker = window.variantTracker || (typeof VariantTracker !== 'undefined' ? new VariantTracker() : null);
 
+    // Filter cards
     let collectionCards = allCards.filter(card => {
-        if (!collection.has(card.name)) return false;
+        if (!hasCard(card.name)) return false;
         if (search && !card.name.toLowerCase().includes(search)) return false;
 
         // Filter by set
@@ -2999,69 +4696,118 @@ function renderCollection() {
             if (!hasSet) return false;
         }
 
+        // Filter by type
+        if (typeFilter && card.guardian?.type !== typeFilter) {
+            return false;
+        }
+
+        // Filter by element
+        if (elementFilter && !(card.elements || '').includes(elementFilter)) {
+            return false;
+        }
+
+        // Filter by rarity
+        if (rarityFilter && card.guardian?.rarity !== rarityFilter) {
+            return false;
+        }
+
         return true;
     });
 
-    // Filter by finish using variant tracker
-    if (finishFilter && variantTracker) {
-        collectionCards = collectionCards.filter(card => {
-            const cardVariants = variantTracker.getCollectionByCard(card.name);
-            if (!cardVariants) {
-                // If no variant data, show all for Standard filter
-                return finishFilter === 'Standard';
+    // Rarity order for sorting
+    const rarityOrder = { 'Unique': 4, 'Elite': 3, 'Exceptional': 2, 'Ordinary': 1 };
+
+    // Sort cards
+    collectionCards.sort((a, b) => {
+        switch (sortOption) {
+            case 'name-asc':
+                return a.name.localeCompare(b.name);
+            case 'name-desc':
+                return b.name.localeCompare(a.name);
+            case 'date-desc': {
+                const dataA = getCardData(a.name);
+                const dataB = getCardData(b.name);
+                const dateA = dataA?.addedAt || '1970-01-01';
+                const dateB = dataB?.addedAt || '1970-01-01';
+                return dateB.localeCompare(dateA);
             }
-            // Check if any owned variant has the selected finish
-            return Object.values(cardVariants.variants).some(v => v.finish === finishFilter);
-        });
+            case 'date-asc': {
+                const dataA = getCardData(a.name);
+                const dataB = getCardData(b.name);
+                const dateA = dataA?.addedAt || '1970-01-01';
+                const dateB = dataB?.addedAt || '1970-01-01';
+                return dateA.localeCompare(dateB);
+            }
+            case 'value-desc':
+                return getCardTotalValue(b.name) - getCardTotalValue(a.name);
+            case 'value-asc':
+                return getCardTotalValue(a.name) - getCardTotalValue(b.name);
+            case 'qty-desc':
+                return getCardQuantity(b.name) - getCardQuantity(a.name);
+            case 'qty-asc':
+                return getCardQuantity(a.name) - getCardQuantity(b.name);
+            case 'rarity-desc': {
+                const rarA = rarityOrder[a.guardian?.rarity] || 0;
+                const rarB = rarityOrder[b.guardian?.rarity] || 0;
+                return rarB - rarA;
+            }
+            default:
+                return a.name.localeCompare(b.name);
+        }
+    });
+
+    // Update count display (unique and total)
+    const uniqueCount = getUniqueCardCount();
+    const totalCount = getTotalCardCount();
+    const filteredCount = collectionCards.length;
+    const hasFilters = setFilter || typeFilter || elementFilter || rarityFilter || search;
+
+    const countEl = document.getElementById('collection-count');
+    const totalCountEl = document.getElementById('collection-total-count');
+
+    if (countEl) {
+        countEl.textContent = hasFilters ? `${filteredCount} / ${uniqueCount}` : uniqueCount;
+    }
+    if (totalCountEl) {
+        totalCountEl.textContent = totalCount;
     }
 
-    // Update count display
-    const totalInCollection = collection.size;
-    const filteredCount = collectionCards.length;
-    const countText = (setFilter || finishFilter)
-        ? `${filteredCount} / ${totalInCollection}`
-        : totalInCollection;
-    document.getElementById('collection-count').textContent = countText;
+    // Calculate and display collection summary stats
+    updateCollectionSummary(collectionCards);
 
     if (collectionCards.length === 0) {
-        const filterMessage = (setFilter || finishFilter)
-            ? 'No cards match the current filters.'
-            : 'Add cards from the Cards view or mark your precons.';
+        const filterMessage = hasFilters
+            ? 'Nenhuma carta corresponde aos filtros selecionados.'
+            : 'Clique em "Adicionar Cartas" para começar sua coleção.';
         collectionGridEl.innerHTML = `
             <div class="empty-state">
-                <h3>No cards in collection</h3>
+                <h3>Nenhuma carta na coleção</h3>
                 <p>${filterMessage}</p>
             </div>
         `;
         return;
     }
 
-    // Add finish badge to cards if filtering by finish
+    // Render cards with quantity badges
     collectionGridEl.innerHTML = collectionCards.map(card => {
         let html = createCardHTML(card);
+        const cardQty = getCardQuantity(card.name);
+        const cardValue = getCardTotalValue(card.name);
 
-        // Add finish badge if we're filtering
-        if (finishFilter && variantTracker) {
-            const cardVariants = variantTracker.getCollectionByCard(card.name);
-            if (cardVariants) {
-                const matchingVariants = Object.values(cardVariants.variants)
-                    .filter(v => v.finish === finishFilter);
-                const totalQty = matchingVariants.reduce((sum, v) => sum + v.qty, 0);
+        // Add quantity badge if more than 1
+        if (cardQty > 1) {
+            html = html.replace(
+                /(<div class="card-item"[^>]*>)/,
+                `$1<span class="collection-card-qty">${cardQty}x</span>`
+            );
+        }
 
-                if (totalQty > 0) {
-                    const badgeColor = getFinishBadgeColor(finishFilter);
-                    const badgeStyle = badgeColor.gradient
-                        ? `background: ${badgeColor.gradient}; color: ${badgeColor.text};`
-                        : `background: ${badgeColor.background}; color: ${badgeColor.text};`;
-
-                    // Insert badge as direct child of card-item (before final closing </div>)
-                    // Card structure: <div class="card-item">...<div class="card-item-info">...</div></div>
-                    html = html.replace(
-                        /<\/div>\s*<\/div>\s*<\/div>\s*$/,
-                        `</div></div><span class="finish-badge" style="${badgeStyle}">${finishFilter} x${totalQty}</span></div>`
-                    );
-                }
-            }
+        // Add value badge if sorting by value and card has value
+        if ((sortOption === 'value-desc' || sortOption === 'value-asc') && cardValue > 0) {
+            html = html.replace(
+                /(<div class="card-item"[^>]*>)/,
+                `$1<span class="collection-card-value">$${cardValue.toFixed(2)}</span>`
+            );
         }
 
         return html;
@@ -3075,19 +4821,74 @@ function renderCollection() {
     });
 }
 
+// Update collection summary stats
+function updateCollectionSummary(filteredCards) {
+    const totalValueEl = document.getElementById('collection-total-value');
+    const avgValueEl = document.getElementById('collection-avg-value');
+    const topCardEl = document.getElementById('collection-top-card');
+
+    if (!totalValueEl || !avgValueEl || !topCardEl) return;
+
+    // Calculate total value of filtered cards
+    let totalValue = 0;
+    let topCard = null;
+    let topCardValue = 0;
+
+    filteredCards.forEach(card => {
+        const cardValue = getCardTotalValue(card.name);
+        totalValue += cardValue;
+
+        if (cardValue > topCardValue) {
+            topCardValue = cardValue;
+            topCard = card;
+        }
+    });
+
+    // Calculate average value
+    const avgValue = filteredCards.length > 0 ? totalValue / filteredCards.length : 0;
+
+    // Update display
+    totalValueEl.textContent = `$${totalValue.toFixed(2)}`;
+    avgValueEl.textContent = `$${avgValue.toFixed(2)}`;
+
+    if (topCard && topCardValue > 0) {
+        topCardEl.textContent = `${topCard.name} ($${topCardValue.toFixed(2)})`;
+        topCardEl.classList.add('text-small');
+    } else {
+        topCardEl.textContent = '-';
+        topCardEl.classList.remove('text-small');
+    }
+}
+
 // Render Wishlist
 function renderWishlist() {
+    const loginPrompt = document.getElementById('wishlist-login-prompt');
+    const wishlistContent = document.getElementById('wishlist-content');
+    const isLoggedIn = checkUserLoggedIn();
+
+    if (!isLoggedIn) {
+        if (loginPrompt) loginPrompt.classList.remove('hidden');
+        if (wishlistContent) wishlistContent.classList.add('hidden');
+        refreshIcons();
+        return;
+    }
+
+    if (loginPrompt) loginPrompt.classList.add('hidden');
+    if (wishlistContent) wishlistContent.classList.remove('hidden');
+
     const wishlistCards = allCards.filter(card => wishlist.has(card.name));
 
-    document.getElementById('wishlist-count').textContent = `${wishlist.size} cards`;
+    document.getElementById('wishlist-count').textContent = `${wishlist.size} cartas`;
 
     if (wishlistCards.length === 0) {
         wishlistGridEl.innerHTML = `
-            <div class="empty-state">
-                <h3>Wishlist is empty</h3>
-                <p>Add cards you want from the Cards view.</p>
+            <div class="empty-state centered">
+                <i data-lucide="heart" class="empty-icon"></i>
+                <h3>Lista vazia</h3>
+                <p>Adicione cartas que você deseja da aba Cards.</p>
             </div>
         `;
+        refreshIcons();
         return;
     }
 
@@ -3099,6 +4900,10 @@ function renderWishlist() {
             openCardModal(cardName);
         });
     });
+
+    // Render price alerts section
+    renderPriceAlerts();
+    refreshIcons();
 }
 
 // Update Stats
@@ -3120,7 +4925,7 @@ function updateStats() {
     if (setProgressEl) {
         setProgressEl.innerHTML = sets.map(setName => {
             const setCards = allCards.filter(c => c.sets.some(s => s.name === setName));
-            const ownedInSet = setCards.filter(c => collection.has(c.name)).length;
+            const ownedInSet = setCards.filter(c => hasCard(c.name)).length;
             const percent = setCards.length > 0 ? ((ownedInSet / setCards.length) * 100).toFixed(0) : 0;
 
             return `
@@ -3142,7 +4947,7 @@ function updateStats() {
     if (elementProgressEl) {
         elementProgressEl.innerHTML = elements.map(element => {
             const elementCards = allCards.filter(c => (c.elements || '').includes(element));
-            const ownedInElement = elementCards.filter(c => collection.has(c.name)).length;
+            const ownedInElement = elementCards.filter(c => hasCard(c.name)).length;
             const percent = elementCards.length > 0 ? ((ownedInElement / elementCards.length) * 100).toFixed(0) : 0;
 
             return `
@@ -3158,17 +4963,23 @@ function updateStats() {
     }
 }
 
-// Render Decks
-function renderDecks() {
+// Render User's Decks (in Collection view)
+function renderUserDecks() {
     const decksListEl = document.getElementById('decks-list');
+    if (!decksListEl) return;
+
+    // Load user-specific decks
+    loadUserDecks();
 
     if (decks.length === 0) {
         decksListEl.innerHTML = `
-            <div class="empty-state">
-                <h3>No decks yet</h3>
-                <p>Create your first deck to get started!</p>
+            <div class="empty-state centered">
+                <i data-lucide="layers" class="empty-icon"></i>
+                <h3>Nenhum deck ainda</h3>
+                <p>Crie seu primeiro deck para começar!</p>
             </div>
         `;
+        refreshIcons();
         return;
     }
 
@@ -3187,7 +4998,7 @@ function renderDecks() {
                 const price = priceService.getPrice(card.name) || priceService.getEstimatedPrice(card);
                 deckValue += price * qty;
             }
-            if (collection.has(cardEntry.name)) {
+            if (hasCard(cardEntry.name)) {
                 cardsOwned += qty;
             }
         });
@@ -3196,34 +5007,215 @@ function renderDecks() {
             ? priceService.formatPrice(deckValue)
             : '--';
 
+        const isShared = deck.sharedToCommunity || false;
         return `
-            <div class="deck-card" data-deck-index="${index}">
+            <div class="deck-card" data-deck-index="${index}" data-deck-id="${deck.id || index}">
+                ${isShared ? '<span class="community-deck-badge"><i data-lucide="users"></i> Compartilhado</span>' : ''}
                 <h3>${deck.name}</h3>
                 <div class="deck-card-meta">
-                    ${deck.spellbook?.length || 0} spells / ${deck.atlas?.length || 0} sites
+                    ${deck.spellbook?.length || 0} feitiços / ${deck.atlas?.length || 0} locais
                 </div>
                 <div class="deck-value">
-                    <span class="deck-value-label">Value:</span>
+                    <span class="deck-value-label">Valor:</span>
                     <span class="deck-value-amount">${valueDisplay}</span>
                 </div>
                 <div class="deck-ownership">
-                    <span>Owned: ${cardsOwned}/${totalCards}</span>
+                    <span>Possui: ${cardsOwned}/${totalCards}</span>
                     <div class="mini-progress">
                         <div class="mini-progress-fill" style="width: ${totalCards > 0 ? (cardsOwned/totalCards)*100 : 0}%"></div>
                     </div>
+                </div>
+                <div class="deck-card-actions">
+                    <button class="btn secondary btn-view" data-index="${index}">
+                        <i data-lucide="eye"></i> Ver
+                    </button>
+                    ${!isShared ? `
+                    <button class="btn btn-share" data-index="${index}">
+                        <i data-lucide="share-2"></i> Compartilhar
+                    </button>
+                    ` : ''}
+                    <button class="btn secondary btn-delete" data-index="${index}">
+                        <i data-lucide="trash-2"></i>
+                    </button>
                 </div>
             </div>
         `;
     }).join('');
 
-    // Add click handlers for decks
-    decksListEl.querySelectorAll('.deck-card').forEach(el => {
-        el.addEventListener('click', () => {
-            const index = parseInt(el.dataset.deckIndex);
+    // Initialize icons
+    refreshIcons();
+
+    // Add click handlers for view buttons
+    decksListEl.querySelectorAll('.btn-view').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
             viewDeck(index);
         });
     });
+
+    // Add click handlers for share buttons
+    decksListEl.querySelectorAll('.btn-share').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
+            openShareDeckModal(index);
+        });
+    });
+
+    // Add click handlers for delete buttons
+    decksListEl.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
+            deleteDeck(index);
+        });
+    });
 }
+
+// Delete User Deck
+function deleteDeck(index) {
+    const deck = decks[index];
+    if (!deck) return;
+
+    if (confirm(`Tem certeza que deseja excluir o deck "${deck.name}"?`)) {
+        decks.splice(index, 1);
+        saveUserDecks();
+        renderUserDecks();
+        showNotification(`Deck "${deck.name}" excluído.`, 'success');
+    }
+}
+
+// Open Share Deck Modal
+function openShareDeckModal(index) {
+    const deck = decks[index];
+    if (!deck) return;
+
+    // Populate form with deck data
+    document.getElementById('share-deck-id').value = index;
+    document.getElementById('share-deck-name').value = deck.name || '';
+    document.getElementById('share-deck-format').value = deck.format || 'Constructed';
+    document.getElementById('share-deck-tier').value = deck.tier || '';
+    document.getElementById('share-deck-description').value = deck.description || '';
+    document.getElementById('share-deck-strategy').value = deck.strategy || '';
+    document.getElementById('share-deck-matchups').value = deck.matchups || '';
+    document.getElementById('share-deck-keycards').value = deck.keyCards?.join(', ') || '';
+
+    // Reset element checkboxes
+    document.querySelectorAll('#share-deck-modal input[name="elements"]').forEach(cb => {
+        cb.checked = false;
+    });
+
+    // Set element checkboxes based on deck elements
+    if (deck.elements && Array.isArray(deck.elements)) {
+        deck.elements.forEach(el => {
+            const cb = document.querySelector(`#share-deck-modal input[name="elements"][value="${el}"]`);
+            if (cb) cb.checked = true;
+        });
+    }
+
+    document.getElementById('share-deck-modal').classList.remove('hidden');
+    refreshIcons();
+}
+
+// Submit Shared Deck to Community
+async function submitSharedDeck(e) {
+    e.preventDefault();
+
+    const index = parseInt(document.getElementById('share-deck-id').value);
+    const deck = decks[index];
+    if (!deck) return;
+
+    // Get form data
+    const name = document.getElementById('share-deck-name').value.trim();
+    const format = document.getElementById('share-deck-format').value;
+    const tier = document.getElementById('share-deck-tier').value;
+    const description = document.getElementById('share-deck-description').value.trim();
+    const strategy = document.getElementById('share-deck-strategy').value.trim();
+    const matchups = document.getElementById('share-deck-matchups').value.trim();
+    const keyCardsStr = document.getElementById('share-deck-keycards').value.trim();
+    const keyCards = keyCardsStr ? keyCardsStr.split(',').map(s => s.trim()).filter(s => s) : [];
+
+    // Get selected elements
+    const elements = [];
+    document.querySelectorAll('#share-deck-modal input[name="elements"]:checked').forEach(cb => {
+        elements.push(cb.value);
+    });
+
+    if (!name || !description) {
+        showNotification('Nome e descrição são obrigatórios.', 'error');
+        return;
+    }
+
+    // Get current user info
+    const user = nocoDBService.currentUser;
+    if (!user) {
+        showNotification('Você precisa estar logado para compartilhar.', 'error');
+        return;
+    }
+
+    // Build community deck object
+    const communityDeck = {
+        name,
+        author: user.name || user.email?.split('@')[0] || 'Anônimo',
+        authorId: user.Id || user.id,
+        format,
+        tier: tier || null,
+        description,
+        strategy: strategy || null,
+        matchups: matchups || null,
+        elements,
+        keyCards,
+        avatar: deck.avatar || null,
+        decklist: {
+            avatar: deck.avatar,
+            minions: deck.spellbook?.filter(c => {
+                const card = allCards.find(ac => ac.name === c.name);
+                return card && card.type === 'Minion';
+            }) || [],
+            spells: deck.spellbook?.filter(c => {
+                const card = allCards.find(ac => ac.name === c.name);
+                return card && card.type === 'Magic';
+            }) || [],
+            artifacts: deck.spellbook?.filter(c => {
+                const card = allCards.find(ac => ac.name === c.name);
+                return card && card.type === 'Artifact';
+            }) || [],
+            sites: deck.atlas || []
+        },
+        views: 0,
+        likes: 0,
+        createdAt: new Date().toISOString(),
+        source: 'user-submitted'
+    };
+
+    try {
+        // Save to NocoDB
+        const savedDeck = await communityDeckService.saveDeck(communityDeck);
+
+        if (savedDeck) {
+            // Mark local deck as shared
+            decks[index].sharedToCommunity = true;
+            decks[index].communityDeckId = savedDeck.Id || savedDeck.id;
+            saveUserDecks();
+
+            closeModal('share-deck-modal');
+            renderUserDecks();
+            showNotification(`Deck "${name}" compartilhado com a comunidade!`, 'success');
+        }
+    } catch (error) {
+        console.error('Error sharing deck:', error);
+        showNotification('Erro ao compartilhar deck. Tente novamente.', 'error');
+    }
+}
+
+// Setup share deck form handler
+document.addEventListener('DOMContentLoaded', () => {
+    const shareForm = document.getElementById('share-deck-form');
+    if (shareForm) {
+        shareForm.addEventListener('submit', submitSharedDeck);
+    }
+});
 
 // Open Deck Builder
 function openDeckBuilder() {
@@ -3270,10 +5262,9 @@ function saveDeckFromBuilder() {
 
     // Close modal and refresh deck list
     closeDeckBuilder();
-    renderDecks();
+    renderUserDecks();
 
-    // Show success message
-    console.log('[Decks] Deck saved:', deck.name);
+    // Deck saved successfully
 }
 
 // View Deck Details
@@ -3307,7 +5298,7 @@ function renderDeckCards(deck) {
             }
             const entryValue = price * (entry.qty || 1);
             totalValue += entryValue;
-            const owned = collection.has(entry.name);
+            const owned = hasCard(entry.name);
 
             return `
                 <div class="deck-card-entry ${owned ? 'owned' : 'missing'}">
@@ -3330,7 +5321,7 @@ function renderDeckCards(deck) {
             }
             const entryValue = price * (entry.qty || 1);
             totalValue += entryValue;
-            const owned = collection.has(entry.name);
+            const owned = hasCard(entry.name);
 
             return `
                 <div class="deck-card-entry ${owned ? 'owned' : 'missing'}">
@@ -3377,7 +5368,7 @@ function toggleDeckAnalysis() {
 
     // Re-init icons
     if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+        refreshIcons();
     }
 }
 
@@ -3648,7 +5639,7 @@ function renderElementDistribution(cardsByElement) {
         </div>
     `;
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 function renderSiteSuggestions(suggestions) {
@@ -3712,7 +5703,7 @@ function renderValidationMessages(validation) {
         el.innerHTML = validation && validation.isValid
             ? '<div class="validation-success"><i data-lucide="check-circle"></i> Deck is valid!</div>'
             : '';
-        if (typeof lucide !== 'undefined') lucide.createIcons();
+        refreshIcons();
         return;
     }
 
@@ -3731,7 +5722,7 @@ function renderValidationMessages(validation) {
         `).join('')}
     `;
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 function renderDeckSummary(analysis, spellbookCount, atlasCount) {
@@ -3739,8 +5730,8 @@ function renderDeckSummary(analysis, spellbookCount, atlasCount) {
     if (!el) return;
 
     const totalCards = spellbookCount + atlasCount;
-    const isValidSpellbook = spellbookCount >= 40 && spellbookCount <= 60;
-    const isValidAtlas = atlasCount >= 20 && atlasCount <= 30;
+    const isValidSpellbook = spellbookCount >= SPELLBOOK_MIN && spellbookCount <= SPELLBOOK_MAX;
+    const isValidAtlas = atlasCount >= ATLAS_MIN && atlasCount <= ATLAS_MAX;
 
     el.innerHTML = `
         <div class="deck-summary-grid">
@@ -3775,20 +5766,7 @@ function renderDeckSummary(analysis, spellbookCount, atlasCount) {
         </div>
     `;
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
-}
-
-// Debounce utility
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
+    refreshIcons();
 }
 
 // ============================================
@@ -3809,23 +5787,49 @@ const deckBrowserState = {
     primerOnly: false
 };
 
-// Get all decks combined
+// Get all decks combined (including user-submitted)
 function getAllCommunityDecks() {
-    const decks = [];
+    const allDecks = [];
 
+    // Recommended decks from static file
     if (typeof RECOMMENDED_DECKS !== 'undefined') {
-        decks.push(...RECOMMENDED_DECKS.map(d => ({ ...d, type: 'community' })));
+        allDecks.push(...RECOMMENDED_DECKS.map(d => ({ ...d, type: 'community', source: 'curated' })));
     }
 
+    // Tournament decks
     if (typeof TOURNAMENT_DECKS !== 'undefined') {
-        decks.push(...TOURNAMENT_DECKS.map(d => ({
+        allDecks.push(...TOURNAMENT_DECKS.map(d => ({
             ...d,
             type: 'tournament',
+            source: 'tournament',
             author: d.player ? `Player: ${d.player}` : 'Championship'
         })));
     }
 
-    return decks;
+    // User-submitted decks from community service (cached)
+    if (typeof communityDeckService !== 'undefined' && communityDeckService.cachedDecks.length > 0) {
+        allDecks.push(...communityDeckService.cachedDecks.map(d => ({
+            ...d,
+            type: 'user-submitted'
+        })));
+    }
+
+    return allDecks;
+}
+
+// Load community decks from NocoDB (call on page load)
+async function loadCommunityDecks() {
+    if (typeof communityDeckService !== 'undefined') {
+        try {
+            await communityDeckService.getDecks(true);
+            // Re-render if we're on the decks view
+            if (document.getElementById('decks-view')?.classList.contains('active')) {
+                renderCommunityDecks();
+            }
+        } catch (error) {
+            console.error('Error loading community decks:', error);
+        }
+    }
 }
 
 // Filter decks based on current state
@@ -3920,11 +5924,13 @@ function sortDecks(decks) {
 function renderDeckCard(deck) {
     const tierClass = deck.type === 'tournament' ? 'tournament' : `tier-${deck.tier}`;
     const tierLabel = deck.type === 'tournament' ? deck.tournament : deck.tier;
+    const isUserSubmitted = deck.source === 'user-submitted' || deck.isCommunityDeck;
 
     return `
-        <div class="deck-card-enhanced" data-deck-id="${deck.id}" onclick="openDeckDetail('${deck.id}')">
+        <div class="deck-card-enhanced ${isUserSubmitted ? 'user-submitted' : ''}" data-deck-id="${deck.id}" onclick="openDeckDetail('${deck.id}')">
             <div class="deck-card-header">
-                <span class="deck-tier-badge ${tierClass}">${tierLabel}</span>
+                ${tierLabel ? `<span class="deck-tier-badge ${tierClass}">${tierLabel}</span>` : ''}
+                ${isUserSubmitted ? '<span class="deck-source-badge user"><i data-lucide="users"></i> Comunidade</span>' : ''}
                 ${deck.estimatedPrice ? `<span class="deck-price-badge">$${deck.estimatedPrice}</span>` : ''}
             </div>
 
@@ -3939,7 +5945,7 @@ function renderDeckCard(deck) {
             <p class="deck-card-description">${deck.description || ''}</p>
 
             <div class="deck-card-elements">
-                ${deck.elements.map(e => `
+                ${(deck.elements || []).map(e => `
                     <span class="element-badge ${e.toLowerCase()}">
                         ${getElementIcon(e)} ${e}
                     </span>
@@ -4022,11 +6028,17 @@ function openDeckDetail(deckId) {
         deck.strategy || deck.description || 'Estratégia não disponível.';
 
     // Decklist
+    const validElements = ['fire', 'water', 'earth', 'air'];
+
     const getCardElements = (cardName) => {
         if (typeof allCards === 'undefined' || !allCards.length) return [];
         const card = allCards.find(c => c.name === cardName);
         if (!card || !card.elements) return [];
-        return card.elements.split('/').map(e => e.trim()).filter(e => e);
+        // Handle both "/" and ", " separators, filter out "None" and invalid elements
+        const separator = card.elements.includes(',') ? ',' : '/';
+        return card.elements.split(separator)
+            .map(e => e.trim())
+            .filter(e => e && e.toLowerCase() !== 'none' && validElements.includes(e.toLowerCase()));
     };
 
     const renderElementIcons = (elements) => {
@@ -4110,10 +6122,8 @@ function openDeckDetail(deckId) {
 
     // Primer Section
     const primerSection = document.getElementById('deck-detail-primer-section');
-    console.log('Deck primer check:', { deckId: deck.id, primer: deck.primer, hasDeckGuides: typeof DECK_GUIDES !== 'undefined', hasPrimers: typeof DECK_GUIDES !== 'undefined' && DECK_GUIDES.deckPrimers });
     if (deck.primer && typeof DECK_GUIDES !== 'undefined' && DECK_GUIDES.deckPrimers) {
         const primer = DECK_GUIDES.deckPrimers.find(p => p.id === deck.primer);
-        console.log('Found primer:', primer);
         if (primer) {
             primerSection.style.display = 'block';
 
@@ -4193,7 +6203,7 @@ function openDeckDetail(deckId) {
 
     // Reinitialize Lucide icons
     if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+        refreshIcons();
     }
 }
 
@@ -4294,7 +6304,7 @@ function openImportDeckModal() {
     switchImportTab('url');
 
     modal.classList.remove('hidden');
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 function switchImportTab(tabName) {
@@ -4330,7 +6340,7 @@ async function handleImportUrlInput(e) {
 
     const deckId = curiosaMatch[1];
     previewEl.innerHTML = '<div class="loading"><i data-lucide="loader-2" class="spinning"></i> Buscando deck...</div>';
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 
     // Try to find the deck in our recommended decks
     const allDecks = getAllCommunityDecks();
@@ -4360,7 +6370,7 @@ async function handleImportUrlInput(e) {
         submitBtn.disabled = true;
     }
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    refreshIcons();
 }
 
 function handleImportTextInput(e) {
@@ -4479,7 +6489,7 @@ function submitImportDeck() {
 
         decks.push(newDeck);
         saveToStorage();
-        renderDecks();
+        renderUserDecks();
         showNotification(`Deck "${newDeck.name}" importado com sucesso!`, 'success');
     } else if (importedDeckData.type === 'text') {
         // Import from text
@@ -4500,7 +6510,7 @@ function submitImportDeck() {
 
         decks.push(newDeck);
         saveToStorage();
-        renderDecks();
+        renderUserDecks();
 
         let message = `Deck "${deckName}" importado com ${importedDeckData.cards.length} cartas!`;
         if (importedDeckData.missing.length > 0) {
@@ -4510,19 +6520,6 @@ function submitImportDeck() {
     }
 
     closeModal('import-deck-modal');
-}
-
-// Debounce helper
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func.apply(this, args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
 }
 
 // Render community decks
@@ -4572,7 +6569,7 @@ function renderCommunityDecks() {
 
     // Reinitialize Lucide icons
     if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+        refreshIcons();
     }
 }
 
@@ -4614,7 +6611,7 @@ function setupDeckBrowser() {
     document.getElementById('deck-card-filter')?.addEventListener('input', debounce((e) => {
         deckBrowserState.cardSearch = e.target.value;
         renderCommunityDecks();
-    }, 300));
+    }, SEARCH_DEBOUNCE_MS, { leading: true }));
 
     // Quick filter buttons
     document.querySelectorAll('.quick-filter-btn').forEach(btn => {
@@ -4680,43 +6677,401 @@ function renderRecommendedDecks() {
     setupDeckBrowser();
 }
 
-// Setup export/import
-function setupExportImport() {
-    document.getElementById('export-json-btn')?.addEventListener('click', () => {
-        const data = collectionTracker.exportToJSON();
-        downloadFile(data, 'sorcery-collection.json', 'application/json');
+// ============================================
+// EXPORT/IMPORT COLLECTION
+// ============================================
+
+// Export collection to JSON
+function exportCollectionToJSON() {
+    const exportData = {
+        version: '2.0',
+        exportDate: new Date().toISOString(),
+        totalCards: getTotalCardCount(),
+        uniqueCards: collection.size,
+        collection: {},
+        wishlist: Array.from(wishlist),
+        tradeBinder: Array.from(tradeBinder)
+    };
+
+    // Convert Map to object with full data
+    collection.forEach((data, cardName) => {
+        const card = allCards.find(c => c.name === cardName);
+        exportData.collection[cardName] = {
+            qty: typeof data === 'object' ? data.qty : data,
+            addedAt: typeof data === 'object' ? data.addedAt : null,
+            sets: card?.sets?.map(s => s.name) || [],
+            type: card?.guardian?.type || '',
+            rarity: card?.guardian?.rarity || '',
+            elements: card?.elements || ''
+        };
     });
 
-    document.getElementById('export-csv-btn')?.addEventListener('click', () => {
-        const data = collectionTracker.exportToCSV();
-        downloadFile(data, 'sorcery-collection.csv', 'text/csv');
+    return JSON.stringify(exportData, null, 2);
+}
+
+// Export collection to CSV
+function exportCollectionToCSV() {
+    let csv = 'Card Name,Quantity,Type,Rarity,Elements,Sets,Added Date\n';
+
+    collection.forEach((data, cardName) => {
+        const card = allCards.find(c => c.name === cardName);
+        const qty = typeof data === 'object' ? data.qty : data;
+        const addedAt = typeof data === 'object' ? data.addedAt : '';
+        const sets = card?.sets?.map(s => s.name).join('; ') || '';
+        const type = card?.guardian?.type || '';
+        const rarity = card?.guardian?.rarity || '';
+        const elements = card?.elements || '';
+
+        // Escape quotes in card name
+        const escapedName = cardName.replace(/"/g, '""');
+        csv += `"${escapedName}",${qty},"${type}","${rarity}","${elements}","${sets}","${addedAt}"\n`;
     });
+
+    return csv;
+}
+
+// Import collection from JSON
+function importCollectionFromJSON(jsonString, mode = 'merge') {
+    try {
+        const data = JSON.parse(jsonString);
+
+        // Support both old format (direct object) and new format (with version)
+        const collectionData = data.collection || data;
+
+        if (mode === 'replace') {
+            collection.clear();
+        }
+
+        let importCount = 0;
+        const now = new Date().toISOString();
+
+        Object.entries(collectionData).forEach(([cardName, cardData]) => {
+            // Verify card exists in database
+            const cardExists = allCards.some(c => c.name === cardName);
+            if (!cardExists) return;
+
+            const qty = typeof cardData === 'object' ? (cardData.qty || 1) : (cardData || 1);
+            const addedAt = typeof cardData === 'object' ? (cardData.addedAt || now) : now;
+
+            if (mode === 'merge') {
+                const existing = collection.get(cardName);
+                const currentQty = existing ? (typeof existing === 'object' ? existing.qty : existing) : 0;
+                collection.set(cardName, { qty: currentQty + qty, addedAt });
+            } else {
+                collection.set(cardName, { qty, addedAt });
+            }
+            importCount++;
+        });
+
+        // Import wishlist if present
+        if (data.wishlist && Array.isArray(data.wishlist)) {
+            data.wishlist.forEach(cardName => {
+                if (allCards.some(c => c.name === cardName)) {
+                    wishlist.add(cardName);
+                }
+            });
+        }
+
+        // Import trade binder if present
+        if (data.tradeBinder && Array.isArray(data.tradeBinder)) {
+            data.tradeBinder.forEach(cardName => {
+                if (allCards.some(c => c.name === cardName)) {
+                    tradeBinder.add(cardName);
+                }
+            });
+        }
+
+        saveToStorage();
+        return { success: true, count: importCount };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Import collection from CSV
+function importCollectionFromCSV(csvString, mode = 'merge') {
+    try {
+        const lines = csvString.trim().split('\n');
+        if (lines.length < 2) {
+            return { success: false, error: 'Arquivo CSV vazio ou inválido' };
+        }
+
+        // Skip header row
+        const header = lines[0].toLowerCase();
+        const hasHeader = header.includes('card') || header.includes('name') || header.includes('quantity');
+
+        if (mode === 'replace') {
+            collection.clear();
+        }
+
+        let importCount = 0;
+        let skippedCount = 0;
+        const now = new Date().toISOString();
+        const startIndex = hasHeader ? 1 : 0;
+
+        for (let i = startIndex; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+
+            // Parse CSV line (handling quoted values)
+            const values = parseCSVLine(line);
+            if (values.length < 1) continue;
+
+            const cardName = values[0].replace(/^"|"$/g, '').trim();
+            const qty = parseInt(values[1]) || 1;
+
+            // Verify card exists
+            const cardExists = allCards.some(c => c.name.toLowerCase() === cardName.toLowerCase());
+            if (!cardExists) {
+                skippedCount++;
+                continue;
+            }
+
+            // Find exact card name (case-insensitive match)
+            const exactCard = allCards.find(c => c.name.toLowerCase() === cardName.toLowerCase());
+            const exactName = exactCard ? exactCard.name : cardName;
+
+            if (mode === 'merge') {
+                const existing = collection.get(exactName);
+                const currentQty = existing ? (typeof existing === 'object' ? existing.qty : existing) : 0;
+                collection.set(exactName, { qty: currentQty + qty, addedAt: now });
+            } else {
+                collection.set(exactName, { qty, addedAt: now });
+            }
+            importCount++;
+        }
+
+        saveToStorage();
+        return { success: true, count: importCount, skipped: skippedCount };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
+
+// Parse a CSV line handling quoted values
+function parseCSVLine(line) {
+    const values = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+                current += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            values.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    values.push(current.trim());
+
+    return values;
+}
+
+// Open export/import modal
+function openExportImportModal() {
+    const modal = document.getElementById('export-import-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        updateExportPreview();
+        trapFocus(modal);
+    }
+}
+
+// Close export/import modal
+function closeExportImportModal() {
+    const modal = document.getElementById('export-import-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        releaseFocusTrap();
+    }
+}
+
+// Update export preview
+function updateExportPreview() {
+    const previewEl = document.getElementById('export-preview');
+    if (!previewEl) return;
+
+    const uniqueCards = collection.size;
+    const totalCards = getTotalCardCount();
+    const wishlistCount = wishlist.size;
+    const tradeCount = tradeBinder.size;
+
+    previewEl.innerHTML = `
+        <div class="export-stats">
+            <div class="export-stat">
+                <span class="export-stat-value">${uniqueCards}</span>
+                <span class="export-stat-label">Cards únicos</span>
+            </div>
+            <div class="export-stat">
+                <span class="export-stat-value">${totalCards}</span>
+                <span class="export-stat-label">Total de cópias</span>
+            </div>
+            <div class="export-stat">
+                <span class="export-stat-value">${wishlistCount}</span>
+                <span class="export-stat-label">Na wishlist</span>
+            </div>
+            <div class="export-stat">
+                <span class="export-stat-value">${tradeCount}</span>
+                <span class="export-stat-label">Para trade</span>
+            </div>
+        </div>
+    `;
+}
+
+// Handle export
+function handleExport(format) {
+    const btn = document.querySelector(`[data-export="${format}"]`);
+    setButtonLoading(btn, true, 'Exportando...');
+
+    setTimeout(() => {
+        try {
+            let data, filename, mimeType;
+
+            if (format === 'json') {
+                data = exportCollectionToJSON();
+                filename = `sorcery-collection-${new Date().toISOString().split('T')[0]}.json`;
+                mimeType = 'application/json';
+            } else {
+                data = exportCollectionToCSV();
+                filename = `sorcery-collection-${new Date().toISOString().split('T')[0]}.csv`;
+                mimeType = 'text/csv';
+            }
+
+            downloadFile(data, filename, mimeType);
+            showSuccessToast(`Coleção exportada como ${format.toUpperCase()}!`);
+        } catch (error) {
+            showErrorToast(error.message, 'Erro na exportação');
+        } finally {
+            setButtonLoading(btn, false);
+        }
+    }, 100);
+}
+
+// Handle import file selection
+function handleImportFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const importModeEl = document.getElementById('import-mode');
+    const mode = importModeEl?.value || 'merge';
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        const content = event.target.result;
+        const isJSON = file.name.endsWith('.json') || content.trim().startsWith('{');
+
+        let result;
+        if (isJSON) {
+            result = importCollectionFromJSON(content, mode);
+        } else {
+            result = importCollectionFromCSV(content, mode);
+        }
+
+        if (result.success) {
+            updateStats();
+            renderCards();
+            renderCollection();
+            updateExportPreview();
+
+            let message = `${result.count} cards importados!`;
+            if (result.skipped > 0) {
+                message += ` (${result.skipped} ignorados)`;
+            }
+            showSuccessToast(message, 'Importação completa');
+        } else {
+            showErrorToast(result.error, 'Erro na importação');
+        }
+
+        // Reset file input
+        e.target.value = '';
+    };
+
+    reader.onerror = () => {
+        showErrorToast('Não foi possível ler o arquivo', 'Erro');
+    };
+
+    reader.readAsText(file);
+}
+
+// Setup export/import (legacy support + new modal)
+function setupExportImport() {
+    // Legacy buttons (if they exist)
+    document.getElementById('export-json-btn')?.addEventListener('click', () => handleExport('json'));
+    document.getElementById('export-csv-btn')?.addEventListener('click', () => handleExport('csv'));
 
     document.getElementById('import-btn')?.addEventListener('click', () => {
         document.getElementById('import-file')?.click();
     });
 
-    document.getElementById('import-file')?.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                if (collectionTracker.importFromJSON(event.target.result)) {
-                    alert('Collection imported successfully!');
-                    // Sync with simple collection set
-                    Object.keys(collectionTracker.collection).forEach(name => {
-                        collection.add(name);
-                    });
-                    saveToStorage();
-                    updateStats();
-                    renderCards();
-                } else {
-                    alert('Error importing collection. Please check the file format.');
-                }
-            };
-            reader.readAsText(file);
-        }
+    document.getElementById('import-file')?.addEventListener('change', handleImportFile);
+
+    // New modal buttons
+    document.getElementById('open-export-import-btn')?.addEventListener('click', openExportImportModal);
+
+    document.querySelector('#export-import-modal .close-modal')?.addEventListener('click', closeExportImportModal);
+
+    document.getElementById('export-import-modal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'export-import-modal') closeExportImportModal();
     });
+
+    document.querySelectorAll('[data-export]').forEach(btn => {
+        btn.addEventListener('click', () => handleExport(btn.dataset.export));
+    });
+
+    document.getElementById('import-file-btn')?.addEventListener('click', () => {
+        document.getElementById('import-file-input')?.click();
+    });
+
+    document.getElementById('import-file-input')?.addEventListener('change', handleImportFile);
+
+    // Drag and drop support
+    const dropzone = document.getElementById('import-dropzone');
+    if (dropzone) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.classList.add('drag-over');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropzone.addEventListener(eventName, () => {
+                dropzone.classList.remove('drag-over');
+            });
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.name.endsWith('.json') || file.name.endsWith('.csv')) {
+                    // Trigger file input change handler
+                    const input = document.getElementById('import-file-input');
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    input.files = dataTransfer.files;
+                    input.dispatchEvent(new Event('change'));
+                } else {
+                    showWarningToast('Apenas arquivos .json e .csv são aceitos');
+                }
+            }
+        });
+    }
 }
 
 // Download file helper
@@ -4747,7 +7102,7 @@ function updateStatsEnhanced() {
                 : { totalCards: 0, ownedUnique: 0, completionPercent: 0 };
 
             const rarityCards = allCards.filter(c => c.guardian.rarity === rarity);
-            const ownedInRarity = rarityCards.filter(c => collection.has(c.name)).length;
+            const ownedInRarity = rarityCards.filter(c => hasCard(c.name)).length;
             const percent = rarityCards.length > 0 ? ((ownedInRarity / rarityCards.length) * 100).toFixed(0) : 0;
 
             return `
@@ -4776,16 +7131,19 @@ function toggleTradeBinder(cardName) {
     // Check login for adding (not for removing)
     if (!tradeBinder.has(cardName)) {
         if (typeof nocoDBService !== 'undefined' && !nocoDBService.isLoggedIn()) {
-            showNotification('Faça login para adicionar cards ao trade binder');
+            showNotification('Faça login para adicionar cards às trocas');
             openAuthModal('login');
             return;
         }
     }
 
-    if (tradeBinder.has(cardName)) {
+    const wasInTrade = tradeBinder.has(cardName);
+    if (wasInTrade) {
         tradeBinder.delete(cardName);
+        showToast(`${cardName} removido das trocas`, 'info');
     } else {
         tradeBinder.add(cardName);
+        showSuccessToast(`${cardName} adicionado às trocas`);
     }
     saveToStorage();
     renderCards();
@@ -4794,7 +7152,37 @@ function toggleTradeBinder(cardName) {
 
 // Render Trade Binder
 function renderTradeBinder() {
+    const loginPrompt = document.getElementById('trade-login-prompt');
+    const tradeContent = document.getElementById('trade-content');
+    const isLoggedIn = checkUserLoggedIn();
+
+    if (!isLoggedIn) {
+        if (loginPrompt) loginPrompt.classList.remove('hidden');
+        if (tradeContent) tradeContent.classList.add('hidden');
+        refreshIcons();
+        return;
+    }
+
+    if (loginPrompt) loginPrompt.classList.add('hidden');
+    if (tradeContent) tradeContent.classList.remove('hidden');
+
+    // Render offering tab
+    renderTradeOffering();
+
+    // Render looking for tab
+    renderTradeLookingFor();
+
+    // Update overall stats
+    updateTradeStats();
+
+    refreshIcons();
+}
+
+// Render offering cards
+function renderTradeOffering() {
     const tradeGridEl = document.getElementById('trade-grid');
+    if (!tradeGridEl) return;
+
     const search = document.getElementById('trade-search')?.value.toLowerCase() || '';
 
     const tradeCards = allCards.filter(card => {
@@ -4803,27 +7191,12 @@ function renderTradeBinder() {
         return true;
     });
 
-    // Update stats
-    document.getElementById('trade-count').textContent = tradeBinder.size;
-
-    // Calculate trade value
-    if (typeof priceService !== 'undefined') {
-        let totalValue = 0;
-        tradeBinder.forEach(cardName => {
-            const card = allCards.find(c => c.name === cardName);
-            if (card) {
-                const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
-                totalValue += price;
-            }
-        });
-        document.getElementById('trade-value').textContent = priceService.formatPrice(totalValue);
-    }
-
     if (tradeCards.length === 0) {
         tradeGridEl.innerHTML = `
-            <div class="empty-state">
-                <h3>Trade Binder is empty</h3>
-                <p>Add cards you want to trade from the Cards view.</p>
+            <div class="empty-state centered">
+                <i data-lucide="package" class="empty-icon"></i>
+                <h3>Nenhuma carta para troca</h3>
+                <p>Adicione cartas para troca da aba Cards clicando em "Trade".</p>
             </div>
         `;
         return;
@@ -4837,6 +7210,261 @@ function renderTradeBinder() {
             openCardModal(cardName);
         });
     });
+}
+
+// Render looking for cards
+function renderTradeLookingFor() {
+    const wantGridEl = document.getElementById('trade-want-grid');
+    if (!wantGridEl) return;
+
+    const search = document.getElementById('trade-want-search')?.value.toLowerCase() || '';
+
+    const wantCards = allCards.filter(card => {
+        if (!tradeWants.has(card.name)) return false;
+        if (search && !card.name.toLowerCase().includes(search)) return false;
+        return true;
+    });
+
+    if (wantCards.length === 0) {
+        wantGridEl.innerHTML = `
+            <div class="empty-state centered">
+                <i data-lucide="search" class="empty-icon"></i>
+                <h3>Lista vazia</h3>
+                <p>Importe da wishlist ou adicione cartas que você procura.</p>
+            </div>
+        `;
+        return;
+    }
+
+    wantGridEl.innerHTML = wantCards.map(card => {
+        const html = createCardHTML(card);
+        // Add remove button
+        return html.replace('class="card-item"', 'class="card-item in-trade-wants"');
+    }).join('');
+
+    wantGridEl.querySelectorAll('.card-item').forEach(el => {
+        el.addEventListener('click', () => {
+            const cardName = el.dataset.cardName;
+            openCardModal(cardName);
+        });
+    });
+}
+
+// Update trade stats
+function updateTradeStats() {
+    // Offering stats
+    const tradeCountEl = document.getElementById('trade-count');
+    const tradeValueEl = document.getElementById('trade-value');
+
+    if (tradeCountEl) {
+        tradeCountEl.textContent = `${tradeBinder.size} cartas`;
+    }
+
+    if (tradeValueEl && typeof priceService !== 'undefined') {
+        let totalValue = 0;
+        tradeBinder.forEach(cardName => {
+            const card = allCards.find(c => c.name === cardName);
+            if (card) {
+                const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
+                totalValue += price;
+            }
+        });
+        tradeValueEl.textContent = priceService.formatPrice(totalValue);
+    }
+
+    // Looking for stats
+    const wantCountEl = document.getElementById('trade-want-count');
+    const wantValueEl = document.getElementById('trade-want-value');
+
+    if (wantCountEl) {
+        wantCountEl.textContent = `${tradeWants.size} cartas`;
+    }
+
+    if (wantValueEl && typeof priceService !== 'undefined') {
+        let totalValue = 0;
+        tradeWants.forEach(cardName => {
+            const card = allCards.find(c => c.name === cardName);
+            if (card) {
+                const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
+                totalValue += price;
+            }
+        });
+        wantValueEl.textContent = priceService.formatPrice(totalValue);
+    }
+}
+
+// Switch trade tab
+function switchTradeTab(tabName) {
+    document.querySelectorAll('.trade-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.tab === tabName);
+    });
+
+    document.querySelectorAll('.trade-tab-content').forEach(content => {
+        const contentId = `trade-tab-${content.id.replace('trade-tab-', '')}`;
+        content.classList.toggle('active', content.id === `trade-tab-${tabName}`);
+        content.classList.toggle('hidden', content.id !== `trade-tab-${tabName}`);
+    });
+
+    refreshIcons();
+}
+window.switchTradeTab = switchTradeTab;
+
+// Add wishlist items to trade wants
+function addWishlistToTradeWants() {
+    if (wishlist.size === 0) {
+        showWarningToast('Sua wishlist está vazia');
+        return;
+    }
+
+    let added = 0;
+    wishlist.forEach(cardName => {
+        if (!tradeWants.has(cardName)) {
+            tradeWants.add(cardName);
+            added++;
+        }
+    });
+
+    saveTradeWants();
+    renderTradeLookingFor();
+    updateTradeStats();
+    refreshIcons();
+
+    if (added > 0) {
+        showSuccessToast(`${added} cartas importadas da wishlist`);
+    } else {
+        showInfoToast('Todas as cartas já estavam na lista');
+    }
+}
+window.addWishlistToTradeWants = addWishlistToTradeWants;
+
+// Toggle trade wants
+function toggleTradeWant(cardName) {
+    if (tradeWants.has(cardName)) {
+        tradeWants.delete(cardName);
+    } else {
+        tradeWants.add(cardName);
+    }
+    saveTradeWants();
+    renderTradeLookingFor();
+    updateTradeStats();
+}
+window.toggleTradeWant = toggleTradeWant;
+
+// Save trade wants to storage
+function saveTradeWants() {
+    const userId = getCurrentUserId();
+    if (userId) {
+        localStorage.setItem(`sorcery-trade-wants-${userId}`, JSON.stringify([...tradeWants]));
+    }
+}
+
+// Load trade wants from storage
+function loadTradeWants() {
+    const userId = getCurrentUserId();
+    if (userId) {
+        try {
+            const stored = localStorage.getItem(`sorcery-trade-wants-${userId}`);
+            if (stored) {
+                tradeWants = new Set(JSON.parse(stored));
+            }
+        } catch (e) {
+            tradeWants = new Set();
+        }
+    }
+}
+
+// Generate shareable trade link
+function generateTradeLink() {
+    if (tradeBinder.size === 0 && tradeWants.size === 0) {
+        showWarningToast('Adicione cartas para gerar o link');
+        return;
+    }
+
+    // Create trade data object
+    const tradeData = {
+        offering: Array.from(tradeBinder),
+        looking: Array.from(tradeWants),
+        user: getCurrentUserName() || 'Jogador',
+        date: new Date().toISOString().split('T')[0]
+    };
+
+    // Encode to base64
+    const encoded = btoa(encodeURIComponent(JSON.stringify(tradeData)));
+
+    // Create URL
+    const baseUrl = window.location.origin + window.location.pathname;
+    const shareUrl = `${baseUrl}?trade=${encoded}`;
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(shareUrl).then(() => {
+        showSuccessToast('Link copiado para a área de transferência!', 'Trade Link');
+    }).catch(() => {
+        // Fallback
+        const textArea = document.createElement('textarea');
+        textArea.value = shareUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showSuccessToast('Link copiado para a área de transferência!', 'Trade Link');
+    });
+}
+window.generateTradeLink = generateTradeLink;
+
+// Parse trade link and show trade view
+function handleTradeLink(encoded) {
+    try {
+        const decoded = JSON.parse(decodeURIComponent(atob(encoded)));
+
+        if (!decoded.offering || !decoded.looking) {
+            throw new Error('Invalid trade data');
+        }
+
+        showTradePreview(decoded);
+    } catch (e) {
+        console.error('Invalid trade link:', e);
+        showErrorToast('Link de trade inválido');
+    }
+}
+
+// Show trade preview modal
+function showTradePreview(tradeData) {
+    // Create modal content
+    const offeringCards = tradeData.offering.map(name => {
+        const card = allCards.find(c => c.name === name);
+        return card ? card : { name, guardian: {} };
+    });
+
+    const lookingCards = tradeData.looking.map(name => {
+        const card = allCards.find(c => c.name === name);
+        return card ? card : { name, guardian: {} };
+    });
+
+    // Show in an alert or modal
+    const message = `
+Trade de ${tradeData.user} (${tradeData.date})
+
+Oferecendo (${offeringCards.length} cartas):
+${offeringCards.slice(0, 10).map(c => `- ${c.name}`).join('\n')}
+${offeringCards.length > 10 ? `... e mais ${offeringCards.length - 10}` : ''}
+
+Procurando (${lookingCards.length} cartas):
+${lookingCards.slice(0, 10).map(c => `- ${c.name}`).join('\n')}
+${lookingCards.length > 10 ? `... e mais ${lookingCards.length - 10}` : ''}
+    `;
+
+    showInfoToast(`Trade de ${tradeData.user}: ${tradeData.offering.length} oferecendo, ${tradeData.looking.length} procurando`, 'Trade Recebido');
+
+    // Store for reference
+    window.currentTradePreview = tradeData;
+}
+
+// Get current user name
+function getCurrentUserName() {
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        return nocoDBService.currentUser.display_name || nocoDBService.currentUser.email?.split('@')[0];
+    }
+    return null;
 }
 
 // Handle Price Import
@@ -4863,6 +7491,20 @@ function handlePriceImport(e) {
 
 // Update Stats with Prices
 function updateStatsWithPrices() {
+    const loginPrompt = document.getElementById('stats-login-prompt');
+    const statsContent = document.getElementById('stats-content');
+    const isLoggedIn = checkUserLoggedIn();
+
+    if (!isLoggedIn) {
+        if (loginPrompt) loginPrompt.classList.remove('hidden');
+        if (statsContent) statsContent.classList.add('hidden');
+        refreshIcons();
+        return;
+    }
+
+    if (loginPrompt) loginPrompt.classList.add('hidden');
+    if (statsContent) statsContent.classList.remove('hidden');
+
     // Call the original stats update
     updateStats();
     updateStatsEnhanced();
@@ -4949,7 +7591,7 @@ function updateValueTracking(valueData, brlRate) {
 
         // Reinitialize Lucide icons
         if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+            refreshIcons();
         }
     }
 
@@ -5043,7 +7685,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i data-lucide="${icon}"></i>
                         <span>${sign}${trend.changePercent.toFixed(1)}%</span>
                     `;
-                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                    refreshIcons();
                 }
 
                 // Update change amount
@@ -5355,6 +7997,37 @@ function updateAuthUI() {
     }
 }
 
+// Refresh current view (especially for views that require login)
+function refreshCurrentView() {
+    // Reload user-specific data first
+    loadFromStorage();
+    loadUserDecks();
+
+    const activeView = document.querySelector('.view.active');
+    if (!activeView) return;
+
+    const viewName = activeView.id.replace('-view', '');
+
+    // Re-render views that have login-dependent content
+    switch (viewName) {
+        case 'collection':
+            renderCollection();
+            break;
+        case 'wishlist':
+            renderWishlist();
+            break;
+        case 'stats':
+            updateStatsWithPrices();
+            break;
+        case 'trade':
+            renderTradeBinder();
+            break;
+    }
+
+    // Also update stats
+    updateStats();
+}
+
 // Setup auth event listeners
 function setupAuthEventListeners() {
     // Login button
@@ -5371,7 +8044,16 @@ function setupAuthEventListeners() {
     document.getElementById('logout-btn')?.addEventListener('click', () => {
         nocoDBService.logout();
         updateAuthUI();
-        showNotification('Logged out successfully');
+
+        // Clear user-specific data from memory
+        collection = new Map(); // FIXED: was new Set(), but collection is now a Map
+        wishlist = new Set();
+        tradeBinder = new Set();
+        decks = [];
+
+        // Refresh current view to show login prompt
+        refreshCurrentView();
+        showNotification('Sessão encerrada');
     });
 
     // Sync button
@@ -5491,10 +8173,13 @@ function openAuthModal(tab = 'login') {
     const modal = document.getElementById('auth-modal');
     modal.classList.remove('hidden');
     switchAuthTab(tab);
-    
+
     // Clear previous errors
     document.getElementById('login-error').classList.add('hidden');
     document.getElementById('register-error').classList.add('hidden');
+
+    // Trap focus for accessibility
+    requestAnimationFrame(() => trapFocus(modal));
 }
 
 // Switch auth tab
@@ -5514,12 +8199,18 @@ async function handleLogin(e) {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
     const errorEl = document.getElementById('login-error');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+
+    // Show loading state
+    setButtonLoading(submitBtn, true, 'Entrando...');
+    errorEl.classList.add('hidden');
 
     try {
         const user = await nocoDBService.login(email, password);
         closeModal('auth-modal');
         updateAuthUI();
-        showNotification('Welcome back!');
+        refreshCurrentView();
+        showSuccessToast('Bem-vindo de volta!', 'Login realizado');
 
         // Initialize profile
         if (typeof profileService !== 'undefined') {
@@ -5534,6 +8225,9 @@ async function handleLogin(e) {
     } catch (error) {
         errorEl.textContent = error.message;
         errorEl.classList.remove('hidden');
+        showErrorToast(error.message, 'Falha no login');
+    } finally {
+        setButtonLoading(submitBtn, false);
     }
 }
 
@@ -5546,19 +8240,25 @@ async function handleRegister(e) {
     const password = document.getElementById('register-password').value;
     const confirmPassword = document.getElementById('register-password-confirm').value;
     const errorEl = document.getElementById('register-error');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
 
     // Validate passwords match
     if (password !== confirmPassword) {
-        errorEl.textContent = 'Passwords do not match';
+        errorEl.textContent = 'As senhas não coincidem';
         errorEl.classList.remove('hidden');
         return;
     }
+
+    // Show loading state
+    setButtonLoading(submitBtn, true, 'Criando conta...');
+    errorEl.classList.add('hidden');
 
     try {
         const user = await nocoDBService.register(email, password, name);
         closeModal('auth-modal');
         updateAuthUI();
-        showNotification('Account created! Welcome to Sorcery Collection Manager!');
+        refreshCurrentView();
+        showSuccessToast('Bem-vindo ao Sorcery Portal Brasil!', 'Conta criada');
 
         // Initialize profile for new user
         if (typeof profileService !== 'undefined') {
@@ -5570,13 +8270,86 @@ async function handleRegister(e) {
     } catch (error) {
         errorEl.textContent = error.message;
         errorEl.classList.remove('hidden');
+        showErrorToast(error.message, 'Falha no registro');
+    } finally {
+        setButtonLoading(submitBtn, false);
     }
 }
+
+// Open Forgot Password Modal
+function openForgotPasswordModal() {
+    closeModal('auth-modal');
+    const modal = document.getElementById('forgot-password-modal');
+    modal.classList.remove('hidden');
+
+    // Clear previous messages
+    document.getElementById('forgot-error').classList.add('hidden');
+    document.getElementById('forgot-success').classList.add('hidden');
+    document.getElementById('forgot-email').value = '';
+}
+
+// Close Forgot Password Modal
+function closeForgotPasswordModal() {
+    closeModal('forgot-password-modal');
+    openAuthModal('login');
+}
+
+// Handle Forgot Password
+async function handleForgotPassword(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('forgot-email').value;
+    const errorEl = document.getElementById('forgot-error');
+    const successEl = document.getElementById('forgot-success');
+
+    // Hide previous messages
+    errorEl.classList.add('hidden');
+    successEl.classList.add('hidden');
+
+    try {
+        // Check if user exists
+        const userExists = await nocoDBService.checkUserExists(email);
+
+        if (!userExists) {
+            errorEl.textContent = 'Email não encontrado em nosso sistema.';
+            errorEl.classList.remove('hidden');
+            return;
+        }
+
+        // Generate reset token and store it
+        const resetToken = Math.random().toString(36).substring(2, 10);
+        localStorage.setItem('password-reset-token', JSON.stringify({
+            email,
+            token: resetToken,
+            expires: Date.now() + (60 * 60 * 1000) // 1 hour
+        }));
+
+        // Show success message (in real app, would send email)
+        successEl.innerHTML = `
+            <strong>Email enviado!</strong><br>
+            Por enquanto, use o código: <strong>${resetToken}</strong><br>
+            <small>(Em produção, isso seria enviado por email)</small>
+        `;
+        successEl.classList.remove('hidden');
+
+    } catch (error) {
+        errorEl.textContent = 'Erro ao processar solicitação. Tente novamente.';
+        errorEl.classList.remove('hidden');
+    }
+}
+
+// Setup forgot password form
+document.addEventListener('DOMContentLoaded', () => {
+    const forgotForm = document.getElementById('forgot-password-form');
+    if (forgotForm) {
+        forgotForm.addEventListener('submit', handleForgotPassword);
+    }
+});
 
 // Open sync modal
 function openSyncModal() {
     if (!nocoDBService.isLoggedIn()) {
-        showNotification('Please login first to sync your collection');
+        showNotification('Faça login primeiro para sincronizar sua coleção');
         openAuthModal('login');
         return;
     }
@@ -5584,32 +8357,42 @@ function openSyncModal() {
     const modal = document.getElementById('sync-modal');
     modal.classList.remove('hidden');
 
-    // Update last sync time
-    const lastSync = localStorage.getItem('sorcery-last-sync');
+    // Update last sync time (per-user)
+    const userId = getCurrentUserId();
+    const lastSync = userId ? localStorage.getItem(`sorcery-last-sync-${userId}`) : null;
     const lastSyncEl = document.getElementById('last-sync-time');
     if (lastSync) {
         lastSyncEl.textContent = new Date(lastSync).toLocaleString();
     } else {
-        lastSyncEl.textContent = 'Never';
+        lastSyncEl.textContent = 'Nunca';
     }
 
     // Hide status
     document.getElementById('sync-status').classList.add('hidden');
+
+    // Trap focus for accessibility
+    requestAnimationFrame(() => trapFocus(modal));
 }
 
 // Handle sync upload
 async function handleSyncUpload() {
+    const uploadBtn = document.getElementById('sync-upload-btn');
     const statusEl = document.getElementById('sync-status');
     const messageEl = statusEl.querySelector('.sync-message');
 
+    setButtonLoading(uploadBtn, true, 'Enviando...');
     statusEl.classList.remove('hidden');
-    messageEl.textContent = 'Uploading collection to cloud...';
+    messageEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Enviando coleção para a nuvem...';
+    refreshIcons(messageEl);
 
     try {
-        // Convert collection Set to object format
+        // Convert collection Map to object format (preserves qty and addedAt)
         const collectionObj = {};
-        collection.forEach(cardName => {
-            collectionObj[cardName] = { qty: 1 };
+        collection.forEach((data, cardName) => {
+            collectionObj[cardName] = {
+                qty: typeof data === 'object' ? data.qty : data,
+                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString()
+            };
         });
 
         const results = await nocoDBService.fullSyncToCloud(
@@ -5619,34 +8402,52 @@ async function handleSyncUpload() {
             decks
         );
 
-        // Save last sync time
-        localStorage.setItem('sorcery-last-sync', new Date().toISOString());
+        // Save last sync time (per-user)
+        const userId = getCurrentUserId();
+        if (userId) {
+            localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+        }
 
-        messageEl.textContent = 'Upload complete!';
+        messageEl.innerHTML = '<i data-lucide="check-circle"></i> Upload completo!';
+        refreshIcons(messageEl);
         setTimeout(() => {
             closeModal('sync-modal');
-            showNotification('Collection synced to cloud!');
-        }, 1500);
+            showSuccessToast('Coleção sincronizada com a nuvem!', 'Sync completo');
+        }, 1000);
     } catch (error) {
-        messageEl.textContent = 'Error: ' + error.message;
+        messageEl.innerHTML = `<i data-lucide="x-circle"></i> Erro: ${error.message}`;
+        refreshIcons(messageEl);
+        showErrorToast(error.message, 'Erro no sync');
+    } finally {
+        setButtonLoading(uploadBtn, false);
     }
 }
 
 // Handle sync download
 async function handleSyncDownload() {
+    const downloadBtn = document.getElementById('sync-download-btn');
     const statusEl = document.getElementById('sync-status');
     const messageEl = statusEl.querySelector('.sync-message');
 
+    setButtonLoading(downloadBtn, true, 'Baixando...');
     statusEl.classList.remove('hidden');
-    messageEl.textContent = 'Downloading from cloud...';
+    messageEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Baixando da nuvem...';
+    refreshIcons(messageEl);
 
     try {
         const data = await nocoDBService.fullDownloadFromCloud();
 
-        // Update local collection
-        collection.clear();
-        Object.keys(data.collection).forEach(cardName => {
-            collection.add(cardName);
+        // Update local collection (supports quantities with addedAt)
+        collection = new Map();
+        const now = new Date().toISOString();
+        Object.entries(data.collection).forEach(([cardName, cardData]) => {
+            if (typeof cardData === 'number') {
+                collection.set(cardName, { qty: cardData, addedAt: now });
+            } else if (typeof cardData === 'object') {
+                collection.set(cardName, { qty: cardData.qty || 1, addedAt: cardData.addedAt || now });
+            } else {
+                collection.set(cardName, { qty: 1, addedAt: now });
+            }
         });
 
         // Update wishlist
@@ -5672,19 +8473,27 @@ async function handleSyncDownload() {
         renderCollection();
         renderWishlist();
         renderTradeBinder();
-        renderDecks();
+        renderUserDecks();
         updateStats();
 
-        // Save last sync time
-        localStorage.setItem('sorcery-last-sync', new Date().toISOString());
+        // Save last sync time (per-user)
+        const userId = getCurrentUserId();
+        if (userId) {
+            localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+        }
 
-        messageEl.textContent = 'Download complete!';
+        messageEl.innerHTML = '<i data-lucide="check-circle"></i> Download completo!';
+        refreshIcons(messageEl);
         setTimeout(() => {
             closeModal('sync-modal');
-            showNotification('Collection downloaded from cloud!');
-        }, 1500);
+            showSuccessToast('Coleção baixada da nuvem!', 'Download completo');
+        }, 1000);
     } catch (error) {
-        messageEl.textContent = 'Error: ' + error.message;
+        messageEl.innerHTML = `<i data-lucide="x-circle"></i> Erro: ${error.message}`;
+        refreshIcons(messageEl);
+        showErrorToast(error.message, 'Erro no download');
+    } finally {
+        setButtonLoading(downloadBtn, false);
     }
 }
 
@@ -5832,6 +8641,7 @@ async function deleteCardPhoto(photoId) {
 // Close modal helper
 function closeModal(modalId) {
     document.getElementById(modalId)?.classList.add('hidden');
+    releaseFocusTrap();
 }
 
 // Show notification
@@ -5854,19 +8664,12 @@ function showNotification(message) {
     }, 3000);
 }
 
-// Save local data helper
+// Save local data helper (uses per-user storage)
 function saveLocalData() {
-    localStorage.setItem('sorcery-collection', JSON.stringify([...collection]));
-    localStorage.setItem('sorcery-wishlist', JSON.stringify([...wishlist]));
-    localStorage.setItem('sorcery-trade-binder', JSON.stringify([...tradeBinder]));
-    localStorage.setItem('sorcery-decks', JSON.stringify(decks));
+    saveToStorage();
 }
 
-// Initialize auth UI when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Wait a bit for other scripts to load
-    setTimeout(initAuthUI, 100);
-});
+// Auth UI is now initialized in main DOMContentLoaded handler
 
 // Export additional functions
 window.sorceryApp.nocoDBService = typeof nocoDBService !== 'undefined' ? nocoDBService : null;

@@ -480,17 +480,6 @@ class TCGPriceService {
 
         let html = '<div class="price-table-container">';
 
-        // Determinar badge de fonte
-        const getBadge = () => {
-            if (priceData.hasTCGCSVPrices) {
-                return '<span class="price-badge verified tcgcsv">TCGPlayer (TCGCSV)</span>';
-            }
-            if (priceData.hasSpecificPrices) {
-                return '<span class="price-badge verified">TCGPlayer</span>';
-            }
-            return '<span class="price-badge estimated">Estimado</span>';
-        };
-
         sets.forEach(setName => {
             const setPrices = priceData.prices[setName];
 
@@ -498,7 +487,6 @@ class TCGPriceService {
                 <div class="price-table">
                     <div class="price-table-header">
                         <span class="set-name">${setName}</span>
-                        ${getBadge()}
                     </div>
                     <table>
                         <thead>
