@@ -1,9 +1,10 @@
 {
   "version": 1,
-  "lastUpdate": "2026-04-11T02:43:37.108Z",
+  "lastUpdate": "2026-04-11T02:47:02.541Z",
   "source": "tcgcsv.com",
   "totalCards": 1281,
   "totalProducts": 3141,
+  "totalPriced": 2906,
   "cards": {
     "Abundance": [
       {
