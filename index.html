@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=58">
+    <link rel="stylesheet" href="styles.css?v=59">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -160,7 +160,7 @@
                         </div>
                     </div>
 
-                    <!-- Comunidade Dropdown -->
+                    <!-- Comunidade Dropdown (max 5 items) -->
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Comunidade">
                             <i data-lucide="users"></i>
@@ -180,14 +180,22 @@
                             <button class="nav-dropdown-item" data-view="locator" role="menuitem">
                                 <i data-lucide="map-pin"></i> Lojas Brasil
                             </button>
+                        </div>
+                    </div>
+
+                    <!-- Explorar Dropdown (conteúdo e descoberta) -->
+                    <div class="nav-dropdown">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Explorar">
+                            <i data-lucide="compass"></i>
+                            <span>Explorar</span>
+                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+                        </button>
+                        <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Explorar">
                             <button class="nav-dropdown-item" data-view="meta" role="menuitem">
                                 <i data-lucide="trophy"></i> Meta & Tier List
                             </button>
                             <button class="nav-dropdown-item" data-view="top-cards" role="menuitem">
                                 <i data-lucide="trending-up"></i> Top Cards
-                            </button>
-                            <button class="nav-dropdown-item" data-view="art" role="menuitem">
-                                <i data-lucide="brush"></i> A Arte & Artistas
                             </button>
                             <button class="nav-dropdown-item" data-view="timeline" role="menuitem">
                                 <i data-lucide="calendar"></i> Timeline
@@ -218,18 +226,27 @@
                     </button>
                 </div>
                 <div class="mobile-menu-nav">
+                    <!-- Principal -->
+                    <span class="mobile-menu-section-title">Principal</span>
                     <button class="mobile-nav-item" data-view="home">
                         <i data-lucide="home"></i> Início
                     </button>
                     <button class="mobile-nav-item" data-view="cards">
                         <i data-lucide="layers"></i> Cards
                     </button>
-                    <button class="mobile-nav-item" data-view="collection">
-                        <i data-lucide="folder-heart"></i> Coleção
+                    <button class="mobile-nav-item" data-view="art">
+                        <i data-lucide="brush"></i> Artistas
                     </button>
                     <button class="mobile-nav-item" data-view="decks">
                         <i data-lucide="layout-grid"></i> Decks
                     </button>
+                    <button class="mobile-nav-item" data-view="collection">
+                        <i data-lucide="folder-heart"></i> Coleção
+                    </button>
+
+                    <!-- Ferramentas -->
+                    <div class="mobile-menu-divider"></div>
+                    <span class="mobile-menu-section-title">Ferramentas</span>
                     <button class="mobile-nav-item" data-view="wishlist">
                         <i data-lucide="heart"></i> Wishlist
                     </button>
@@ -239,7 +256,10 @@
                     <button class="mobile-nav-item" data-view="stats">
                         <i data-lucide="bar-chart-3"></i> Estatísticas
                     </button>
+
+                    <!-- Aprender -->
                     <div class="mobile-menu-divider"></div>
+                    <span class="mobile-menu-section-title">Aprender</span>
                     <button class="mobile-nav-item" data-view="codex">
                         <i data-lucide="book-open"></i> Codex
                     </button>
@@ -249,15 +269,31 @@
                     <button class="mobile-nav-item" data-view="faq">
                         <i data-lucide="help-circle"></i> FAQ
                     </button>
+
+                    <!-- Comunidade -->
                     <div class="mobile-menu-divider"></div>
+                    <span class="mobile-menu-section-title">Comunidade</span>
+                    <button class="mobile-nav-item" data-view="forum">
+                        <i data-lucide="message-square"></i> Fórum
+                    </button>
+                    <button class="mobile-nav-item" data-view="marketplace">
+                        <i data-lucide="store"></i> Marketplace
+                    </button>
                     <button class="mobile-nav-item" data-view="community">
-                        <i data-lucide="users"></i> Comunidade
+                        <i data-lucide="users"></i> Discord & Links
                     </button>
+                    <button class="mobile-nav-item" data-view="locator">
+                        <i data-lucide="map-pin"></i> Lojas Brasil
+                    </button>
+
+                    <!-- Explorar -->
+                    <div class="mobile-menu-divider"></div>
+                    <span class="mobile-menu-section-title">Explorar</span>
                     <button class="mobile-nav-item" data-view="meta">
-                        <i data-lucide="trophy"></i> Meta
+                        <i data-lucide="trophy"></i> Meta & Tier List
                     </button>
-                    <button class="mobile-nav-item" data-view="art">
-                        <i data-lucide="brush"></i> Artistas
+                    <button class="mobile-nav-item" data-view="news">
+                        <i data-lucide="newspaper"></i> Notícias
                     </button>
                 </div>
             </div>
@@ -265,6 +301,32 @@
 
         <!-- Main Content -->
         <main class="main">
+            <!-- Breadcrumb Navigation -->
+            <nav id="breadcrumb" class="breadcrumb hidden" aria-label="Navegação estrutural">
+                <ol class="breadcrumb-list">
+                    <li class="breadcrumb-item">
+                        <a href="#" onclick="showView('home'); return false;" class="breadcrumb-link">
+                            <i data-lucide="home" class="breadcrumb-icon"></i>
+                            <span>Início</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-separator" aria-hidden="true">
+                        <i data-lucide="chevron-right"></i>
+                    </li>
+                    <li id="breadcrumb-category" class="breadcrumb-item hidden">
+                        <a href="#" class="breadcrumb-link" id="breadcrumb-category-link">
+                            <span id="breadcrumb-category-text"></span>
+                        </a>
+                    </li>
+                    <li id="breadcrumb-category-separator" class="breadcrumb-separator hidden" aria-hidden="true">
+                        <i data-lucide="chevron-right"></i>
+                    </li>
+                    <li class="breadcrumb-item breadcrumb-current" aria-current="page">
+                        <span id="breadcrumb-current"></span>
+                    </li>
+                </ol>
+            </nav>
+
             <!-- Home View -->
             <section id="home-view" class="view active">
                 <!-- Hero Section -->
@@ -406,7 +468,7 @@
             <!-- Cards View -->
             <section id="cards-view" class="view">
                 <div class="filters">
-                    <input type="text" id="search-input" placeholder="Buscar cards..." data-i18n-placeholder="searchCards" class="search-input">
+                    <input type="text" id="search-input" placeholder="Buscar cards..." data-i18n-placeholder="searchCards" class="search-input" aria-label="Buscar cards">
                     <select id="set-filter" class="filter-select">
                         <option value="">All Sets</option>
                         <option value="Alpha">Alpha</option>
@@ -441,7 +503,7 @@
                         <option value="Unique">Unique</option>
                     </select>
                     <div class="keyword-filter-container">
-                        <input type="text" id="keyword-search" placeholder="Filtrar por keyword..." class="keyword-search-input" autocomplete="off">
+                        <input type="text" id="keyword-search" placeholder="Filtrar por keyword..." class="keyword-search-input" autocomplete="off" aria-label="Filtrar por keyword">
                         <div id="keyword-dropdown" class="keyword-dropdown hidden">
                             <!-- Keywords will be populated by JS -->
                         </div>
@@ -526,7 +588,7 @@
 
                         <div class="collection-filters">
                             <div class="filters-row">
-                                <input type="text" id="collection-search" placeholder="Buscar na coleção..." class="search-input">
+                                <input type="text" id="collection-search" placeholder="Buscar na coleção..." class="search-input" aria-label="Buscar na coleção">
                                 <select id="collection-sort" class="filter-select">
                                     <option value="name-asc">Nome (A-Z)</option>
                                     <option value="name-desc">Nome (Z-A)</option>
@@ -624,7 +686,7 @@
                         <!-- Search by Card -->
                         <div class="filter-group search-group">
                             <label><i data-lucide="search"></i> Buscar por Carta</label>
-                            <input type="text" id="deck-card-filter" placeholder="Ex: Lightning Bolt, Autumn Unicorn..." class="search-input">
+                            <input type="text" id="deck-card-filter" placeholder="Ex: Lightning Bolt, Autumn Unicorn..." class="search-input" aria-label="Buscar cartas no deck">
                         </div>
 
                         <!-- Element Filter -->
@@ -740,7 +802,7 @@
                         </div>
                         <div class="deck-builder-container">
                             <div class="deck-cards-search">
-                                <input type="text" id="deck-card-search" placeholder="Search cards to add..." class="search-input">
+                                <input type="text" id="deck-card-search" placeholder="Search cards to add..." class="search-input" aria-label="Buscar cartas para adicionar ao deck">
                                 <div id="deck-search-results" class="deck-search-results"></div>
                             </div>
                             <div class="deck-current">
@@ -1159,7 +1221,7 @@
                     <!-- Offering Section -->
                     <div id="trade-tab-offering" class="trade-tab-content active">
                         <div class="filters">
-                            <input type="text" id="trade-search" placeholder="Buscar cartas oferecidas..." class="search-input">
+                            <input type="text" id="trade-search" placeholder="Buscar cartas oferecidas..." class="search-input" aria-label="Buscar cartas oferecidas para troca">
                         </div>
                         <div id="trade-grid" class="cards-grid">
                             <!-- Trade cards will be shown here -->
@@ -1175,7 +1237,7 @@
                             </button>
                         </div>
                         <div class="filters">
-                            <input type="text" id="trade-want-search" placeholder="Buscar cartas procuradas..." class="search-input">
+                            <input type="text" id="trade-want-search" placeholder="Buscar cartas procuradas..." class="search-input" aria-label="Buscar cartas procuradas">
                         </div>
                         <div id="trade-want-grid" class="cards-grid">
                             <!-- Looking for cards will be shown here -->
@@ -1203,7 +1265,7 @@
                         <div class="discord-widget-body">
                             <div class="discord-server-info">
                                 <div class="discord-status">
-                                    <span class="status-dot online"></span>
+                                    <span class="status-dot online" role="img" aria-label="Online"></span>
                                     <span id="discord-online-count">100+ membros</span>
                                 </div>
                                 <p class="discord-description">Comunidade brasileira oficial de Sorcery: Contested Realm</p>
@@ -1433,7 +1495,7 @@
                 <div class="locator-container">
                     <div class="locator-sidebar">
                         <div class="locator-filters">
-                            <input type="text" id="locator-search" placeholder="Buscar por cidade ou estado..." class="search-input">
+                            <input type="text" id="locator-search" placeholder="Buscar por cidade ou estado..." class="search-input" aria-label="Buscar lojas por cidade ou estado">
                             <select id="locator-state-filter" class="filter-select">
                                 <option value="">Todos os Estados</option>
                                 <option value="SP">São Paulo</option>
@@ -1491,7 +1553,7 @@
 
                 <!-- Search -->
                 <div class="codex-search-container">
-                    <input type="text" id="codex-search" placeholder="Buscar termo ou mecânica..." class="search-input codex-search-input">
+                    <input type="text" id="codex-search" placeholder="Buscar termo ou mecânica..." class="search-input codex-search-input" aria-label="Buscar no codex">
                 </div>
 
                 <!-- Quick Links -->
@@ -1923,7 +1985,7 @@
                 <div class="faq-search-container">
                     <div class="search-box">
                         <i data-lucide="search"></i>
-                        <input type="text" id="faq-search" placeholder="Buscar perguntas..." oninput="searchFAQ(this.value)">
+                        <input type="text" id="faq-search" placeholder="Buscar perguntas..." oninput="searchFAQ(this.value)" aria-label="Buscar no FAQ">
                     </div>
                 </div>
 
@@ -2130,7 +2192,7 @@
 
                 <div class="lore-controls">
                     <div class="filters">
-                        <input type="text" id="lore-search" placeholder="Buscar no lore..." class="search-input">
+                        <input type="text" id="lore-search" placeholder="Buscar no lore..." class="search-input" aria-label="Buscar no lore">
                         <select id="lore-element-filter" class="filter-select">
                             <option value="all">Todos os Elementos</option>
                             <option value="fire">Fogo</option>
@@ -2530,11 +2592,11 @@
                     <div class="art-search-filters">
                         <div class="search-box">
                             <i data-lucide="user"></i>
-                            <input type="text" id="art-artist-search" placeholder="Buscar por artista...">
+                            <input type="text" id="art-artist-search" placeholder="Buscar por artista..." aria-label="Buscar por artista">
                         </div>
                         <div class="search-box">
                             <i data-lucide="image"></i>
-                            <input type="text" id="art-card-search" placeholder="Buscar por nome da carta...">
+                            <input type="text" id="art-card-search" placeholder="Buscar por nome da carta..." aria-label="Buscar por nome da carta">
                         </div>
                     </div>
 
@@ -2662,7 +2724,7 @@
 
                 <div class="marketplace-toolbar">
                     <div class="marketplace-filters">
-                        <input type="text" id="marketplace-search" placeholder="Buscar carta..." class="search-input">
+                        <input type="text" id="marketplace-search" placeholder="Buscar carta..." class="search-input" aria-label="Buscar no marketplace">
                         <select id="marketplace-type-filter" class="filter-select">
                             <option value="">Todos</option>
                             <option value="offering">Oferecendo</option>
@@ -2724,7 +2786,7 @@
                     <!-- Main Content -->
                     <div class="forum-main">
                         <div class="forum-toolbar">
-                            <input type="text" id="forum-search" placeholder="Buscar posts..." class="search-input">
+                            <input type="text" id="forum-search" placeholder="Buscar posts..." class="search-input" aria-label="Buscar posts no fórum">
                             <select id="forum-sort" class="filter-select">
                                 <option value="recent">Mais Recentes</option>
                                 <option value="popular">Mais Vistos</option>
@@ -2762,7 +2824,7 @@
                 <h2><i data-lucide="plus-circle"></i> Adicionar Cartas à Coleção</h2>
 
                 <div class="add-cards-search-section">
-                    <input type="text" id="add-cards-search" placeholder="Buscar carta pelo nome..." class="search-input" oninput="filterAddCardsResults()">
+                    <input type="text" id="add-cards-search" placeholder="Buscar carta pelo nome..." class="search-input" oninput="filterAddCardsResults()" aria-label="Buscar carta para adicionar à coleção">
                     <div class="add-cards-filters">
                         <select id="add-cards-element-filter" class="filter-select" onchange="filterAddCardsResults()">
                             <option value="">Todos os Elementos</option>
@@ -3843,7 +3905,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=64"></script>
+    <script src="app.js?v=65"></script>
     <script src="offline-manager.js?v=2"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
@@ -3896,6 +3958,27 @@
     <div id="offline-indicator" class="offline-indicator hidden">
         <i data-lucide="wifi-off"></i>
         <span>Sem conexão</span>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden" role="alertdialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-message">
+        <div class="modal-content confirm-modal-content">
+            <div class="confirm-modal-icon" id="confirm-modal-icon">
+                <i data-lucide="alert-triangle"></i>
+            </div>
+            <h3 id="confirm-modal-title" class="confirm-modal-title">Confirmar ação</h3>
+            <p id="confirm-modal-message" class="confirm-modal-message">Tem certeza que deseja continuar?</p>
+            <div class="confirm-modal-actions">
+                <button id="confirm-modal-cancel" class="btn secondary">
+                    <i data-lucide="x"></i>
+                    Cancelar
+                </button>
+                <button id="confirm-modal-confirm" class="btn danger">
+                    <i data-lucide="trash-2"></i>
+                    Confirmar
+                </button>
+            </div>
+        </div>
     </div>
 </body>
 </html>

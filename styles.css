@@ -539,6 +539,98 @@ body {
     margin: var(--space-2) 0;
 }
 
+.mobile-menu-section-title {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    padding: var(--space-2) var(--space-4);
+    margin-top: var(--space-1);
+}
+
+/* ============================================
+   BREADCRUMB NAVIGATION
+   ============================================ */
+
+.breadcrumb {
+    padding: var(--space-3) 0;
+    margin-bottom: var(--space-4);
+}
+
+.breadcrumb.hidden {
+    display: none;
+}
+
+.breadcrumb-list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-fast) var(--ease-out-expo);
+}
+
+.breadcrumb-link:hover {
+    color: var(--text-primary);
+    background: var(--bg-hover);
+}
+
+.breadcrumb-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.breadcrumb-separator {
+    display: flex;
+    align-items: center;
+    color: var(--text-tertiary);
+}
+
+.breadcrumb-separator svg {
+    width: 14px;
+    height: 14px;
+}
+
+.breadcrumb-current {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    padding: var(--space-1) var(--space-2);
+}
+
+@media (max-width: 768px) {
+    .breadcrumb {
+        padding: var(--space-2) 0;
+        margin-bottom: var(--space-3);
+    }
+
+    .breadcrumb-link,
+    .breadcrumb-current {
+        font-size: 0.8125rem;
+        padding: var(--space-1);
+    }
+}
+
 /* Ghost button style */
 .btn.ghost {
     background: transparent;
@@ -2979,6 +3071,78 @@ body {
     transform: translateY(20px) scale(0.98);
 }
 
+/* Confirmation Modal */
+.confirm-modal-content {
+    max-width: 400px;
+    padding: var(--space-6);
+    text-align: center;
+}
+
+.confirm-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-4);
+}
+
+.confirm-modal-icon svg {
+    width: 32px;
+    height: 32px;
+    color: var(--error);
+}
+
+.confirm-modal-icon.warning {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.confirm-modal-icon.warning svg {
+    color: var(--warning);
+}
+
+.confirm-modal-icon.info {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.confirm-modal-icon.info svg {
+    color: var(--info);
+}
+
+.confirm-modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.confirm-modal-message {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-5);
+    line-height: 1.5;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+}
+
+.confirm-modal-actions .btn {
+    min-width: 120px;
+}
+
+.btn.danger {
+    background: var(--error);
+    color: white;
+}
+
+.btn.danger:hover {
+    background: #dc2626;
+}
+
 .close-modal {
     position: absolute;
     top: var(--space-4);
@@ -3107,6 +3271,85 @@ body {
     font-weight: 700;
     padding: 2px 8px;
     border-radius: var(--radius-sm);
+    z-index: 2;
+}
+
+.add-card-item-qty.hidden {
+    display: none;
+}
+
+.add-card-item-preview {
+    cursor: pointer;
+}
+
+.add-card-item-name {
+    cursor: pointer;
+}
+
+.add-card-item-name:hover {
+    color: var(--accent-gold);
+}
+
+/* Quick Add/Remove Buttons */
+.add-card-item-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    background: var(--bg-surface-2);
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.quick-add-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.quick-add-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.quick-add-btn.add {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+}
+
+.quick-add-btn.add:hover {
+    background: var(--accent-gold-light);
+    transform: scale(1.1);
+}
+
+.quick-add-btn.remove {
+    background: var(--bg-surface-3);
+    color: var(--text-secondary);
+}
+
+.quick-add-btn.remove:hover:not(:disabled) {
+    background: var(--error);
+    color: white;
+    transform: scale(1.1);
+}
+
+.quick-add-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.quick-qty {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
 }
 
 /* Card Quantity Modal */
@@ -4801,11 +5044,19 @@ body {
 }
 
 .rarity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
     font-size: 0.7rem;
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     text-transform: uppercase;
     font-weight: 600;
+}
+
+.rarity-badge .rarity-icon {
+    width: 10px;
+    height: 10px;
 }
 
 .rarity-badge.ordinary { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
@@ -15056,6 +15307,41 @@ button:disabled .spin,
 .toast-close:hover {
     background: rgba(255,255,255,0.1);
     color: var(--text-primary);
+}
+
+/* Toast with undo button */
+.toast-with-undo {
+    padding-right: var(--space-2);
+}
+
+.toast-undo-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+    white-space: nowrap;
+}
+
+.toast-undo-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.toast-undo-btn:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.3);
+}
+
+.toast-undo-btn:active {
+    transform: scale(0.95);
 }
 
 .toast.toast-exit {

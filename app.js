@@ -209,6 +209,185 @@ function showInfoToast(message, title = '') {
     return showToast(message, 'info', title);
 }
 
+/**
+ * Show a toast with an undo button
+ * @param {string} message - Toast message
+ * @param {Function} undoCallback - Function to call when undo is clicked
+ * @param {string} type - Toast type (default: 'info')
+ * @param {number} duration - Duration in ms (default: 5000 for undo toasts)
+ * @returns {HTMLElement} The toast element
+ */
+function showUndoToast(message, undoCallback, type = 'info', duration = 5000) {
+    const container = getToastContainer();
+
+    const icons = {
+        success: 'check-circle',
+        error: 'x-circle',
+        warning: 'alert-triangle',
+        info: 'info'
+    };
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type} toast-with-undo`;
+    toast.innerHTML = `
+        <i data-lucide="${icons[type] || 'info'}"></i>
+        <div class="toast-content">
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-undo-btn" aria-label="Desfazer">
+            <i data-lucide="rotate-ccw"></i>
+            Desfazer
+        </button>
+        <button class="toast-close" aria-label="Fechar">
+            <i data-lucide="x"></i>
+        </button>
+    `;
+
+    let undoClicked = false;
+
+    // Close handler
+    const closeToast = () => {
+        toast.classList.add('toast-exit');
+        setTimeout(() => toast.remove(), 200);
+    };
+
+    // Undo handler
+    const undoBtn = toast.querySelector('.toast-undo-btn');
+    undoBtn.addEventListener('click', () => {
+        if (!undoClicked && typeof undoCallback === 'function') {
+            undoClicked = true;
+            undoCallback();
+            closeToast();
+            showSuccessToast('Ação desfeita!');
+        }
+    });
+
+    toast.querySelector('.toast-close').addEventListener('click', closeToast);
+
+    // Auto close
+    if (duration > 0) {
+        setTimeout(closeToast, duration);
+    }
+
+    container.appendChild(toast);
+    refreshIcons(toast);
+
+    return toast;
+}
+
+// ============================================
+// CONFIRMATION DIALOG
+// ============================================
+
+let confirmResolver = null;
+
+/**
+ * Show a confirmation dialog
+ * @param {Object} options - Dialog options
+ * @param {string} options.title - Dialog title
+ * @param {string} options.message - Dialog message
+ * @param {string} options.confirmText - Confirm button text (default: "Confirmar")
+ * @param {string} options.cancelText - Cancel button text (default: "Cancelar")
+ * @param {string} options.type - Icon type: 'danger', 'warning', 'info' (default: 'danger')
+ * @param {string} options.icon - Lucide icon name (default based on type)
+ * @returns {Promise<boolean>} - Resolves to true if confirmed, false if cancelled
+ */
+function showConfirmDialog(options = {}) {
+    return new Promise((resolve) => {
+        const {
+            title = 'Confirmar ação',
+            message = 'Tem certeza que deseja continuar?',
+            confirmText = 'Confirmar',
+            cancelText = 'Cancelar',
+            type = 'danger',
+            icon = type === 'danger' ? 'trash-2' : type === 'warning' ? 'alert-triangle' : 'info'
+        } = options;
+
+        const modal = document.getElementById('confirm-modal');
+        if (!modal) {
+            resolve(window.confirm(message)); // Fallback to native confirm
+            return;
+        }
+
+        // Update content
+        document.getElementById('confirm-modal-title').textContent = title;
+        document.getElementById('confirm-modal-message').textContent = message;
+
+        // Update icon
+        const iconContainer = document.getElementById('confirm-modal-icon');
+        iconContainer.className = `confirm-modal-icon ${type}`;
+        iconContainer.innerHTML = `<i data-lucide="${icon}"></i>`;
+
+        // Update buttons
+        const confirmBtn = document.getElementById('confirm-modal-confirm');
+        const cancelBtn = document.getElementById('confirm-modal-cancel');
+
+        confirmBtn.innerHTML = `<i data-lucide="${icon}"></i> ${confirmText}`;
+        confirmBtn.className = `btn ${type === 'danger' ? 'danger' : 'primary'}`;
+        cancelBtn.querySelector('span, i + span')?.remove();
+        cancelBtn.innerHTML = `<i data-lucide="x"></i> ${cancelText}`;
+
+        // Store resolver
+        confirmResolver = resolve;
+
+        // Show modal
+        modal.classList.remove('hidden');
+        refreshIcons();
+
+        // Focus confirm button
+        requestAnimationFrame(() => {
+            confirmBtn.focus();
+        });
+    });
+}
+
+// Handle confirm modal button clicks
+function setupConfirmModalHandlers() {
+    const modal = document.getElementById('confirm-modal');
+    if (!modal) return;
+
+    const confirmBtn = document.getElementById('confirm-modal-confirm');
+    const cancelBtn = document.getElementById('confirm-modal-cancel');
+
+    confirmBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        if (confirmResolver) {
+            confirmResolver(true);
+            confirmResolver = null;
+        }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        if (confirmResolver) {
+            confirmResolver(false);
+            confirmResolver = null;
+        }
+    });
+
+    // ESC to cancel
+    modal.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            modal.classList.add('hidden');
+            if (confirmResolver) {
+                confirmResolver(false);
+                confirmResolver = null;
+            }
+        }
+    });
+
+    // Click outside to cancel
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+            if (confirmResolver) {
+                confirmResolver(false);
+                confirmResolver = null;
+            }
+        }
+    });
+}
+
 // ============================================
 // ACCESSIBILITY UTILITIES
 // ============================================
@@ -945,6 +1124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await loadCards();
     setupEventListeners();
+    setupConfirmModalHandlers(); // Confirmation dialog handlers
     initDropdownAccessibility(); // Keyboard navigation for dropdowns
     initMobileMenu(); // Mobile hamburger menu
     restoreFilterState(); // Restore saved filter state
@@ -1261,20 +1441,72 @@ function removeFromCollection(cardName, quantity = 1, showFeedback = true) {
     const addedAt = typeof existing === 'object' ? existing.addedAt : new Date().toISOString();
     const newQty = currentQty - quantity;
 
+    // Store original state for undo
+    const originalState = { qty: currentQty, addedAt };
+
     if (newQty <= 0) {
         collection.delete(cardName);
+        saveToStorage();
         if (showFeedback) {
             highlightCardInGrid(cardName, 'removed');
-            showInfoToast(`${cardName} removido da coleção`);
+            // Show undo toast when card is completely removed
+            showUndoToast(`${cardName} removido da coleção`, () => {
+                collection.set(cardName, originalState);
+                saveToStorage();
+                renderCollection();
+                renderCards();
+                updateStats();
+            });
         }
     } else {
         collection.set(cardName, { qty: newQty, addedAt: addedAt });
+        saveToStorage();
         if (showFeedback) {
             highlightCardInGrid(cardName, 'updated');
             showInfoToast(`${cardName} atualizado (${newQty}x restantes)`);
         }
     }
-    saveToStorage();
+}
+
+// Quick add to collection (from add cards modal)
+function quickAddToCollection(cardName, event) {
+    if (event) event.stopPropagation();
+    addToCollection(cardName, 1, true);
+    updateAddCardModalItem(cardName);
+}
+
+// Quick remove from collection (from add cards modal)
+function quickRemoveFromCollection(cardName, event) {
+    if (event) event.stopPropagation();
+    const qty = getCardQuantity(cardName);
+    if (qty <= 0) return;
+    removeFromCollection(cardName, 1, true);
+    updateAddCardModalItem(cardName);
+}
+
+// Update a single card item in the add cards modal
+function updateAddCardModalItem(cardName) {
+    const qty = getCardQuantity(cardName);
+    const cardId = cardName.replace(/\s+/g, '-');
+
+    // Update quantity badge
+    const qtyBadge = document.getElementById(`qty-${cardId}`);
+    if (qtyBadge) {
+        qtyBadge.textContent = `${qty}x`;
+        qtyBadge.classList.toggle('hidden', qty === 0);
+    }
+
+    // Update quick add buttons
+    const cardItem = document.querySelector(`.add-card-item[data-card-name="${cardName}"]`);
+    if (cardItem) {
+        const qtySpan = cardItem.querySelector('.quick-qty');
+        if (qtySpan) qtySpan.textContent = qty;
+
+        const removeBtn = cardItem.querySelector('.quick-add-btn.remove');
+        if (removeBtn) removeBtn.disabled = qty === 0;
+    }
+
+    refreshIcons();
 }
 
 // Set exact quantity for a card
@@ -1441,14 +1673,26 @@ function filterAddCardsResults() {
         const imageSlug = getCardImageSlug(card);
         const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
         const qty = getCardQuantity(card.name);
+        const escapedName = card.name.replace(/'/g, "\\'");
 
         return `
-            <div class="add-card-item" onclick="openCardQuantityModal('${card.name.replace(/'/g, "\\'")}')">
-                ${qty > 0 ? `<span class="add-card-item-qty">${qty}x</span>` : ''}
-                <img src="${imageUrl}" alt="${card.name}" onerror="this.src='placeholder.png'">
+            <div class="add-card-item" data-card-name="${card.name}">
+                <span class="add-card-item-qty ${qty > 0 ? '' : 'hidden'}" id="qty-${card.name.replace(/\s+/g, '-')}">${qty}x</span>
+                <div class="add-card-item-preview" onclick="openCardQuantityModal('${escapedName}')">
+                    <img src="${imageUrl}" alt="${card.name}" onerror="this.src='placeholder.png'">
+                </div>
                 <div class="add-card-item-info">
-                    <div class="add-card-item-name">${card.name}</div>
+                    <div class="add-card-item-name" onclick="openCardQuantityModal('${escapedName}')">${card.name}</div>
                     <div class="add-card-item-type">${card.guardian?.type || ''}</div>
+                </div>
+                <div class="add-card-item-actions">
+                    <button class="quick-add-btn remove" onclick="quickRemoveFromCollection('${escapedName}', event)" aria-label="Remover 1" ${qty === 0 ? 'disabled' : ''}>
+                        <i data-lucide="minus"></i>
+                    </button>
+                    <span class="quick-qty">${qty}</span>
+                    <button class="quick-add-btn add" onclick="quickAddToCollection('${escapedName}', event)" aria-label="Adicionar 1">
+                        <i data-lucide="plus"></i>
+                    </button>
                 </div>
             </div>
         `;
@@ -1468,6 +1712,9 @@ function filterAddCardsResults() {
             </div>
         `;
     }
+
+    // Refresh Lucide icons for the quick add buttons
+    refreshIcons();
 }
 
 // Open card detail from add cards modal - just opens the regular card modal
@@ -1653,6 +1900,85 @@ function setupEventListeners() {
     });
 }
 
+// View information for breadcrumbs
+const VIEW_INFO = {
+    'home': { name: 'Início', category: null },
+    'cards': { name: 'Cards', category: null },
+    'art': { name: 'Artistas', category: null },
+    'decks': { name: 'Decks', category: null },
+    'collection': { name: 'Coleção', category: null },
+    // Ferramentas
+    'wishlist': { name: 'Wishlist', category: 'Ferramentas', categoryView: null },
+    'trade': { name: 'Trocas', category: 'Ferramentas', categoryView: null },
+    'stats': { name: 'Estatísticas', category: 'Ferramentas', categoryView: null },
+    // Aprender
+    'codex': { name: 'Codex', category: 'Aprender', categoryView: null },
+    'rulebook': { name: 'Rulebook', category: 'Aprender', categoryView: null },
+    'faq': { name: 'FAQ', category: 'Aprender', categoryView: null },
+    'lore': { name: 'Lore', category: 'Aprender', categoryView: null },
+    'quiz': { name: 'Quiz', category: 'Aprender', categoryView: null },
+    'boosters': { name: 'Boosters', category: 'Aprender', categoryView: null },
+    // Comunidade
+    'forum': { name: 'Fórum', category: 'Comunidade', categoryView: 'community' },
+    'marketplace': { name: 'Marketplace', category: 'Comunidade', categoryView: 'community' },
+    'community': { name: 'Discord & Links', category: 'Comunidade', categoryView: null },
+    'locator': { name: 'Lojas Brasil', category: 'Comunidade', categoryView: 'community' },
+    // Explorar
+    'meta': { name: 'Meta & Tier List', category: 'Explorar', categoryView: null },
+    'top-cards': { name: 'Top Cards', category: 'Explorar', categoryView: null },
+    'timeline': { name: 'Timeline', category: 'Explorar', categoryView: null },
+    'news': { name: 'Notícias', category: 'Explorar', categoryView: null },
+    // Outros
+    'dust': { name: 'Dust Tracker', category: 'Ferramentas', categoryView: null },
+    'promos': { name: 'Promos', category: 'Explorar', categoryView: null }
+};
+
+// Update breadcrumb navigation
+function updateBreadcrumb(viewName) {
+    const breadcrumb = document.getElementById('breadcrumb');
+    const categoryEl = document.getElementById('breadcrumb-category');
+    const categorySeparator = document.getElementById('breadcrumb-category-separator');
+    const categoryLink = document.getElementById('breadcrumb-category-link');
+    const categoryText = document.getElementById('breadcrumb-category-text');
+    const currentEl = document.getElementById('breadcrumb-current');
+
+    if (!breadcrumb || !currentEl) return;
+
+    const viewInfo = VIEW_INFO[viewName];
+
+    // Hide breadcrumb on home
+    if (viewName === 'home' || !viewInfo) {
+        breadcrumb.classList.add('hidden');
+        return;
+    }
+
+    breadcrumb.classList.remove('hidden');
+
+    // Set current page name
+    currentEl.textContent = viewInfo.name;
+
+    // Handle category
+    if (viewInfo.category) {
+        categoryEl.classList.remove('hidden');
+        categorySeparator.classList.remove('hidden');
+        categoryText.textContent = viewInfo.category;
+
+        // Set category link if there's a category view
+        if (viewInfo.categoryView) {
+            categoryLink.onclick = () => { showView(viewInfo.categoryView); return false; };
+            categoryLink.style.cursor = 'pointer';
+        } else {
+            categoryLink.onclick = null;
+            categoryLink.style.cursor = 'default';
+        }
+    } else {
+        categoryEl.classList.add('hidden');
+        categorySeparator.classList.add('hidden');
+    }
+
+    refreshIcons(breadcrumb);
+}
+
 // Switch View
 function switchView(viewName) {
     // Scroll to top when switching views
@@ -1675,6 +2001,9 @@ function switchView(viewName) {
             parentDropdown.querySelector('.nav-dropdown-trigger')?.classList.add('has-active');
         }
     }
+
+    // Update breadcrumb
+    updateBreadcrumb(viewName);
 
     // Refresh view content
     if (viewName === 'home') initHomeView();
@@ -3560,6 +3889,50 @@ function clearAllKeywordFilters() {
     applyFilters();
 }
 
+// Clear all filters and reset search
+function clearAllFilters() {
+    // Clear search input
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.value = '';
+
+    // Reset all select filters
+    const setFilter = document.getElementById('set-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const elementFilter = document.getElementById('element-filter');
+    const rarityFilter = document.getElementById('rarity-filter');
+
+    if (setFilter) setFilter.value = '';
+    if (typeFilter) typeFilter.value = '';
+    if (elementFilter) elementFilter.value = '';
+    if (rarityFilter) rarityFilter.value = '';
+
+    // Clear keyword filters
+    clearAllKeywordFilters();
+
+    // Clear session storage
+    sessionStorage.removeItem('sorcery-filter-state');
+
+    showSuccessToast('Filtros limpos');
+}
+
+// Clear collection filters
+function clearCollectionFilters() {
+    const searchInput = document.getElementById('collection-search');
+    const setFilter = document.getElementById('collection-set-filter');
+    const typeFilter = document.getElementById('collection-type-filter');
+    const elementFilter = document.getElementById('collection-element-filter');
+    const rarityFilter = document.getElementById('collection-rarity-filter');
+
+    if (searchInput) searchInput.value = '';
+    if (setFilter) setFilter.value = '';
+    if (typeFilter) typeFilter.value = '';
+    if (elementFilter) elementFilter.value = '';
+    if (rarityFilter) rarityFilter.value = '';
+
+    renderCollection();
+    showSuccessToast('Filtros da coleção limpos');
+}
+
 // Render Cards with infinite scroll
 function renderCards() {
     resultsCountEl.textContent = `${filteredCards.length} cards`;
@@ -3571,6 +3944,22 @@ function renderCards() {
     // Remove existing observer
     if (cardsObserver) {
         cardsObserver.disconnect();
+    }
+
+    // Show empty state if no cards match filters
+    if (filteredCards.length === 0 && allCards.length > 0) {
+        cardsGridEl.innerHTML = `
+            <div class="empty-state centered" style="grid-column: 1/-1;">
+                <i data-lucide="search-x" class="empty-icon"></i>
+                <h3>Nenhuma carta encontrada</h3>
+                <p>Tente ajustar os filtros ou buscar por outro termo.</p>
+                <button class="btn secondary" onclick="clearAllFilters()" style="margin-top: 1rem;">
+                    <i data-lucide="x"></i> Limpar filtros
+                </button>
+            </div>
+        `;
+        refreshIcons(cardsGridEl);
+        return;
     }
 
     // Render first batch
@@ -4919,8 +5308,8 @@ function renderRarityBreakdown(byRarity) {
         const rarityClass = rarity.toLowerCase();
 
         return `
-            <div class="rarity-item ${rarityClass}">
-                <span class="rarity-name">${rarity.charAt(0)}</span>
+            <div class="rarity-item ${rarityClass}" title="${rarity}">
+                <span class="rarity-name">${getRarityIcon(rarity)}</span>
                 <div class="rarity-bar">
                     <div class="rarity-fill" style="width: ${percent}%"></div>
                 </div>
@@ -4981,7 +5370,7 @@ function renderMissingCardsList(cards) {
         return `
             <div class="missing-card-item" onclick="openCardModal('${card.name.replace(/'/g, "\\'")}')">
                 <span class="missing-card-name">${card.name}</span>
-                <span class="rarity-badge ${rarityClass}">${rarity}</span>
+                <span class="rarity-badge ${rarityClass}">${getRarityIcon(rarity)} ${rarity}</span>
             </div>
         `;
     }).join('');
@@ -5215,15 +5604,30 @@ function renderCollection() {
     updateCollectionSummary(collectionCards);
 
     if (collectionCards.length === 0) {
-        const filterMessage = hasFilters
-            ? 'Nenhuma carta corresponde aos filtros selecionados.'
-            : 'Clique em "Adicionar Cartas" para começar sua coleção.';
-        collectionGridEl.innerHTML = `
-            <div class="empty-state">
-                <h3>Nenhuma carta na coleção</h3>
-                <p>${filterMessage}</p>
-            </div>
-        `;
+        if (hasFilters) {
+            collectionGridEl.innerHTML = `
+                <div class="empty-state centered">
+                    <i data-lucide="filter-x" class="empty-icon"></i>
+                    <h3>Nenhuma carta encontrada</h3>
+                    <p>Nenhuma carta corresponde aos filtros selecionados.</p>
+                    <button class="btn secondary" onclick="clearCollectionFilters()" style="margin-top: 1rem;">
+                        <i data-lucide="x"></i> Limpar filtros
+                    </button>
+                </div>
+            `;
+        } else {
+            collectionGridEl.innerHTML = `
+                <div class="empty-state centered">
+                    <i data-lucide="library" class="empty-icon"></i>
+                    <h3>Sua coleção está vazia</h3>
+                    <p>Adicione cartas para começar a montar sua coleção!</p>
+                    <button class="btn primary" onclick="openAddCardsModal()" style="margin-top: 1rem;">
+                        <i data-lucide="plus"></i> Adicionar Cartas
+                    </button>
+                </div>
+            `;
+        }
+        refreshIcons(collectionGridEl);
         return;
     }
 
@@ -5513,15 +5917,24 @@ function renderUserDecks() {
 }
 
 // Delete User Deck
-function deleteDeck(index) {
+async function deleteDeck(index) {
     const deck = decks[index];
     if (!deck) return;
 
-    if (confirm(`Tem certeza que deseja excluir o deck "${deck.name}"?`)) {
+    const confirmed = await showConfirmDialog({
+        title: 'Excluir deck',
+        message: `Tem certeza que deseja excluir o deck "${deck.name}"? Esta ação não pode ser desfeita.`,
+        confirmText: 'Excluir',
+        cancelText: 'Manter',
+        type: 'danger',
+        icon: 'trash-2'
+    });
+
+    if (confirmed) {
         decks.splice(index, 1);
         saveUserDecks();
         renderUserDecks();
-        showNotification(`Deck "${deck.name}" excluído.`, 'success');
+        showSuccessToast(`Deck "${deck.name}" excluído com sucesso.`);
     }
 }
 
@@ -6420,6 +6833,18 @@ function getElementIcon(element) {
         Air: '<img src="assets/elements/air.png" alt="Air" class="element-icon-img">'
     };
     return icons[element] || '<span class="element-icon-fallback">✦</span>';
+}
+
+// Get rarity icon (for accessibility - not just color)
+function getRarityIcon(rarity) {
+    const icons = {
+        ordinary: '<i data-lucide="circle" class="rarity-icon"></i>',
+        exceptional: '<i data-lucide="star" class="rarity-icon"></i>',
+        elite: '<i data-lucide="gem" class="rarity-icon"></i>',
+        unique: '<i data-lucide="crown" class="rarity-icon"></i>'
+    };
+    const key = (rarity || '').toLowerCase();
+    return icons[key] || '<i data-lucide="circle" class="rarity-icon"></i>';
 }
 
 // Open deck detail modal
@@ -7396,12 +7821,30 @@ function handleExport(format) {
 }
 
 // Handle import file selection
-function handleImportFile(e) {
+async function handleImportFile(e) {
     const file = e.target.files[0];
     if (!file) return;
 
     const importModeEl = document.getElementById('import-mode');
     const mode = importModeEl?.value || 'merge';
+
+    // Confirm before replacing collection
+    if (mode === 'replace' && collection.size > 0) {
+        const confirmed = await showConfirmDialog({
+            title: 'Substituir coleção',
+            message: `Isso irá APAGAR sua coleção atual (${collection.size} cards) e substituir pelo arquivo importado. Esta ação não pode ser desfeita.`,
+            confirmText: 'Substituir',
+            cancelText: 'Cancelar',
+            type: 'warning',
+            icon: 'alert-triangle'
+        });
+
+        if (!confirmed) {
+            // Reset file input
+            e.target.value = '';
+            return;
+        }
+    }
 
     const reader = new FileReader();
     reader.onload = (event) => {
