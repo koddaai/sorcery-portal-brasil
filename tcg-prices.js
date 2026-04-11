@@ -207,11 +207,60 @@ class TCGPriceService {
         this.specificPrices = SPECIFIC_CARD_PRICES;
         this.rarityRanges = RARITY_PRICE_RANGES;
         this.finishMultipliers = FINISH_MULTIPLIERS;
-        this.lastUpdate = '2026-04-08';
+        this.priceDataVersion = '2026-04-10'; // Versão dos dados de preço manuais
         this.currency = 'USD';
-        this.brlRate = 5.50; // Default fallback
+        this.brlRate = 5.80; // Default fallback (atualizado)
         this.brlRateLastFetch = null;
         this.isFetchingRate = false;
+
+        // Carregar taxa salva do localStorage
+        this.loadSavedRate();
+
+        // Buscar cotação atual automaticamente
+        this.fetchCurrentBRLRate();
+    }
+
+    /**
+     * Carregar taxa salva do localStorage
+     */
+    loadSavedRate() {
+        try {
+            const saved = localStorage.getItem('sorcery-brl-rate');
+            if (saved) {
+                const data = JSON.parse(saved);
+                // Usar cache se tiver menos de 6 horas
+                if (data.timestamp && (Date.now() - data.timestamp) < 6 * 60 * 60 * 1000) {
+                    this.brlRate = data.rate;
+                    this.brlRateLastFetch = data.timestamp;
+                }
+            }
+        } catch (e) {
+            console.warn('Erro ao carregar taxa BRL:', e);
+        }
+    }
+
+    /**
+     * Salvar taxa no localStorage
+     */
+    saveRate() {
+        try {
+            localStorage.setItem('sorcery-brl-rate', JSON.stringify({
+                rate: this.brlRate,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            console.warn('Erro ao salvar taxa BRL:', e);
+        }
+    }
+
+    /**
+     * Obter data de última atualização (hoje para cotação, versão para preços)
+     */
+    get lastUpdate() {
+        if (this.brlRateLastFetch) {
+            return new Date(this.brlRateLastFetch).toISOString().split('T')[0];
+        }
+        return this.priceDataVersion;
     }
 
     /**
@@ -240,7 +289,11 @@ class TCGPriceService {
             if (data.USDBRL && data.USDBRL.bid) {
                 this.brlRate = parseFloat(data.USDBRL.bid);
                 this.brlRateLastFetch = now;
+                this.saveRate(); // Salvar no localStorage
                 console.log(`Cotação atualizada: 1 USD = R$ ${this.brlRate.toFixed(2)}`);
+
+                // Atualizar UI se estiver visível
+                this.updateRateDisplay();
             }
         } catch (error) {
             console.warn('Erro ao buscar cotação, usando fallback:', error);
@@ -253,24 +306,91 @@ class TCGPriceService {
     }
 
     /**
+     * Atualizar exibição da taxa na UI
+     */
+    updateRateDisplay() {
+        const rateEl = document.getElementById('current-brl-rate');
+        if (rateEl) {
+            rateEl.textContent = this.brlRate.toFixed(2);
+        }
+
+        // Atualizar também nos botões de moeda se existirem
+        document.querySelectorAll('.currency-btn[data-currency="BRL"]').forEach(btn => {
+            btn.textContent = `BRL (${this.brlRate.toFixed(2)})`;
+        });
+    }
+
+    /**
+     * Formatar tempo relativo (ex: "há 5 min", "há 1 hora")
+     */
+    getTimeAgo(timestamp) {
+        if (!timestamp) return 'desconhecido';
+
+        const seconds = Math.floor((Date.now() - timestamp) / 1000);
+
+        if (seconds < 60) return 'agora';
+        if (seconds < 3600) return `há ${Math.floor(seconds / 60)} min`;
+        if (seconds < 86400) return `há ${Math.floor(seconds / 3600)}h`;
+        return `há ${Math.floor(seconds / 86400)} dias`;
+    }
+
+    /**
      * Obter preços de um card (todas as variantes)
+     * Prioridade: 1. TCGCSV (dados reais TCGPlayer), 2. Manual, 3. Estimativa
      */
     getCardPrices(cardName, cardData = null) {
         const result = {
             cardName,
             hasSpecificPrices: false,
+            hasTCGCSVPrices: false,
             prices: {},
             lastUpdate: this.lastUpdate
         };
 
-        // Verificar se tem preços específicos
+        // 1. Tentar TCGCSV primeiro (dados reais do TCGPlayer)
+        if (typeof tcgcsvPriceService !== 'undefined' && tcgcsvPriceService.cardPrices.size > 0) {
+            const tcgcsvPrices = tcgcsvPriceService.getAllPrices(cardName);
+
+            if (tcgcsvPrices && tcgcsvPrices.length > 0) {
+                result.hasTCGCSVPrices = true;
+                result.hasSpecificPrices = true;
+
+                // Agrupar por set
+                const bySet = {};
+                tcgcsvPrices.forEach(p => {
+                    if (!bySet[p.setName]) {
+                        bySet[p.setName] = {};
+                    }
+
+                    // Mapear finish: "Normal" -> "Standard", "Foil" -> "Foil"
+                    const finish = p.finish === 'Normal' ? 'Standard' : p.finish;
+
+                    bySet[p.setName][finish] = {
+                        min: p.lowPrice || p.marketPrice * 0.8,
+                        mid: p.marketPrice || p.midPrice,
+                        max: p.highPrice || p.marketPrice * 1.2,
+                        market: p.marketPrice,
+                        url: p.url
+                    };
+                });
+
+                result.prices = bySet;
+                result.lastUpdate = tcgcsvPriceService.lastUpdate
+                    ? tcgcsvPriceService.lastUpdate.toISOString().split('T')[0]
+                    : this.lastUpdate;
+
+                return result;
+            }
+        }
+
+        // 2. Verificar se tem preços específicos manuais
         if (this.specificPrices[cardName]) {
             result.hasSpecificPrices = true;
             result.prices = this.specificPrices[cardName];
             return result;
         }
 
-        // Gerar preços baseados em raridade
+        // 3. Gerar preços estimados baseados em raridade
         if (cardData) {
             const rarity = cardData.guardian?.rarity || 'Ordinary';
             const sets = cardData.sets?.map(s => s.name) || ['Beta'];
@@ -360,6 +480,17 @@ class TCGPriceService {
 
         let html = '<div class="price-table-container">';
 
+        // Determinar badge de fonte
+        const getBadge = () => {
+            if (priceData.hasTCGCSVPrices) {
+                return '<span class="price-badge verified tcgcsv">TCGPlayer (TCGCSV)</span>';
+            }
+            if (priceData.hasSpecificPrices) {
+                return '<span class="price-badge verified">TCGPlayer</span>';
+            }
+            return '<span class="price-badge estimated">Estimado</span>';
+        };
+
         sets.forEach(setName => {
             const setPrices = priceData.prices[setName];
 
@@ -367,7 +498,7 @@ class TCGPriceService {
                 <div class="price-table">
                     <div class="price-table-header">
                         <span class="set-name">${setName}</span>
-                        ${priceData.hasSpecificPrices ? '<span class="price-badge verified">TCGPlayer</span>' : '<span class="price-badge estimated">Estimado</span>'}
+                        ${getBadge()}
                     </div>
                     <table>
                         <thead>
@@ -408,14 +539,28 @@ class TCGPriceService {
         html += '</div>';
 
         // Adicionar conversão BRL
+        const rateAge = this.brlRateLastFetch
+            ? this.getTimeAgo(this.brlRateLastFetch)
+            : 'cache';
+
+        // Fonte de dados: TCGCSV ou manual
+        const priceSource = priceData.hasTCGCSVPrices
+            ? `TCGCSV.com (${priceData.lastUpdate})`
+            : `Manual (${this.priceDataVersion})`;
+
+        // Status do TCGCSV
+        const tcgcsvStatus = typeof tcgcsvPriceService !== 'undefined'
+            ? tcgcsvPriceService.getStatus()
+            : null;
+
         html += `
             <div class="price-currency-toggle">
                 <button class="currency-btn active" data-currency="USD">USD</button>
-                <button class="currency-btn" data-currency="BRL">BRL</button>
+                <button class="currency-btn" data-currency="BRL">BRL (${this.brlRate.toFixed(2)})</button>
             </div>
             <p class="price-disclaimer">
-                Preços atualizados em ${this.lastUpdate}.
-                <span id="brl-rate-info" style="display: none;"> | Cotação: <strong>R$ <span id="current-brl-rate">${this.brlRate.toFixed(2)}</span></strong></span>
+                Fonte: ${priceSource} | Cotação: R$ <span id="current-brl-rate">${this.brlRate.toFixed(2)}</span> <small>(${rateAge})</small>
+                ${tcgcsvStatus && tcgcsvStatus.cardCount > 0 ? `<br><small>${tcgcsvStatus.cardCount} cards indexados</small>` : ''}
                 <br><a href="https://www.tcgplayer.com/search/sorcery-contested-realm/product?q=${encodeURIComponent(cardName)}" target="_blank">Ver no TCGPlayer</a>
             </p>
         `;
@@ -485,13 +630,29 @@ class TCGPriceService {
         const specificCount = Object.keys(this.specificPrices).length;
         const setsWithPrices = Object.keys(this.rarityRanges).length;
 
+        // TCGCSV status
+        const tcgcsvStatus = typeof tcgcsvPriceService !== 'undefined'
+            ? tcgcsvPriceService.getStatus()
+            : null;
+
         return {
             specificPriceCards: specificCount,
             setsWithPrices,
             finishTypes: Object.keys(this.finishMultipliers),
             lastUpdate: this.lastUpdate,
-            brlRate: this.brlRate
+            brlRate: this.brlRate,
+            tcgcsv: tcgcsvStatus
         };
+    }
+
+    /**
+     * Forçar atualização dos preços TCGCSV
+     */
+    async refreshTCGCSVPrices() {
+        if (typeof tcgcsvPriceService !== 'undefined') {
+            return await tcgcsvPriceService.refresh();
+        }
+        return false;
     }
 }
 

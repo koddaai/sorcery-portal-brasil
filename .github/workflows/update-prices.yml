@@ -1,0 +1,285 @@
+name: Update TCGCSV Prices
+
+on:
+  schedule:
+    # Runs daily at 21:00 UTC (after TCGCSV updates at 20:00 UTC)
+    - cron: '0 21 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch TCGCSV Data
+        run: |
+          echo "Fetching Sorcery TCG prices from TCGCSV.com..."
+
+          # Sorcery: Contested Realm = Category 77
+          CATEGORY_ID=77
+          BASE_URL="https://tcgcsv.com/tcgplayer"
+
+          # Set groupIds
+          declare -A SETS
+          SETS["Alpha"]=23335
+          SETS["Beta"]=23336
+          SETS["Arthurian_Legends"]=23588
+          SETS["Arthurian_Legends_Promo"]=23778
+          SETS["Dust_Reward_Promos"]=23514
+          SETS["Gothic"]=24471
+          SETS["Dragonlord"]=24378
+
+          # Create output directory
+          mkdir -p data/tcgcsv
+
+          # Initialize combined data
+          echo '{"sets":{},"lastUpdate":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","source":"tcgcsv.com"}' > data/tcgcsv/prices.json
+
+          # Fetch each set
+          for SET_NAME in "${!SETS[@]}"; do
+            GROUP_ID=${SETS[$SET_NAME]}
+            echo "Fetching $SET_NAME (groupId: $GROUP_ID)..."
+
+            # Fetch products and prices
+            curl -s "${BASE_URL}/${CATEGORY_ID}/${GROUP_ID}/products" > "/tmp/${SET_NAME}_products.json"
+            curl -s "${BASE_URL}/${CATEGORY_ID}/${GROUP_ID}/prices" > "/tmp/${SET_NAME}_prices.json"
+
+            # Check if fetch was successful
+            if [ -s "/tmp/${SET_NAME}_products.json" ] && [ -s "/tmp/${SET_NAME}_prices.json" ]; then
+              echo "  - Products: $(jq '.totalItems // 0' /tmp/${SET_NAME}_products.json)"
+              echo "  - Prices: $(jq '.results | length' /tmp/${SET_NAME}_prices.json)"
+            else
+              echo "  - Warning: Failed to fetch $SET_NAME"
+            fi
+          done
+
+      - name: Process and Combine Data
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+
+          const SETS = {
+            'Alpha': 23335,
+            'Beta': 23336,
+            'Arthurian Legends': 23588,
+            'Arthurian Legends Promo': 23778,
+            'Dust Reward Promos': 23514,
+            'Gothic': 24471,
+            'Dragonlord': 24378
+          };
+
+          const cardPrices = {};
+          let totalProducts = 0;
+          let totalPriced = 0;
+
+          for (const [setName, groupId] of Object.entries(SETS)) {
+            const safeName = setName.replace(/ /g, '_');
+            const productsPath = `/tmp/${safeName}_products.json`;
+            const pricesPath = `/tmp/${safeName}_prices.json`;
+
+            try {
+              if (!fs.existsSync(productsPath) || !fs.existsSync(pricesPath)) {
+                console.log(`Skipping ${setName}: files not found`);
+                continue;
+              }
+
+              const productsData = JSON.parse(fs.readFileSync(productsPath, 'utf8'));
+              const pricesData = JSON.parse(fs.readFileSync(pricesPath, 'utf8'));
+
+              const products = productsData.results || [];
+              const prices = pricesData.results || [];
+
+              // Create price lookup
+              const priceMap = new Map();
+              prices.forEach(p => priceMap.set(p.productId, p));
+
+              // Process products
+              products.forEach(product => {
+                const price = priceMap.get(product.productId);
+                if (!price) return;
+
+                // Clean card name (remove "Foil" suffix)
+                const baseName = (product.cleanName || product.name)
+                  .replace(/\s*\(Foil\)\s*$/i, '')
+                  .replace(/\s*Foil\s*$/i, '')
+                  .trim();
+
+                if (!cardPrices[baseName]) {
+                  cardPrices[baseName] = [];
+                }
+
+                // Determine finish
+                const finish = price.subTypeName || 'Normal';
+
+                cardPrices[baseName].push({
+                  set: setName,
+                  finish: finish,
+                  low: price.lowPrice,
+                  mid: price.midPrice,
+                  high: price.highPrice,
+                  market: price.marketPrice,
+                  productId: product.productId
+                });
+
+                totalProducts++;
+                if (price.marketPrice) totalPriced++;
+              });
+
+              console.log(`${setName}: ${products.length} products processed`);
+            } catch (error) {
+              console.error(`Error processing ${setName}:`, error.message);
+            }
+          }
+
+          // Create output
+          const output = {
+            version: 1,
+            lastUpdate: new Date().toISOString(),
+            source: 'tcgcsv.com',
+            totalCards: Object.keys(cardPrices).length,
+            totalProducts: totalProducts,
+            totalPriced: totalPriced,
+            cards: cardPrices
+          };
+
+          // Ensure directory exists
+          fs.mkdirSync('data/tcgcsv', { recursive: true });
+
+          // Write combined file
+          fs.writeFileSync('data/tcgcsv/prices.json', JSON.stringify(output, null, 2));
+
+          console.log(`\nDone! ${Object.keys(cardPrices).length} unique cards, ${totalProducts} total products`);
+          EOF
+
+      - name: Verify Output
+        run: |
+          echo "=== Price Data Summary ==="
+          jq '{
+            lastUpdate: .lastUpdate,
+            totalCards: .totalCards,
+            totalProducts: .totalProducts,
+            sampleCards: [.cards | to_entries | .[:5] | .[].key]
+          }' data/tcgcsv/prices.json
+
+      - name: Update Price History
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+
+          const HISTORY_FILE = 'data/tcgcsv/history.json';
+          const PRICES_FILE = 'data/tcgcsv/prices.json';
+          const MAX_HISTORY_DAYS = 90; // Keep 90 days of history
+
+          // Load current prices
+          const prices = JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8'));
+
+          // Load or create history
+          let history = { snapshots: [] };
+          if (fs.existsSync(HISTORY_FILE)) {
+            try {
+              history = JSON.parse(fs.readFileSync(HISTORY_FILE, 'utf8'));
+            } catch (e) {
+              console.log('Creating new history file');
+            }
+          }
+
+          // Calculate summary stats for this snapshot
+          const cards = prices.cards || {};
+          let totalMarketValue = 0;
+          let cardCount = 0;
+          const topCards = [];
+
+          for (const [name, variants] of Object.entries(cards)) {
+            const normal = variants.find(v => v.finish === 'Normal');
+            if (normal && normal.market) {
+              totalMarketValue += normal.market;
+              cardCount++;
+              topCards.push({ name, price: normal.market, set: normal.set });
+            }
+          }
+
+          // Sort and keep top 20
+          topCards.sort((a, b) => b.price - a.price);
+          const top20 = topCards.slice(0, 20).map(c => ({
+            name: c.name,
+            price: c.price,
+            set: c.set
+          }));
+
+          // Create today's snapshot
+          const today = new Date().toISOString().split('T')[0];
+          const snapshot = {
+            date: today,
+            timestamp: new Date().toISOString(),
+            totalCards: cardCount,
+            totalMarketValue: Math.round(totalMarketValue * 100) / 100,
+            averagePrice: Math.round((totalMarketValue / cardCount) * 100) / 100,
+            top20: top20
+          };
+
+          // Remove existing snapshot for today (if re-running)
+          history.snapshots = history.snapshots.filter(s => s.date !== today);
+
+          // Add new snapshot
+          history.snapshots.push(snapshot);
+
+          // Keep only last N days
+          history.snapshots.sort((a, b) => a.date.localeCompare(b.date));
+          if (history.snapshots.length > MAX_HISTORY_DAYS) {
+            history.snapshots = history.snapshots.slice(-MAX_HISTORY_DAYS);
+          }
+
+          // Add metadata
+          history.lastUpdate = new Date().toISOString();
+          history.totalSnapshots = history.snapshots.length;
+
+          // Calculate price changes if we have history
+          if (history.snapshots.length >= 2) {
+            const latest = history.snapshots[history.snapshots.length - 1];
+            const previous = history.snapshots[history.snapshots.length - 2];
+
+            const change = latest.totalMarketValue - previous.totalMarketValue;
+            const changePercent = (change / previous.totalMarketValue) * 100;
+
+            history.latestChange = {
+              from: previous.date,
+              to: latest.date,
+              valueDiff: Math.round(change * 100) / 100,
+              percentDiff: Math.round(changePercent * 100) / 100
+            };
+
+            console.log(`Price change: $${change.toFixed(2)} (${changePercent.toFixed(2)}%)`);
+          }
+
+          // Save history
+          fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
+          console.log(`History updated: ${history.snapshots.length} snapshots`);
+          console.log(`Latest: ${snapshot.totalCards} cards, $${snapshot.totalMarketValue} total value`);
+          EOF
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git add data/tcgcsv/prices.json data/tcgcsv/history.json
+
+          # Check if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update TCGCSV prices $(date -u +%Y-%m-%d)"
+            git push
+            echo "Prices updated and pushed!"
+          fi

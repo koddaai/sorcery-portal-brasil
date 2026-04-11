@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorcery Brasil - O Portal Brasileiro de Sorcery TCG</title>
     <meta name="description" content="O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.">
 
@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=32">
+    <link rel="stylesheet" href="styles.css?v=56">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -49,13 +49,13 @@
                 <div class="header-actions">
                     <!-- Language Selector -->
                     <div class="language-selector">
-                        <button id="lang-toggle" class="header-icon-btn" title="Idioma">
+                        <button id="lang-toggle" class="header-icon-btn" title="Idioma" aria-label="Mudar idioma" aria-haspopup="true" aria-expanded="false">
                             <i data-lucide="globe"></i>
                         </button>
-                        <div id="lang-dropdown" class="lang-dropdown hidden">
-                            <button class="lang-option active" data-lang="pt">🇧🇷 Português</button>
-                            <button class="lang-option" data-lang="en">🇺🇸 English</button>
-                            <button class="lang-option" data-lang="es">🇪🇸 Español</button>
+                        <div id="lang-dropdown" class="lang-dropdown hidden" role="menu" aria-label="Opções de idioma">
+                            <button class="lang-option active" data-lang="pt" role="menuitem">🇧🇷 Português</button>
+                            <button class="lang-option" data-lang="en" role="menuitem">🇺🇸 English</button>
+                            <button class="lang-option" data-lang="es" role="menuitem">🇪🇸 Español</button>
                         </div>
                     </div>
 
@@ -65,16 +65,16 @@
                         <button id="register-btn" class="btn btn-sm primary" data-i18n="register">Criar Conta</button>
                     </div>
                     <div id="user-logged-in" class="user-status hidden">
-                        <button id="sync-btn" class="header-icon-btn" title="Sincronizar">
+                        <button id="sync-btn" class="header-icon-btn" title="Sincronizar" aria-label="Sincronizar coleção com a nuvem">
                             <i data-lucide="cloud"></i>
                         </button>
-                        <button id="profile-settings-btn" class="header-icon-btn" title="Configurações de Perfil" onclick="openProfileSettings()">
+                        <button id="profile-settings-btn" class="header-icon-btn" title="Configurações de Perfil" aria-label="Abrir configurações de perfil" onclick="openProfileSettings()">
                             <i data-lucide="user-cog"></i>
                         </button>
                         <div class="user-avatar">
                             <span id="user-display-name"></span>
                         </div>
-                        <button id="logout-btn" class="header-icon-btn" title="Sair">
+                        <button id="logout-btn" class="header-icon-btn" title="Sair" aria-label="Sair da conta">
                             <i data-lucide="log-out"></i>
                         </button>
                     </div>
@@ -83,6 +83,11 @@
 
             <!-- Navigation Bar -->
             <nav class="nav-bar">
+                <!-- Mobile Hamburger Menu Button -->
+                <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
+                    <i data-lucide="menu"></i>
+                </button>
+
                 <!-- Primary Navigation -->
                 <div class="nav-primary">
                     <button class="nav-btn" data-view="cards">
@@ -107,28 +112,25 @@
                 <div class="nav-dropdowns">
                     <!-- Aprender Dropdown -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Aprender">
                             <i data-lucide="book-open"></i>
                             <span>Aprender</span>
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <button class="nav-dropdown-item" data-view="codex">
+                        <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Aprender">
+                            <button class="nav-dropdown-item" data-view="codex" role="menuitem">
                                 <i data-lucide="book-open"></i> Codex
                             </button>
-                            <button class="nav-dropdown-item" data-view="rulebook">
+                            <button class="nav-dropdown-item" data-view="rulebook" role="menuitem">
                                 <i data-lucide="scroll-text"></i> Rulebook
                             </button>
-                            <button class="nav-dropdown-item" data-view="faq">
+                            <button class="nav-dropdown-item" data-view="faq" role="menuitem">
                                 <i data-lucide="help-circle"></i> FAQ
                             </button>
-                            <button class="nav-dropdown-item" data-view="guides">
-                                <i data-lucide="compass"></i> Guias
-                            </button>
-                            <button class="nav-dropdown-item" data-view="lore">
+                            <button class="nav-dropdown-item" data-view="lore" role="menuitem">
                                 <i data-lucide="feather"></i> Lore
                             </button>
-                            <button class="nav-dropdown-item" data-view="quiz">
+                            <button class="nav-dropdown-item" data-view="quiz" role="menuitem">
                                 <i data-lucide="brain"></i> Quiz
                             </button>
                         </div>
@@ -136,60 +138,51 @@
 
                     <!-- Ferramentas Dropdown -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Ferramentas">
                             <i data-lucide="wrench"></i>
                             <span>Ferramentas</span>
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <button class="nav-dropdown-item" data-view="wishlist">
+                        <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Ferramentas">
+                            <button class="nav-dropdown-item" data-view="wishlist" role="menuitem">
                                 <i data-lucide="heart"></i> Wishlist
                             </button>
-                            <button class="nav-dropdown-item" data-view="trade">
-                                <i data-lucide="repeat"></i> Trade Binder
+                            <button class="nav-dropdown-item" data-view="trade" role="menuitem">
+                                <i data-lucide="repeat"></i> Trocas
                             </button>
-                            <button class="nav-dropdown-item" data-view="precons">
-                                <i data-lucide="package"></i> Precons
-                            </button>
-                            <button class="nav-dropdown-item" data-view="stats">
+                            <button class="nav-dropdown-item" data-view="stats" role="menuitem">
                                 <i data-lucide="bar-chart-3"></i> Estatísticas
-                            </button>
-                            <button class="nav-dropdown-item" data-view="dust">
-                                <i data-lucide="sparkles"></i> Dust Tracker
-                            </button>
-                            <button class="nav-dropdown-item" data-view="promos">
-                                <i data-lucide="gift"></i> Promos
                             </button>
                         </div>
                     </div>
 
                     <!-- Comunidade Dropdown -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Comunidade">
                             <i data-lucide="users"></i>
                             <span>Comunidade</span>
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
                         </button>
-                        <div class="nav-dropdown-menu">
-                            <button class="nav-dropdown-item" data-view="community">
+                        <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Comunidade">
+                            <button class="nav-dropdown-item" data-view="community" role="menuitem">
                                 <i data-lucide="users"></i> Discord & Links
                             </button>
-                            <button class="nav-dropdown-item" data-view="locator">
+                            <button class="nav-dropdown-item" data-view="locator" role="menuitem">
                                 <i data-lucide="map-pin"></i> Lojas Brasil
                             </button>
-                            <button class="nav-dropdown-item" data-view="meta">
+                            <button class="nav-dropdown-item" data-view="meta" role="menuitem">
                                 <i data-lucide="trophy"></i> Meta & Tier List
                             </button>
-                            <button class="nav-dropdown-item" data-view="top-cards">
+                            <button class="nav-dropdown-item" data-view="top-cards" role="menuitem">
                                 <i data-lucide="trending-up"></i> Top Cards
                             </button>
-                            <button class="nav-dropdown-item" data-view="art">
+                            <button class="nav-dropdown-item" data-view="art" role="menuitem">
                                 <i data-lucide="brush"></i> A Arte & Artistas
                             </button>
-                            <button class="nav-dropdown-item" data-view="timeline">
+                            <button class="nav-dropdown-item" data-view="timeline" role="menuitem">
                                 <i data-lucide="calendar"></i> Timeline
                             </button>
-                            <button class="nav-dropdown-item" data-view="news">
+                            <button class="nav-dropdown-item" data-view="news" role="menuitem">
                                 <i data-lucide="newspaper"></i> Notícias
                             </button>
                         </div>
@@ -203,6 +196,62 @@
                 </button>
             </nav>
         </header>
+
+        <!-- Mobile Navigation Menu (Slide-out) -->
+        <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+            <div class="mobile-menu-overlay"></div>
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <span class="mobile-menu-title">Menu</span>
+                    <button id="mobile-menu-close" class="mobile-menu-close" aria-label="Fechar menu">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="mobile-menu-nav">
+                    <button class="mobile-nav-item" data-view="home">
+                        <i data-lucide="home"></i> Início
+                    </button>
+                    <button class="mobile-nav-item" data-view="cards">
+                        <i data-lucide="layers"></i> Cards
+                    </button>
+                    <button class="mobile-nav-item" data-view="collection">
+                        <i data-lucide="folder-heart"></i> Coleção
+                    </button>
+                    <button class="mobile-nav-item" data-view="decks">
+                        <i data-lucide="layout-grid"></i> Decks
+                    </button>
+                    <button class="mobile-nav-item" data-view="wishlist">
+                        <i data-lucide="heart"></i> Wishlist
+                    </button>
+                    <button class="mobile-nav-item" data-view="trade">
+                        <i data-lucide="repeat"></i> Trocas
+                    </button>
+                    <button class="mobile-nav-item" data-view="stats">
+                        <i data-lucide="bar-chart-3"></i> Estatísticas
+                    </button>
+                    <div class="mobile-menu-divider"></div>
+                    <button class="mobile-nav-item" data-view="codex">
+                        <i data-lucide="book-open"></i> Codex
+                    </button>
+                    <button class="mobile-nav-item" data-view="rulebook">
+                        <i data-lucide="scroll-text"></i> Rulebook
+                    </button>
+                    <button class="mobile-nav-item" data-view="faq">
+                        <i data-lucide="help-circle"></i> FAQ
+                    </button>
+                    <div class="mobile-menu-divider"></div>
+                    <button class="mobile-nav-item" data-view="community">
+                        <i data-lucide="users"></i> Comunidade
+                    </button>
+                    <button class="mobile-nav-item" data-view="meta">
+                        <i data-lucide="trophy"></i> Meta
+                    </button>
+                    <button class="mobile-nav-item" data-view="art">
+                        <i data-lucide="brush"></i> Artistas
+                    </button>
+                </div>
+            </div>
+        </div>
 
         <!-- Main Content -->
         <main class="main">
@@ -401,160 +450,158 @@
 
             <!-- Collection View -->
             <section id="collection-view" class="view">
-                <div class="collection-header">
-                    <h2>My Collection</h2>
-                    <div class="collection-stats">
-                        <span id="collection-count">0</span> cards collected
-                    </div>
-                </div>
-
-                <!-- Set Progress Section -->
-                <div class="set-progress-section" id="set-progress-section">
-                    <div class="section-toggle" onclick="toggleSetProgress()">
-                        <h3><i data-lucide="bar-chart-3"></i> Progresso por Set</h3>
-                        <i data-lucide="chevron-down" class="toggle-icon"></i>
-                    </div>
-                    <div class="set-progress-content" id="set-progress-content">
-                        <!-- Will be populated by JS -->
-                    </div>
-                </div>
-
-                <div class="filters">
-                    <input type="text" id="collection-search" placeholder="Search in collection..." class="search-input">
-                    <select id="collection-set-filter" class="filter-select">
-                        <option value="">All Sets</option>
-                        <option value="Alpha">Alpha</option>
-                        <option value="Beta">Beta</option>
-                        <option value="Arthurian Legends">Arthurian Legends</option>
-                        <option value="Gothic">Gothic</option>
-                        <option value="Dragonlord">Dragonlord</option>
-                        <option value="Promotional">Promotional</option>
-                    </select>
-                    <select id="collection-finish-filter" class="filter-select">
-                        <option value="">All Finishes</option>
-                        <option value="Standard">Standard</option>
-                        <option value="Foil">Foil</option>
-                        <option value="Rainbow">Rainbow</option>
-                    </select>
-                </div>
-                <div id="collection-grid" class="cards-grid">
-                    <!-- Collection cards will be shown here -->
-                </div>
-            </section>
-
-            <!-- Precons View -->
-            <section id="precons-view" class="view">
-                <h2>Preconstructed Decks</h2>
-                <p class="subtitle">Mark the precons you own to automatically add their cards to your collection.</p>
-
-                <div class="precons-container">
-                    <div class="precon-set">
-                        <h3>Beta Edition - The Four Elements</h3>
-                        <div class="precon-cards">
-                            <div class="precon-card" data-precon="beta-fire">
-                                <div class="precon-image fire"></div>
-                                <h4>Fire Precon</h4>
-                                <p>Flamecaller</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-beta-fire">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
-                            <div class="precon-card" data-precon="beta-air">
-                                <div class="precon-image air"></div>
-                                <h4>Air Precon</h4>
-                                <p>Sparkmage</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-beta-air">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
-                            <div class="precon-card" data-precon="beta-water">
-                                <div class="precon-image water"></div>
-                                <h4>Water Precon</h4>
-                                <p>Waveshaper</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-beta-water">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
-                            <div class="precon-card" data-precon="beta-earth">
-                                <div class="precon-image earth"></div>
-                                <h4>Earth Precon</h4>
-                                <p>Geomancer</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-beta-earth">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
+                <!-- Login prompt for non-logged users -->
+                <div id="collection-login-prompt" class="login-prompt-section hidden">
+                    <div class="login-prompt-card">
+                        <div class="login-prompt-icon">
+                            <i data-lucide="user-circle"></i>
                         </div>
-                    </div>
-
-                    <div class="precon-set">
-                        <h3>Gothic - Prophets of Doom</h3>
-                        <div class="precon-cards">
-                            <div class="precon-card" data-precon="gothic-necromancer">
-                                <div class="precon-image necromancer"></div>
-                                <h4>Necromancer Precon</h4>
-                                <p>Raise the dead</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-gothic-necromancer">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
-                            <div class="precon-card" data-precon="gothic-harbinger">
-                                <div class="precon-image harbinger"></div>
-                                <h4>Harbinger Precon</h4>
-                                <p>Omens darken the skies</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-gothic-harbinger">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
-                            <div class="precon-card" data-precon="gothic-persecutor">
-                                <div class="precon-image persecutor"></div>
-                                <h4>Persecutor Precon</h4>
-                                <p>Cast out corruption</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-gothic-persecutor">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
-                            <div class="precon-card" data-precon="gothic-savior">
-                                <div class="precon-image savior"></div>
-                                <h4>Savior Precon</h4>
-                                <p>Shield for the innocent</p>
-                                <label class="checkbox-container">
-                                    <input type="checkbox" id="precon-gothic-savior">
-                                    <span class="checkmark"></span>
-                                    I own this
-                                </label>
-                            </div>
+                        <h3>Minha Área Pessoal</h3>
+                        <p>Faça login para gerenciar sua coleção e decks pessoais.</p>
+                        <ul class="login-benefits">
+                            <li><i data-lucide="check"></i> Gerencie sua coleção de cartas</li>
+                            <li><i data-lucide="check"></i> Crie e salve seus decks</li>
+                            <li><i data-lucide="check"></i> Acompanhe valor e progresso</li>
+                            <li><i data-lucide="check"></i> Sincronize entre dispositivos</li>
+                        </ul>
+                        <div class="login-prompt-buttons">
+                            <button class="btn primary" onclick="openAuthModal('login')">
+                                <i data-lucide="log-in"></i> Entrar
+                            </button>
+                            <button class="btn secondary" onclick="openAuthModal('register')">
+                                <i data-lucide="user-plus"></i> Criar Conta
+                            </button>
                         </div>
                     </div>
                 </div>
+
+                <!-- Collection Content (requires login) -->
+                <div id="collection-content" class="hidden">
+                    <!-- Tabs for Collection and Decks -->
+                    <div class="collection-tabs">
+                        <button class="collection-tab active" data-tab="cards">
+                            <i data-lucide="grid-3x3"></i> Minha Coleção
+                        </button>
+                        <button class="collection-tab" data-tab="decks">
+                            <i data-lucide="layers"></i> Meus Decks
+                        </button>
+                    </div>
+
+                    <!-- Cards Tab Content -->
+                    <div id="collection-cards-tab" class="tab-content active">
+                        <div class="collection-header">
+                            <div class="collection-stats">
+                                <span id="collection-count">0</span> cartas únicas (<span id="collection-total-count">0</span> total)
+                            </div>
+                            <div class="collection-actions">
+                                <button class="btn btn-secondary" onclick="openExportImportModal()" aria-label="Exportar ou importar coleção">
+                                    <i data-lucide="file-down"></i> Exportar/Importar
+                                </button>
+                                <button class="btn primary" onclick="openAddCardsModal()">
+                                    <i data-lucide="plus"></i> Adicionar Cartas
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Set Progress Section -->
+                        <div class="set-progress-section" id="set-progress-section">
+                            <div class="section-toggle" onclick="toggleSetProgress()">
+                                <h3><i data-lucide="bar-chart-3"></i> Progresso por Set</h3>
+                                <i data-lucide="chevron-down" class="toggle-icon"></i>
+                            </div>
+                            <div class="set-progress-content" id="set-progress-content">
+                                <!-- Will be populated by JS -->
+                            </div>
+                        </div>
+
+                        <div class="collection-filters">
+                            <div class="filters-row">
+                                <input type="text" id="collection-search" placeholder="Buscar na coleção..." class="search-input">
+                                <select id="collection-sort" class="filter-select">
+                                    <option value="name-asc">Nome (A-Z)</option>
+                                    <option value="name-desc">Nome (Z-A)</option>
+                                    <option value="date-desc">Recém Adicionados</option>
+                                    <option value="date-asc">Mais Antigos</option>
+                                    <option value="value-desc">Maior Valor</option>
+                                    <option value="value-asc">Menor Valor</option>
+                                    <option value="qty-desc">Maior Quantidade</option>
+                                    <option value="qty-asc">Menor Quantidade</option>
+                                    <option value="rarity-desc">Raridade (Alta-Baixa)</option>
+                                </select>
+                            </div>
+                            <div class="filters-row">
+                                <select id="collection-type-filter" class="filter-select">
+                                    <option value="">Todos os Tipos</option>
+                                    <option value="Avatar">Avatar</option>
+                                    <option value="Minion">Minion</option>
+                                    <option value="Spell">Spell</option>
+                                    <option value="Artifact">Artifact</option>
+                                    <option value="Site">Site</option>
+                                    <option value="Aura">Aura</option>
+                                    <option value="Magic">Magic</option>
+                                </select>
+                                <select id="collection-element-filter" class="filter-select">
+                                    <option value="">Todos os Elementos</option>
+                                    <option value="Fire">Fire</option>
+                                    <option value="Water">Water</option>
+                                    <option value="Earth">Earth</option>
+                                    <option value="Air">Air</option>
+                                </select>
+                                <select id="collection-rarity-filter" class="filter-select">
+                                    <option value="">Todas as Raridades</option>
+                                    <option value="Ordinary">Ordinary</option>
+                                    <option value="Exceptional">Exceptional</option>
+                                    <option value="Elite">Elite</option>
+                                    <option value="Unique">Unique</option>
+                                </select>
+                                <select id="collection-set-filter" class="filter-select">
+                                    <option value="">Todos os Sets</option>
+                                    <option value="Alpha">Alpha</option>
+                                    <option value="Beta">Beta</option>
+                                    <option value="Arthurian Legends">Arthurian Legends</option>
+                                    <option value="Gothic">Gothic</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Collection Summary Stats -->
+                        <div class="collection-summary" id="collection-summary">
+                            <div class="summary-stat">
+                                <span class="summary-label">Valor Total</span>
+                                <span class="summary-value" id="collection-total-value">$0.00</span>
+                            </div>
+                            <div class="summary-stat">
+                                <span class="summary-label">Valor Médio</span>
+                                <span class="summary-value" id="collection-avg-value">$0.00</span>
+                            </div>
+                            <div class="summary-stat">
+                                <span class="summary-label">Carta Mais Valiosa</span>
+                                <span class="summary-value" id="collection-top-card">-</span>
+                            </div>
+                        </div>
+
+                        <div id="collection-grid" class="cards-grid">
+                            <!-- Collection cards will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Decks Tab Content -->
+                    <div id="collection-decks-tab" class="tab-content">
+                        <div class="decks-header">
+                            <div class="deck-header-actions">
+                                <button id="import-deck-btn" class="btn secondary"><i data-lucide="download"></i> Importar</button>
+                                <button id="new-deck-btn" class="btn primary"><i data-lucide="plus"></i> Novo Deck</button>
+                            </div>
+                        </div>
+                        <div id="decks-list" class="decks-list">
+                            <!-- User's decks will be listed here -->
+                        </div>
+                    </div>
+                </div>
             </section>
 
-            <!-- Decks View -->
+            <!-- Decks View - Community Deck Browser -->
             <section id="decks-view" class="view">
-                <div class="decks-header">
-                    <h2>My Decks</h2>
-                    <div class="deck-header-actions">
-                        <button id="import-deck-btn" class="btn secondary"><i data-lucide="download"></i> Importar Deck</button>
-                        <button id="new-deck-btn" class="btn primary">+ New Deck</button>
-                    </div>
-                </div>
-                <div id="decks-list" class="decks-list">
-                    <!-- Decks will be listed here -->
-                </div>
-
                 <!-- Community Decks Browser -->
                 <div class="community-decks-browser">
                     <div class="browser-header">
@@ -675,11 +722,11 @@
                 </div>
 
                 <!-- Deck Builder Modal -->
-                <div id="deck-builder-modal" class="modal hidden">
+                <div id="deck-builder-modal" class="modal hidden" role="dialog" aria-modal="true">
                     <div class="modal-content deck-builder">
                         <div class="modal-header">
                             <input type="text" id="deck-name-input" placeholder="Deck Name" class="deck-name-input">
-                            <button class="close-modal">&times;</button>
+                            <button class="close-modal" aria-label="Fechar modal">&times;</button>
                         </div>
                         <div class="deck-builder-container">
                             <div class="deck-cards-search">
@@ -738,11 +785,11 @@
                 </div>
 
                 <!-- Import Deck Modal -->
-                <div id="import-deck-modal" class="modal hidden">
+                <div id="import-deck-modal" class="modal hidden" role="dialog" aria-modal="true">
                     <div class="modal-content import-deck-modal">
                         <div class="modal-header">
                             <h2><i data-lucide="download"></i> Importar Deck</h2>
-                            <button class="close-modal">&times;</button>
+                            <button class="close-modal" aria-label="Fechar modal">&times;</button>
                         </div>
                         <div class="import-deck-content">
                             <div class="import-tabs">
@@ -798,18 +845,69 @@
 
             <!-- Wishlist View -->
             <section id="wishlist-view" class="view">
-                <div class="wishlist-header">
-                    <h2>Wishlist</h2>
-                    <span id="wishlist-count">0 cards</span>
+                <!-- Login prompt -->
+                <div id="wishlist-login-prompt" class="login-prompt-section hidden">
+                    <div class="login-prompt-card">
+                        <div class="login-prompt-icon">
+                            <i data-lucide="heart"></i>
+                        </div>
+                        <h3>Lista de Desejos</h3>
+                        <p>Faça login para salvar as cartas que você deseja adquirir.</p>
+                        <div class="login-prompt-buttons">
+                            <button class="btn primary" onclick="openAuthModal('login')">
+                                <i data-lucide="log-in"></i> Entrar
+                            </button>
+                            <button class="btn secondary" onclick="openAuthModal('register')">
+                                <i data-lucide="user-plus"></i> Criar Conta
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div id="wishlist-grid" class="cards-grid">
-                    <!-- Wishlist cards will be shown here -->
+                <div id="wishlist-content" class="hidden">
+                    <div class="wishlist-header">
+                        <h2>Lista de Desejos</h2>
+                        <span id="wishlist-count">0 cartas</span>
+                    </div>
+
+                    <!-- Price Alerts Section -->
+                    <div id="price-alerts-section" class="price-alerts-section">
+                        <div class="section-header collapsible" onclick="togglePriceAlertsSection()">
+                            <h3><i data-lucide="bell"></i> Alertas de Preço</h3>
+                            <i data-lucide="chevron-down" class="collapse-icon"></i>
+                        </div>
+                        <div id="price-alerts-list" class="section-content">
+                            <!-- Price alerts will be rendered here -->
+                        </div>
+                    </div>
+
+                    <div id="wishlist-grid" class="cards-grid">
+                        <!-- Wishlist cards will be shown here -->
+                    </div>
                 </div>
             </section>
 
             <!-- Stats View -->
             <section id="stats-view" class="view">
-                <h2>Collection Statistics</h2>
+                <!-- Login prompt -->
+                <div id="stats-login-prompt" class="login-prompt-section hidden">
+                    <div class="login-prompt-card">
+                        <div class="login-prompt-icon">
+                            <i data-lucide="bar-chart-3"></i>
+                        </div>
+                        <h3>Estatísticas da Coleção</h3>
+                        <p>Faça login para ver estatísticas detalhadas, valor e progresso da sua coleção.</p>
+                        <div class="login-prompt-buttons">
+                            <button class="btn primary" onclick="openAuthModal('login')">
+                                <i data-lucide="log-in"></i> Entrar
+                            </button>
+                            <button class="btn secondary" onclick="openAuthModal('register')">
+                                <i data-lucide="user-plus"></i> Criar Conta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="stats-content" class="hidden">
+                <h2>Estatísticas da Coleção</h2>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Total Cards</h3>
@@ -984,23 +1082,95 @@
                         <!-- Achievements will be populated by JS -->
                     </div>
                 </div>
+                </div>
             </section>
 
-            <!-- Trade Binder View -->
+            <!-- Trocas View -->
             <section id="trade-view" class="view">
-                <div class="trade-header">
-                    <h2>Trade Binder</h2>
-                    <p class="subtitle">Cards you have available for trade</p>
+                <!-- Login prompt -->
+                <div id="trade-login-prompt" class="login-prompt-section hidden">
+                    <div class="login-prompt-card">
+                        <div class="login-prompt-icon">
+                            <i data-lucide="repeat"></i>
+                        </div>
+                        <h3>Trocas</h3>
+                        <p>Faça login para gerenciar as cartas que você deseja trocar.</p>
+                        <div class="login-prompt-buttons">
+                            <button class="btn primary" onclick="openAuthModal('login')">
+                                <i data-lucide="log-in"></i> Entrar
+                            </button>
+                            <button class="btn secondary" onclick="openAuthModal('register')">
+                                <i data-lucide="user-plus"></i> Criar Conta
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="trade-stats">
-                    <span id="trade-count">0</span> cards for trade |
-                    Estimated value: <span id="trade-value">$0.00</span>
-                </div>
-                <div class="filters">
-                    <input type="text" id="trade-search" placeholder="Search trade binder..." class="search-input">
-                </div>
-                <div id="trade-grid" class="cards-grid">
-                    <!-- Trade cards will be shown here -->
+                <div id="trade-content" class="hidden">
+                    <div class="trade-header">
+                        <h2>Trocas</h2>
+                        <p class="subtitle">Gerencie suas cartas para troca</p>
+                        <div class="trade-actions">
+                            <button class="btn btn-secondary" onclick="generateTradeLink()">
+                                <i data-lucide="share-2"></i> Compartilhar Trocas
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Trade Overview -->
+                    <div class="trade-overview">
+                        <div class="trade-stat-card">
+                            <i data-lucide="arrow-up-right"></i>
+                            <div class="trade-stat-info">
+                                <span class="trade-stat-label">Oferecendo</span>
+                                <span id="trade-count" class="trade-stat-value">0 cartas</span>
+                                <span id="trade-value" class="trade-stat-secondary">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="trade-stat-card">
+                            <i data-lucide="arrow-down-left"></i>
+                            <div class="trade-stat-info">
+                                <span class="trade-stat-label">Procurando</span>
+                                <span id="trade-want-count" class="trade-stat-value">0 cartas</span>
+                                <span id="trade-want-value" class="trade-stat-secondary">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs for Offering / Looking For -->
+                    <div class="trade-tabs">
+                        <button class="trade-tab active" data-tab="offering" onclick="switchTradeTab('offering')">
+                            <i data-lucide="package"></i> Oferecendo
+                        </button>
+                        <button class="trade-tab" data-tab="looking-for" onclick="switchTradeTab('looking-for')">
+                            <i data-lucide="search"></i> Procurando
+                        </button>
+                    </div>
+
+                    <!-- Offering Section -->
+                    <div id="trade-tab-offering" class="trade-tab-content active">
+                        <div class="filters">
+                            <input type="text" id="trade-search" placeholder="Buscar cartas oferecidas..." class="search-input">
+                        </div>
+                        <div id="trade-grid" class="cards-grid">
+                            <!-- Trade cards will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Looking For Section -->
+                    <div id="trade-tab-looking-for" class="trade-tab-content hidden">
+                        <div class="trade-looking-for-header">
+                            <p>Adicione cartas da sua wishlist que você procura em trocas.</p>
+                            <button class="btn btn-secondary" onclick="addWishlistToTradeWants()">
+                                <i data-lucide="heart"></i> Importar da Wishlist
+                            </button>
+                        </div>
+                        <div class="filters">
+                            <input type="text" id="trade-want-search" placeholder="Buscar cartas procuradas..." class="search-input">
+                        </div>
+                        <div id="trade-want-grid" class="cards-grid">
+                            <!-- Looking for cards will be shown here -->
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -1759,9 +1929,194 @@
             <!-- Lore / Flavor Text View -->
             <section id="lore-view" class="view">
                 <div class="section-header">
-                    <h2>Coleção de Lore</h2>
+                    <h2>O Mundo de Sorcery</h2>
                     <p class="subtitle">Explore as histórias e o universo por trás dos cards</p>
                 </div>
+
+                <!-- World Building Section -->
+                <div class="lore-intro">
+                    <div class="lore-section world-intro">
+                        <h3><i data-lucide="globe"></i> O Realm</h3>
+                        <p>O Realm existe em dois estados: o <strong>Void</strong>, seu estado natural e vazio, e o <strong>reino físico</strong> que surge quando um Site é jogado no Void. Avatares são entidades mágicas poderosas que conjuram terras do vazio cósmico, criando o campo de batalha em uma grade tática 5x4.</p>
+                        <p>Regiões especiais definem onde e como os minions podem se mover:</p>
+                        <div class="terrain-grid">
+                            <div class="terrain-card">
+                                <i data-lucide="sun"></i>
+                                <span>Superfície</span>
+                                <small>Terreno padrão</small>
+                            </div>
+                            <div class="terrain-card">
+                                <i data-lucide="mountain"></i>
+                                <span>Subterrâneo</span>
+                                <small>Requer Burrowing</small>
+                            </div>
+                            <div class="terrain-card">
+                                <i data-lucide="waves"></i>
+                                <span>Subaquático</span>
+                                <small>Requer Submerge</small>
+                            </div>
+                            <div class="terrain-card">
+                                <i data-lucide="sparkles"></i>
+                                <span>Void</span>
+                                <small>Requer Voidwalk</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lore-section avatars-intro">
+                        <h3><i data-lucide="crown"></i> Os Avatares</h3>
+                        <p>Avatares são feiticeiros que expandem seu domínio explorando sites, invocando minions, conjurando relíquias e auras, e lançando magias para derrotar seus inimigos. Jogadores assumem o papel de Avatares — entidades mágicas poderosas em um duelo cósmico com a habilidade única de conjurar terras do vazio.</p>
+                        <div class="avatar-lore-note">
+                            <i data-lucide="info"></i>
+                            <p><em>A artista dos Avatares elementais (Séverine Pineaux) especulou que o Avatar de Terra é a mãe dos outros Avatares elementais. Pode haver conflito entre eles sobre domínio e oposição elemental natural.</em></p>
+                        </div>
+                    </div>
+
+                    <div class="lore-section elements-intro">
+                        <h3><i data-lucide="palette"></i> Os Quatro Elementos</h3>
+                        <p>Os quatro elementos representam diferentes filosofias de magia:</p>
+                        <div class="elements-lore-grid">
+                            <div class="element-lore fire">
+                                <i data-lucide="flame"></i>
+                                <h4>Fogo</h4>
+                                <p>Focado em <strong>dano direto</strong> e destruição. Agressivo e implacável.</p>
+                            </div>
+                            <div class="element-lore air">
+                                <i data-lucide="wind"></i>
+                                <h4>Ar</h4>
+                                <p>Focado em <strong>movimento</strong> e efeitos indiretos. Relâmpagos e evasão.</p>
+                            </div>
+                            <div class="element-lore water">
+                                <i data-lucide="droplets"></i>
+                                <h4>Água</h4>
+                                <p>Focado em <strong>controle</strong> e manipulação. Afoga e empurra.</p>
+                            </div>
+                            <div class="element-lore earth">
+                                <i data-lucide="mountain"></i>
+                                <h4>Terra</h4>
+                                <p>Focado no <strong>físico</strong>. Criaturas, sites e resistência.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gothic Expansion Lore -->
+                    <div class="lore-section gothic-lore">
+                        <h3><i data-lucide="skull"></i> Gothic: Os Profetas da Perdição</h3>
+                        <p>A expansão Gothic mergulha na fantasia sombria, com inspiração em horror Lovecraftiano e cataclismos medievais. O set explora <strong>pavor, devoção e desespero</strong> — temas de morte, ressurreição e conflito moral entre luz e trevas.</p>
+
+                        <h4>As Três Tribos do Mal</h4>
+                        <div class="evil-tribes-grid">
+                            <div class="tribe-card undead">
+                                <i data-lucide="bone"></i>
+                                <h5>Undead (Ar)</h5>
+                                <p>Forças implacáveis forjadas em ossos. "Transformam cada morte em oportunidade, cada túmulo em arma."</p>
+                            </div>
+                            <div class="tribe-card demons">
+                                <i data-lucide="flame"></i>
+                                <h5>Demons (Fogo)</h5>
+                                <p>Poder exige sacrifício. Representam "ambição desenfreada" e gameplay de alto risco.</p>
+                            </div>
+                            <div class="tribe-card monsters">
+                                <i data-lucide="fish"></i>
+                                <h5>Monsters (Água)</h5>
+                                <p>Seres eldritch e incognoscíveis que emergem através de rituais das profundezas misteriosas.</p>
+                            </div>
+                        </div>
+
+                        <h4>Os Quatro Profetas</h4>
+                        <div class="prophets-grid">
+                            <div class="prophet-card">
+                                <i data-lucide="skull"></i>
+                                <span>Necromancer</span>
+                                <small>"Vê o mundo não como é, mas como poderia ser: Podre e esperando para ser refeito."</small>
+                            </div>
+                            <div class="prophet-card">
+                                <i data-lucide="cloud-lightning"></i>
+                                <span>Harbinger</span>
+                                <small>Deixa presságios escurecerem os céus.</small>
+                            </div>
+                            <div class="prophet-card">
+                                <i data-lucide="gavel"></i>
+                                <span>Persecutor</span>
+                                <small>Expulsa a corrupção e acusa os condenados.</small>
+                            </div>
+                            <div class="prophet-card">
+                                <i data-lucide="shield"></i>
+                                <span>Savior</span>
+                                <small>Ergue-se como escudo para os inocentes.</small>
+                            </div>
+                        </div>
+
+                        <p class="lore-quote"><em>"A fé perdura onde carne e chamas falham" — Anjos e Wards representam esperança e proteção, chegando "quando a esperança está no seu ponto mais fraco."</em></p>
+                    </div>
+
+                    <!-- Arthurian Legends Lore -->
+                    <div class="lore-section arthurian-lore">
+                        <h3><i data-lucide="crown"></i> Arthurian Legends</h3>
+                        <p>A primeira expansão de Sorcery mergulha na mitologia Arturiana. <em>"Você atenderá ao chamado, deixará seu confortável castelo e embarcará em uma jornada repleta de grande perigo?"</em></p>
+                        <p>Com mais de 220 cards, a expansão traz personagens famosos da Távola Redonda à vida no Contested Realm: <strong>Sir Lancelot</strong>, os cavaleiros da Mesa Redonda, <strong>Excalibur</strong>, e a lendária cidade de <strong>Camelot</strong>.</p>
+                        <p>Locais místicos como <strong>Tintagel</strong> (o lendário local de nascimento do Rei Arthur) e o <strong>Vale do Deleite</strong> evocam as paisagens místicas da lenda Arturiana.</p>
+                    </div>
+
+                    <!-- Design Philosophy -->
+                    <div class="lore-section philosophy-intro">
+                        <h3><i data-lucide="lightbulb"></i> Filosofia de Design</h3>
+                        <p>Erik Olofsson, criador do jogo e ex-Diretor Criativo de Path of Exile, construiu Sorcery sobre três pilares:</p>
+                        <ul>
+                            <li><strong>Fantasia Old School:</strong> Inspiração na era inicial de Magic: The Gathering e a era dourada dos TCGs</li>
+                            <li><strong>Gameplay Tático:</strong> Sistema de grade quadrada que cria estratégia baseada em posicionamento</li>
+                            <li><strong>Arte Pintada à Mão:</strong> Diversidade artística onde cada carta reflete o estilo individual do artista</li>
+                        </ul>
+                        <p class="lore-quote"><em>"Sorcery é sobre a imaginação dos artistas e jogadores. Estamos tentando criar algo evocativo que permite aos jogadores preencher as lacunas com suas próprias histórias."</em> — Erik Olofsson</p>
+                    </div>
+
+                    <div class="lore-section art-intro">
+                        <h3><i data-lucide="brush"></i> A Arte de Sorcery</h3>
+                        <p>Sorcery celebra a arte tradicional pintada à mão — uma ruptura com a ilustração digital padrão dos TCGs modernos. Erik's Curiosa reuniu mestres da fantasia incluindo <strong>Frank Frazetta</strong>, <strong>Ian Miller</strong>, <strong>Gerald Brom</strong>, <strong>Jeff Easley</strong>, <strong>Rodney Matthews</strong>, <strong>Dan Seagrave</strong>, e veteranos de Magic como <strong>Liz Danforth</strong>, <strong>Quinton Hoover</strong>, <strong>Drew Tucker</strong>, <strong>Melissa Benson</strong>, <strong>Jeff Menges</strong>, e <strong>Anson Maddocks</strong>.</p>
+                        <p>Um Avatar sem rosto, com apenas um título, pode ser qualquer um de qualquer lugar. Eles se tornam blocos de construção que os jogadores usam para criar suas próprias histórias.</p>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="lore-section timeline-intro">
+                        <h3><i data-lucide="calendar"></i> Linha do Tempo</h3>
+                        <div class="timeline-simple">
+                            <div class="timeline-item">
+                                <span class="year">2017</span>
+                                <span class="event">Início do projeto</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="year">2018</span>
+                                <span class="event">Primeira arte comissionada</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="year">Mar 2022</span>
+                                <span class="event">Kickstarter arrecada NZ$ 5.7M de 6,456 apoiadores</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="year">Mai 2023</span>
+                                <span class="event">Alpha Set lançado (403 cards)</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="year">Out 2023</span>
+                                <span class="event">Beta Set chega ao varejo</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="year">Out 2024</span>
+                                <span class="event">Arthurian Legends (220+ cards)</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="year">Ago 2025</span>
+                                <span class="event">Dragonlord miniset (13 cards de dragões)</span>
+                            </div>
+                            <div class="timeline-item">
+                                <span class="year">Dez 2025</span>
+                                <span class="event">Gothic: Prophets of Doom (440 cards)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="lore-flavor-header"><i data-lucide="book-open"></i> Flavor Texts dos Cards</h3>
 
                 <div class="lore-controls">
                     <div class="filters">
@@ -1797,40 +2152,6 @@
             </section>
 
             <!-- Deck Guides View -->
-            <section id="guides-view" class="view">
-                <div class="section-header">
-                    <h2 data-i18n="guidesTitle">Guias de Deck</h2>
-                    <p class="subtitle">Aprenda a construir decks competitivos em Sorcery: Contested Realm</p>
-                </div>
-
-                <div class="guides-nav">
-                    <a href="#guide-basics" class="guide-nav-link active">
-                        <i data-lucide="book"></i>
-                        <span>Fundamentos</span>
-                    </a>
-                    <a href="#guide-elements" class="guide-nav-link">
-                        <i data-lucide="palette"></i>
-                        <span>Elementos</span>
-                    </a>
-                    <a href="#guide-archetypes" class="guide-nav-link">
-                        <i data-lucide="layers"></i>
-                        <span>Arquétipos</span>
-                    </a>
-                    <a href="#guide-beginner" class="guide-nav-link">
-                        <i data-lucide="graduation-cap"></i>
-                        <span>Iniciantes</span>
-                    </a>
-                </div>
-
-                <div id="deck-guides-content" class="guides-container">
-                    <!-- Will be populated by JS -->
-                </div>
-
-                <div class="guides-footer">
-                    <p>Explore decks populares no <a href="https://curiosa.io/decks" target="_blank">Curiosa.io</a> e participe do <a href="https://discord.gg/qvYVGFAS5n" target="_blank">Discord Oficial</a>.</p>
-                </div>
-            </section>
-
             <!-- Art & Artists View (Unified) -->
             <section id="art-view" class="view">
                 <div class="section-header">
@@ -1882,50 +2203,6 @@
                 </div>
 
                 <div id="timeline-content" class="timeline-container">
-                    <!-- Will be populated by JS -->
-                </div>
-            </section>
-
-            <!-- Dust Tracker View -->
-            <section id="dust-view" class="view">
-                <div class="section-header">
-                    <h2 data-i18n="dustTitle">Dust Tracker</h2>
-                    <p class="subtitle">Acompanhe seus pontos Dust do Organized Play</p>
-                </div>
-
-                <div class="dust-actions">
-                    <button class="btn primary" onclick="openAddDustModal()">
-                        <i data-lucide="plus"></i>
-                        <span>Adicionar Dust</span>
-                    </button>
-                    <button class="btn secondary" onclick="openAddEventModal()">
-                        <i data-lucide="calendar-plus"></i>
-                        <span>Adicionar Evento</span>
-                    </button>
-                </div>
-
-                <div id="dust-content" class="dust-container">
-                    <!-- Will be populated by JS -->
-                </div>
-            </section>
-
-            <!-- Promos Tracker View -->
-            <section id="promos-view" class="view">
-                <div class="section-header">
-                    <h2 data-i18n="promosTitle">Tracker de Promos</h2>
-                    <p class="subtitle">Cards promocionais, exclusivos e variantes especiais</p>
-                </div>
-
-                <div class="promos-tabs">
-                    <button class="promo-tab active" data-category="all">Todos</button>
-                    <button class="promo-tab" data-category="retailer_exclusive">Retailer</button>
-                    <button class="promo-tab" data-category="kickstarter">Kickstarter</button>
-                    <button class="promo-tab" data-category="organized_play">OP</button>
-                    <button class="promo-tab" data-category="box_topper">Box Topper</button>
-                    <button class="promo-tab" data-category="rainbow">Rainbow</button>
-                </div>
-
-                <div id="promos-content" class="promos-container">
                     <!-- Will be populated by JS -->
                 </div>
             </section>
@@ -2023,10 +2300,49 @@
             </section>
         </main>
 
+        <!-- Add Cards to Collection Modal -->
+        <div id="add-cards-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content add-cards-modal-content">
+                <button class="close-modal" onclick="closeAddCardsModal()" aria-label="Fechar modal">&times;</button>
+                <h2><i data-lucide="plus-circle"></i> Adicionar Cartas à Coleção</h2>
+
+                <div class="add-cards-search-section">
+                    <input type="text" id="add-cards-search" placeholder="Buscar carta pelo nome..." class="search-input" oninput="filterAddCardsResults()">
+                    <div class="add-cards-filters">
+                        <select id="add-cards-element-filter" class="filter-select" onchange="filterAddCardsResults()">
+                            <option value="">Todos os Elementos</option>
+                            <option value="Fire">Fire</option>
+                            <option value="Water">Water</option>
+                            <option value="Earth">Earth</option>
+                            <option value="Air">Air</option>
+                        </select>
+                        <select id="add-cards-type-filter" class="filter-select" onchange="filterAddCardsResults()">
+                            <option value="">Todos os Tipos</option>
+                            <option value="Avatar">Avatar</option>
+                            <option value="Minion">Minion</option>
+                            <option value="Spell">Spell</option>
+                            <option value="Artifact">Artifact</option>
+                            <option value="Site">Site</option>
+                            <option value="Aura">Aura</option>
+                            <option value="Magic">Magic</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="add-cards-results-info">
+                    <span id="add-cards-results-count">0</span> cartas encontradas
+                </div>
+
+                <div id="add-cards-results" class="add-cards-grid">
+                    <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Card Detail Modal -->
-        <div id="card-modal" class="modal hidden">
+        <div id="card-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content">
-                <button class="close-modal" onclick="closeCardModal()">&times;</button>
+                <button class="close-modal" onclick="closeCardModal()" aria-label="Fechar modal">&times;</button>
                 <div class="card-detail">
                     <div class="card-image-container">
                         <img id="modal-card-image" src="" alt="">
@@ -2084,22 +2400,22 @@
                         </div>
 
                         <div class="card-actions">
-                            <button id="add-to-collection-btn" class="btn primary">
-                                <span class="icon">+</span> Add to Collection
+                            <button id="add-to-collection-btn" class="btn primary" aria-label="Adicionar carta à coleção">
+                                <i data-lucide="plus"></i> Coleção
                             </button>
-                            <button id="add-to-wishlist-btn" class="btn">
-                                <span class="icon">&#10084;</span> Add to Wishlist
+                            <button id="add-to-wishlist-btn" class="btn" aria-label="Adicionar carta à wishlist">
+                                <i data-lucide="heart"></i> Wishlist
                             </button>
-                            <button id="add-to-trade-btn" class="btn">
-                                <span class="icon">&#128257;</span> Add to Trade
+                            <button id="add-to-trade-btn" class="btn" aria-label="Adicionar carta às trocas">
+                                <i data-lucide="repeat"></i> Trocas
                             </button>
-                            <button id="add-photo-btn" class="btn">
-                                <span class="icon">&#128247;</span> Add Photo
+                            <button id="price-alert-btn" class="btn" aria-label="Configurar alerta de preço">
+                                <i data-lucide="bell"></i> Alerta
                             </button>
-                            <button id="share-card-btn" class="btn">
-                                <i data-lucide="share-2"></i> Share
+                            <button id="share-card-btn" class="btn" aria-label="Compartilhar carta">
+                                <i data-lucide="share-2"></i> Compartilhar
                             </button>
-                            <button id="qr-card-btn" class="btn">
+                            <button id="qr-card-btn" class="btn" aria-label="Gerar QR Code">
                                 <i data-lucide="qr-code"></i> QR Code
                             </button>
                         </div>
@@ -2115,9 +2431,9 @@
         </div>
 
         <!-- Deck Detail Modal -->
-        <div id="deck-detail-modal" class="modal hidden">
+        <div id="deck-detail-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content deck-detail-modal-content">
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" aria-label="Fechar modal">&times;</button>
 
                 <div class="deck-detail-header">
                     <div class="deck-detail-badges">
@@ -2227,61 +2543,169 @@
             </div>
         </div>
 
+        <!-- Share Deck to Community Modal -->
+        <div id="share-deck-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content share-deck-modal-content">
+                <button class="close-modal" onclick="closeModal('share-deck-modal')" aria-label="Fechar modal">&times;</button>
+                <h2><i data-lucide="share-2"></i> Compartilhar Deck</h2>
+                <p class="modal-subtitle">Compartilhe seu deck com a comunidade brasileira de Sorcery!</p>
+
+                <form id="share-deck-form">
+                    <input type="hidden" id="share-deck-id">
+
+                    <div class="form-group">
+                        <label for="share-deck-name">Nome do Deck *</label>
+                        <input type="text" id="share-deck-name" required placeholder="Ex: Fury Road Aggro">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="share-deck-format">Formato</label>
+                            <select id="share-deck-format">
+                                <option value="Constructed">Constructed</option>
+                                <option value="Limited">Limited</option>
+                                <option value="Casual">Casual</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="share-deck-tier">Tier (opcional)</label>
+                            <select id="share-deck-tier">
+                                <option value="">Não especificado</option>
+                                <option value="S">S - Meta Defining</option>
+                                <option value="A">A - Competitivo</option>
+                                <option value="B">B - Viável</option>
+                                <option value="C">C - Casual/Fun</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="share-deck-elements">Elementos</label>
+                        <div class="element-checkboxes">
+                            <label class="element-checkbox">
+                                <input type="checkbox" name="elements" value="Fire">
+                                <img src="assets/elements/fire.png" alt="Fire"> Fire
+                            </label>
+                            <label class="element-checkbox">
+                                <input type="checkbox" name="elements" value="Water">
+                                <img src="assets/elements/water.png" alt="Water"> Water
+                            </label>
+                            <label class="element-checkbox">
+                                <input type="checkbox" name="elements" value="Earth">
+                                <img src="assets/elements/earth.png" alt="Earth"> Earth
+                            </label>
+                            <label class="element-checkbox">
+                                <input type="checkbox" name="elements" value="Air">
+                                <img src="assets/elements/air.png" alt="Air"> Air
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="share-deck-description">Descrição *</label>
+                        <textarea id="share-deck-description" required rows="3" placeholder="Descreva brevemente o deck e seu objetivo..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="share-deck-strategy">Estratégia / Como Jogar</label>
+                        <textarea id="share-deck-strategy" rows="4" placeholder="Explique como pilotar o deck, combos importantes, mulligans..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="share-deck-matchups">Matchups (opcional)</label>
+                        <textarea id="share-deck-matchups" rows="3" placeholder="Como o deck se sai contra outros arquétipos populares..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="share-deck-keycards">Key Cards (separados por vírgula)</label>
+                        <input type="text" id="share-deck-keycards" placeholder="Ex: Fury, Blaze, Bosk Troll">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn secondary" onclick="closeModal('share-deck-modal')">Cancelar</button>
+                        <button type="submit" class="btn primary">
+                            <i data-lucide="upload"></i> Publicar na Comunidade
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Login/Register Modal -->
-        <div id="auth-modal" class="modal hidden">
+        <div id="auth-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content auth-modal-content">
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" aria-label="Fechar modal">&times;</button>
                 <div class="auth-tabs">
-                    <button class="auth-tab active" data-tab="login">Login</button>
-                    <button class="auth-tab" data-tab="register">Register</button>
+                    <button class="auth-tab active" data-tab="login">Entrar</button>
+                    <button class="auth-tab" data-tab="register">Criar Conta</button>
                 </div>
 
                 <!-- Login Form -->
                 <form id="login-form" class="auth-form">
-                    <h3>Login to Your Account</h3>
+                    <h3>Entrar na sua Conta</h3>
                     <div class="form-group">
                         <label for="login-email">Email</label>
-                        <input type="email" id="login-email" required placeholder="your@email.com">
+                        <input type="email" id="login-email" required placeholder="seu@email.com">
                     </div>
                     <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" id="login-password" required placeholder="Your password">
+                        <label for="login-password">Senha</label>
+                        <input type="password" id="login-password" required placeholder="Sua senha">
                     </div>
                     <div id="login-error" class="auth-error hidden"></div>
-                    <button type="submit" class="btn primary btn-full">Login</button>
+                    <button type="submit" class="btn primary btn-full">Entrar</button>
+                    <a href="#" class="forgot-password-link" onclick="openForgotPasswordModal(); return false;">Esqueci minha senha</a>
                 </form>
 
                 <!-- Register Form -->
                 <form id="register-form" class="auth-form hidden">
-                    <h3>Create an Account</h3>
+                    <h3>Criar uma Conta</h3>
                     <div class="form-group">
-                        <label for="register-name">Display Name</label>
-                        <input type="text" id="register-name" required placeholder="Your name">
+                        <label for="register-name">Nome de Exibição</label>
+                        <input type="text" id="register-name" required placeholder="Seu nome">
                     </div>
                     <div class="form-group">
                         <label for="register-email">Email</label>
-                        <input type="email" id="register-email" required placeholder="your@email.com">
+                        <input type="email" id="register-email" required placeholder="seu@email.com">
                     </div>
                     <div class="form-group">
-                        <label for="register-password">Password</label>
-                        <input type="password" id="register-password" required minlength="6" placeholder="Min 6 characters">
+                        <label for="register-password">Senha</label>
+                        <input type="password" id="register-password" required minlength="6" placeholder="Mínimo 6 caracteres">
                     </div>
                     <div class="form-group">
-                        <label for="register-password-confirm">Confirm Password</label>
-                        <input type="password" id="register-password-confirm" required placeholder="Repeat password">
+                        <label for="register-password-confirm">Confirmar Senha</label>
+                        <input type="password" id="register-password-confirm" required placeholder="Repita a senha">
                     </div>
                     <div id="register-error" class="auth-error hidden"></div>
-                    <button type="submit" class="btn primary btn-full">Create Account</button>
+                    <button type="submit" class="btn primary btn-full">Criar Conta</button>
                 </form>
 
-                <p class="auth-info">Your collection will be synced to the cloud so you can access it from any device.</p>
+                <p class="auth-info">Sua coleção será sincronizada na nuvem para que você possa acessá-la de qualquer dispositivo.</p>
+            </div>
+        </div>
+
+        <!-- Forgot Password Modal -->
+        <div id="forgot-password-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content auth-modal-content">
+                <button class="close-modal" onclick="closeModal('forgot-password-modal')" aria-label="Fechar modal">&times;</button>
+                <form id="forgot-password-form" class="auth-form">
+                    <h3>Recuperar Senha</h3>
+                    <p class="form-description">Digite seu email e enviaremos instruções para redefinir sua senha.</p>
+                    <div class="form-group">
+                        <label for="forgot-email">Email</label>
+                        <input type="email" id="forgot-email" required placeholder="seu@email.com">
+                    </div>
+                    <div id="forgot-error" class="auth-error hidden"></div>
+                    <div id="forgot-success" class="auth-success hidden"></div>
+                    <button type="submit" class="btn primary btn-full">Enviar Email de Recuperação</button>
+                    <a href="#" class="back-to-login-link" onclick="closeForgotPasswordModal(); return false;">Voltar para o login</a>
+                </form>
             </div>
         </div>
 
         <!-- Sync Options Modal -->
-        <div id="sync-modal" class="modal hidden">
+        <div id="sync-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content sync-modal-content">
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" aria-label="Fechar modal">&times;</button>
                 <h3>Cloud Sync</h3>
                 <p class="subtitle">Synchronize your collection with the cloud</p>
 
@@ -2310,10 +2734,117 @@
             </div>
         </div>
 
+        <!-- Price Alert Modal -->
+        <div id="price-alert-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content price-alert-modal-content">
+                <button class="close-modal" onclick="closePriceAlertModal()" aria-label="Fechar modal">&times;</button>
+                <h3><i data-lucide="bell"></i> Alerta de Preço</h3>
+
+                <div class="alert-card-info">
+                    <span class="label">Card:</span>
+                    <span id="alert-card-name" class="value">-</span>
+                </div>
+
+                <div class="alert-card-info">
+                    <span class="label">Preço atual:</span>
+                    <span id="alert-current-price" class="value">-</span>
+                </div>
+
+                <form id="price-alert-form" onsubmit="handlePriceAlertSubmit(event)">
+                    <div class="form-group">
+                        <label for="alert-direction">Notificar quando preço estiver:</label>
+                        <select id="alert-direction" required>
+                            <option value="below">Abaixo de</option>
+                            <option value="above">Acima de</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alert-target-price">Preço alvo (USD):</label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="alert-target-price" step="0.01" min="0" required placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" id="remove-alert-btn" class="btn btn-danger" onclick="removePriceAlert(document.getElementById('price-alert-modal').dataset.cardName); closePriceAlertModal();" style="display: none;">
+                            <i data-lucide="trash-2"></i> Remover Alerta
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i data-lucide="bell-plus"></i> Salvar Alerta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Export/Import Modal -->
+        <div id="export-import-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content export-import-modal-content">
+                <button class="close-modal" aria-label="Fechar modal">&times;</button>
+                <h3><i data-lucide="file-down"></i> Exportar / Importar Coleção</h3>
+                <p class="subtitle">Faça backup ou restaure sua coleção</p>
+
+                <!-- Export Preview -->
+                <div id="export-preview" class="export-preview"></div>
+
+                <!-- Export Section -->
+                <div class="export-section">
+                    <h4><i data-lucide="download"></i> Exportar</h4>
+                    <p class="section-desc">Baixe sua coleção em formato JSON ou CSV</p>
+                    <div class="export-buttons">
+                        <button class="btn btn-secondary" data-export="json">
+                            <i data-lucide="file-json"></i> Exportar JSON
+                        </button>
+                        <button class="btn btn-secondary" data-export="csv">
+                            <i data-lucide="file-spreadsheet"></i> Exportar CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Import Section -->
+                <div class="import-section">
+                    <h4><i data-lucide="upload"></i> Importar</h4>
+                    <p class="section-desc">Importe uma coleção de arquivo JSON ou CSV</p>
+
+                    <div class="import-options">
+                        <label class="import-mode-label">Modo de importação:</label>
+                        <select id="import-mode" class="import-mode-select">
+                            <option value="merge">Mesclar (soma quantidades)</option>
+                            <option value="replace">Substituir (apaga coleção atual)</option>
+                        </select>
+                    </div>
+
+                    <div class="import-dropzone" id="import-dropzone">
+                        <i data-lucide="upload-cloud"></i>
+                        <p>Arraste um arquivo aqui ou</p>
+                        <button class="btn btn-primary" id="import-file-btn">
+                            <i data-lucide="file-plus"></i> Selecionar Arquivo
+                        </button>
+                        <input type="file" id="import-file-input" accept=".json,.csv" hidden>
+                        <span class="import-formats">Formatos aceitos: .json, .csv</span>
+                    </div>
+                </div>
+
+                <!-- Import Format Help -->
+                <details class="import-help">
+                    <summary><i data-lucide="help-circle"></i> Formato do arquivo CSV</summary>
+                    <div class="import-help-content">
+                        <p>O CSV deve ter o nome do card na primeira coluna e a quantidade na segunda:</p>
+                        <pre>Card Name,Quantity
+"Merlin",4
+"Excalibur",2
+"Morgan le Fay",1</pre>
+                    </div>
+                </details>
+            </div>
+        </div>
+
         <!-- Profile Settings Modal -->
-        <div id="profile-modal" class="modal hidden">
+        <div id="profile-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content profile-modal-content">
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" aria-label="Fechar modal">&times;</button>
                 <h3><i data-lucide="user-cog"></i> Configurações de Perfil</h3>
                 <p class="subtitle">Configure seu perfil público e compartilhe sua coleção</p>
 
@@ -2411,9 +2942,9 @@
         </div>
 
         <!-- Photo Upload Modal -->
-        <div id="photo-modal" class="modal hidden">
+        <div id="photo-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content photo-modal-content">
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" aria-label="Fechar modal">&times;</button>
                 <h3>Card Photo</h3>
                 <div id="photo-card-name" class="photo-card-name"></div>
 
@@ -2465,9 +2996,9 @@
         </div>
 
         <!-- Card Scanner Modal -->
-        <div id="scanner-modal" class="modal hidden">
+        <div id="scanner-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content scanner-modal-content">
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" aria-label="Fechar modal">&times;</button>
                 <h3>Card Scanner</h3>
                 <p class="subtitle">Point your camera at a card to scan it</p>
 
@@ -2547,36 +3078,35 @@
     <!-- Tesseract.js for OCR -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-    <script src="recommended-decks.js?v=4"></script>
+    <script src="recommended-decks.js?v=5"></script>
     <script src="top-cards.js"></script>
-    <script src="collection-tracker.js"></script>
-    <script src="price-service.js"></script>
+    <script src="collection-tracker.js?v=2"></script>
+    <script src="price-service.js?v=2"></script>
     <script src="value-tracker.js"></script>
-    <script src="gamification.js"></script>
+    <script src="gamification.js?v=2"></script>
     <script src="nocodb-service.js"></script>
-    <script src="profile-service.js"></script>
+    <script src="community-deck-service.js"></script>
+    <script src="profile-service.js?v=2"></script>
     <script src="card-scanner.js"></script>
     <script src="brazilian-stores.js"></script>
     <script src="i18n.js"></script>
     <script src="rulebook-pt.js"></script>
     <script src="faq-pt.js"></script>
-    <script src="deck-guides-pt.js?v=4"></script>
     <!-- New Feature Modules -->
-    <script src="variant-tracker.js"></script>
+    <script src="variant-tracker.js?v=2"></script>
     <script src="keyword-parser.js?v=2"></script>
     <script src="set-progress.js"></script>
     <script src="threshold-calculator.js?v=2"></script>
-    <script src="dust-tracker.js"></script>
     <script src="artist-gallery.js"></script>
-    <script src="promo-tracker.js?v=2"></script>
     <script src="release-timeline.js"></script>
     <script src="chase-cards-prices.js"></script>
-    <script src="tcg-prices.js"></script>
+    <script src="tcgcsv-price-service.js?v=1"></script>
+    <script src="tcg-prices.js?v=3"></script>
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
-    <script src="app.js?v=30"></script>
-    <script src="offline-manager.js"></script>
+    <script src="app.js?v=57"></script>
+    <script src="offline-manager.js?v=2"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
         document.addEventListener('DOMContentLoaded', () => {

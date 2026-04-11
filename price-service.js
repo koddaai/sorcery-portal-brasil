@@ -210,14 +210,24 @@ class PriceService {
 
     // Obter preço de uma carta
     getPrice(cardName, variant = 'standard', setName = null) {
-        // 1. Primeiro, tentar NocoDB
-        const finish = variant === 'foil' ? 'Foil' : variant === 'rainbow' ? 'Rainbow' : 'Standard';
-        const nocodbPrice = this.getNocodbPrice(cardName, setName, finish);
+        const finish = variant === 'foil' ? 'Foil' : variant === 'rainbow' ? 'Rainbow' : 'Normal';
+
+        // 1. Primeiro, tentar TCGCSV (dados atualizados do TCGPlayer)
+        if (typeof tcgcsvPriceService !== 'undefined' && tcgcsvPriceService.cardPrices.size > 0) {
+            const tcgcsvPrice = tcgcsvPriceService.getPrice(cardName, setName, finish);
+            if (tcgcsvPrice !== null) {
+                return tcgcsvPrice;
+            }
+        }
+
+        // 2. Fallback para NocoDB
+        const nocodbFinish = finish === 'Normal' ? 'Standard' : finish;
+        const nocodbPrice = this.getNocodbPrice(cardName, setName, nocodbFinish);
         if (nocodbPrice !== null) {
             return nocodbPrice;
         }
 
-        // 2. Fallback para cache local
+        // 3. Fallback para cache local
         const key = this.normalizeCardName(cardName);
         const priceData = this.prices[key];
 
@@ -606,19 +616,37 @@ class PriceService {
         return lines.join('\n');
     }
 
-    // Taxa de conversão USD para BRL (atualizar periodicamente)
+    // Taxa de conversão USD para BRL
     getBRLRate() {
-        // Tentar pegar do cache primeiro
-        const cached = localStorage.getItem('sorcery-brl-rate');
-        if (cached) {
-            const data = JSON.parse(cached);
-            // Cache válido por 24 horas
-            if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
-                return data.rate;
-            }
+        // Usar tcgPriceService se disponível (tem cotação em tempo real)
+        if (typeof tcgPriceService !== 'undefined' && tcgPriceService.brlRate) {
+            return tcgPriceService.brlRate;
         }
-        // Taxa padrão se não houver cache
-        return 5.50;
+
+        // Tentar pegar do cache local
+        try {
+            const cached = localStorage.getItem('sorcery-brl-rate');
+            if (cached) {
+                const data = JSON.parse(cached);
+                // Cache válido por 6 horas
+                if (Date.now() - data.timestamp < 6 * 60 * 60 * 1000) {
+                    return data.rate;
+                }
+            }
+        } catch (e) {
+            console.warn('Erro ao ler cache de taxa BRL:', e);
+        }
+
+        // Taxa padrão atualizada (Abril 2026)
+        return 5.80;
+    }
+
+    // Buscar cotação atualizada (usa tcgPriceService)
+    async fetchBRLRate() {
+        if (typeof tcgPriceService !== 'undefined') {
+            return await tcgPriceService.fetchCurrentBRLRate();
+        }
+        return this.getBRLRate();
     }
 
     // Detectar se deve usar BRL baseado no idioma
