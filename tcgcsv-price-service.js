@@ -466,7 +466,7 @@ class TCGCSVPriceService {
             cardCount: this.cardPrices.size,
             cacheExpired: this.needsRefresh(),
             error: this.loadError,
-            source: 'TCGCSV.com (via GitHub Actions)'
+            source: 'TCGPlayer'
         };
     }
 

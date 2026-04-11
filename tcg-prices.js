@@ -531,15 +531,10 @@ class TCGPriceService {
             ? this.getTimeAgo(this.brlRateLastFetch)
             : 'cache';
 
-        // Fonte de dados: TCGCSV ou manual
+        // Fonte de dados
         const priceSource = priceData.hasTCGCSVPrices
-            ? `TCGCSV.com (${priceData.lastUpdate})`
-            : `Manual (${this.priceDataVersion})`;
-
-        // Status do TCGCSV
-        const tcgcsvStatus = typeof tcgcsvPriceService !== 'undefined'
-            ? tcgcsvPriceService.getStatus()
-            : null;
+            ? `TCGPlayer (${priceData.lastUpdate})`
+            : `Estimado`;
 
         html += `
             <div class="price-currency-toggle">
@@ -548,7 +543,6 @@ class TCGPriceService {
             </div>
             <p class="price-disclaimer">
                 Fonte: ${priceSource} | Cotação: R$ <span id="current-brl-rate">${this.brlRate.toFixed(2)}</span> <small>(${rateAge})</small>
-                ${tcgcsvStatus && tcgcsvStatus.cardCount > 0 ? `<br><small>${tcgcsvStatus.cardCount} cards indexados</small>` : ''}
                 <br><a href="https://www.tcgplayer.com/search/sorcery-contested-realm/product?q=${encodeURIComponent(cardName)}" target="_blank">Ver no TCGPlayer</a>
             </p>
         `;
