@@ -2,12 +2,19 @@
 // SORCERY NOCODB SERVICE
 // Cloud sync and user management via NocoDB
 // ============================================
+//
+// ⚠️ SEGURANÇA: Este serviço usa tokens expostos no cliente.
+// Em produção, implemente um proxy backend.
+// Veja security-config.js para recomendações.
+// ============================================
 
 class NocoDBService {
     constructor() {
-        this.baseUrl = 'https://dados.kodda.ai';
-        this.apiToken = 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-';
-        this.baseId = 'pybbgkutded1ay0';
+        // Usar configuração centralizada se disponível
+        const config = typeof SecurityConfig !== 'undefined' ? SecurityConfig.api : null;
+        this.baseUrl = config?.baseUrl || 'https://dados.kodda.ai';
+        this.apiToken = config?.token || 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-';
+        this.baseId = config?.baseId || 'pybbgkutded1ay0';
 
         // Table names as they appear in NocoDB
         this.tables = {
@@ -51,12 +58,20 @@ class NocoDBService {
         }
     }
 
-    // Save session to localStorage
+    // Save session to localStorage (usando função segura se disponível)
     saveSession() {
         if (this.currentUser) {
-            localStorage.setItem('sorcery-session', JSON.stringify(this.currentUser));
+            if (typeof saveSecureSession === 'function') {
+                saveSecureSession(this.currentUser);
+            } else {
+                localStorage.setItem('sorcery-session', JSON.stringify(this.currentUser));
+            }
         } else {
-            localStorage.removeItem('sorcery-session');
+            if (typeof clearSecureSession === 'function') {
+                clearSecureSession();
+            } else {
+                localStorage.removeItem('sorcery-session');
+            }
         }
     }
 
@@ -67,14 +82,34 @@ class NocoDBService {
     // Register a new user
     async register(email, password, displayName) {
         try {
+            // Validar entrada
+            if (typeof validateInput === 'function') {
+                const emailValidation = validateInput(email, { type: 'email', required: true });
+                if (!emailValidation.valid) {
+                    throw new Error(emailValidation.error);
+                }
+                const passwordValidation = validatePassword(password);
+                if (!passwordValidation.valid) {
+                    throw new Error(passwordValidation.errors.join(', '));
+                }
+            }
+
             // Check if user exists
             const existing = await this.findUserByEmail(email);
             if (existing) {
                 throw new Error('Email already registered');
             }
 
-            // Hash password (simple hash for demo - use bcrypt in production)
-            const passwordHash = await this.hashPassword(password);
+            // Gerar salt único e hash seguro
+            let passwordHash, salt;
+            if (typeof hashPasswordSecure === 'function' && typeof generateSalt === 'function') {
+                salt = generateSalt();
+                passwordHash = await hashPasswordSecure(password, salt);
+            } else {
+                // Fallback para hash simples (não recomendado)
+                passwordHash = await this.hashPassword(password);
+                salt = 'legacy';
+            }
 
             // Create user
             const response = await fetch(this.getTableUrl(this.tables.users), {
@@ -83,6 +118,7 @@ class NocoDBService {
                 body: JSON.stringify({
                     email: email,
                     password_hash: passwordHash,
+                    password_salt: salt,
                     display_name: displayName,
                     created_at: new Date().toISOString()
                 })
@@ -110,21 +146,43 @@ class NocoDBService {
     // Login user
     async login(email, password) {
         try {
+            // Verificar rate limiting
+            if (typeof rateLimiter !== 'undefined') {
+                const loginCheck = rateLimiter.checkLoginAttempt(email);
+                if (!loginCheck.allowed) {
+                    throw new Error(`Muitas tentativas. Aguarde ${loginCheck.waitTime} segundos.`);
+                }
+            }
+
             const user = await this.findUserByEmail(email);
             if (!user) {
                 throw new Error('User not found');
             }
 
-            // Verify password
-            const passwordHash = await this.hashPassword(password);
-            if (user.password_hash !== passwordHash) {
+            // Verificar senha usando método seguro se disponível
+            let passwordValid = false;
+            if (typeof verifyPassword === 'function' && user.password_salt && user.password_salt !== 'legacy') {
+                passwordValid = await verifyPassword(password, user.password_salt, user.password_hash);
+            } else {
+                // Fallback para hash simples (usuários antigos)
+                const passwordHash = await this.hashPassword(password);
+                passwordValid = user.password_hash === passwordHash;
+            }
+
+            if (!passwordValid) {
                 throw new Error('Invalid password');
+            }
+
+            // Resetar tentativas de login após sucesso
+            if (typeof rateLimiter !== 'undefined') {
+                rateLimiter.resetLoginAttempts(email);
             }
 
             this.currentUser = {
                 id: user.Id,
                 email: user.email,
-                displayName: user.display_name
+                displayName: user.display_name,
+                avatarId: user.avatar_id || 1
             };
             this.saveSession();
             return this.currentUser;

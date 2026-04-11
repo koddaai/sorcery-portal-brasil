@@ -2,12 +2,16 @@
 // COMMUNITY DECK SERVICE
 // Manages shared decks in the community
 // ============================================
+// ⚠️ SEGURANÇA: Veja security-config.js para recomendações
+// ============================================
 
 class CommunityDeckService {
     constructor() {
-        this.baseUrl = 'https://dados.kodda.ai';
-        this.apiToken = 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-';
-        this.baseId = 'pybbgkutded1ay0';
+        // Usar configuração centralizada se disponível
+        const config = typeof SecurityConfig !== 'undefined' ? SecurityConfig.api : null;
+        this.baseUrl = config?.baseUrl || 'https://dados.kodda.ai';
+        this.apiToken = config?.token || 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-';
+        this.baseId = config?.baseId || 'pybbgkutded1ay0';
         this.tableName = 'community_decks';
         this.cachedDecks = [];
         this.lastFetch = null;

@@ -27,10 +27,11 @@ class PriceService {
         this.cacheExpiry = 30 * 24 * 60 * 60 * 1000; // 30 dias (preços manuais)
         this.nocodbCacheExpiry = 24 * 60 * 60 * 1000; // 24 horas (NocoDB)
 
-        // NocoDB Configuration
+        // NocoDB Configuration (usar config centralizada se disponível)
+        const config = typeof SecurityConfig !== 'undefined' ? SecurityConfig.api : null;
         this.nocodb = {
-            baseUrl: 'https://dados.kodda.ai',
-            token: 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-',
+            baseUrl: config?.baseUrl || 'https://dados.kodda.ai',
+            token: config?.token || 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-',
             tableId: 'mh3n77dmh5d9jax'
         };
 
