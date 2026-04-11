@@ -69,13 +69,10 @@
                             <i data-lucide="mail"></i>
                             <span class="inbox-header-badge hidden">0</span>
                         </button>
-                        <button id="sync-btn" class="header-icon-btn" title="Sincronizar" aria-label="Sincronizar coleção com a nuvem">
-                            <i data-lucide="cloud"></i>
-                        </button>
                         <button id="profile-settings-btn" class="header-icon-btn" title="Configurações de Perfil" aria-label="Abrir configurações de perfil" onclick="openProfileSettings()">
                             <i data-lucide="user-cog"></i>
                         </button>
-                        <div class="user-avatar user-menu-avatar" onclick="openModal('avatar-modal'); renderAvatarSelectorModal();">
+                        <div class="user-avatar user-menu-avatar" onclick="openProfileSettings()" title="Configurações de Perfil">
                             <span id="user-display-name"></span>
                         </div>
                         <button id="logout-btn" class="header-icon-btn" title="Sair" aria-label="Sair da conta">
@@ -3306,9 +3303,25 @@
                 <h3><i data-lucide="user-cog"></i> Configurações de Perfil</h3>
                 <p class="subtitle">Configure seu perfil público e compartilhe sua coleção</p>
 
+                <!-- Avatar Section -->
+                <div class="profile-form-section">
+                    <h4><i data-lucide="user-circle"></i> Avatar</h4>
+                    <div class="profile-avatar-selector">
+                        <div id="profile-current-avatar" class="profile-avatar-preview">
+                            <!-- Current avatar will be rendered here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary" onclick="openAvatarSelectorInline()">
+                            <i data-lucide="edit-2"></i> Alterar Avatar
+                        </button>
+                    </div>
+                    <div id="profile-avatar-grid" class="profile-avatar-grid hidden">
+                        <!-- Avatar options will be rendered here -->
+                    </div>
+                </div>
+
                 <!-- Profile Info Section -->
                 <div class="profile-form-section">
-                    <h4>Informações do Perfil</h4>
+                    <h4><i data-lucide="user"></i> Informações do Perfil</h4>
                     <div class="form-group">
                         <label for="profile-display-name">Nome de Exibição</label>
                         <input type="text" id="profile-display-name" maxlength="50" placeholder="Seu nome de colecionador">
@@ -3322,7 +3335,7 @@
 
                 <!-- Privacy Settings Section -->
                 <div class="profile-form-section">
-                    <h4>Configurações de Privacidade</h4>
+                    <h4><i data-lucide="shield"></i> Configurações de Privacidade</h4>
                     <div class="privacy-toggle-group">
                         <div class="privacy-toggle">
                             <label class="toggle-switch">
@@ -3379,7 +3392,7 @@
 
                 <!-- Share Section -->
                 <div class="profile-form-section" id="profile-share-section">
-                    <h4>Compartilhar Perfil</h4>
+                    <h4><i data-lucide="share-2"></i> Compartilhar Perfil</h4>
                     <div class="share-url-container">
                         <input type="text" id="profile-share-url" readonly>
                         <button id="copy-profile-url" class="btn icon-btn" title="Copiar Link">
@@ -3387,6 +3400,27 @@
                         </button>
                     </div>
                     <p class="share-hint">Seu link único para compartilhar com amigos</p>
+                </div>
+
+                <!-- Sync Section -->
+                <div class="profile-form-section">
+                    <h4><i data-lucide="cloud"></i> Sincronização</h4>
+                    <p class="section-desc">Sincronize sua coleção entre dispositivos</p>
+                    <div class="sync-buttons-inline">
+                        <button id="profile-sync-upload" class="btn btn-secondary sync-inline-btn">
+                            <i data-lucide="upload-cloud"></i>
+                            <span>Enviar para Nuvem</span>
+                        </button>
+                        <button id="profile-sync-download" class="btn btn-secondary sync-inline-btn">
+                            <i data-lucide="download-cloud"></i>
+                            <span>Baixar da Nuvem</span>
+                        </button>
+                    </div>
+                    <div id="profile-sync-status" class="sync-status-inline hidden">
+                        <div class="sync-progress-inline"></div>
+                        <span class="sync-message-inline">Sincronizando...</span>
+                    </div>
+                    <p class="sync-last-time">Última sincronização: <span id="profile-last-sync">Nunca</span></p>
                 </div>
 
                 <!-- Save Button -->
@@ -3809,7 +3843,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=63"></script>
+    <script src="app.js?v=64"></script>
     <script src="offline-manager.js?v=2"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

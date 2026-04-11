@@ -3965,11 +3965,222 @@ function openProfileSettings() {
         document.getElementById('profile-share-section').style.display = profile.isPublic ? '' : 'none';
     }
 
+    // Render current avatar
+    renderCurrentAvatarPreview();
+
+    // Hide avatar grid initially
+    const avatarGrid = document.getElementById('profile-avatar-grid');
+    if (avatarGrid) avatarGrid.classList.add('hidden');
+
+    // Update last sync time
+    updateProfileLastSyncTime();
+
     modal.classList.remove('hidden');
     refreshIcons();
 
     // Trap focus for accessibility
     requestAnimationFrame(() => trapFocus(modal));
+}
+
+// Render current avatar preview in profile settings
+function renderCurrentAvatarPreview() {
+    const container = document.getElementById('profile-current-avatar');
+    if (!container || typeof getAvatarSVG !== 'function') return;
+
+    const user = nocoDBService.getCurrentUser();
+    const avatarId = user?.avatar_id || 1;
+    container.innerHTML = getAvatarSVG(avatarId);
+}
+
+// Open avatar selector inline in profile modal
+function openAvatarSelectorInline() {
+    const grid = document.getElementById('profile-avatar-grid');
+    if (!grid) return;
+
+    if (grid.classList.contains('hidden')) {
+        // Render avatar options
+        renderAvatarOptionsInline();
+        grid.classList.remove('hidden');
+    } else {
+        grid.classList.add('hidden');
+    }
+}
+
+// Render avatar options in profile modal
+function renderAvatarOptionsInline() {
+    const grid = document.getElementById('profile-avatar-grid');
+    if (!grid || typeof AVATARS === 'undefined') return;
+
+    const user = nocoDBService.getCurrentUser();
+    const currentAvatarId = user?.avatar_id || 1;
+
+    grid.innerHTML = AVATARS.map(avatar => `
+        <div class="avatar-option ${avatar.id === currentAvatarId ? 'selected' : ''}"
+             data-avatar-id="${avatar.id}"
+             title="${avatar.name}"
+             onclick="selectAvatarInline(${avatar.id})">
+            ${avatar.svg}
+        </div>
+    `).join('');
+}
+
+// Select avatar inline in profile modal
+async function selectAvatarInline(avatarId) {
+    // Update visual selection
+    const grid = document.getElementById('profile-avatar-grid');
+    if (grid) {
+        grid.querySelectorAll('.avatar-option').forEach(opt => {
+            opt.classList.toggle('selected', parseInt(opt.dataset.avatarId) === avatarId);
+        });
+    }
+
+    // Update preview
+    const preview = document.getElementById('profile-current-avatar');
+    if (preview && typeof getAvatarSVG === 'function') {
+        preview.innerHTML = getAvatarSVG(avatarId);
+    }
+
+    // Save avatar
+    if (typeof saveUserAvatar === 'function') {
+        await saveUserAvatar(avatarId);
+    }
+
+    // Update header avatar
+    updateUserAvatar();
+
+    // Hide grid after selection
+    if (grid) {
+        setTimeout(() => grid.classList.add('hidden'), 300);
+    }
+
+    showSuccessToast('Avatar atualizado!', 'Perfil');
+}
+
+// Update last sync time in profile modal
+function updateProfileLastSyncTime() {
+    const userId = getCurrentUserId();
+    const lastSyncEl = document.getElementById('profile-last-sync');
+    if (!lastSyncEl) return;
+
+    if (userId) {
+        const lastSync = localStorage.getItem(`sorcery-last-sync-${userId}`);
+        if (lastSync) {
+            const date = new Date(lastSync);
+            lastSyncEl.textContent = date.toLocaleString('pt-BR');
+        } else {
+            lastSyncEl.textContent = 'Nunca';
+        }
+    } else {
+        lastSyncEl.textContent = 'Nunca';
+    }
+}
+
+// Handle sync upload from profile modal
+async function handleProfileSyncUpload() {
+    const uploadBtn = document.getElementById('profile-sync-upload');
+    const statusEl = document.getElementById('profile-sync-status');
+    const messageEl = statusEl?.querySelector('.sync-message-inline');
+
+    if (uploadBtn) setButtonLoading(uploadBtn, true, 'Enviando...');
+    if (statusEl) statusEl.classList.remove('hidden');
+    if (messageEl) messageEl.textContent = 'Enviando coleção para a nuvem...';
+
+    try {
+        // Convert collection Map to object format
+        const collectionObj = {};
+        collection.forEach((data, cardName) => {
+            collectionObj[cardName] = {
+                qty: typeof data === 'object' ? data.qty : data,
+                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString()
+            };
+        });
+
+        await nocoDBService.fullSyncToCloud(
+            collectionObj,
+            wishlist,
+            tradeBinder,
+            decks
+        );
+
+        // Save last sync time
+        const userId = getCurrentUserId();
+        if (userId) {
+            localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+        }
+
+        if (messageEl) messageEl.textContent = 'Upload completo!';
+        updateProfileLastSyncTime();
+        showSuccessToast('Coleção sincronizada com a nuvem!', 'Sync completo');
+
+        setTimeout(() => {
+            if (statusEl) statusEl.classList.add('hidden');
+        }, 2000);
+    } catch (error) {
+        if (messageEl) messageEl.textContent = `Erro: ${error.message}`;
+        showErrorToast(error.message, 'Erro no sync');
+    } finally {
+        if (uploadBtn) setButtonLoading(uploadBtn, false);
+    }
+}
+
+// Handle sync download from profile modal
+async function handleProfileSyncDownload() {
+    const downloadBtn = document.getElementById('profile-sync-download');
+    const statusEl = document.getElementById('profile-sync-status');
+    const messageEl = statusEl?.querySelector('.sync-message-inline');
+
+    if (downloadBtn) setButtonLoading(downloadBtn, true, 'Baixando...');
+    if (statusEl) statusEl.classList.remove('hidden');
+    if (messageEl) messageEl.textContent = 'Baixando da nuvem...';
+
+    try {
+        const data = await nocoDBService.fullDownloadFromCloud();
+
+        // Update local collection
+        collection = new Map();
+        const now = new Date().toISOString();
+        Object.entries(data.collection).forEach(([cardName, cardData]) => {
+            if (typeof cardData === 'number') {
+                collection.set(cardName, { qty: cardData, addedAt: now });
+            } else if (typeof cardData === 'object') {
+                collection.set(cardName, { qty: cardData.qty || 1, addedAt: cardData.addedAt || now });
+            } else {
+                collection.set(cardName, { qty: 1, addedAt: now });
+            }
+        });
+
+        // Update wishlist
+        wishlist.clear();
+        data.wishlist.forEach(cardName => wishlist.add(cardName));
+
+        // Update trade binder
+        tradeBinder.clear();
+        data.tradeBinder.forEach(cardName => tradeBinder.add(cardName));
+
+        // Update decks
+        decks = data.decks;
+
+        // Save locally
+        saveLocalData();
+
+        // Re-render
+        renderCards();
+        renderCollection();
+        renderWishlist();
+
+        if (messageEl) messageEl.textContent = 'Download completo!';
+        updateProfileLastSyncTime();
+        showSuccessToast('Coleção baixada da nuvem!', 'Download completo');
+
+        setTimeout(() => {
+            if (statusEl) statusEl.classList.add('hidden');
+        }, 2000);
+    } catch (error) {
+        if (messageEl) messageEl.textContent = `Erro: ${error.message}`;
+        showErrorToast(error.message, 'Erro no download');
+    } finally {
+        if (downloadBtn) setButtonLoading(downloadBtn, false);
+    }
 }
 
 // Save profile settings
@@ -8361,6 +8572,10 @@ function setupAuthEventListeners() {
 
     // Copy profile URL button
     document.getElementById('copy-profile-url')?.addEventListener('click', copyProfileUrl);
+
+    // Profile sync buttons (inside profile modal)
+    document.getElementById('profile-sync-upload')?.addEventListener('click', handleProfileSyncUpload);
+    document.getElementById('profile-sync-download')?.addEventListener('click', handleProfileSyncDownload);
 
     // Login form
     document.getElementById('login-form')?.addEventListener('submit', handleLogin);
