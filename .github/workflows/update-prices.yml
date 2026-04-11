@@ -271,12 +271,85 @@ jobs:
           console.log(`Latest: ${snapshot.totalCards} cards, $${snapshot.totalMarketValue} total value`);
           EOF
 
+      - name: Update Per-Card Price History
+        run: |
+          node << 'EOF'
+          const fs = require('fs');
+
+          const CARD_HISTORY_FILE = 'data/tcgcsv/card-history.json';
+          const PRICES_FILE = 'data/tcgcsv/prices.json';
+          const MAX_HISTORY_DAYS = 90;
+
+          // Load current prices
+          const prices = JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8'));
+
+          // Load or create card history
+          let cardHistory = { cards: {} };
+          if (fs.existsSync(CARD_HISTORY_FILE)) {
+            try {
+              cardHistory = JSON.parse(fs.readFileSync(CARD_HISTORY_FILE, 'utf8'));
+            } catch (e) {
+              console.log('Creating new card history file');
+            }
+          }
+
+          const today = new Date().toISOString().split('T')[0];
+          const cards = prices.cards || {};
+          let updatedCount = 0;
+
+          // Update history for each card
+          for (const [name, variants] of Object.entries(cards)) {
+            // Skip sealed products
+            if (/Preconstructed|Booster|Case|Bundle|Box|Starter|Kit/i.test(name)) continue;
+
+            // Get Normal finish price (most relevant for tracking)
+            const normal = variants.find(v => v.finish === 'Normal');
+            const marketPrice = normal?.market || normal?.low || null;
+
+            if (marketPrice === null) continue;
+
+            // Initialize card history if needed
+            if (!cardHistory.cards[name]) {
+              cardHistory.cards[name] = [];
+            }
+
+            const history = cardHistory.cards[name];
+
+            // Remove today's entry if exists (re-run)
+            const existingIndex = history.findIndex(h => h.d === today);
+            if (existingIndex !== -1) {
+              history.splice(existingIndex, 1);
+            }
+
+            // Add today's price (compact format: d=date, p=price)
+            history.push({
+              d: today,
+              p: Math.round(marketPrice * 100) / 100
+            });
+
+            // Keep only last N days
+            if (history.length > MAX_HISTORY_DAYS) {
+              cardHistory.cards[name] = history.slice(-MAX_HISTORY_DAYS);
+            }
+
+            updatedCount++;
+          }
+
+          // Add metadata
+          cardHistory.lastUpdate = new Date().toISOString();
+          cardHistory.totalCards = Object.keys(cardHistory.cards).length;
+
+          // Save card history
+          fs.writeFileSync(CARD_HISTORY_FILE, JSON.stringify(cardHistory));
+          console.log(`Card history updated: ${updatedCount} cards tracked`);
+          EOF
+
       - name: Commit and Push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          git add data/tcgcsv/prices.json data/tcgcsv/history.json
+          git add data/tcgcsv/prices.json data/tcgcsv/history.json data/tcgcsv/card-history.json
 
           # Check if there are changes
           if git diff --staged --quiet; then

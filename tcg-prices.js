@@ -606,6 +606,135 @@ class TCGPriceService {
     }
 
     /**
+     * Carregar histórico de preços por card
+     */
+    async loadCardHistory() {
+        if (this.cardHistory && Date.now() - this.cardHistoryLoaded < 3600000) {
+            return this.cardHistory;
+        }
+
+        try {
+            const response = await fetch('data/tcgcsv/card-history.json');
+            if (response.ok) {
+                this.cardHistory = await response.json();
+                this.cardHistoryLoaded = Date.now();
+                console.log(`Card history loaded: ${this.cardHistory.totalCards} cards`);
+                return this.cardHistory;
+            }
+        } catch (e) {
+            console.warn('Failed to load card history:', e);
+        }
+        return null;
+    }
+
+    /**
+     * Obter histórico de preço de um card específico
+     */
+    async getCardPriceHistory(cardName) {
+        const history = await this.loadCardHistory();
+        if (!history || !history.cards) return null;
+
+        // Tentar nome exato
+        if (history.cards[cardName]) {
+            return history.cards[cardName];
+        }
+
+        // Tentar normalizado (se TCGCSV estiver disponível)
+        if (typeof tcgcsvPriceService !== 'undefined') {
+            const normalized = tcgcsvPriceService.normalizeCardName(cardName);
+            for (const [name, data] of Object.entries(history.cards)) {
+                if (tcgcsvPriceService.normalizeCardName(name) === normalized) {
+                    return data;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Renderizar sparkline de histórico de preço
+     */
+    renderPriceSparkline(historyData, width = 200, height = 60) {
+        if (!historyData || historyData.length < 2) {
+            return `<div class="price-chart-placeholder">
+                <i data-lucide="trending-up"></i>
+                <span>Histórico disponível em breve</span>
+            </div>`;
+        }
+
+        const prices = historyData.map(h => h.p);
+        const dates = historyData.map(h => h.d);
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+        const range = maxPrice - minPrice || 1;
+
+        // Calcular pontos para o SVG
+        const padding = 5;
+        const chartWidth = width - padding * 2;
+        const chartHeight = height - padding * 2;
+
+        const points = prices.map((price, i) => {
+            const x = padding + (i / (prices.length - 1)) * chartWidth;
+            const y = padding + chartHeight - ((price - minPrice) / range) * chartHeight;
+            return `${x},${y}`;
+        }).join(' ');
+
+        // Determinar cor baseado na tendência
+        const firstPrice = prices[0];
+        const lastPrice = prices[prices.length - 1];
+        const change = lastPrice - firstPrice;
+        const changePercent = ((change / firstPrice) * 100).toFixed(1);
+        const trendColor = change >= 0 ? '#22c55e' : '#ef4444';
+        const trendIcon = change >= 0 ? 'trending-up' : 'trending-down';
+
+        // Área preenchida
+        const areaPoints = `${padding},${height - padding} ${points} ${width - padding},${height - padding}`;
+
+        return `
+            <div class="price-chart-container">
+                <div class="price-chart-header">
+                    <span class="price-chart-title">
+                        <i data-lucide="bar-chart-2"></i>
+                        Histórico de Preço (${historyData.length} dias)
+                    </span>
+                    <span class="price-trend ${change >= 0 ? 'up' : 'down'}">
+                        <i data-lucide="${trendIcon}"></i>
+                        ${change >= 0 ? '+' : ''}${changePercent}%
+                    </span>
+                </div>
+                <svg class="price-sparkline" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+                    <defs>
+                        <linearGradient id="sparklineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:${trendColor};stop-opacity:0.3"/>
+                            <stop offset="100%" style="stop-color:${trendColor};stop-opacity:0.05"/>
+                        </linearGradient>
+                    </defs>
+                    <polygon points="${areaPoints}" fill="url(#sparklineGradient)"/>
+                    <polyline points="${points}" fill="none" stroke="${trendColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="${width - padding}" cy="${padding + chartHeight - ((lastPrice - minPrice) / range) * chartHeight}" r="4" fill="${trendColor}"/>
+                </svg>
+                <div class="price-chart-labels">
+                    <span class="price-min-label">$${minPrice.toFixed(2)}</span>
+                    <span class="price-max-label">$${maxPrice.toFixed(2)}</span>
+                </div>
+                <div class="price-chart-dates">
+                    <span>${dates[0]}</span>
+                    <span>${dates[dates.length - 1]}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    /**
+     * Gerar HTML do gráfico de histórico para um card
+     */
+    async generatePriceChartHTML(cardName) {
+        const history = await this.getCardPriceHistory(cardName);
+        return this.renderPriceSparkline(history);
+    }
+
+    /**
      * Estatísticas do serviço de preços
      */
     getStats() {

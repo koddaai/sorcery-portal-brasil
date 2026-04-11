@@ -3993,6 +3993,21 @@ function openCardModal(cardName, updateHash = true) {
     if (priceTableContainer && typeof tcgPriceService !== 'undefined') {
         priceTableContainer.innerHTML = tcgPriceService.generatePriceTableHTML(card.name, card);
 
+        // Add price history chart container
+        const chartContainer = document.createElement('div');
+        chartContainer.id = 'price-history-chart';
+        chartContainer.innerHTML = `<div class="price-chart-placeholder">
+            <i data-lucide="loader"></i>
+            <span>Carregando histórico...</span>
+        </div>`;
+        priceTableContainer.appendChild(chartContainer);
+
+        // Load price history chart asynchronously
+        tcgPriceService.generatePriceChartHTML(card.name).then(chartHTML => {
+            chartContainer.innerHTML = chartHTML;
+            refreshIcons();
+        });
+
         // Setup currency toggle
         const currencyBtns = priceTableContainer.querySelectorAll('.currency-btn');
         const rateInfo = document.getElementById('brl-rate-info');

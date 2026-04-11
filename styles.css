@@ -2157,6 +2157,102 @@ body {
     padding: var(--space-4);
 }
 
+/* Price History Chart */
+.price-chart-container {
+    margin: var(--space-4) 0;
+    padding: var(--space-3);
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.price-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+}
+
+.price-chart-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.price-chart-title svg {
+    width: 14px;
+    height: 14px;
+}
+
+.price-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.price-trend.up {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.15);
+}
+
+.price-trend.down {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.price-trend svg {
+    width: 14px;
+    height: 14px;
+}
+
+.price-sparkline {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.price-chart-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-1);
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+}
+
+.price-chart-dates {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+}
+
+.price-chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    color: var(--text-tertiary);
+    font-size: 0.8rem;
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    margin: var(--space-3) 0;
+}
+
+.price-chart-placeholder svg {
+    width: 24px;
+    height: 24px;
+    opacity: 0.5;
+}
+
 /* Card Artist Section in Modal */
 .card-artist-section {
     margin: var(--space-4) 0;
