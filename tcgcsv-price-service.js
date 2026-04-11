@@ -332,10 +332,54 @@ class TCGCSVPriceService {
     }
 
     /**
+     * Normalize card name for matching (remove special chars, accents, etc)
+     */
+    normalizeCardName(name) {
+        return name
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '') // Remove accents
+            .replace(/[''`]/g, '')           // Remove apostrophes
+            .replace(/[–—]/g, '-')           // Normalize dashes
+            .replace(/[!?]/g, '')            // Remove punctuation
+            .toLowerCase()
+            .trim();
+    }
+
+    /**
+     * Find card prices with fuzzy matching
+     */
+    findCardPrices(cardName) {
+        // Try exact match first
+        let prices = this.cardPrices.get(cardName);
+        if (prices && prices.length > 0) return prices;
+
+        // Try normalized match
+        const normalized = this.normalizeCardName(cardName);
+
+        for (const [name, priceData] of this.cardPrices) {
+            if (this.normalizeCardName(name) === normalized) {
+                return priceData;
+            }
+        }
+
+        // Try partial match for numbered cards (Foot Soldier 1 -> Foot Soldier)
+        const baseName = cardName.replace(/\s+\d+$/, '').trim();
+        if (baseName !== cardName) {
+            for (const [name, priceData] of this.cardPrices) {
+                if (this.normalizeCardName(name) === this.normalizeCardName(baseName)) {
+                    return priceData;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Get price for a card
      */
     getPrice(cardName, setName = null, finish = 'Normal') {
-        const prices = this.cardPrices.get(cardName);
+        const prices = this.findCardPrices(cardName);
         if (!prices || prices.length === 0) return null;
 
         let filtered = prices.filter(p => {
@@ -357,14 +401,14 @@ class TCGCSVPriceService {
      * Get all prices for a card
      */
     getAllPrices(cardName) {
-        return this.cardPrices.get(cardName) || [];
+        return this.findCardPrices(cardName) || [];
     }
 
     /**
      * Get price data for a specific variant
      */
     getPriceData(cardName, setName, finish = 'Normal') {
-        const prices = this.cardPrices.get(cardName);
+        const prices = this.findCardPrices(cardName);
         if (!prices) return null;
 
         return prices.find(p =>
@@ -377,7 +421,7 @@ class TCGCSVPriceService {
      * Get best price (lowest market price across all variants)
      */
     getBestPrice(cardName, finish = 'Normal') {
-        const prices = this.cardPrices.get(cardName);
+        const prices = this.findCardPrices(cardName);
         if (!prices) return null;
 
         const filtered = prices.filter(p =>
