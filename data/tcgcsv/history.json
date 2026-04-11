@@ -1,13 +1,13 @@
 {
-  "lastUpdate": "2026-04-11T02:47:02.631Z",
+  "lastUpdate": "2026-04-11T21:22:30.179Z",
   "totalSnapshots": 1,
   "snapshots": [
     {
       "date": "2026-04-11",
-      "timestamp": "2026-04-11T02:47:02.631Z",
-      "totalCards": 1162,
-      "totalMarketValue": 18504.78,
-      "averagePrice": 15.92,
+      "timestamp": "2026-04-11T21:22:30.179Z",
+      "totalCards": 1161,
+      "totalMarketValue": 18544.46,
+      "averagePrice": 15.97,
       "top20": [
         {
           "name": "Alpha Booster Box Case",
@@ -41,7 +41,7 @@
         },
         {
           "name": "Avatar of Air Preconstructed Deck",
-          "price": 279.37,
+          "price": 290.93,
           "set": "Alpha"
         },
         {
@@ -91,8 +91,13 @@
         },
         {
           "name": "Gothic Booster Box",
-          "price": 169.8,
+          "price": 170.37,
           "set": "Gothic"
+        },
+        {
+          "name": "Necromancer",
+          "price": 167.5,
+          "set": "Dust Reward Promos"
         },
         {
           "name": "Ruler of Thul",
@@ -101,13 +106,8 @@
         },
         {
           "name": "Ring of Morrigan",
-          "price": 160.01,
+          "price": 159.9,
           "set": "Arthurian Legends"
-        },
-        {
-          "name": "Beta Booster Box",
-          "price": 156.2,
-          "set": "Beta"
         }
       ]
     }
