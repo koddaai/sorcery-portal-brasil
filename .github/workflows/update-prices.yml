@@ -182,7 +182,7 @@ jobs:
 
           const HISTORY_FILE = 'data/tcgcsv/history.json';
           const PRICES_FILE = 'data/tcgcsv/prices.json';
-          const MAX_HISTORY_DAYS = 90; // Keep 90 days of history
+          // No limit - keep all history forever
 
           // Load current prices
           const prices = JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8'));
@@ -237,11 +237,8 @@ jobs:
           // Add new snapshot
           history.snapshots.push(snapshot);
 
-          // Keep only last N days
+          // Sort snapshots by date (no limit - keep all history)
           history.snapshots.sort((a, b) => a.date.localeCompare(b.date));
-          if (history.snapshots.length > MAX_HISTORY_DAYS) {
-            history.snapshots = history.snapshots.slice(-MAX_HISTORY_DAYS);
-          }
 
           // Add metadata
           history.lastUpdate = new Date().toISOString();
@@ -278,7 +275,7 @@ jobs:
 
           const CARD_HISTORY_FILE = 'data/tcgcsv/card-history.json';
           const PRICES_FILE = 'data/tcgcsv/prices.json';
-          const MAX_HISTORY_DAYS = 90;
+          // No limit - keep all history forever
 
           // Load current prices
           const prices = JSON.parse(fs.readFileSync(PRICES_FILE, 'utf8'));
@@ -327,10 +324,7 @@ jobs:
               p: Math.round(marketPrice * 100) / 100
             });
 
-            // Keep only last N days
-            if (history.length > MAX_HISTORY_DAYS) {
-              cardHistory.cards[name] = history.slice(-MAX_HISTORY_DAYS);
-            }
+            // No limit - keep all history forever
 
             updatedCount++;
           }
