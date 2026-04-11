@@ -16351,62 +16351,102 @@ button:disabled .spin,
     max-width: 700px;
 }
 
+/* Avatar/Element Selector - Simplified 4 Elements */
 .avatar-selector {
-    max-height: 400px;
-    overflow-y: auto;
+    padding: var(--space-4);
 }
 
-.avatar-category {
-    margin-bottom: var(--space-5);
+.avatar-selector-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+    text-align: center;
 }
 
-.avatar-category-title {
+.element-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+}
+
+.element-option {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: var(--space-2);
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: var(--space-3);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.avatar-category-title i {
-    width: 16px;
-    height: 16px;
-}
-
-.avatar-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-    gap: var(--space-2);
-}
-
-.avatar-option {
-    width: 60px;
-    height: 60px;
-    padding: var(--space-1);
+    padding: var(--space-3);
     border: 2px solid transparent;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     background: var(--bg-surface-2);
     cursor: pointer;
     transition: all var(--duration-fast);
 }
 
-.avatar-option:hover {
+.element-option:hover {
     background: var(--bg-surface-3);
     border-color: var(--text-tertiary);
+    transform: translateY(-2px);
 }
 
-.avatar-option.selected {
+.element-option.selected {
     border-color: var(--accent-gold);
     background: rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-.avatar-option svg {
+.element-option .element-icon {
+    width: 60px;
+    height: 60px;
+}
+
+.element-option .element-icon svg {
     width: 100%;
     height: 100%;
+}
+
+.element-option .element-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.element-option.selected .element-name {
+    color: var(--accent-gold);
+}
+
+/* User Avatar Display */
+.user-avatar {
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.user-avatar svg {
+    width: 100%;
+    height: 100%;
+}
+
+.user-avatar-small {
+    width: 24px;
+    height: 24px;
+}
+
+.user-avatar-medium {
+    width: 40px;
+    height: 40px;
+}
+
+.user-avatar-large {
+    width: 80px;
+    height: 80px;
+}
+
+/* Mobile: 2x2 grid */
+@media (max-width: 480px) {
+    .element-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 /* ============================================
