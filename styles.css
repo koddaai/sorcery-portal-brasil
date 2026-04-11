@@ -7893,6 +7893,7 @@ body {
     margin-bottom: var(--space-3);
     cursor: pointer;
     transition: all var(--duration-fast);
+    border-left: 3px solid transparent;
 }
 
 .locator-store-item:hover {
@@ -7901,41 +7902,135 @@ body {
 }
 
 .locator-store-item.active {
-    border-left: 3px solid var(--accent-gold);
+    border-left-color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.locator-store-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--space-2);
 }
 
 .locator-store-name {
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--space-1);
+    font-size: 1rem;
+}
+
+.locator-store-badges {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
 }
 
 .locator-store-type {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: var(--accent-gold);
-    margin-bottom: var(--space-2);
+    background: rgba(212, 175, 55, 0.15);
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.locator-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.locator-badge svg {
+    width: 10px;
+    height: 10px;
+}
+
+.locator-badge.events {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
 }
 
 .locator-store-address {
-    font-size: 0.875rem;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: 0.85rem;
     color: var(--text-secondary);
     line-height: 1.4;
+    margin-bottom: var(--space-2);
+}
+
+.locator-store-address svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--accent-gold);
+}
+
+.locator-store-city {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+}
+
+.locator-store-phone {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+}
+
+.locator-store-phone svg {
+    width: 12px;
+    height: 12px;
+    color: var(--text-tertiary);
+}
+
+.locator-store-desc {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-3);
 }
 
 .locator-store-links {
     display: flex;
-    gap: var(--space-2);
-    margin-top: var(--space-3);
+    gap: var(--space-3);
+    flex-wrap: wrap;
 }
 
-.locator-store-links a {
+.locator-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     font-size: 0.8rem;
     color: var(--accent-gold);
     text-decoration: none;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    background: rgba(212, 175, 55, 0.1);
+    transition: all var(--duration-fast);
 }
 
-.locator-store-links a:hover {
-    text-decoration: underline;
+.locator-link svg {
+    width: 12px;
+    height: 12px;
+}
+
+.locator-link:hover {
+    background: rgba(212, 175, 55, 0.2);
+}
+
+.locator-link.maps {
+    color: #4285f4;
+    background: rgba(66, 133, 244, 0.1);
+}
+
+.locator-link.maps:hover {
+    background: rgba(66, 133, 244, 0.2);
 }
 
 .locator-map {
@@ -7981,16 +8076,124 @@ body {
     color: var(--text-secondary);
 }
 
+.map-embed-container {
+    width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    overflow: hidden;
+}
+
+.map-embed-container iframe {
+    display: block;
+}
+
 .map-store-info {
+    padding: var(--space-5);
+    background: var(--bg-surface-3);
+    text-align: left;
+}
+
+.map-store-info.no-map {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    padding: var(--space-6);
-    background: var(--bg-surface-3);
     border-radius: var(--radius-lg);
     max-width: 400px;
+    width: 90%;
+}
+
+.map-store-info h3 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.store-type-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.15);
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-4);
+}
+
+.store-full-address {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+    padding: var(--space-3);
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.store-full-address svg {
+    width: 18px;
+    height: 18px;
+    color: var(--accent-gold);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.store-phone {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-3);
+}
+
+.store-phone svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text-tertiary);
+}
+
+.store-online-only {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-3);
+}
+
+.store-online-only svg {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-gold);
+}
+
+.store-description {
+    font-size: 0.9rem;
+    color: var(--text-tertiary);
+    margin-bottom: var(--space-4);
+}
+
+.store-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.store-actions .btn {
+    flex: 1;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.store-actions .btn svg {
+    width: 16px;
+    height: 16px;
 }
 
 .map-store-info h3 {

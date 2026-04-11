@@ -1719,9 +1719,15 @@ function initLocatorView() {
 // Render stores in locator
 function renderLocatorStores(filter = {}) {
     const container = document.getElementById('locator-results');
-    if (!container || typeof BRAZILIAN_STORES === 'undefined') return;
+    if (!container) return;
 
-    let stores = [...BRAZILIAN_STORES];
+    // Usar PHYSICAL_STORES se disponível, senão BRAZILIAN_STORES
+    const storeList = typeof PHYSICAL_STORES !== 'undefined' ? PHYSICAL_STORES :
+                      typeof BRAZILIAN_STORES !== 'undefined' ? BRAZILIAN_STORES : [];
+
+    if (storeList.length === 0) return;
+
+    let stores = [...storeList];
 
     // Apply filters
     if (filter.search) {
@@ -1729,7 +1735,8 @@ function renderLocatorStores(filter = {}) {
         stores = stores.filter(store =>
             store.name.toLowerCase().includes(searchTerm) ||
             (store.city && store.city.toLowerCase().includes(searchTerm)) ||
-            (store.state && store.state.toLowerCase().includes(searchTerm))
+            (store.state && store.state.toLowerCase().includes(searchTerm)) ||
+            (store.address && store.address.toLowerCase().includes(searchTerm))
         );
     }
 
@@ -1750,18 +1757,47 @@ function renderLocatorStores(filter = {}) {
         return;
     }
 
-    container.innerHTML = stores.map((store, index) => `
-        <div class="locator-store-item" data-index="${index}" onclick="selectStore(${index})">
-            <div class="locator-store-name">${store.name}</div>
-            <div class="locator-store-type">${store.type || 'Loja'}</div>
-            ${store.city ? `<div class="locator-store-address">${store.city}${store.state ? ', ' + store.state : ''}</div>` : ''}
-            <div class="locator-store-links">
-                <a href="${store.url}" target="_blank" onclick="event.stopPropagation()">
-                    <i data-lucide="external-link"></i> Visitar Site
-                </a>
+    container.innerHTML = stores.map((store, index) => {
+        const hasAddress = store.address && store.city;
+        const mapsUrl = typeof getGoogleMapsUrl === 'function' ? getGoogleMapsUrl(store) : '#';
+
+        return `
+            <div class="locator-store-item" data-index="${index}" onclick="selectStore(${index})">
+                <div class="locator-store-header">
+                    <div class="locator-store-name">${store.name}</div>
+                    <div class="locator-store-badges">
+                        <span class="locator-store-type">${store.type || 'Loja'}</span>
+                        ${store.hasEvents ? '<span class="locator-badge events"><i data-lucide="calendar"></i> Eventos</span>' : ''}
+                    </div>
+                </div>
+                ${hasAddress ? `
+                    <div class="locator-store-address">
+                        <i data-lucide="map-pin"></i>
+                        <div>
+                            <div>${store.address}</div>
+                            <div class="locator-store-city">${store.city}, ${store.state}${store.cep ? ' - CEP: ' + store.cep : ''}</div>
+                        </div>
+                    </div>
+                ` : ''}
+                ${store.phone ? `
+                    <div class="locator-store-phone">
+                        <i data-lucide="phone"></i> ${store.phone}
+                    </div>
+                ` : ''}
+                <div class="locator-store-desc">${store.description}</div>
+                <div class="locator-store-links">
+                    <a href="${store.url}" target="_blank" onclick="event.stopPropagation()" class="locator-link">
+                        <i data-lucide="external-link"></i> Site
+                    </a>
+                    ${hasAddress ? `
+                        <a href="${mapsUrl}" target="_blank" onclick="event.stopPropagation()" class="locator-link maps">
+                            <i data-lucide="map"></i> Ver no Mapa
+                        </a>
+                    ` : ''}
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     // Re-init icons
     refreshIcons();
@@ -1769,31 +1805,103 @@ function renderLocatorStores(filter = {}) {
 
 // Select store in locator
 function selectStore(index) {
-    if (typeof BRAZILIAN_STORES === 'undefined') return;
+    // Usar PHYSICAL_STORES se disponível
+    const storeList = typeof PHYSICAL_STORES !== 'undefined' ? PHYSICAL_STORES :
+                      typeof BRAZILIAN_STORES !== 'undefined' ? BRAZILIAN_STORES : [];
 
-    const store = BRAZILIAN_STORES[index];
+    const store = storeList[index];
     if (!store) return;
 
     // Update active state
     document.querySelectorAll('.locator-store-item').forEach(item => item.classList.remove('active'));
     document.querySelector(`.locator-store-item[data-index="${index}"]`)?.classList.add('active');
 
-    // Update map (if we had coordinates, we could show a map)
+    // Update map container
     const mapContainer = document.getElementById('locator-map-container');
-    if (mapContainer) {
-        // For now, show store info - could integrate with Google Maps API later
+    if (!mapContainer) return;
+
+    const hasAddress = store.address && store.city;
+    const mapsUrl = typeof getGoogleMapsUrl === 'function' ? getGoogleMapsUrl(store) : '#';
+    const embedUrl = typeof getGoogleMapsEmbed === 'function' ? getGoogleMapsEmbed(store) : null;
+
+    // Se tem coordenadas, mostrar mapa embed
+    if (embedUrl) {
         mapContainer.innerHTML = `
+            <div class="map-embed-container">
+                <iframe
+                    src="${embedUrl}"
+                    width="100%"
+                    height="300"
+                    style="border:0; border-radius: 12px;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
             <div class="map-store-info">
                 <h3>${store.name}</h3>
-                <p class="store-type">${store.type || 'Loja'}</p>
-                ${store.city ? `<p class="store-location"><i data-lucide="map-pin"></i> ${store.city}${store.state ? ', ' + store.state : ''}</p>` : ''}
-                <a href="${store.url}" target="_blank" class="btn primary">
-                    <i data-lucide="external-link"></i> Ir para o Site
-                </a>
+                <p class="store-type-badge">${store.type || 'Loja'}</p>
+                ${hasAddress ? `
+                    <div class="store-full-address">
+                        <i data-lucide="map-pin"></i>
+                        <div>
+                            <strong>${store.address}</strong><br>
+                            ${store.city}, ${store.state}${store.cep ? ' - CEP: ' + store.cep : ''}
+                        </div>
+                    </div>
+                ` : ''}
+                ${store.phone ? `
+                    <p class="store-phone"><i data-lucide="phone"></i> ${store.phone}</p>
+                ` : ''}
+                <p class="store-description">${store.description}</p>
+                <div class="store-actions">
+                    <a href="${store.url}" target="_blank" class="btn primary">
+                        <i data-lucide="external-link"></i> Visitar Site
+                    </a>
+                    <a href="${mapsUrl}" target="_blank" class="btn secondary">
+                        <i data-lucide="navigation"></i> Abrir no Google Maps
+                    </a>
+                </div>
             </div>
         `;
-        refreshIcons();
+    } else {
+        // Sem coordenadas, mostrar apenas info
+        mapContainer.innerHTML = `
+            <div class="map-store-info no-map">
+                <h3>${store.name}</h3>
+                <p class="store-type-badge">${store.type || 'Loja'}</p>
+                ${hasAddress ? `
+                    <div class="store-full-address">
+                        <i data-lucide="map-pin"></i>
+                        <div>
+                            <strong>${store.address}</strong><br>
+                            ${store.city}, ${store.state}${store.cep ? ' - CEP: ' + store.cep : ''}
+                        </div>
+                    </div>
+                ` : `
+                    <p class="store-online-only">
+                        <i data-lucide="globe"></i> Loja apenas online
+                    </p>
+                `}
+                ${store.phone ? `
+                    <p class="store-phone"><i data-lucide="phone"></i> ${store.phone}</p>
+                ` : ''}
+                <p class="store-description">${store.description}</p>
+                <div class="store-actions">
+                    <a href="${store.url}" target="_blank" class="btn primary">
+                        <i data-lucide="external-link"></i> Visitar Site
+                    </a>
+                    ${hasAddress ? `
+                        <a href="${mapsUrl}" target="_blank" class="btn secondary">
+                            <i data-lucide="navigation"></i> Abrir no Google Maps
+                        </a>
+                    ` : ''}
+                </div>
+            </div>
+        `;
     }
+
+    refreshIcons();
 }
 
 // Initialize locator filters

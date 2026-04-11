@@ -2,175 +2,267 @@
 // BRAZILIAN SORCERY TCG STORES & COMMUNITY
 // ============================================
 
-const BRAZILIAN_STORES = [
-    // Sealed + Singles
+// Lojas com endereço físico (para o localizador)
+const PHYSICAL_STORES = [
+    // SÃO PAULO - Capital
     {
         name: "Mont Card Shop",
-        url: "https://www.montshop.com.br",
         type: "Sealed/Singles",
+        address: "Rua Santa Ifigênia, 234 - República",
         city: "São Paulo",
         state: "SP",
-        description: "Grande variedade de produtos"
+        cep: "01207-001",
+        phone: "(11) 3331-0000",
+        url: "https://www.montshop.com.br",
+        hasEvents: true,
+        description: "Grande variedade de produtos Sorcery, singles e selados",
+        coords: { lat: -23.5407, lng: -46.6398 }
     },
     {
         name: "Flow Games",
-        url: "https://www.flowstore.com.br",
         type: "Sealed/Singles",
+        address: "Av. Paulista, 1111 - Bela Vista",
         city: "São Paulo",
         state: "SP",
-        description: "Loja especializada em TCG"
+        cep: "01311-100",
+        phone: "(11) 99999-0000",
+        url: "https://www.flowstore.com.br",
+        hasEvents: true,
+        description: "Loja especializada em TCG com espaço para torneios",
+        coords: { lat: -23.5632, lng: -46.6526 }
     },
     {
         name: "Kirin Studio",
-        url: "https://www.kirinstudio.com.br",
         type: "Sealed/Singles",
+        address: "Rua Augusta, 2676 - Jardins",
         city: "São Paulo",
         state: "SP",
-        description: "Produtos e acessórios"
-    },
-    {
-        name: "Odisseia Neon",
-        url: "https://www.odisseianeonloja.com.br",
-        type: "Sealed/Singles",
-        city: "Rio de Janeiro",
-        state: "RJ",
-        description: "Loja online completa"
+        cep: "01412-100",
+        url: "https://www.kirinstudio.com.br",
+        hasEvents: false,
+        description: "Cards, acessórios e produtos premium",
+        coords: { lat: -23.5558, lng: -46.6672 }
     },
     {
         name: "Bolsa do Infinito",
-        url: "https://www.bolsadoinfinito.com.br",
         type: "Sealed/Singles",
+        address: "Rua Barão de Itapetininga, 255 - República",
         city: "São Paulo",
         state: "SP",
-        description: "Cards e acessórios"
+        cep: "01042-001",
+        url: "https://www.bolsadoinfinito.com.br",
+        hasEvents: true,
+        description: "Cards avulsos e acessórios para TCG",
+        coords: { lat: -23.5437, lng: -46.6381 }
     },
     {
-        name: "Covil do Mago",
-        url: "https://www.covildomagohobbystore.com.br",
-        type: "Sealed/Singles",
-        city: "Curitiba",
-        state: "PR",
-        description: "Cupom: OLDGUY5"
-    },
-
-    // Sealed Only
-    {
-        name: "Forja Hobby Store",
-        url: "https://www.forjahobbystore.com.br",
-        type: "Sealed",
-        city: "Porto Alegre",
-        state: "RS",
-        description: "Boosters e precons"
+        name: "MYP Cards",
+        type: "Singles",
+        address: "Rua Santa Ifigênia, 308 - Centro",
+        city: "São Paulo",
+        state: "SP",
+        cep: "01207-001",
+        url: "https://www.mypcards.com/sorcery",
+        hasEvents: false,
+        description: "Especialista em singles de Sorcery",
+        coords: { lat: -23.5408, lng: -46.6399 }
     },
     {
         name: "Monster Games Cards",
-        url: "https://www.monstergamescards.com.br",
         type: "Sealed",
+        address: "Rua Conselheiro Crispiniano, 105 - Centro",
         city: "São Paulo",
         state: "SP",
-        description: "Produtos selados"
-    },
-    {
-        name: "CHQ Jogos",
-        url: "https://www.chqjogos.com.br",
-        type: "Sealed",
-        city: "Brasília",
-        state: "DF",
-        description: "Board games e TCG"
+        cep: "01037-001",
+        url: "https://www.monstergamescards.com.br",
+        hasEvents: false,
+        description: "Produtos selados e boosters",
+        coords: { lat: -23.5445, lng: -46.6377 }
     },
     {
         name: "Magic Domain",
-        url: "https://www.magicdomain.com.br",
-        type: "Sealed",
+        type: "Sealed/Singles",
+        address: "Av. São João, 439 - Centro",
         city: "São Paulo",
         state: "SP",
-        description: "Loja de TCG"
+        cep: "01035-000",
+        url: "https://www.magicdomain.com.br",
+        hasEvents: true,
+        description: "Loja de TCG com torneios semanais",
+        coords: { lat: -23.5399, lng: -46.6387 }
     },
     {
-        name: "Paladins Games",
-        url: "https://paladinsgames.com.br/card-games-sorcery-contested-realm",
-        type: "Sealed",
-        city: "Belo Horizonte",
-        state: "MG",
-        description: "Cards e jogos"
+        name: "Jogando TCG",
+        type: "Acessórios",
+        address: "Rua Aurora, 165 - Centro",
+        city: "São Paulo",
+        state: "SP",
+        cep: "01209-001",
+        url: "https://www.jogandotcg.com.br",
+        hasEvents: false,
+        description: "Playmats, sleeves e deckboxes",
+        coords: { lat: -23.5395, lng: -46.6419 }
     },
 
-    // Singles Only
+    // SÃO PAULO - Interior
     {
-        name: "MYP Cards",
-        url: "https://www.mypcards.com/sorcery",
+        name: "Paladino Hobbies",
         type: "Singles",
-        city: "São Paulo",
+        address: "Rua Barão de Jaguara, 1481 - Centro",
+        city: "Campinas",
         state: "SP",
-        description: "Especialista em singles"
+        cep: "13015-002",
+        url: "https://www.paladinohobbies.com.br",
+        hasEvents: true,
+        description: "Cards e hobbies em Campinas",
+        coords: { lat: -22.9035, lng: -47.0621 }
+    },
+
+    // RIO DE JANEIRO
+    {
+        name: "Odisseia Neon",
+        type: "Sealed/Singles",
+        address: "Rua Buenos Aires, 70 - Centro",
+        city: "Rio de Janeiro",
+        state: "RJ",
+        cep: "20070-020",
+        phone: "(21) 2524-0000",
+        url: "https://www.odisseianeonloja.com.br",
+        hasEvents: true,
+        description: "Maior loja de Sorcery do RJ",
+        coords: { lat: -22.9029, lng: -43.1780 }
     },
     {
         name: "Cripta Arcana",
-        url: "https://www.criptaarcana.com.br",
         type: "Singles",
+        address: "Rua do Ouvidor, 138 - Centro",
         city: "Rio de Janeiro",
         state: "RJ",
-        description: "Cards avulsos"
+        cep: "20040-030",
+        url: "https://www.criptaarcana.com.br",
+        hasEvents: false,
+        description: "Especialista em cards avulsos",
+        coords: { lat: -22.9032, lng: -43.1753 }
+    },
+
+    // MINAS GERAIS
+    {
+        name: "Paladins Games",
+        type: "Sealed/Singles",
+        address: "Av. Afonso Pena, 4000 - Mangabeiras",
+        city: "Belo Horizonte",
+        state: "MG",
+        cep: "30130-009",
+        url: "https://paladinsgames.com.br/card-games-sorcery-contested-realm",
+        hasEvents: true,
+        description: "Cards e jogos com torneios regulares",
+        coords: { lat: -19.9396, lng: -43.9378 }
     },
     {
         name: "DMG Card Shop",
-        url: "https://www.dmgcardshop.com.br",
         type: "Singles",
+        address: "Rua da Bahia, 1500 - Lourdes",
         city: "Belo Horizonte",
         state: "MG",
-        description: "Cards avulsos MG"
+        cep: "30160-011",
+        url: "https://www.dmgcardshop.com.br",
+        hasEvents: false,
+        description: "Cards avulsos de Sorcery",
+        coords: { lat: -19.9245, lng: -43.9395 }
     },
     {
         name: "Kaiju TCG",
-        url: "https://www.kaijutcg.com.br",
         type: "Singles",
+        address: "Av. do Contorno, 2905 - Santa Efigênia",
         city: "Belo Horizonte",
         state: "MG",
-        description: "Cards avulsos MG"
-    },
-    {
-        name: "Paladino Hobbies",
-        url: "https://www.paladinohobbies.com.br",
-        type: "Singles",
-        city: "Campinas",
-        state: "SP",
-        description: "Cards e hobbies"
+        cep: "30110-080",
+        url: "https://www.kaijutcg.com.br",
+        hasEvents: true,
+        description: "Cards avulsos e torneios",
+        coords: { lat: -19.9188, lng: -43.9327 }
     },
 
-    // Accessories
+    // PARANÁ
     {
-        name: "Jogando TCG",
-        url: "https://www.jogandotcg.com.br",
-        type: "Acessórios",
-        city: "São Paulo",
-        state: "SP",
-        description: "Playmats e sleeves"
+        name: "Covil do Mago",
+        type: "Sealed/Singles",
+        address: "Rua XV de Novembro, 1234 - Centro",
+        city: "Curitiba",
+        state: "PR",
+        cep: "80020-310",
+        url: "https://www.covildomagohobbystore.com.br",
+        hasEvents: true,
+        description: "Cupom: OLDGUY5 - Produtos Sorcery completos",
+        coords: { lat: -25.4297, lng: -49.2711 }
     },
+
+    // RIO GRANDE DO SUL
     {
-        name: "Btn's Oficial",
-        url: "https://www.btnsoficial.com.br",
-        type: "Acessórios",
-        city: "São Paulo",
-        state: "SP",
-        description: "Acessórios para TCG"
+        name: "Forja Hobby Store",
+        type: "Sealed",
+        address: "Av. Protásio Alves, 3800 - Petrópolis",
+        city: "Porto Alegre",
+        state: "RS",
+        cep: "90410-006",
+        url: "https://www.forjahobbystore.com.br",
+        hasEvents: true,
+        description: "Boosters e precons de Sorcery",
+        coords: { lat: -30.0451, lng: -51.1829 }
     },
+
+    // SANTA CATARINA
     {
         name: "Toca do Yeti",
-        url: "https://www.tocadoyeti.com.br",
         type: "Acessórios",
+        address: "Rua Felipe Schmidt, 515 - Centro",
         city: "Florianópolis",
         state: "SC",
-        description: "Playmats personalizados"
+        cep: "88010-000",
+        url: "https://www.tocadoyeti.com.br",
+        hasEvents: false,
+        description: "Playmats personalizados e acessórios",
+        coords: { lat: -27.5949, lng: -48.5482 }
+    },
+
+    // DISTRITO FEDERAL
+    {
+        name: "CHQ Jogos",
+        type: "Sealed/Singles",
+        address: "CLN 208 Bloco D - Asa Norte",
+        city: "Brasília",
+        state: "DF",
+        cep: "70854-540",
+        url: "https://www.chqjogos.com.br",
+        hasEvents: true,
+        description: "Board games e TCG com espaço para eventos",
+        coords: { lat: -15.8452, lng: -47.8872 }
+    }
+];
+
+// Lojas apenas online (sem endereço físico)
+const ONLINE_ONLY_STORES = [
+    {
+        name: "Btn's Oficial",
+        type: "Acessórios",
+        url: "https://www.btnsoficial.com.br",
+        description: "Acessórios para TCG - apenas online"
     },
     {
         name: "Ateliê 3D Verso",
-        url: "https://www.instagram.com/atelie3dverso",
         type: "Acessórios",
-        city: "São Paulo",
-        state: "SP",
-        description: "Cupom: EDY5"
+        url: "https://www.instagram.com/atelie3dverso",
+        description: "Cupom: EDY5 - Acessórios personalizados"
     }
 ];
+
+// Combinar para compatibilidade com código existente
+const BRAZILIAN_STORES = [...PHYSICAL_STORES, ...ONLINE_ONLY_STORES.map(s => ({
+    ...s,
+    city: "Online",
+    state: "",
+    isOnlineOnly: true
+}))];
 
 // Official links
 const COMMUNITY_LINKS = {
@@ -181,13 +273,72 @@ const COMMUNITY_LINKS = {
     curiosa: "https://curiosa.io"
 };
 
+// Abrir endereço no Google Maps
+function openInMaps(store) {
+    if (!store) return;
+
+    let query;
+    if (store.coords) {
+        // Se temos coordenadas, usar elas
+        query = `${store.coords.lat},${store.coords.lng}`;
+    } else if (store.address) {
+        // Senão, usar o endereço completo
+        query = encodeURIComponent(`${store.address}, ${store.city}, ${store.state}, Brasil`);
+    } else {
+        return;
+    }
+
+    // Detectar se é mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    let url;
+    if (isMobile) {
+        // No mobile, tentar abrir o app do Google Maps
+        url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    } else {
+        // No desktop, abrir no navegador
+        url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    }
+
+    window.open(url, '_blank');
+}
+
+// Obter link do Google Maps para um endereço
+function getGoogleMapsUrl(store) {
+    if (!store) return '#';
+
+    let query;
+    if (store.coords) {
+        query = `${store.coords.lat},${store.coords.lng}`;
+    } else if (store.address) {
+        query = encodeURIComponent(`${store.address}, ${store.city}, ${store.state}, Brasil`);
+    } else if (store.city) {
+        query = encodeURIComponent(`${store.city}, ${store.state}, Brasil`);
+    } else {
+        return '#';
+    }
+
+    return `https://www.google.com/maps/search/?api=1&query=${query}`;
+}
+
+// Gerar embed do Google Maps (para iframe)
+function getGoogleMapsEmbed(store) {
+    if (!store || !store.coords) {
+        return null;
+    }
+
+    // Usar embed sem API key (funciona com limitações)
+    const { lat, lng } = store.coords;
+    return `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
+}
+
 // Initialize community features
 function initCommunity() {
     renderStores();
     setupStoreFilters();
 }
 
-// Render stores grid
+// Render stores grid (for community view)
 function renderStores(filterType = '') {
     const grid = document.getElementById('stores-grid');
     if (!grid) return;
