@@ -9,63 +9,63 @@ const QUIZ_QUESTIONS = [
         question: "Quantos cards deve ter seu Spellbook (deck principal)?",
         options: ["40 cards", "50 cards", "60 cards", "70 cards"],
         correct: 2,
-        category: "Regras Basicas",
+        category: "Regras Básicas",
         explanation: "O Spellbook deve ter exatamente 60 cards, incluindo 1 Avatar."
     },
     {
-        question: "Quantas copias de um card voce pode ter no deck?",
-        options: ["2 copias", "3 copias", "4 copias", "Sem limite"],
+        question: "Quantas cópias de um card você pode ter no deck?",
+        options: ["2 cópias", "3 cópias", "4 cópias", "Sem limite"],
         correct: 2,
-        category: "Regras Basicas",
-        explanation: "Maximo de 4 copias de qualquer card pelo nome. Sites basicos nao tem limite."
+        category: "Regras Básicas",
+        explanation: "Máximo de 4 cópias de qualquer card pelo nome. Sites basicos não tem limite."
     },
     {
-        question: "Quantos Sites voce pode jogar por turno?",
+        question: "Quantos Sites você pode jogar por turno?",
         options: ["1 Site", "2 Sites", "3 Sites", "Sem limite"],
         correct: 0,
-        category: "Regras Basicas",
-        explanation: "Voce so pode jogar 1 Site por turno, durante sua Fase de Inicio."
+        category: "Regras Básicas",
+        explanation: "Voce só pode jogar 1 Site por turno, durante sua Fase de Início."
     },
     {
-        question: "Qual o limite de cards na mao?",
+        question: "Qual o limite de cards na mão?",
         options: ["5 cards", "6 cards", "7 cards", "10 cards"],
         correct: 2,
-        category: "Regras Basicas",
-        explanation: "O limite e 7 cards. Se tiver mais de 7 no final do turno, deve descartar."
+        category: "Regras Básicas",
+        explanation: "O limite é 7 cards. Se tiver mais de 7 no final do turno, deve descartar."
     },
     {
         question: "O que acontece se seu Spellbook acabar?",
         options: ["Nada", "Compra do descarte", "Embaralha o descarte", "Voce perde o jogo"],
         correct: 3,
-        category: "Regras Basicas",
-        explanation: "Se precisar comprar e o Spellbook estiver vazio, voce perde o jogo."
+        category: "Regras Básicas",
+        explanation: "Se precisar comprar e o Spellbook estiver vazio, você perde o jogo."
     },
 
     // Threshold e Mana
     {
         question: "Threshold pode diminuir?",
-        options: ["Sim, quando Sites sao destruidos", "Sim, no fim do turno", "Nao, e permanente", "Depende do card"],
+        options: ["Sim, quando Sites são destruídos", "Sim, no fim do turno", "Não, é permanente", "Depende do card"],
         correct: 2,
         category: "Threshold e Mana",
-        explanation: "Threshold nunca diminui. Mesmo se um Site for destruido, seu Threshold permanece."
+        explanation: "Threshold nunca diminui. Mesmo se um Site for destruído, seu Threshold permanece."
     },
     {
-        question: "Posso guardar mana para o proximo turno?",
-        options: ["Sim, sempre", "Sim, ate 3 mana", "Nao, mana e perdido", "Depende do elemento"],
+        question: "Posso guardar mana para o próximo turno?",
+        options: ["Sim, sempre", "Sim, ate 3 mana", "Não, mana é perdido", "Depende do elemento"],
         correct: 2,
         category: "Threshold e Mana",
-        explanation: "Mana nao utilizado e perdido no final do turno. Use ou perca!"
+        explanation: "Mana não utilizado é perdido no final do turno. Use ou perca!"
     },
     {
         question: "Como ganho Threshold?",
         options: ["Comprando cards", "Jogando Sites", "Vencendo combates", "No inicio do turno"],
         correct: 1,
         category: "Threshold e Mana",
-        explanation: "Cada Site que voce joga aumenta seu Threshold do elemento correspondente em +1."
+        explanation: "Cada Site que você joga aumenta seu Threshold do elemento correspondente em +1."
     },
     {
         question: "O que e Affinity?",
-        options: ["Bonus de ataque", "Reducao de custo", "Bonus de defesa", "Tipo de criatura"],
+        options: ["Bonus de ataque", "Redução de custo", "Bonus de defesa", "Tipo de criatura"],
         correct: 1,
         category: "Threshold e Mana",
         explanation: "Affinity reduz o custo de mana baseado no seu Threshold do elemento indicado."
@@ -75,35 +75,35 @@ const QUIZ_QUESTIONS = [
     {
         question: "O que e Summoning Sickness?",
         options: [
-            "Criatura nao pode atacar/mover no turno em que entra",
+            "Criatura não pode atacar/mover no turno em que entra",
             "Criatura leva dano ao entrar",
             "Criatura custa mais mana",
-            "Criatura nao pode bloquear"
+            "Criatura não pode bloquear"
         ],
         correct: 0,
         category: "Combate",
-        explanation: "Criaturas recem-jogadas nao podem atacar, mover, ou virar ate o proximo turno. Ainda podem bloquear."
+        explanation: "Criaturas recém-jogadas não podem atacar, mover, ou virar ate o próximo turno. Ainda podem bloquear."
     },
     {
         question: "Uma criatura pode atacar mais de uma vez por turno?",
-        options: ["Sim, sempre", "Sim, se tiver Haste", "Nao, apenas uma vez", "Nao, a menos que tenha Double Strike"],
+        options: ["Sim, sempre", "Sim, se tiver Haste", "Não, apenas uma vez", "Não, a menos que tenha Double Strike"],
         correct: 2,
         category: "Combate",
-        explanation: "Cada criatura so pode atacar uma vez por turno, pois atacar a vira."
+        explanation: "Cada criatura só pode atacar uma vez por turno, pois atacar a vira (tapa)."
     },
     {
-        question: "Criaturas recem-jogadas podem bloquear?",
-        options: ["Nao, tem Summoning Sickness", "Sim, podem bloquear", "Depende do tipo", "Apenas se tiver Defender"],
+        question: "Criaturas recém-jogadas podem bloquear?",
+        options: ["Não, tem Summoning Sickness", "Sim, podem bloquear", "Depende do tipo", "Apenas se tiver Defender"],
         correct: 1,
         category: "Combate",
-        explanation: "Summoning Sickness nao impede bloqueio. Criaturas podem bloquear no turno em que entram."
+        explanation: "Summoning Sickness não impede bloqueio. Criaturas podem bloquear no turno em que entram."
     },
     {
         question: "O que e Lethal?",
         options: [
             "Criatura causa dano dobrado",
             "Qualquer dano destroi a criatura alvo",
-            "Criatura nao pode ser bloqueada",
+            "Criatura não pode ser bloqueada",
             "Criatura ataca duas vezes"
         ],
         correct: 1,
@@ -121,7 +121,7 @@ const QUIZ_QUESTIONS = [
     },
     {
         question: "Uma criatura pode mover e atacar no mesmo turno?",
-        options: ["Nao, sao acoes exclusivas", "Sim, pode fazer ambos", "Sim, mas nao no primeiro turno", "Apenas com Haste"],
+        options: ["Não, são ações exclusivas", "Sim, pode fazer ambos", "Sim, mas não no primeiro turno", "Apenas com Haste"],
         correct: 1,
         category: "Movimento",
         explanation: "Sim, uma criatura pode mover e depois atacar (ou vice-versa) no mesmo turno."
@@ -131,25 +131,25 @@ const QUIZ_QUESTIONS = [
         options: [
             "Criatura pode atacar direto",
             "Criatura pode mover sobre outras",
-            "Criatura so pode ser bloqueada por Airborne",
+            "Criatura só pode ser bloqueada por Airborne",
             "Criatura ignora terrenos"
         ],
         correct: 2,
         category: "Movimento",
-        explanation: "Airborne significa que a criatura so pode ser bloqueada por outras criaturas com Airborne."
+        explanation: "Airborne significa que a criatura só pode ser bloqueada por outras criaturas com Airborne."
     },
 
     // Spells
     {
         question: "Posso jogar Magias na fase principal?",
-        options: ["Nao, apenas em combate", "Sim, a qualquer momento", "Depende da magia", "Apenas se tiver mana sobrando"],
+        options: ["Não, apenas em combate", "Sim, a qualquer momento", "Depende da magia", "Apenas se tiver mana sobrando"],
         correct: 1,
         category: "Magias",
         explanation: "Voce pode jogar magias a qualquer momento durante sua fase principal, se tiver mana e threshold."
     },
     {
         question: "O que acontece com uma Aura se a criatura equipada morrer?",
-        options: ["Aura vai para o descarte", "Aura vai para a mao", "Aura fica no campo", "Aura equipa outra criatura"],
+        options: ["Aura vai para o descarte", "Aura vai para a mão", "Aura fica no campo", "Aura equipa outra criatura"],
         correct: 0,
         category: "Magias",
         explanation: "Quando uma criatura com Aura morre, a Aura vai para o descarte junto."
@@ -158,17 +158,17 @@ const QUIZ_QUESTIONS = [
     // Avatar
     {
         question: "O que acontece se seu Avatar morrer?",
-        options: ["Voce compra outro", "Voce perde o jogo", "Avatar volta virado", "Nada, e opcional"],
+        options: ["Voce compra outro", "Voce perde o jogo", "Avatar volta virado", "Nada, é opcional"],
         correct: 1,
         category: "Avatar",
-        explanation: "Se seu Avatar for destruido ou tiver 0 ou menos de vida, voce perde o jogo imediatamente."
+        explanation: "Se seu Avatar for destruído ou tiver 0 ou menos de vida, você perde o jogo imediatamente."
     },
     {
         question: "Avatar pode ser bloqueado?",
-        options: ["Nao, e intocavel", "Sim, como qualquer criatura", "Depende da habilidade", "Apenas por outros Avatars"],
+        options: ["Não, é intocável", "Sim, como qualquer criatura", "Depende da habilidade", "Apenas por outros Avatars"],
         correct: 1,
         category: "Avatar",
-        explanation: "Avatar e uma criatura especial e pode ser bloqueado normalmente."
+        explanation: "Avatar é uma criatura especial e pode ser bloqueado normalmente."
     }
 ];
 
@@ -264,16 +264,16 @@ class RulesQuiz {
         let grade, message;
         if (percentage >= 90) {
             grade = 'S';
-            message = 'Mestre das Regras! Voce domina Sorcery!';
+            message = 'Mestre das Regras! Você domina Sorcery!';
         } else if (percentage >= 80) {
             grade = 'A';
-            message = 'Excelente! Conhecimento solido das regras.';
+            message = 'Excelente! Conhecimento sólido das regras.';
         } else if (percentage >= 70) {
             grade = 'B';
-            message = 'Bom trabalho! Algumas revisoes podem ajudar.';
+            message = 'Bom trabalho! Algumas revisões podem ajudar.';
         } else if (percentage >= 60) {
             grade = 'C';
-            message = 'Razoavel. Recomendo estudar o Rulebook.';
+            message = 'Razoável. Recomendo estudar o Rulebook.';
         } else {
             grade = 'D';
             message = 'Precisa praticar mais. Leia o FAQ e tente novamente!';
@@ -346,14 +346,14 @@ function renderQuizStart(containerId = 'quiz-container') {
             <p>Teste seus conhecimentos sobre as regras de Sorcery: Contested Realm</p>
 
             <div class="quiz-stats">
-                <span>${stats.totalQuestions} perguntas disponiveis</span>
+                <span>${stats.totalQuestions} perguntas disponíveis</span>
                 <span>${stats.categories.length} categorias</span>
             </div>
 
             <div class="quiz-options">
-                <label>Numero de perguntas:</label>
+                <label>Número de perguntas:</label>
                 <select id="quiz-length">
-                    <option value="5">5 perguntas (Rapido)</option>
+                    <option value="5">5 perguntas (Rápido)</option>
                     <option value="10" selected>10 perguntas (Normal)</option>
                     <option value="15">15 perguntas (Completo)</option>
                     <option value="20">20 perguntas (Desafio)</option>
@@ -361,7 +361,7 @@ function renderQuizStart(containerId = 'quiz-container') {
             </div>
 
             <button class="btn primary quiz-start-btn" onclick="startQuizGame()">
-                <i data-lucide="play"></i> Comecar Quiz
+                <i data-lucide="play"></i> Começar Quiz
             </button>
         </div>
     `;
@@ -441,7 +441,7 @@ function selectQuizAnswer(index) {
         </div>
         <p>${result.explanation}</p>
         <button class="btn primary" onclick="renderQuizQuestion()">
-            ${rulesQuiz.isComplete() ? 'Ver Resultados' : 'Proxima Pergunta'}
+            ${rulesQuiz.isComplete() ? 'Ver Resultados' : 'Próxima Pergunta'}
         </button>
     `;
     questionDiv.appendChild(explanationDiv);
@@ -495,7 +495,7 @@ function showQuizReview() {
 
     container.innerHTML = `
         <div class="quiz-review">
-            <h3>Revisao das Respostas</h3>
+            <h3>Revisão das Respostas</h3>
 
             <div class="review-list">
                 ${results.answers.map((a, i) => `

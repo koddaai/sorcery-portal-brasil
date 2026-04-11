@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Atualizando Preços...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #141418;
+            color: #f5f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: #1c1c22;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            max-width: 500px;
+        }
+        h1 { color: #d4af37; margin-bottom: 20px; }
+        .status {
+            font-size: 18px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #242430;
+            border-radius: 8px;
+        }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        .loading { color: #fbbf24; }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #333;
+            border-top-color: #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .btn {
+            background: linear-gradient(135deg, #d4af37, #b8962e);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:hover { opacity: 0.9; }
+        .log {
+            text-align: left;
+            font-family: monospace;
+            font-size: 12px;
+            background: #0d0d0f;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .log-line { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Atualizador de Precos</h1>
+        <div id="spinner" class="spinner"></div>
+        <div id="status" class="status loading">Carregando servico de precos...</div>
+        <div id="log" class="log"></div>
+        <button id="backBtn" class="btn" style="display:none" onclick="window.location.href='/'">Voltar ao Site</button>
+    </div>
+
+    <!-- Load the price service -->
+    <script src="tcgcsv-price-service.js"></script>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const spinnerEl = document.getElementById('spinner');
+        const logEl = document.getElementById('log');
+        const backBtn = document.getElementById('backBtn');
+
+        function log(msg) {
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logEl.appendChild(line);
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(msg);
+        }
+
+        async function forceUpdate() {
+            try {
+                log('Iniciando atualizacao de precos...');
+
+                // Wait for service to be ready
+                if (typeof tcgcsvPriceService === 'undefined') {
+                    throw new Error('tcgcsvPriceService nao carregado');
+                }
+
+                log('Servico encontrado. Limpando cache...');
+                localStorage.removeItem('sorcery-tcgcsv-prices');
+                localStorage.removeItem('sorcery-tcgcsv-meta');
+
+                log('Buscando precos do TCGCSV.com...');
+                statusEl.textContent = 'Buscando precos do TCGPlayer via TCGCSV...';
+
+                const success = await tcgcsvPriceService.fetchAllPrices(true);
+
+                if (success) {
+                    const cardCount = tcgcsvPriceService.cardPrices.size;
+                    const lastUpdate = tcgcsvPriceService.lastUpdate?.toLocaleString('pt-BR');
+
+                    log(`Sucesso! ${cardCount} cards carregados.`);
+                    log(`Ultima atualizacao: ${lastUpdate}`);
+
+                    // Show some sample prices
+                    log('--- Exemplos de precos ---');
+                    let count = 0;
+                    for (const [name, prices] of tcgcsvPriceService.cardPrices) {
+                        if (count >= 5) break;
+                        const normal = prices.find(p => p.finish === 'Normal');
+                        if (normal && normal.marketPrice) {
+                            log(`${name}: $${normal.marketPrice.toFixed(2)}`);
+                            count++;
+                        }
+                    }
+
+                    statusEl.className = 'status success';
+                    statusEl.innerHTML = `<strong>Precos atualizados!</strong><br>${cardCount} cards carregados<br>Fonte: TCGCSV.com (TCGPlayer)`;
+                    spinnerEl.style.display = 'none';
+                    backBtn.style.display = 'inline-block';
+                } else {
+                    throw new Error('Falha ao buscar precos');
+                }
+            } catch (error) {
+                log(`ERRO: ${error.message}`);
+                statusEl.className = 'status error';
+                statusEl.textContent = `Erro: ${error.message}`;
+                spinnerEl.style.display = 'none';
+                backBtn.style.display = 'inline-block';
+            }
+        }
+
+        // Start update after page loads
+        setTimeout(forceUpdate, 1000);
+    </script>
+</body>
+</html>

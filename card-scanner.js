@@ -431,7 +431,7 @@ const scannerUI = {
         if (!container || !list) return;
 
         if (matches.length === 0) {
-            list.innerHTML = '<p class="no-matches">No matching cards found. Try adjusting the text above.</p>';
+            list.innerHTML = '<p class="no-matches">Nenhum card encontrado. Tente ajustar o texto acima.</p>';
         } else {
             list.innerHTML = matches.map(card => `
                 <div class="scanner-match-card" data-card-name="${card.name}">
@@ -441,7 +441,7 @@ const scannerUI = {
                         <span class="match-type">${card.guardian?.type || ''}</span>
                     </div>
                     <div class="match-actions">
-                        <button class="btn btn-small primary add-to-collection-btn" title="Add to collection">+</button>
+                        <button class="btn btn-small primary add-to-collection-btn" title="Adicionar à coleção">+</button>
                     </div>
                 </div>
             `).join('');

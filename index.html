@@ -431,7 +431,7 @@
                         <option value="Unique">Unique</option>
                     </select>
                     <div class="keyword-filter-container">
-                        <input type="text" id="keyword-search" placeholder="Filter by keyword..." class="keyword-search-input" autocomplete="off">
+                        <input type="text" id="keyword-search" placeholder="Filtrar por keyword..." class="keyword-search-input" autocomplete="off">
                         <div id="keyword-dropdown" class="keyword-dropdown hidden">
                             <!-- Keywords will be populated by JS -->
                         </div>
@@ -441,7 +441,7 @@
                     </div>
                 </div>
                 <div class="results-info">
-                    <span id="results-count">Loading...</span>
+                    <span id="results-count">Carregando...</span>
                 </div>
                 <div id="cards-grid" class="cards-grid">
                     <!-- Cards will be loaded here -->
@@ -778,8 +778,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button id="save-deck-btn" class="btn primary">Save Deck</button>
-                            <button id="cancel-deck-btn" class="btn">Cancel</button>
+                            <button id="save-deck-btn" class="btn primary">Salvar Deck</button>
+                            <button id="cancel-deck-btn" class="btn">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -910,24 +910,24 @@
                 <h2>Estatísticas da Coleção</h2>
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <h3>Total Cards</h3>
+                        <h3>Total de Cards</h3>
                         <div class="stat-value" id="stat-total">0</div>
-                        <div class="stat-label">in collection</div>
+                        <div class="stat-label">na coleção</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Completion</h3>
+                        <h3>Conclusão</h3>
                         <div class="stat-value" id="stat-completion">0%</div>
-                        <div class="stat-label">of all cards</div>
+                        <div class="stat-label">de todos os cards</div>
                     </div>
                     <div class="stat-card">
-                        <h3>Precons Owned</h3>
+                        <h3>Precons</h3>
                         <div class="stat-value" id="stat-precons">0/8</div>
-                        <div class="stat-label">precon decks</div>
+                        <div class="stat-label">decks pré-construídos</div>
                     </div>
                     <div class="stat-card">
                         <h3>Wishlist</h3>
                         <div class="stat-value" id="stat-wishlist">0</div>
-                        <div class="stat-label">cards wanted</div>
+                        <div class="stat-label">cards desejados</div>
                     </div>
                 </div>
 
@@ -935,8 +935,8 @@
                 <div class="stats-breakdown value-section">
                     <div class="section-header-flex">
                         <div>
-                            <h3>Collection Value</h3>
-                            <p class="subtitle">Track your portfolio value over time</p>
+                            <h3>Valor da Coleção</h3>
+                            <p class="subtitle">Acompanhe o valor do seu portfólio ao longo do tempo</p>
                         </div>
                         <div class="period-selector">
                             <button class="period-btn active" data-period="7">7D</button>
@@ -991,7 +991,7 @@
 
                 <!-- Most Valuable Cards -->
                 <div class="stats-breakdown">
-                    <h3>Most Valuable Cards in Collection</h3>
+                    <h3>Cards Mais Valiosos da Coleção</h3>
                     <div id="valuable-cards-list" class="valuable-cards-list">
                         <!-- Will be populated by JS -->
                     </div>
@@ -999,7 +999,7 @@
 
                 <!-- Investment Analytics -->
                 <div class="stats-breakdown analytics-section">
-                    <h3>Investment Analytics</h3>
+                    <h3>Análise de Investimento</h3>
                     <p class="subtitle">Portfolio breakdown by category</p>
 
                     <div class="analytics-grid">
@@ -1052,21 +1052,21 @@
                 </div>
 
                 <div class="stats-breakdown">
-                    <h3>Export / Import Collection</h3>
+                    <h3>Exportar / Importar Coleção</h3>
                     <div class="export-import-buttons">
-                        <button id="export-json-btn" class="btn">Export JSON</button>
-                        <button id="export-csv-btn" class="btn">Export CSV</button>
-                        <button id="import-btn" class="btn">Import Collection</button>
+                        <button id="export-json-btn" class="btn">Exportar JSON</button>
+                        <button id="export-csv-btn" class="btn">Exportar CSV</button>
+                        <button id="import-btn" class="btn">Importar Coleção</button>
                         <input type="file" id="import-file" accept=".json" style="display: none;">
                     </div>
                 </div>
 
                 <div class="stats-breakdown">
-                    <h3>Price Data Management</h3>
-                    <p class="subtitle">Import prices from CSV (columns: name, price, foil) or export current prices.</p>
+                    <h3>Gerenciamento de Preços</h3>
+                    <p class="subtitle">Importe preços de CSV (colunas: name, price, foil) ou exporte os preços atuais.</p>
                     <div class="export-import-buttons">
-                        <button id="import-prices-btn" class="btn">Import Prices CSV</button>
-                        <button id="export-prices-btn" class="btn">Export Prices CSV</button>
+                        <button id="import-prices-btn" class="btn">Importar CSV de Preços</button>
+                        <button id="export-prices-btn" class="btn">Exportar CSV de Preços</button>
                         <input type="file" id="import-prices-file" accept=".csv" style="display: none;">
                     </div>
                     <div id="price-import-status" class="import-status"></div>
@@ -1074,9 +1074,9 @@
 
                 <!-- Achievements Section -->
                 <div class="stats-breakdown achievements-section">
-                    <h3>Achievements</h3>
+                    <h3>Conquistas</h3>
                     <div class="achievement-summary">
-                        <span id="achievement-count">0/0</span> achievements unlocked
+                        <span id="achievement-count">0/0</span> conquistas desbloqueadas
                     </div>
                     <div id="achievements-grid" class="achievements-grid">
                         <!-- Achievements will be populated by JS -->
@@ -2228,7 +2228,7 @@
                             <i data-lucide="user-circle"></i>
                         </div>
                         <div class="profile-header-info">
-                            <h1 id="public-profile-name">Loading...</h1>
+                            <h1 id="public-profile-name">Carregando...</h1>
                             <p id="public-profile-bio" class="profile-bio"></p>
                         </div>
                     </div>
@@ -2370,13 +2370,13 @@
                         </div>
 
                         <div class="card-price-section">
-                            <h4>Precos por Versao</h4>
+                            <h4>Preços por Versão</h4>
                             <div id="modal-price-table">
                                 <!-- Price table will be rendered by JS -->
                             </div>
                         </div>
                         <div class="card-sets">
-                            <h4>Available in:</h4>
+                            <h4>Disponível em:</h4>
                             <div id="modal-card-sets"></div>
                         </div>
 
@@ -2706,25 +2706,25 @@
         <div id="sync-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content sync-modal-content">
                 <button class="close-modal" aria-label="Fechar modal">&times;</button>
-                <h3>Cloud Sync</h3>
-                <p class="subtitle">Synchronize your collection with the cloud</p>
+                <h3>Sincronização na Nuvem</h3>
+                <p class="subtitle">Sincronize sua coleção com a nuvem</p>
 
                 <div class="sync-options">
                     <button id="sync-upload-btn" class="btn sync-btn">
                         <span class="sync-icon">&#8593;</span>
-                        <span class="sync-label">Upload to Cloud</span>
-                        <span class="sync-desc">Save local collection to cloud</span>
+                        <span class="sync-label">Enviar para Nuvem</span>
+                        <span class="sync-desc">Salvar coleção local na nuvem</span>
                     </button>
                     <button id="sync-download-btn" class="btn sync-btn">
                         <span class="sync-icon">&#8595;</span>
-                        <span class="sync-label">Download from Cloud</span>
-                        <span class="sync-desc">Replace local with cloud data</span>
+                        <span class="sync-label">Baixar da Nuvem</span>
+                        <span class="sync-desc">Substituir dados locais pelos da nuvem</span>
                     </button>
                 </div>
 
                 <div id="sync-status" class="sync-status hidden">
                     <div class="sync-progress"></div>
-                    <span class="sync-message">Syncing...</span>
+                    <span class="sync-message">Sincronizando...</span>
                 </div>
 
                 <div class="sync-info">
@@ -2950,25 +2950,25 @@
 
                 <div class="photo-capture-section">
                     <div class="photo-preview-container">
-                        <img id="photo-preview" class="photo-preview hidden" alt="Photo preview">
+                        <img id="photo-preview" class="photo-preview hidden" alt="Prévia da foto">
                         <div id="photo-placeholder" class="photo-placeholder">
                             <span>&#128247;</span>
-                            <p>Take or upload a photo</p>
+                            <p>Tire ou envie uma foto</p>
                         </div>
                     </div>
 
                     <div class="photo-actions">
                         <button id="capture-photo-btn" class="btn">
-                            <span>&#128247;</span> Take Photo
+                            <span>&#128247;</span> Tirar Foto
                         </button>
                         <button id="upload-photo-btn" class="btn">
-                            <span>&#128194;</span> Upload
+                            <span>&#128194;</span> Enviar
                         </button>
                         <input type="file" id="photo-file-input" accept="image/*" capture="environment" style="display: none;">
                     </div>
 
                     <div class="form-group">
-                        <label for="photo-condition">Condition</label>
+                        <label for="photo-condition">Condição</label>
                         <select id="photo-condition">
                             <option value="NM">Near Mint (NM)</option>
                             <option value="LP">Lightly Played (LP)</option>
@@ -2979,15 +2979,15 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="photo-notes">Notes</label>
-                        <textarea id="photo-notes" placeholder="Any notes about this card..."></textarea>
+                        <label for="photo-notes">Observações</label>
+                        <textarea id="photo-notes" placeholder="Observações sobre este card..."></textarea>
                     </div>
 
-                    <button id="save-photo-btn" class="btn primary btn-full" disabled>Save Photo</button>
+                    <button id="save-photo-btn" class="btn primary btn-full" disabled>Salvar Foto</button>
                 </div>
 
                 <div class="existing-photos">
-                    <h4>Existing Photos</h4>
+                    <h4>Fotos Existentes</h4>
                     <div id="card-photos-grid" class="photos-grid">
                         <!-- Photos will be shown here -->
                     </div>
@@ -3071,7 +3071,7 @@
         <!-- Loading Overlay -->
         <div id="loading" class="loading-overlay">
             <div class="loading-spinner"></div>
-            <p>Loading cards from Sorcery API...</p>
+            <p>Carregando cards da API do Sorcery...</p>
         </div>
     </div>
 

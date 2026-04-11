@@ -7,6 +7,164 @@ const DECK_GUIDES = {
     version: "Abril 2026",
 
     // ============================================
+    // MECÂNICAS DE JOGO - REGRAS ESSENCIAIS
+    // ============================================
+    gameMechanics: {
+        title: "Mecânicas de Jogo",
+        icon: "cog",
+        sections: [
+            {
+                id: "golden-silver-rules",
+                title: "As Regras de Ouro e Prata",
+                content: `
+                    <div class="rule-box golden">
+                        <h4><i data-lucide="crown"></i> Regra de Ouro</h4>
+                        <p>"Use o bom senso e seja razoável" - O texto dos cards usa linguagem informal propositalmente. Aplique raciocínio prático primeiro, consulte o rulebook apenas quando necessário.</p>
+                    </div>
+
+                    <div class="rule-box silver">
+                        <h4><i data-lucide="medal"></i> Regra de Prata</h4>
+                        <p>Texto específico tem precedência sobre regras gerais. A ordem de prioridade é:</p>
+                        <ol>
+                            <li>"Não pode" específico → sempre vence</li>
+                            <li>"Pode" específico → permite a ação</li>
+                            <li>"Não pode" geral → segue a regra</li>
+                            <li>"Pode" geral → ação permitida</li>
+                        </ol>
+                    </div>
+                `
+            },
+            {
+                id: "resources",
+                title: "Recursos: Mana e Threshold",
+                content: `
+                    <div class="resource-section">
+                        <h5><i data-lucide="zap"></i> Mana</h5>
+                        <ul>
+                            <li>Gerado ao virar (tap) Sites durante sua Start Phase</li>
+                            <li>Mana não utilizado é perdido no fim do turno</li>
+                            <li>Custo de mana aparece no canto superior do card</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-section">
+                        <h5><i data-lucide="gauge"></i> Threshold</h5>
+                        <ul>
+                            <li>Representa seu domínio sobre os elementos</li>
+                            <li>Cada Site jogado aumenta seu threshold do elemento em +1</li>
+                            <li><strong>Threshold nunca diminui</strong> - é permanente</li>
+                            <li>Threshold não é gasto - é apenas um requisito</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-example">
+                        <strong>Exemplo:</strong> Um card "Fire 2" requer que você tenha pelo menos 2 de threshold de Fogo. Se você jogou 2 Sites de Fogo, seu threshold é 2, permitindo jogar o card.
+                    </div>
+                `
+            },
+            {
+                id: "turn-structure",
+                title: "Estrutura do Turno",
+                content: `
+                    <div class="turn-phase">
+                        <h5><i data-lucide="sunrise"></i> Fase de Início (Start Phase)</h5>
+                        <ol>
+                            <li>Desvirar todos os seus permanentes</li>
+                            <li>Gerar mana dos Sites</li>
+                            <li>Triggers de "Awaken"</li>
+                            <li>Comprar 1 card do Spellbook</li>
+                        </ol>
+                    </div>
+
+                    <div class="turn-phase">
+                        <h5><i data-lucide="sun"></i> Fase Principal (Main Phase)</h5>
+                        <ul>
+                            <li>Jogar cards (Minions, Magics, Artifacts, Auras)</li>
+                            <li>Jogar 1 Site do Atlas</li>
+                            <li>Ativar habilidades</li>
+                            <li>Movimentar criaturas</li>
+                            <li>Atacar</li>
+                        </ul>
+                    </div>
+
+                    <div class="turn-phase">
+                        <h5><i data-lucide="sunset"></i> Fase de Fim (End Phase)</h5>
+                        <ol>
+                            <li>Triggers de fim de turno</li>
+                            <li>Descartar até 7 cards na mão</li>
+                            <li>Curar dano de minions</li>
+                            <li>Passar o turno</li>
+                        </ol>
+                    </div>
+                `
+            },
+            {
+                id: "movement-combat",
+                title: "Movimento e Combate",
+                content: `
+                    <div class="mechanics-section">
+                        <h5><i data-lucide="move"></i> Movimento</h5>
+                        <ul>
+                            <li>Movimento básico: para uma região adjacente</li>
+                            <li>Criaturas recém-jogadas têm <strong>Summoning Sickness</strong></li>
+                            <li>Não podem mover ou atacar no turno que entram</li>
+                            <li><strong>Airborne:</strong> ignora obstáculos terrestres</li>
+                            <li><strong>Burrowing:</strong> pode ir para regiões subterrâneas</li>
+                            <li><strong>Voidwalk:</strong> pode atravessar o Void</li>
+                        </ul>
+                    </div>
+
+                    <div class="mechanics-section">
+                        <h5><i data-lucide="swords"></i> Combate</h5>
+                        <ol>
+                            <li><strong>Declarar atacante:</strong> Escolha criatura e alvo</li>
+                            <li><strong>Virar atacante:</strong> A criatura é tapada</li>
+                            <li><strong>Declarar bloqueadores:</strong> Defensor pode bloquear</li>
+                            <li><strong>Dano simultâneo:</strong> Ambos causam dano ao mesmo tempo</li>
+                            <li><strong>Resolver dano:</strong> Criaturas com dano ≥ defesa morrem</li>
+                        </ol>
+                    </div>
+
+                    <div class="guide-tip">
+                        <h4>Keywords de Combate</h4>
+                        <ul>
+                            <li><strong>First Strike:</strong> Causa dano primeiro</li>
+                            <li><strong>Lethal:</strong> Qualquer dano (1+) mata</li>
+                            <li><strong>Lance:</strong> +2 Ataque ao atacar</li>
+                            <li><strong>Ranged:</strong> Ataca em regiões adjacentes</li>
+                            <li><strong>Stealth:</strong> Não pode ser bloqueado</li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                id: "keywords",
+                title: "Keywords Importantes",
+                content: `
+                    <div class="keywords-table-container">
+                        <table class="keywords-table">
+                            <thead>
+                                <tr><th>Keyword</th><th>Efeito</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Airborne</strong></td><td>Só pode ser bloqueado por criaturas Airborne</td></tr>
+                                <tr><td><strong>Burst</strong></td><td>Pode ser jogado a qualquer momento, mesmo no turno do oponente</td></tr>
+                                <tr><td><strong>Defender</strong></td><td>Não pode atacar</td></tr>
+                                <tr><td><strong>Genesis</strong></td><td>Trigger quando entra no Realm</td></tr>
+                                <tr><td><strong>Death</strong></td><td>Trigger quando vai para o Cemetery</td></tr>
+                                <tr><td><strong>Awaken</strong></td><td>Trigger no início do seu turno</td></tr>
+                                <tr><td><strong>Ward</strong></td><td>Não pode ser alvo de habilidades/magias do oponente</td></tr>
+                                <tr><td><strong>Intercept</strong></td><td>Pode bloquear ataques a alvos adjacentes</td></tr>
+                                <tr><td><strong>Landfall</strong></td><td>Trigger quando você joga um Site</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            }
+        ]
+    },
+
+    // ============================================
     // GUIA BÁSICO DE DECKBUILDING
     // ============================================
     basics: {
@@ -790,6 +948,362 @@ const DECK_GUIDES = {
                 { deck: "Air Frog", difficulty: "Equilibrado", winrate: "50%", tips: "Ambos têm tempo plays. Jogo de skill." }
             ],
             budgetVersion: "Skirmishers of Mu é key. Fire Elemental pode ser Flame Imp extra."
+        },
+
+        // ============================================
+        // PRECON PRIMERS - GUIAS OFICIAIS
+        // ============================================
+        {
+            id: "precon-air",
+            name: "Air Elemental Precon (Sparkmage)",
+            tier: "Precon",
+            elements: ["Air"],
+            avatar: "Sparkmage",
+            difficulty: "Fácil",
+            playstyle: "Tempo-Evasion",
+            description: "Precon oficial de Air. Minions móveis e magia que causa dano à distância.",
+            overview: `
+                <p><strong>Air Precon</strong> é perfeito para quem gosta de jogar rápido e evasivo. O Sparkmage permite usar Lucky Charm para dar precisão a habilidades poderosas mas imprevisíveis.</p>
+                <p>Suas criaturas voam sobre os defensores inimigos enquanto seus bolts removem ameaças.</p>
+            `,
+            keyCards: [
+                { name: "Lucky Charm", copies: 3, role: "Core - Precisão em randomness" },
+                { name: "Lightning Bolt", copies: 4, role: "Core - Remoção/Burn" },
+                { name: "Headless Haunt", copies: 4, role: "Core - Evasivo agressivo" },
+                { name: "Phase Assassin", copies: 3, role: "Core - Evasão versátil" },
+                { name: "Blink", copies: 3, role: "Core - Proteção" }
+            ],
+            gameplan: {
+                early: "Turnos 1-2: Desenvolver Sites. Wisps e criaturas pequenas para estabelecer presença.",
+                mid: "Turnos 3-5: Phase Assassin e Headless Haunt. Voar sobre defensores. Lightning Bolt em blockers.",
+                late: "Turnos 6+: Fechar com evasivos. Chain Lightning para dano final."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>2-3 lands + criatura evasiva + bolt = KEEP</li>
+                    <li>2 lands + curva de criaturas = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Sem criaturas evasivas = MULLIGAN</li>
+                    <li>4+ lands sem ação = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Earth Precon", difficulty: "Favorável", winrate: "55%", tips: "Voe sobre os blockers deles." },
+                { deck: "Fire Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Race de dano. Seja mais rápido." },
+                { deck: "Water Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Não deixe eles estabilizarem." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
+        },
+        {
+            id: "precon-earth",
+            name: "Earth Elemental Precon (Geomancer)",
+            tier: "Precon",
+            elements: ["Earth"],
+            avatar: "Geomancer",
+            difficulty: "Fácil",
+            playstyle: "Midrange-Swarm",
+            description: "Precon oficial de Earth. Força bruta através de poder individual e flood de board.",
+            overview: `
+                <p><strong>Earth Precon</strong> é o deck mais direto - jogar criaturas grandes e atacar. O Geomancer recompensa jogar muitas criaturas de Earth.</p>
+                <p>Ordinary Village gera tokens 1/1 constantemente, inundando o board enquanto suas criaturas grandes dominam o combate.</p>
+            `,
+            keyCards: [
+                { name: "Autumn Unicorn", copies: 4, role: "Core - Value midrange" },
+                { name: "Border Militia", copies: 4, role: "Core - 1-drop eficiente" },
+                { name: "Ordinary Village", copies: 4, role: "Core - Token engine (Site)" },
+                { name: "Bosk Troll", copies: 3, role: "Core - Regeneração" },
+                { name: "Landslide", copies: 3, role: "Core - Board wipe" }
+            ],
+            gameplan: {
+                early: "Turnos 1-2: Border Militia para bloquear. Ordinary Village gerando tokens.",
+                mid: "Turnos 3-5: Autumn Unicorn e Bosk Troll. Dominar combate com criaturas maiores.",
+                late: "Turnos 6+: Overwhelm com números. Landslide limpa ameaças pequenas."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3 lands + Border Militia + curva = KEEP</li>
+                    <li>2 lands + Ordinary Village + criaturas = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Sem early game = MULLIGAN</li>
+                    <li>5+ lands = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Air Precon", difficulty: "Desfavorável", winrate: "45%", tips: "Suas criaturas não voam. Pressione rápido." },
+                { deck: "Fire Precon", difficulty: "Favorável", winrate: "55%", tips: "Suas criaturas sobrevivem ao burn deles." },
+                { deck: "Water Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Aggro antes que eles controlem." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
+        },
+        {
+            id: "precon-fire",
+            name: "Fire Elemental Precon (Flamecaller)",
+            tier: "Precon",
+            elements: ["Fire"],
+            avatar: "Flamecaller",
+            difficulty: "Fácil",
+            playstyle: "Aggro-Burn",
+            description: "Precon oficial de Fire. Não tem medo de dano colateral - explosões de todos os lados!",
+            overview: `
+                <p><strong>Fire Precon</strong> é puro aggro. O Flamecaller potencializa suas magias de fogo, transformando cada spell em uma ameaça letal.</p>
+                <p>Sacred Scarabs e Colicky Dragonettes pressionam desde o turno 1, enquanto burn finaliza.</p>
+            `,
+            keyCards: [
+                { name: "Sacred Scarabs", copies: 4, role: "Core - Recursivo agressivo" },
+                { name: "Colicky Dragonettes", copies: 4, role: "Core - 2-drop com upside" },
+                { name: "Fireball", copies: 4, role: "Core - Flexível burn" },
+                { name: "Blaze", copies: 4, role: "Core - Mobilidade + dano" },
+                { name: "Lightning Bolt", copies: 4, role: "Core - Remoção eficiente" }
+            ],
+            gameplan: {
+                early: "Turnos 1-2: Criaturas agressivas. Atacar SEMPRE. Bolt em blockers.",
+                mid: "Turnos 3-4: Calcular dano. Blaze move criaturas para atacar. Fireball fecha.",
+                late: "Turnos 5+: Se chegou aqui, burn na cara. Não deixe eles estabilizarem."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>2 lands + 1-drop + burn = KEEP sempre</li>
+                    <li>2-3 lands + curva agressiva = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>4+ lands = MULLIGAN (deck não precisa)</li>
+                    <li>Só burn sem criaturas = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Earth Precon", difficulty: "Desfavorável", winrate: "45%", tips: "Criaturas deles são grandes demais. Corra." },
+                { deck: "Air Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Race! Quem for mais rápido ganha." },
+                { deck: "Water Precon", difficulty: "Favorável", winrate: "55%", tips: "Rápido demais para eles controlarem." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
+        },
+        {
+            id: "precon-water",
+            name: "Water Elemental Precon (Waveshaper)",
+            tier: "Precon",
+            elements: ["Water"],
+            avatar: "Waveshaper",
+            difficulty: "Médio",
+            playstyle: "Control-Ramp",
+            description: "Precon oficial de Water. Defenda cedo, domine tarde com criaturas massivas.",
+            overview: `
+                <p><strong>Water Precon</strong> é o deck de controle. O Waveshaper usa vantagem de terreno para atrasar inimigos até você jogar bombas como Diluvian Kraken.</p>
+                <p>Tufted Turtles e Brobdingnag Bullfrog defendem enquanto você desenvolve mana.</p>
+            `,
+            keyCards: [
+                { name: "Diluvian Kraken", copies: 2, role: "Core - Bomba finisher" },
+                { name: "Tufted Turtles", copies: 4, role: "Core - Wall defensivo" },
+                { name: "Brobdingnag Bullfrog", copies: 3, role: "Core - Blocker eficiente" },
+                { name: "Frost Bolt", copies: 4, role: "Core - Tempo/Remoção" },
+                { name: "Geyser", copies: 3, role: "Core - Board control" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Criaturas defensivas. Bloquear tudo. Desenvolver sites.",
+                mid: "Turnos 4-6: Frost Bolt atrasa ameaças. Geyser limpa board se necessário.",
+                late: "Turnos 7+: Diluvian Kraken domina. Uma criatura gigante por turno."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3-4 lands + defensor + Frost Bolt = KEEP</li>
+                    <li>3 lands + curva defensiva = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Só criaturas caras = MULLIGAN</li>
+                    <li>Sem interação early = MULLIGAN vs aggro</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Fire Precon", difficulty: "Desfavorável", winrate: "45%", tips: "Muito agressivo. Precisamos estabilizar." },
+                { deck: "Earth Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Freeze as bombas deles." },
+                { deck: "Air Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Geyser em evasivos é key." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
+        },
+        {
+            id: "precon-necromancer",
+            name: "Necromancer - Prophets of Doom",
+            tier: "Precon",
+            elements: ["Air", "Earth"],
+            avatar: "Necromancer",
+            difficulty: "Médio",
+            playstyle: "Combo-Recursion",
+            description: "Precon oficial Gothic. Crie um exército interminável de mortos-vivos através de recursão.",
+            overview: `
+                <p><strong>Necromancer</strong> gera um token de Skeleton todo turno. Esses tokens alimentam habilidades de sacrifício e criam inevitabilidade.</p>
+                <p>Cartas como Fowl Bones voltam do cemitério sacrificando Skeletons. Bone Spear transforma mortos-vivos em dano!</p>
+            `,
+            keyCards: [
+                { name: "Grim Reaper", copies: 3, role: "Core - Finisher recursivo" },
+                { name: "Skeleton Army", copies: 4, role: "Core - Go-wide" },
+                { name: "Raise Dead", copies: 4, role: "Core - Recursão" },
+                { name: "Gravedigger", copies: 4, role: "Core - Value engine" },
+                { name: "Bone Dragon", copies: 2, role: "Bomba - Finisher aéreo" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Gerar Skeletons. Zombies e criaturas small. Encher o cemitério.",
+                mid: "Turnos 4-6: Raise Dead traz de volta ameaças. Gravedigger gera valor.",
+                late: "Turnos 7+: Loop infinito de recursão. Grim Reaper não fica morto."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3 lands (ambos elementos) + recursão + criatura = KEEP</li>
+                    <li>2 lands + curva + Raise Dead = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Só recursão sem targets = MULLIGAN</li>
+                    <li>Só um elemento = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Savior Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Recursão ignora remoção deles." },
+                { deck: "Persecutor Precon", difficulty: "Desfavorável", winrate: "45%", tips: "Aggro deles é muito rápido." },
+                { deck: "Harbinger Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Jogo de attrition." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
+        },
+        {
+            id: "precon-harbinger",
+            name: "Harbinger - Prophets of Doom",
+            tier: "Precon",
+            elements: ["Air", "Water"],
+            avatar: "Harbinger",
+            difficulty: "Médio",
+            playstyle: "Tempo-Control",
+            description: "Precon oficial Gothic. Controle o ritmo com criaturas evasivas e remoção eficiente.",
+            overview: `
+                <p><strong>Harbinger</strong> combina o melhor de Air e Water: evasão e controle. Criaturas voam enquanto Frost Bolt e Freeze atrasam o oponente.</p>
+                <p>Similar ao Scatter the Frog, mas com toque mais sombrio e Gothic.</p>
+            `,
+            keyCards: [
+                { name: "Phase Assassin", copies: 4, role: "Core - Evasivo versátil" },
+                { name: "Grim Reaper", copies: 3, role: "Core - Finisher evasivo" },
+                { name: "Frost Bolt", copies: 4, role: "Core - Tempo" },
+                { name: "Lightning Bolt", copies: 4, role: "Core - Remoção" },
+                { name: "Blink", copies: 3, role: "Core - Proteção" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Desenvolver sites. Merfolk Scout para value. Segurar bolts.",
+                mid: "Turnos 4-6: Phase Assassin e Grim Reaper. Voar sobre blockers.",
+                late: "Turnos 7+: Evasivos fecham. Frost Bolt em qualquer ameaça."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3 lands (ambos elementos) + evasivo + remoção = KEEP</li>
+                    <li>2 lands + curva eficiente = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Só um elemento = MULLIGAN</li>
+                    <li>Só interação sem ameaças = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Necromancer Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Voar sobre os zombies." },
+                { deck: "Savior Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Controle vs controle - paciência." },
+                { deck: "Persecutor Precon", difficulty: "Favorável", winrate: "55%", tips: "Evasão ignora blockers deles." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
+        },
+        {
+            id: "precon-savior",
+            name: "Savior - Prophets of Doom",
+            tier: "Precon",
+            elements: ["Fire", "Water"],
+            avatar: "Savior",
+            difficulty: "Médio",
+            playstyle: "Midrange-Protection",
+            description: "Precon oficial Gothic. Proteção angelical combinada com poder de Fire e Water.",
+            overview: `
+                <p><strong>Savior</strong> protege suas criaturas enquanto usa o melhor de Fire (aggro) e Water (controle). Anjos e Phoenix criam ameaças resilientes.</p>
+                <p>Equilibre defesa e ataque - você tem ferramentas para ambos.</p>
+            `,
+            keyCards: [
+                { name: "Angel", copies: 4, role: "Core - Criatura angelical" },
+                { name: "Phoenix", copies: 3, role: "Core - Recursão" },
+                { name: "Blaze", copies: 4, role: "Core - Mobilidade" },
+                { name: "Geyser", copies: 3, role: "Core - Board control" },
+                { name: "Colicky Dragonettes", copies: 4, role: "Core - Pressão early" }
+            ],
+            gameplan: {
+                early: "Turnos 1-3: Colicky Dragonettes pressiona. Desenvolver sites.",
+                mid: "Turnos 4-6: Angels e Phoenix. Savior protege suas ameaças.",
+                late: "Turnos 7+: Geyser limpa o caminho. Anjos fecham."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>3 lands + mix de agressão e controle = KEEP</li>
+                    <li>2 lands + curva eficiente = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>Só um elemento = MULLIGAN</li>
+                    <li>Muito slow sem early game = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Necromancer Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Recursão deles é forte. Pressione." },
+                { deck: "Harbinger Precon", difficulty: "Equilibrado", winrate: "50%", tips: "Jogo longo. Use Geyser bem." },
+                { deck: "Persecutor Precon", difficulty: "Favorável", winrate: "55%", tips: "Você sobrevive ao burst deles." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
+        },
+        {
+            id: "precon-persecutor",
+            name: "Persecutor - Prophets of Doom",
+            tier: "Precon",
+            elements: ["Fire", "Earth"],
+            avatar: "Persecutor",
+            difficulty: "Fácil",
+            playstyle: "Aggro-Destruction",
+            description: "Precon oficial Gothic. Destruição implacável - queime tudo no caminho!",
+            overview: `
+                <p><strong>Persecutor</strong> é puro aggro de Fire/Earth. Similar ao Fury Road mas com toque Gothic - Demons substituem as criaturas normais.</p>
+                <p>Sacred Scarabs, burn e Landslide destroem tudo que ousam bloquear.</p>
+            `,
+            keyCards: [
+                { name: "Demon", copies: 4, role: "Core - Ameaça agressiva" },
+                { name: "Sacred Scarabs", copies: 4, role: "Core - Recursivo" },
+                { name: "Colicky Dragonettes", copies: 4, role: "Core - Pressão early" },
+                { name: "Blaze", copies: 4, role: "Core - Mobilidade + dano" },
+                { name: "Fireball", copies: 3, role: "Core - Finisher" }
+            ],
+            gameplan: {
+                early: "Turnos 1-2: Criaturas agressivas. Atacar SEMPRE.",
+                mid: "Turnos 3-5: Demons e burn. Landslide limpa blockers.",
+                late: "Turnos 6+: Fireball fecha. Não deixe o jogo ir longe."
+            },
+            mulliganGuide: `
+                <h5>Mãos Keepáveis:</h5>
+                <ul>
+                    <li>2 lands + criaturas agressivas + burn = KEEP</li>
+                    <li>2-3 lands + curva agressiva = KEEP</li>
+                </ul>
+                <h5>Mãos para Mulligan:</h5>
+                <ul>
+                    <li>4+ lands = MULLIGAN</li>
+                    <li>Mão lenta = MULLIGAN</li>
+                </ul>
+            `,
+            matchups: [
+                { deck: "Necromancer Precon", difficulty: "Favorável", winrate: "55%", tips: "Corra antes da recursão começar." },
+                { deck: "Harbinger Precon", difficulty: "Desfavorável", winrate: "45%", tips: "Evasivos deles são problema." },
+                { deck: "Savior Precon", difficulty: "Desfavorável", winrate: "45%", tips: "Proteção deles é forte. All-in." }
+            ],
+            budgetVersion: "Este é o precon oficial - já vem pronto para jogar!"
         }
     ],
 
@@ -1084,6 +1598,24 @@ const DECK_GUIDES = {
 function renderDeckGuides() {
     const container = document.getElementById('deck-guides-content');
     if (!container) return;
+
+    // Render mechanics section (NEW)
+    const mechanicsHTML = `
+        <div class="guide-section active" id="guide-mechanics">
+            <div class="guide-section-header">
+                <i data-lucide="${DECK_GUIDES.gameMechanics.icon}"></i>
+                <h3>${DECK_GUIDES.gameMechanics.title}</h3>
+            </div>
+            <div class="guide-sections">
+                ${DECK_GUIDES.gameMechanics.sections.map(section => `
+                    <div class="guide-subsection" id="${section.id}">
+                        <h4>${section.title}</h4>
+                        ${section.content}
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
 
     // Render basics section
     const basicsHTML = `
@@ -1435,7 +1967,7 @@ function renderDeckGuides() {
         </div>
     `;
 
-    container.innerHTML = basicsHTML + elementsHTML + archetypesHTML + beginnerHTML + metaHTML + primersHTML + advancedHTML + preconHTML + budgetHTML;
+    container.innerHTML = mechanicsHTML + basicsHTML + elementsHTML + archetypesHTML + beginnerHTML + metaHTML + primersHTML + advancedHTML + preconHTML + budgetHTML;
 
     // Initialize all interactive components
     initElementTabs();

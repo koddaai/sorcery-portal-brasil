@@ -734,11 +734,11 @@ function renderSetComparison(comparison) {
   return `
     <div class="set-comparison">
       <div class="comparison-header">
-        <h3>Set Comparison</h3>
+        <h3>Comparação de Sets</h3>
         <div class="comparison-totals">
-          <span class="total-stat">Total Cards: ${comparison.totals.totalCards}</span>
-          <span class="total-stat">Avg per Set: ${comparison.totals.avgCardsPerSet}</span>
-          <span class="total-stat">Largest: ${comparison.totals.largestSet?.name} (${comparison.totals.largestSet?.cardCount})</span>
+          <span class="total-stat">Total de Cards: ${comparison.totals.totalCards}</span>
+          <span class="total-stat">Média por Set: ${comparison.totals.avgCardsPerSet}</span>
+          <span class="total-stat">Maior: ${comparison.totals.largestSet?.name} (${comparison.totals.largestSet?.cardCount})</span>
         </div>
       </div>
       <div class="comparison-table-container">

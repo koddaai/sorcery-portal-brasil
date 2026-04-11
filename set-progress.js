@@ -422,7 +422,7 @@ function renderMissingCardsList(missing, options = {}) {
     return `
       <div class="missing-cards-complete">
         <span class="complete-icon">✓</span>
-        <span class="complete-text">Set Complete!</span>
+        <span class="complete-text">Set Completo!</span>
       </div>
     `.trim();
   }
@@ -441,21 +441,21 @@ function renderMissingCardsList(missing, options = {}) {
       >
         <span class="missing-card-rarity" style="background-color: ${rarityColor};"></span>
         <span class="missing-card-name">${card.name}</span>
-        <span class="missing-card-type">${card.type || 'Unknown'}</span>
+        <span class="missing-card-type">${card.type || 'Desconhecido'}</span>
       </div>
     `.trim();
   }).join('\n');
 
   const viewAllButton = showViewAll && remainingCount > 0 ? `
     <button class="missing-cards-view-all" onclick="handleViewAllMissing()">
-      View all ${missing.length} missing cards
+      Ver todos os ${missing.length} cards faltantes
     </button>
   ` : '';
 
   return `
     <div class="missing-cards-list">
       <div class="missing-cards-header">
-        <span class="missing-cards-title">Missing Cards</span>
+        <span class="missing-cards-title">Cards Faltantes</span>
         <span class="missing-cards-count">${missing.length} cards</span>
       </div>
       <div class="missing-cards-items">
@@ -633,10 +633,10 @@ function renderAllSetsOverview(allSetsProgress) {
   return `
     <div class="all-sets-overview">
       <div class="overall-progress-header">
-        <h2 class="overall-title">Collection Progress</h2>
+        <h2 class="overall-title">Progresso da Coleção</h2>
         <div class="overall-summary">
           <span class="overall-owned">${totalOwned}</span>
-          <span class="overall-total">/ ${totalCards} total cards</span>
+          <span class="overall-total">/ ${totalCards} cards no total</span>
         </div>
       </div>
 
@@ -647,7 +647,7 @@ function renderAllSetsOverview(allSetsProgress) {
       <div class="sets-list">
         <div class="sets-list-header">
           <span>Set</span>
-          <span>Progress</span>
+          <span>Progresso</span>
           <span>Cards</span>
           <span>%</span>
         </div>

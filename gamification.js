@@ -3,6 +3,24 @@
 // Achievements, Badges, and Progress Tracking
 // ============================================
 
+// Get per-user storage key for achievements
+function getAchievementsStorageKey() {
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.Id || nocoDBService.currentUser.id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.Id || user.id;
+            }
+        } catch (e) {}
+    }
+    return userId ? `sorcery-achievements-${userId}` : 'sorcery-achievements';
+}
+
 class GamificationSystem {
     constructor() {
         this.unlockedAchievements = new Set();
@@ -180,24 +198,24 @@ class GamificationSystem {
         // Precon achievements
         'precon-owner': {
             id: 'precon-owner',
-            name: 'Precon Owner',
-            description: 'Own at least one precon deck',
+            name: 'Dono de Precon',
+            description: 'Ter pelo menos um deck pré-construído',
             icon: '📦',
             category: 'precons',
             check: (stats) => stats.preconsOwned >= 1
         },
         'precon-collector': {
             id: 'precon-collector',
-            name: 'Precon Collector',
-            description: 'Own all 4 Beta precon decks',
+            name: 'Colecionador de Precons',
+            description: 'Ter todos os 4 precons do Beta',
             icon: '🎴',
             category: 'precons',
             check: (stats) => stats.betaPreconsOwned >= 4
         },
         'complete-precons': {
             id: 'complete-precons',
-            name: 'Precon Completionist',
-            description: 'Own all 8 precon decks',
+            name: 'Completista de Precons',
+            description: 'Ter todos os 8 decks pré-construídos',
             icon: '🏅',
             category: 'precons',
             check: (stats) => stats.preconsOwned >= 8
@@ -250,17 +268,19 @@ class GamificationSystem {
         }
     };
 
-    // Load progress from localStorage
+    // Load progress from localStorage (per-user)
     loadProgress() {
-        const saved = localStorage.getItem('sorcery-achievements');
+        const storageKey = getAchievementsStorageKey();
+        const saved = localStorage.getItem(storageKey);
         if (saved) {
             this.unlockedAchievements = new Set(JSON.parse(saved));
         }
     }
 
-    // Save progress to localStorage
+    // Save progress to localStorage (per-user)
     saveProgress() {
-        localStorage.setItem('sorcery-achievements', JSON.stringify([...this.unlockedAchievements]));
+        const storageKey = getAchievementsStorageKey();
+        localStorage.setItem(storageKey, JSON.stringify([...this.unlockedAchievements]));
     }
 
     // Calculate current stats from app data

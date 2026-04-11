@@ -86,7 +86,6 @@ class ValueTracker {
         this.pruneOldSnapshots();
 
         this.saveToStorage();
-        console.log('[ValueTracker] Snapshot taken:', snapshot.date, '$' + snapshot.totalValueUSD.toFixed(2));
 
         return snapshot;
     }
@@ -126,10 +125,6 @@ class ValueTracker {
 
         const before = this.snapshots.length;
         this.snapshots = this.snapshots.filter(s => s.date >= cutoffStr);
-
-        if (this.snapshots.length < before) {
-            console.log(`[ValueTracker] Pruned ${before - this.snapshots.length} old snapshots`);
-        }
     }
 
     /**
@@ -332,7 +327,6 @@ class ValueTracker {
     clearHistory() {
         this.snapshots = [];
         this.saveToStorage();
-        console.log('[ValueTracker] History cleared');
     }
 }
 
@@ -479,5 +473,3 @@ class ValueChartRenderer {
 const valueTracker = new ValueTracker();
 window.valueTracker = valueTracker;
 window.ValueChartRenderer = ValueChartRenderer;
-
-console.log('[ValueTracker] Service loaded');

@@ -3,8 +3,24 @@
  * Tracks individual card variants by slug with finish type, product, and quantity
  */
 
-// Storage key for localStorage
-const VARIANT_STORAGE_KEY = 'sorcery_variant_collection';
+// Get storage key for localStorage (per-user if logged in)
+function getVariantStorageKey() {
+    // Try to get user ID from nocoDBService or session
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.Id || nocoDBService.currentUser.id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.Id || user.id;
+            }
+        } catch (e) {}
+    }
+    return userId ? `sorcery_variant_collection_${userId}` : 'sorcery_variant_collection';
+}
 
 /**
  * Parse a card slug to extract set, card name, product type, and finish
@@ -162,7 +178,8 @@ class VariantTracker {
      */
     loadFromStorage() {
         try {
-            const stored = localStorage.getItem(VARIANT_STORAGE_KEY);
+            const storageKey = getVariantStorageKey();
+            const stored = localStorage.getItem(storageKey);
             if (stored) {
                 this.collection = JSON.parse(stored);
             }
@@ -173,11 +190,12 @@ class VariantTracker {
     }
 
     /**
-     * Save collection to localStorage
+     * Save collection to localStorage (per-user if logged in)
      */
     saveToStorage() {
         try {
-            localStorage.setItem(VARIANT_STORAGE_KEY, JSON.stringify(this.collection));
+            const storageKey = getVariantStorageKey();
+            localStorage.setItem(storageKey, JSON.stringify(this.collection));
         } catch (error) {
             console.error('Error saving variant collection to storage:', error);
             throw new Error('Failed to save collection to storage');

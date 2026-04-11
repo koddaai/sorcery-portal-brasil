@@ -972,7 +972,7 @@ async function loadCards() {
         await loadCardsFromNetwork();
     } catch (error) {
         loadingEl.innerHTML = `
-            <p>Error loading cards. Please refresh the page.</p>
+            <p>Erro ao carregar cards. Por favor, atualize a página.</p>
             <p style="color: var(--text-secondary); margin-top: 1rem;">${error.message}</p>
         `;
     }
@@ -8617,30 +8617,30 @@ async function handleSavePhoto() {
 // Load existing card photos
 async function loadCardPhotos(cardName) {
     const gridEl = document.getElementById('card-photos-grid');
-    gridEl.innerHTML = '<p class="loading-text">Loading photos...</p>';
+    gridEl.innerHTML = '<p class="loading-text">Carregando fotos...</p>';
 
     try {
         const photos = await nocoDBService.getCardPhotos(cardName);
 
         if (photos.length === 0) {
-            gridEl.innerHTML = '<p class="empty-message">No photos yet</p>';
+            gridEl.innerHTML = '<p class="empty-message">Nenhuma foto ainda</p>';
             return;
         }
 
         gridEl.innerHTML = photos.map(photo => `
             <div class="photo-thumb" data-id="${photo.Id}">
-                <img src="${photo.image_base64}" alt="Card photo">
+                <img src="${photo.image_base64}" alt="Foto do card">
                 <button class="delete-photo" onclick="deleteCardPhoto(${photo.Id})">&times;</button>
             </div>
         `).join('');
     } catch (error) {
-        gridEl.innerHTML = '<p class="error-message">Error loading photos</p>';
+        gridEl.innerHTML = '<p class="error-message">Erro ao carregar fotos</p>';
     }
 }
 
 // Delete card photo
 async function deleteCardPhoto(photoId) {
-    if (!confirm('Delete this photo?')) return;
+    if (!confirm('Excluir esta foto?')) return;
 
     try {
         await nocoDBService.deleteCardPhoto(photoId);

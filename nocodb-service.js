@@ -155,6 +155,12 @@ class NocoDBService {
         }
     }
 
+    // Check if user exists by email
+    async checkUserExists(email) {
+        const user = await this.findUserByEmail(email);
+        return user !== null;
+    }
+
     // Simple password hash (for demo purposes)
     async hashPassword(password) {
         const encoder = new TextEncoder();

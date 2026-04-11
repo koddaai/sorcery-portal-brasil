@@ -3,19 +3,44 @@
 // Public profiles and sharing functionality
 // ============================================
 
+// Get per-user storage key
+function getProfileStorageKey() {
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.Id || nocoDBService.currentUser.id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.Id || user.id;
+            }
+        } catch (e) {}
+    }
+    return userId ? `sorcery-profile-settings-${userId}` : 'sorcery-profile-settings';
+}
+
 class ProfileService {
     constructor() {
-        this.storageKey = 'sorcery-profile-settings';
         this.localSettings = null;
         this.loadLocalSettings();
     }
 
     /**
-     * Load local profile settings from localStorage
+     * Get storage key (per-user if logged in)
+     */
+    getStorageKey() {
+        return getProfileStorageKey();
+    }
+
+    /**
+     * Load local profile settings from localStorage (per-user)
      */
     loadLocalSettings() {
         try {
-            const stored = localStorage.getItem(this.storageKey);
+            const storageKey = this.getStorageKey();
+            const stored = localStorage.getItem(storageKey);
             if (stored) {
                 this.localSettings = JSON.parse(stored);
             }
@@ -25,11 +50,12 @@ class ProfileService {
     }
 
     /**
-     * Save local profile settings to localStorage
+     * Save local profile settings to localStorage (per-user)
      */
     saveLocalSettings() {
         try {
-            localStorage.setItem(this.storageKey, JSON.stringify(this.localSettings));
+            const storageKey = this.getStorageKey();
+            localStorage.setItem(storageKey, JSON.stringify(this.localSettings));
         } catch (error) {
             console.error('[ProfileService] Error saving settings:', error);
         }
@@ -242,7 +268,6 @@ class ProfileService {
                 });
             }
 
-            console.log('[ProfileService] Profile synced to cloud');
             return true;
         } catch (error) {
             console.error('[ProfileService] Error syncing to cloud:', error);
@@ -390,11 +415,12 @@ class ProfileService {
     }
 
     /**
-     * Clear local profile data
+     * Clear local profile data (per-user)
      */
     clearProfile() {
         this.localSettings = null;
-        localStorage.removeItem(this.storageKey);
+        const storageKey = this.getStorageKey();
+        localStorage.removeItem(storageKey);
     }
 }
 
@@ -404,5 +430,3 @@ class ProfileService {
 
 const profileService = new ProfileService();
 window.profileService = profileService;
-
-console.log('[ProfileService] Service loaded');

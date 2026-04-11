@@ -150,12 +150,32 @@ class OfflineManager {
     }
 
     getLastSyncTime() {
-        return localStorage.getItem('sorcery-last-sync');
+        // Get user-specific sync time if logged in
+        let userId = null;
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.Id || user.id;
+            }
+        } catch (e) {}
+        const key = userId ? `sorcery-last-sync-${userId}` : 'sorcery-last-sync';
+        return localStorage.getItem(key);
     }
 
     updateLastSyncTime() {
+        // Save user-specific sync time if logged in
+        let userId = null;
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.Id || user.id;
+            }
+        } catch (e) {}
         const now = new Date().toISOString();
-        localStorage.setItem('sorcery-last-sync', now);
+        const key = userId ? `sorcery-last-sync-${userId}` : 'sorcery-last-sync';
+        localStorage.setItem(key, now);
         this.lastSyncTime = now;
     }
 

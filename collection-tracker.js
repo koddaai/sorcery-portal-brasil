@@ -2,6 +2,24 @@
 // SISTEMA DE TRACKING DE COLEÇÃO DETALHADO
 // ============================================
 
+// Get per-user storage key
+function getCollectionTrackerStorageKey() {
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.Id || nocoDBService.currentUser.id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.Id || user.id;
+            }
+        } catch (e) {}
+    }
+    return userId ? `sorcery-collection-detailed-${userId}` : 'sorcery-collection-detailed';
+}
+
 class CollectionTracker {
     constructor() {
         this.collection = {}; // { cardName: { qty: number, sets: [], notes: '' } }
@@ -9,14 +27,16 @@ class CollectionTracker {
     }
 
     loadFromStorage() {
-        const saved = localStorage.getItem('sorcery-collection-detailed');
+        const storageKey = getCollectionTrackerStorageKey();
+        const saved = localStorage.getItem(storageKey);
         if (saved) {
             this.collection = JSON.parse(saved);
         }
     }
 
     saveToStorage() {
-        localStorage.setItem('sorcery-collection-detailed', JSON.stringify(this.collection));
+        const storageKey = getCollectionTrackerStorageKey();
+        localStorage.setItem(storageKey, JSON.stringify(this.collection));
     }
 
     // Adicionar carta à coleção

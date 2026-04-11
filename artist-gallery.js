@@ -865,7 +865,7 @@ function renderArtistProfile(artistStats) {
           <h1 class="artist-profile-name">${escapeHtml(artistStats.name)}</h1>
           <div class="artist-profile-meta">
             <div class="artist-profile-meta-item">
-              <span>Total Cards:</span>
+              <span>Total de Cards:</span>
               <span class="artist-profile-meta-value">${artistStats.cardCount}</span>
             </div>
             <div class="artist-profile-meta-item">
@@ -878,7 +878,7 @@ function renderArtistProfile(artistStats) {
 
       <div class="artist-stats-grid">
         <div class="artist-stat-card">
-          <h3 class="artist-stat-card-title">Elements</h3>
+          <h3 class="artist-stat-card-title">Elementos</h3>
           ${renderStatBars(artistStats.elements, 'element')}
         </div>
 
@@ -914,7 +914,7 @@ function renderArtistCards(cards) {
     return `
       <div class="artist-cards-gallery">
         <p style="color: #94a3b8; text-align: center; grid-column: 1 / -1;">
-          No cards found.
+          Nenhum card encontrado.
         </p>
       </div>
     `;

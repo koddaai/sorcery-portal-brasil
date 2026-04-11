@@ -646,7 +646,7 @@ function renderElementPie(cardsByElement) {
   });
 
   if (grandTotal === 0) {
-    return '<div class="element-pie"><p>No cards to display</p></div>';
+    return '<div class="element-pie"><p>Nenhum card para exibir</p></div>';
   }
 
   // Build SVG donut chart
