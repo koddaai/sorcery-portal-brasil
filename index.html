@@ -65,13 +65,17 @@
                         <button id="register-btn" class="btn btn-sm primary" data-i18n="register">Criar Conta</button>
                     </div>
                     <div id="user-logged-in" class="user-status hidden">
+                        <button id="inbox-btn" class="header-icon-btn" title="Mensagens" aria-label="Abrir caixa de mensagens" onclick="openModal('inbox-modal'); messagingService.loadInbox();">
+                            <i data-lucide="mail"></i>
+                            <span class="inbox-header-badge hidden">0</span>
+                        </button>
                         <button id="sync-btn" class="header-icon-btn" title="Sincronizar" aria-label="Sincronizar coleção com a nuvem">
                             <i data-lucide="cloud"></i>
                         </button>
                         <button id="profile-settings-btn" class="header-icon-btn" title="Configurações de Perfil" aria-label="Abrir configurações de perfil" onclick="openProfileSettings()">
                             <i data-lucide="user-cog"></i>
                         </button>
-                        <div class="user-avatar">
+                        <div class="user-avatar user-menu-avatar" onclick="openModal('avatar-modal'); renderAvatarSelectorModal();">
                             <span id="user-display-name"></span>
                         </div>
                         <button id="logout-btn" class="header-icon-btn" title="Sair" aria-label="Sair da conta">
@@ -133,6 +137,9 @@
                             <button class="nav-dropdown-item" data-view="quiz" role="menuitem">
                                 <i data-lucide="brain"></i> Quiz
                             </button>
+                            <button class="nav-dropdown-item" data-view="boosters" role="menuitem">
+                                <i data-lucide="package"></i> Boosters
+                            </button>
                         </div>
                     </div>
 
@@ -164,6 +171,12 @@
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
                         </button>
                         <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Comunidade">
+                            <button class="nav-dropdown-item" data-view="forum" role="menuitem">
+                                <i data-lucide="message-square"></i> Fórum
+                            </button>
+                            <button class="nav-dropdown-item" data-view="marketplace" role="menuitem">
+                                <i data-lucide="store"></i> Marketplace
+                            </button>
                             <button class="nav-dropdown-item" data-view="community" role="menuitem">
                                 <i data-lucide="users"></i> Discord & Links
                             </button>
@@ -1000,29 +1013,29 @@
                 <!-- Investment Analytics -->
                 <div class="stats-breakdown analytics-section">
                     <h3>Análise de Investimento</h3>
-                    <p class="subtitle">Portfolio breakdown by category</p>
+                    <p class="subtitle">Distribuição do portfólio por categoria</p>
 
                     <div class="analytics-grid">
                         <div class="analytics-card">
-                            <h4>Value by Set</h4>
+                            <h4>Valor por Set</h4>
                             <div id="analytics-by-set" class="analytics-list">
                                 <!-- Will be populated by JS -->
                             </div>
                         </div>
                         <div class="analytics-card">
-                            <h4>Value by Rarity</h4>
+                            <h4>Valor por Raridade</h4>
                             <div id="analytics-by-rarity" class="analytics-list">
                                 <!-- Will be populated by JS -->
                             </div>
                         </div>
                         <div class="analytics-card">
-                            <h4>Value by Element</h4>
+                            <h4>Valor por Elemento</h4>
                             <div id="analytics-by-element" class="analytics-list">
                                 <!-- Will be populated by JS -->
                             </div>
                         </div>
                         <div class="analytics-card">
-                            <h4>Value by Type</h4>
+                            <h4>Valor por Tipo</h4>
                             <div id="analytics-by-type" class="analytics-list">
                                 <!-- Will be populated by JS -->
                             </div>
@@ -1031,21 +1044,21 @@
                 </div>
 
                 <div class="stats-breakdown">
-                    <h3>Collection by Set</h3>
+                    <h3>Coleção por Set</h3>
                     <div id="set-progress" class="progress-bars">
                         <!-- Set progress bars will be generated here -->
                     </div>
                 </div>
 
                 <div class="stats-breakdown">
-                    <h3>Collection by Element</h3>
+                    <h3>Coleção por Elemento</h3>
                     <div id="element-progress" class="progress-bars">
                         <!-- Element progress bars will be generated here -->
                     </div>
                 </div>
 
                 <div class="stats-breakdown">
-                    <h3>Collection by Rarity</h3>
+                    <h3>Coleção por Raridade</h3>
                     <div id="rarity-progress" class="progress-bars">
                         <!-- Rarity progress bars will be generated here -->
                     </div>
@@ -2151,6 +2164,350 @@
                 </div>
             </section>
 
+            <!-- Boosters View -->
+            <section id="boosters-view" class="view">
+                <div class="section-header">
+                    <h2>Guia Completo de Boosters</h2>
+                    <p class="subtitle">Informações oficiais sobre produtos selados de Sorcery: Contested Realm</p>
+                </div>
+
+                <div class="boosters-content">
+                    <!-- Intro -->
+                    <div class="booster-intro">
+                        <div class="booster-intro-icon">
+                            <i data-lucide="package-open"></i>
+                        </div>
+                        <div class="booster-intro-text">
+                            <h3>Arte Pintada à Mão em Cada Carta</h3>
+                            <p>Sorcery: Contested Realm é único no mercado de TCGs por usar exclusivamente arte tradicional pintada à mão. Cada booster contém obras de mestres da ilustração fantástica, tornando a experiência de abertura verdadeiramente especial.</p>
+                        </div>
+                    </div>
+
+                    <!-- Products Section -->
+                    <div class="booster-section">
+                        <h3><i data-lucide="box"></i> Tipos de Produtos</h3>
+
+                        <div class="products-grid">
+                            <div class="product-card">
+                                <div class="product-icon booster-pack">
+                                    <i data-lucide="package"></i>
+                                </div>
+                                <h4>Booster Pack</h4>
+                                <p class="product-contents">15 cartas por pacote</p>
+                                <ul class="product-details">
+                                    <li><strong>11</strong> cartas Ordinary</li>
+                                    <li><strong>3</strong> cartas Exceptional</li>
+                                    <li><strong>1</strong> carta Elite ou Unique</li>
+                                    <li>25% de chance de 1 Foil Ordinary</li>
+                                </ul>
+                            </div>
+
+                            <div class="product-card">
+                                <div class="product-icon booster-box">
+                                    <i data-lucide="boxes"></i>
+                                </div>
+                                <h4>Booster Box</h4>
+                                <p class="product-contents">36 boosters (540 cartas)</p>
+                                <ul class="product-details">
+                                    <li>~29 cartas Elite garantidas</li>
+                                    <li>~7 cartas Unique por caixa</li>
+                                    <li>~9 cartas Foil por caixa</li>
+                                    <li>Box Topper com tokens</li>
+                                </ul>
+                            </div>
+
+                            <div class="product-card">
+                                <div class="product-icon precon-deck">
+                                    <i data-lucide="layers"></i>
+                                </div>
+                                <h4>Precon Deck</h4>
+                                <p class="product-contents">52 cartas prontas para jogar</p>
+                                <ul class="product-details">
+                                    <li>Avatar exclusivo incluído</li>
+                                    <li>Estratégia coesa e testada</li>
+                                    <li>Ideal para iniciantes</li>
+                                    <li>4 temas por set (Beta/Gothic)</li>
+                                </ul>
+                            </div>
+
+                            <div class="product-card">
+                                <div class="product-icon collector-box">
+                                    <i data-lucide="gem"></i>
+                                </div>
+                                <h4>Mini Set (Dragonlord)</h4>
+                                <p class="product-contents">14 cartas por caixa</p>
+                                <ul class="product-details">
+                                    <li>13 cartas únicas do set</li>
+                                    <li>1 Foil aleatório garantido</li>
+                                    <li>Arte de Ed Beard Jr.</li>
+                                    <li>Playset completo em 1 caixa</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rarity Section -->
+                    <div class="booster-section">
+                        <h3><i data-lucide="sparkles"></i> Sistema de Raridades</h3>
+                        <p class="section-note">A raridade determina quantas cópias você pode ter no deck e a frequência em boosters.</p>
+
+                        <div class="rarity-explainer">
+                            <div class="rarity-card rarity-ordinary">
+                                <div class="rarity-header">
+                                    <span class="rarity-name">Ordinary</span>
+                                    <span class="rarity-symbol">●</span>
+                                </div>
+                                <p>Cartas comuns que formam a base de qualquer deck. Essenciais para estratégias consistentes.</p>
+                                <div class="rarity-stats">
+                                    <span><strong>11</strong> por booster</span>
+                                    <span>Máx <strong>4</strong> no deck</span>
+                                </div>
+                            </div>
+
+                            <div class="rarity-card rarity-exceptional">
+                                <div class="rarity-header">
+                                    <span class="rarity-name">Exceptional</span>
+                                    <span class="rarity-symbol">◆</span>
+                                </div>
+                                <p>Cartas com efeitos mais elaborados e maior impacto. Importantes para combos e sinergias.</p>
+                                <div class="rarity-stats">
+                                    <span><strong>3</strong> por booster</span>
+                                    <span>Máx <strong>3</strong> no deck</span>
+                                </div>
+                            </div>
+
+                            <div class="rarity-card rarity-elite">
+                                <div class="rarity-header">
+                                    <span class="rarity-name">Elite</span>
+                                    <span class="rarity-symbol">★</span>
+                                </div>
+                                <p>Cartas poderosas que definem estratégias. O núcleo de muitos decks competitivos.</p>
+                                <div class="rarity-stats">
+                                    <span><strong>~80%</strong> no slot raro</span>
+                                    <span>Máx <strong>2</strong> no deck</span>
+                                </div>
+                            </div>
+
+                            <div class="rarity-card rarity-unique">
+                                <div class="rarity-header">
+                                    <span class="rarity-name">Unique</span>
+                                    <span class="rarity-symbol">✦</span>
+                                </div>
+                                <p>As cartas mais raras e impactantes. Game-changers que definem partidas.</p>
+                                <div class="rarity-stats">
+                                    <span><strong>~20%</strong> no slot raro</span>
+                                    <span>Máx <strong>1</strong> no deck</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pull Rates Section -->
+                    <div class="booster-section">
+                        <h3><i data-lucide="percent"></i> Taxas de Pull (por Booster)</h3>
+
+                        <div class="pull-rates-table">
+                            <div class="pull-rate-row header">
+                                <span>Raridade</span>
+                                <span>Chance</span>
+                                <span>Por Box (36)</span>
+                            </div>
+                            <div class="pull-rate-row">
+                                <span class="rarity-ordinary-text">Ordinary</span>
+                                <span>11 garantidas</span>
+                                <span>~396 cartas</span>
+                            </div>
+                            <div class="pull-rate-row">
+                                <span class="rarity-exceptional-text">Exceptional</span>
+                                <span>3 garantidas</span>
+                                <span>~108 cartas</span>
+                            </div>
+                            <div class="pull-rate-row">
+                                <span class="rarity-elite-text">Elite</span>
+                                <span>80% no slot raro</span>
+                                <span>~29 cartas</span>
+                            </div>
+                            <div class="pull-rate-row">
+                                <span class="rarity-unique-text">Unique</span>
+                                <span>20% no slot raro</span>
+                                <span>~7 cartas</span>
+                            </div>
+                            <div class="pull-rate-row">
+                                <span class="foil-text">Foil (qualquer)</span>
+                                <span>25% por pack</span>
+                                <span>~9 cartas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sets Section -->
+                    <div class="booster-section">
+                        <h3><i data-lucide="calendar"></i> Coleções Lançadas</h3>
+
+                        <div class="sets-info-grid">
+                            <div class="set-info-card" style="--set-color: #d4af37">
+                                <div class="set-info-header">
+                                    <i data-lucide="star"></i>
+                                    <h4>Alpha</h4>
+                                </div>
+                                <div class="set-info-body">
+                                    <p class="set-date">Maio 2023 (Kickstarter)</p>
+                                    <p class="set-cards">403 cartas • 39 packs/box</p>
+                                    <p class="set-note">Exclusivo para backers do Kickstarter</p>
+                                </div>
+                            </div>
+
+                            <div class="set-info-card" style="--set-color: #9ca3af">
+                                <div class="set-info-header">
+                                    <i data-lucide="circle"></i>
+                                    <h4>Beta</h4>
+                                </div>
+                                <div class="set-info-body">
+                                    <p class="set-date">Novembro 2023</p>
+                                    <p class="set-cards">402 cartas • 36 packs/box</p>
+                                    <p class="set-note">Primeiro set global + 4 Precons</p>
+                                </div>
+                            </div>
+
+                            <div class="set-info-card" style="--set-color: #3b82f6">
+                                <div class="set-info-header">
+                                    <i data-lucide="crown"></i>
+                                    <h4>Arthurian Legends</h4>
+                                </div>
+                                <div class="set-info-body">
+                                    <p class="set-date">2024</p>
+                                    <p class="set-cards">220+ cartas • 24 packs/box</p>
+                                    <p class="set-note">Expansão standalone temática</p>
+                                </div>
+                            </div>
+
+                            <div class="set-info-card" style="--set-color: #8b5cf6">
+                                <div class="set-info-header">
+                                    <i data-lucide="moon"></i>
+                                    <h4>Gothic</h4>
+                                </div>
+                                <div class="set-info-body">
+                                    <p class="set-date">Dezembro 2025</p>
+                                    <p class="set-cards">440 cartas • 36 packs/box</p>
+                                    <p class="set-note">Horror gótico + 4 Precons</p>
+                                </div>
+                            </div>
+
+                            <div class="set-info-card" style="--set-color: #dc2626">
+                                <div class="set-info-header">
+                                    <i data-lucide="flame"></i>
+                                    <h4>Dragonlord</h4>
+                                </div>
+                                <div class="set-info-body">
+                                    <p class="set-date">Agosto 2025</p>
+                                    <p class="set-cards">13 cartas (mini-set)</p>
+                                    <p class="set-note">Caixa completa $59, não boosters</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Foil Section -->
+                    <div class="booster-section">
+                        <h3><i data-lucide="sparkle"></i> Versões Especiais</h3>
+
+                        <div class="special-versions">
+                            <div class="special-card">
+                                <div class="special-icon foil">
+                                    <i data-lucide="sparkles"></i>
+                                </div>
+                                <div class="special-info">
+                                    <h4>Foil Premium</h4>
+                                    <p>Acabamento holográfico premium em todas as raridades. 25% de chance de uma Ordinary ser Foil.</p>
+                                    <span class="special-chance">1:68 packs para Foil Unique</span>
+                                </div>
+                            </div>
+
+                            <div class="special-card">
+                                <div class="special-icon alt-art">
+                                    <i data-lucide="palette"></i>
+                                </div>
+                                <div class="special-info">
+                                    <h4>Arte Alternativa</h4>
+                                    <p>Mesma carta com ilustração por artista diferente. Disponíveis em produtos especiais e Precons.</p>
+                                    <span class="special-chance">Precons e produtos especiais</span>
+                                </div>
+                            </div>
+
+                            <div class="special-card">
+                                <div class="special-icon promo">
+                                    <i data-lucide="award"></i>
+                                </div>
+                                <div class="special-info">
+                                    <h4>Curio (Ultra Raro)</h4>
+                                    <p>Cartas misteriosas extremamente raras. Taxa de pull desconhecida, altamente colecionáveis.</p>
+                                    <span class="special-chance">Extremamente raro</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deck Construction -->
+                    <div class="booster-section">
+                        <h3><i data-lucide="layers-3"></i> Construção de Deck</h3>
+
+                        <div class="deck-rules-grid">
+                            <div class="deck-rule-card">
+                                <h4>Spellbook</h4>
+                                <span class="deck-count">60 cartas</span>
+                                <p>Seu deck principal com feitiços, criaturas e magias</p>
+                            </div>
+                            <div class="deck-rule-card">
+                                <h4>Atlas</h4>
+                                <span class="deck-count">30 cartas</span>
+                                <p>Deck de Sites (terrenos) que geram recursos</p>
+                            </div>
+                            <div class="deck-rule-card">
+                                <h4>Collection</h4>
+                                <span class="deck-count">10 cartas</span>
+                                <p>Sideboard opcional (a partir de Gothic)</p>
+                            </div>
+                            <div class="deck-rule-card">
+                                <h4>Avatar</h4>
+                                <span class="deck-count">1 carta</span>
+                                <p>Seu feiticeiro que comanda o deck</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips Section -->
+                    <div class="booster-section">
+                        <h3><i data-lucide="lightbulb"></i> Dicas para Colecionadores</h3>
+
+                        <div class="tips-grid">
+                            <div class="tip-card">
+                                <i data-lucide="target"></i>
+                                <h4>Foco no Objetivo</h4>
+                                <p>Para completar sets, compre boxes. Para cartas específicas, considere o mercado secundário (TCGPlayer).</p>
+                            </div>
+
+                            <div class="tip-card">
+                                <i data-lucide="shield-check"></i>
+                                <h4>Proteção</h4>
+                                <p>Use sleeves de qualidade e armazene em locais secos. Cards artísticos merecem cuidado especial.</p>
+                            </div>
+
+                            <div class="tip-card">
+                                <i data-lucide="users"></i>
+                                <h4>Comunidade</h4>
+                                <p>Troque com outros jogadores! O mercado de trades é ativo e você pode conseguir o que precisa.</p>
+                            </div>
+
+                            <div class="tip-card">
+                                <i data-lucide="calendar"></i>
+                                <h4>Novos Sets</h4>
+                                <p>Acompanhe os anúncios oficiais. Pré-vendas geralmente têm preços melhores e promos exclusivas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Deck Guides View -->
             <!-- Art & Artists View (Unified) -->
             <section id="art-view" class="view">
@@ -2296,6 +2653,107 @@
                         <p>Este perfil não existe ou foi configurado como privado.</p>
                         <button class="btn primary" onclick="showView('home')">Voltar ao Inicio</button>
                     </div>
+                </div>
+            </section>
+
+            <!-- Marketplace View -->
+            <section id="marketplace-view" class="view">
+                <div class="view-header">
+                    <h2><i data-lucide="store"></i> Marketplace</h2>
+                    <p class="subtitle">Ofertas e demandas da comunidade brasileira</p>
+                </div>
+
+                <div class="marketplace-toolbar">
+                    <div class="marketplace-filters">
+                        <input type="text" id="marketplace-search" placeholder="Buscar carta..." class="search-input">
+                        <select id="marketplace-type-filter" class="filter-select">
+                            <option value="">Todos</option>
+                            <option value="offering">Oferecendo</option>
+                            <option value="looking_for">Procurando</option>
+                        </select>
+                    </div>
+                    <div class="marketplace-actions">
+                        <button class="btn btn-secondary" onclick="tradeMarketplace.publishFromTradeBinder()">
+                            <i data-lucide="upload"></i>
+                            Publicar Trade Binder
+                        </button>
+                        <button class="btn btn-secondary" onclick="tradeMarketplace.publishFromWants()">
+                            <i data-lucide="search"></i>
+                            Publicar Procuras
+                        </button>
+                    </div>
+                </div>
+
+                <div id="marketplace-content" class="marketplace-content">
+                    <div id="marketplace-grid" class="marketplace-grid">
+                        <!-- Populated by trade-marketplace.js -->
+                    </div>
+                </div>
+
+                <div class="legal-disclaimer">
+                    <i data-lucide="alert-triangle"></i>
+                    <p>
+                        <strong>Aviso:</strong> Este portal apenas conecta jogadores.
+                        Transações ocorrem fora da plataforma sob responsabilidade
+                        exclusiva das partes envolvidas.
+                        <a href="#" onclick="showTermsModal(); return false;">Ver termos completos</a>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Forum View -->
+            <section id="forum-view" class="view">
+                <div class="view-header">
+                    <h2><i data-lucide="message-square"></i> Fórum</h2>
+                    <p class="subtitle">Discussões da comunidade Sorcery Brasil</p>
+                </div>
+
+                <div class="forum-layout">
+                    <!-- Categories Sidebar -->
+                    <aside class="forum-sidebar">
+                        <h3>Categorias</h3>
+                        <div id="forum-categories" class="forum-categories">
+                            <!-- Populated by forum-service.js -->
+                        </div>
+
+                        <div class="forum-create-section" id="forum-create-section">
+                            <button class="btn btn-primary btn-full" onclick="forumService.openCreatePostModal()">
+                                <i data-lucide="plus"></i>
+                                Criar Post
+                            </button>
+                        </div>
+                    </aside>
+
+                    <!-- Main Content -->
+                    <div class="forum-main">
+                        <div class="forum-toolbar">
+                            <input type="text" id="forum-search" placeholder="Buscar posts..." class="search-input">
+                            <select id="forum-sort" class="filter-select">
+                                <option value="recent">Mais Recentes</option>
+                                <option value="popular">Mais Vistos</option>
+                            </select>
+                        </div>
+
+                        <div id="forum-list-view">
+                            <div id="forum-posts-list" class="forum-posts-list">
+                                <!-- Populated by forum-service.js -->
+                            </div>
+                        </div>
+
+                        <div id="forum-post-view" class="hidden">
+                            <!-- Single post view - populated by forum-service.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="legal-disclaimer">
+                    <i data-lucide="alert-triangle"></i>
+                    <p>
+                        <strong>Aviso:</strong> Este portal apenas conecta jogadores.
+                        Transações ocorrem fora da plataforma sob responsabilidade
+                        exclusiva das partes envolvidas.
+                        <a href="#" onclick="showTermsModal(); return false;">Ver termos completos</a>
+                    </p>
                 </div>
             </section>
         </main>
@@ -3068,6 +3526,244 @@
             </div>
         </div>
 
+        <!-- Inbox Modal -->
+        <div id="inbox-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content inbox-modal-content">
+                <button class="close-modal" onclick="closeModal('inbox-modal')" aria-label="Fechar modal">&times;</button>
+                <div class="inbox-header">
+                    <h2><i data-lucide="inbox"></i> Mensagens</h2>
+                    <button class="btn btn-primary btn-sm" onclick="openComposeMessage()">
+                        <i data-lucide="edit"></i> Nova
+                    </button>
+                </div>
+
+                <div class="inbox-tabs">
+                    <button class="inbox-tab active" data-view="inbox" onclick="messagingService.switchView('inbox')">
+                        <i data-lucide="inbox"></i> Recebidas
+                        <span id="inbox-unread-badge" class="unread-badge hidden">0</span>
+                    </button>
+                    <button class="inbox-tab" data-view="sent" onclick="messagingService.switchView('sent')">
+                        <i data-lucide="send"></i> Enviadas
+                    </button>
+                </div>
+
+                <div id="inbox-messages" class="inbox-messages">
+                    <!-- Populated by messaging-service.js -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Message View Modal -->
+        <div id="message-view-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content message-view-modal-content">
+                <button class="close-modal" onclick="closeModal('message-view-modal')" aria-label="Fechar modal">&times;</button>
+
+                <div class="message-view-header">
+                    <div id="message-view-user" class="message-view-user"></div>
+                    <span id="message-view-date" class="message-view-date"></span>
+                </div>
+
+                <h3 id="message-view-subject" class="message-view-subject"></h3>
+
+                <div id="message-view-content" class="message-view-content"></div>
+
+                <div class="message-view-actions">
+                    <button id="message-reply-btn" class="btn btn-primary">
+                        <i data-lucide="reply"></i> Responder
+                    </button>
+                    <button class="btn btn-secondary btn-danger" onclick="messagingService.deleteMessage()">
+                        <i data-lucide="trash-2"></i> Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compose Message Modal -->
+        <div id="compose-message-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content compose-modal-content">
+                <button class="close-modal" onclick="closeModal('compose-message-modal')" aria-label="Fechar modal">&times;</button>
+                <h2><i data-lucide="edit"></i> Nova Mensagem</h2>
+
+                <div class="compose-form">
+                    <div class="form-group">
+                        <label for="compose-recipient">Para:</label>
+                        <input type="text" id="compose-recipient" placeholder="Nome do usuário..." class="input">
+                        <div id="compose-recipient-display" class="recipient-display hidden"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="compose-subject">Assunto:</label>
+                        <input type="text" id="compose-subject" placeholder="Assunto da mensagem" class="input" maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="compose-content">Mensagem:</label>
+                        <textarea id="compose-content" placeholder="Escreva sua mensagem..." class="textarea" rows="6" maxlength="2000"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" onclick="closeModal('compose-message-modal')">Cancelar</button>
+                        <button class="btn btn-primary" onclick="sendComposedMessage()">
+                            <i data-lucide="send"></i> Enviar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Forum Post Modal -->
+        <div id="create-post-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content create-post-modal-content">
+                <button class="close-modal" onclick="closeModal('create-post-modal')" aria-label="Fechar modal">&times;</button>
+                <h2><i data-lucide="plus-circle"></i> Criar Post</h2>
+
+                <div class="create-post-form">
+                    <div class="form-group">
+                        <label for="post-category">Categoria:</label>
+                        <select id="post-category" class="select">
+                            <option value="geral">Geral</option>
+                            <option value="dicas">Dicas e Estratégias</option>
+                            <option value="compra_venda">Compra e Venda</option>
+                            <option value="eventos">Eventos e Torneios</option>
+                            <option value="regras">Dúvidas de Regras</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post-title">Título:</label>
+                        <input type="text" id="post-title" placeholder="Título do post..." class="input" maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post-content">Conteúdo:</label>
+                        <textarea id="post-content" placeholder="Escreva seu post..." class="textarea" rows="10" maxlength="5000"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" onclick="closeModal('create-post-modal')">Cancelar</button>
+                        <button class="btn btn-primary" onclick="forumService.createPost()">
+                            <i data-lucide="send"></i> Publicar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vote Modal -->
+        <div id="vote-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content vote-modal-content">
+                <button class="close-modal" onclick="closeModal('vote-modal')" aria-label="Fechar modal">&times;</button>
+                <h2><i data-lucide="thumbs-up"></i> Avaliar Usuário</h2>
+
+                <p class="vote-target">Você está avaliando: <strong id="vote-target-name"></strong></p>
+
+                <div class="vote-type-selector">
+                    <button class="vote-type-btn vote-positive" data-type="positive">
+                        <i data-lucide="thumbs-up"></i>
+                        Positivo
+                    </button>
+                    <button class="vote-type-btn vote-negative" data-type="negative">
+                        <i data-lucide="thumbs-down"></i>
+                        Negativo
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label for="vote-reason">Motivo (opcional):</label>
+                    <input type="text" id="vote-reason" placeholder="Ex: Troca rápida e confiável" class="input" maxlength="200">
+                </div>
+
+                <div class="form-group">
+                    <label for="vote-reference">Referência da troca (opcional):</label>
+                    <input type="text" id="vote-reference" placeholder="Ex: 2x Sol Ring por 1x Force of Will" class="input" maxlength="200">
+                </div>
+
+                <div class="vote-rules">
+                    <i data-lucide="info"></i>
+                    <span>Você pode votar nesta pessoa novamente após 15 dias.</span>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-secondary" onclick="closeModal('vote-modal')">Cancelar</button>
+                    <button class="btn btn-primary" onclick="reputationService.submitVote()">
+                        <i data-lucide="check"></i> Confirmar Voto
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms Modal -->
+        <div id="terms-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content terms-modal-content">
+                <h2><i data-lucide="file-text"></i> Termos de Uso</h2>
+
+                <div class="terms-content">
+                    <h3>1. NATUREZA DO SERVIÇO</h3>
+                    <p>Este portal é uma ferramenta de conexão entre jogadores de Sorcery TCG. Não intermediamos, garantimos ou nos responsabilizamos por transações realizadas entre usuários.</p>
+
+                    <h3>2. TROCAS E NEGOCIAÇÕES</h3>
+                    <ul>
+                        <li>Todas as trocas e negociações ocorrem FORA da plataforma</li>
+                        <li>Cada usuário é responsável por avaliar a contraparte</li>
+                        <li>Recomendamos encontros em locais públicos ou envios rastreados</li>
+                        <li>O portal não oferece garantias, reembolsos ou mediação de disputas</li>
+                    </ul>
+
+                    <h3>3. SISTEMA DE REPUTAÇÃO</h3>
+                    <ul>
+                        <li>A reputação é baseada em votos de outros usuários</li>
+                        <li>Um histórico positivo NÃO garante segurança em futuras transações</li>
+                        <li>O portal não verifica identidades ou informações dos usuários</li>
+                    </ul>
+
+                    <h3>4. ISENÇÃO DE RESPONSABILIDADE</h3>
+                    <p>O Sorcery Portal Brasil e seus administradores não se responsabilizam por:</p>
+                    <ul>
+                        <li>Perdas financeiras em transações</li>
+                        <li>Produtos não entregues ou diferentes do anunciado</li>
+                        <li>Disputas entre usuários</li>
+                        <li>Uso indevido de informações pessoais compartilhadas</li>
+                    </ul>
+
+                    <h3>5. CONDUTA</h3>
+                    <p>Usuários que violarem as regras da comunidade podem ter suas contas suspensas ou removidas a critério da administração.</p>
+                </div>
+
+                <div class="terms-accept" id="terms-accept-section">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms-checkbox">
+                        <span>Li e aceito os termos de uso</span>
+                    </label>
+                    <button class="btn btn-primary" id="terms-accept-btn" disabled onclick="acceptTerms()">
+                        <i data-lucide="check"></i> Aceitar e Continuar
+                    </button>
+                </div>
+
+                <div class="terms-close hidden" id="terms-close-section">
+                    <button class="btn btn-secondary" onclick="closeModal('terms-modal')">Fechar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avatar Selector Modal -->
+        <div id="avatar-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content avatar-modal-content">
+                <button class="close-modal" onclick="closeModal('avatar-modal')" aria-label="Fechar modal">&times;</button>
+                <h2><i data-lucide="user-circle"></i> Escolher Avatar</h2>
+
+                <div id="avatar-selector-container">
+                    <!-- Populated by avatar-system.js -->
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-secondary" onclick="closeModal('avatar-modal')">Cancelar</button>
+                    <button class="btn btn-primary" onclick="saveSelectedAvatar()">
+                        <i data-lucide="check"></i> Salvar
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Loading Overlay -->
         <div id="loading" class="loading-overlay">
             <div class="loading-spinner"></div>
@@ -3105,7 +3801,13 @@
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
-    <script src="app.js?v=60"></script>
+    <!-- Community Features -->
+    <script src="avatar-system.js"></script>
+    <script src="trade-marketplace.js"></script>
+    <script src="messaging-service.js"></script>
+    <script src="forum-service.js"></script>
+    <script src="reputation-service.js"></script>
+    <script src="app.js?v=63"></script>
     <script src="offline-manager.js?v=2"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

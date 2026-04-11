@@ -17,7 +17,13 @@ class NocoDBService {
             tradeBinder: 'trade_binder',
             decks: 'decks',
             cardPhotos: 'card_photos',
-            profiles: 'profiles'
+            profiles: 'profiles',
+            // Community tables
+            forumPosts: 'forum_posts',
+            forumComments: 'forum_comments',
+            messages: 'messages',
+            reputation: 'reputation',
+            tradeListings: 'trade_listings'
         };
 
         this.currentUser = null;
@@ -582,6 +588,370 @@ class NocoDBService {
     // Get current user
     getCurrentUser() {
         return this.currentUser;
+    }
+
+    // ==========================================
+    // COMMUNITY: TRADE LISTINGS
+    // ==========================================
+
+    // Get all active trade listings (public, no auth required)
+    async getTradeListings(filters = {}) {
+        try {
+            let whereClause = '(is_active,eq,true)';
+            if (filters.type) {
+                whereClause += `~and(listing_type,eq,${filters.type})`;
+            }
+            if (filters.cardName) {
+                whereClause += `~and(card_name,like,${encodeURIComponent(filters.cardName)})`;
+            }
+
+            const url = `${this.getTableUrl(this.tables.tradeListings)}?where=${whereClause}&sort=-created_at&limit=100`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return data.list || [];
+        } catch (error) {
+            console.error('Get trade listings error:', error);
+            return [];
+        }
+    }
+
+    // Create a trade listing
+    async createTradeListing(listing) {
+        if (!this.currentUser) throw new Error('Must be logged in');
+
+        return this.createRecord(this.tables.tradeListings, {
+            user_id: this.currentUser.id,
+            listing_type: listing.type, // 'offering' or 'looking_for'
+            card_name: listing.cardName,
+            card_set: listing.cardSet || '',
+            card_condition: listing.condition || 'NM',
+            notes: listing.notes || '',
+            is_active: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        });
+    }
+
+    // Deactivate a trade listing
+    async deactivateTradeListing(listingId) {
+        if (!this.currentUser) throw new Error('Must be logged in');
+        return this.updateRecord(this.tables.tradeListings, listingId, {
+            is_active: false,
+            updated_at: new Date().toISOString()
+        });
+    }
+
+    // Get user's own listings
+    async getUserTradeListings(userId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.tradeListings)}?where=(user_id,eq,${userId})&sort=-created_at&limit=100`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return data.list || [];
+        } catch (error) {
+            console.error('Get user trade listings error:', error);
+            return [];
+        }
+    }
+
+    // ==========================================
+    // COMMUNITY: FORUM
+    // ==========================================
+
+    // Get forum posts (public)
+    async getForumPosts(filters = {}) {
+        try {
+            let whereClause = '';
+            if (filters.category) {
+                whereClause = `where=(category,eq,${filters.category})&`;
+            }
+
+            const sortField = filters.sort === 'popular' ? '-view_count' : '-created_at';
+            const url = `${this.getTableUrl(this.tables.forumPosts)}?${whereClause}sort=${sortField}&limit=${filters.limit || 20}&offset=${filters.offset || 0}`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return data.list || [];
+        } catch (error) {
+            console.error('Get forum posts error:', error);
+            return [];
+        }
+    }
+
+    // Get single post with comments
+    async getForumPost(postId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.forumPosts)}/${postId}`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            if (!response.ok) return null;
+            return await response.json();
+        } catch (error) {
+            console.error('Get forum post error:', error);
+            return null;
+        }
+    }
+
+    // Get comments for a post
+    async getForumComments(postId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.forumComments)}?where=(post_id,eq,${postId})~and(is_deleted,eq,false)&sort=created_at&limit=100`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return data.list || [];
+        } catch (error) {
+            console.error('Get forum comments error:', error);
+            return [];
+        }
+    }
+
+    // Create a forum post
+    async createForumPost(post) {
+        if (!this.currentUser) throw new Error('Must be logged in');
+
+        return this.createRecord(this.tables.forumPosts, {
+            user_id: this.currentUser.id,
+            category: post.category,
+            title: post.title.substring(0, 100),
+            content: post.content.substring(0, 5000),
+            is_pinned: false,
+            is_locked: false,
+            view_count: 0,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        });
+    }
+
+    // Create a comment
+    async createForumComment(postId, content) {
+        if (!this.currentUser) throw new Error('Must be logged in');
+
+        return this.createRecord(this.tables.forumComments, {
+            post_id: postId,
+            user_id: this.currentUser.id,
+            content: content.substring(0, 2000),
+            is_deleted: false,
+            created_at: new Date().toISOString()
+        });
+    }
+
+    // Increment post view count
+    async incrementPostViews(postId, currentCount) {
+        try {
+            await this.updateRecord(this.tables.forumPosts, postId, {
+                view_count: (currentCount || 0) + 1
+            });
+        } catch (error) {
+            // Silently fail - not critical
+        }
+    }
+
+    // ==========================================
+    // COMMUNITY: MESSAGING
+    // ==========================================
+
+    // Get inbox (received messages)
+    async getInbox() {
+        if (!this.currentUser) return [];
+
+        try {
+            const url = `${this.getTableUrl(this.tables.messages)}?where=(recipient_id,eq,${this.currentUser.id})~and(is_deleted_recipient,eq,false)&sort=-created_at&limit=50`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return data.list || [];
+        } catch (error) {
+            console.error('Get inbox error:', error);
+            return [];
+        }
+    }
+
+    // Get sent messages
+    async getSentMessages() {
+        if (!this.currentUser) return [];
+
+        try {
+            const url = `${this.getTableUrl(this.tables.messages)}?where=(sender_id,eq,${this.currentUser.id})~and(is_deleted_sender,eq,false)&sort=-created_at&limit=50`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return data.list || [];
+        } catch (error) {
+            console.error('Get sent messages error:', error);
+            return [];
+        }
+    }
+
+    // Get unread count
+    async getUnreadCount() {
+        if (!this.currentUser) return 0;
+
+        try {
+            const url = `${this.getTableUrl(this.tables.messages)}?where=(recipient_id,eq,${this.currentUser.id})~and(is_read,eq,false)~and(is_deleted_recipient,eq,false)&fields=Id`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return (data.list || []).length;
+        } catch (error) {
+            return 0;
+        }
+    }
+
+    // Send a message
+    async sendMessage(recipientId, subject, content, replyToId = null) {
+        if (!this.currentUser) throw new Error('Must be logged in');
+        if (recipientId === this.currentUser.id) throw new Error('Cannot message yourself');
+
+        return this.createRecord(this.tables.messages, {
+            sender_id: this.currentUser.id,
+            recipient_id: recipientId,
+            subject: subject.substring(0, 100),
+            content: content.substring(0, 2000),
+            is_read: false,
+            is_deleted_sender: false,
+            is_deleted_recipient: false,
+            reply_to_id: replyToId,
+            created_at: new Date().toISOString()
+        });
+    }
+
+    // Mark message as read
+    async markMessageRead(messageId) {
+        if (!this.currentUser) return;
+        await this.updateRecord(this.tables.messages, messageId, { is_read: true });
+    }
+
+    // Delete message (soft delete)
+    async deleteMessage(messageId, isSender) {
+        if (!this.currentUser) return;
+        const field = isSender ? 'is_deleted_sender' : 'is_deleted_recipient';
+        await this.updateRecord(this.tables.messages, messageId, { [field]: true });
+    }
+
+    // ==========================================
+    // COMMUNITY: REPUTATION
+    // ==========================================
+
+    // Get user reputation score
+    async getUserReputation(userId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.reputation)}?where=(recipient_id,eq,${userId})`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            const votes = data.list || [];
+            const positives = votes.filter(v => v.vote_type === 'positive').length;
+            const negatives = votes.filter(v => v.vote_type === 'negative').length;
+
+            return {
+                score: positives - negatives,
+                positives,
+                negatives,
+                total: votes.length
+            };
+        } catch (error) {
+            return { score: 0, positives: 0, negatives: 0, total: 0 };
+        }
+    }
+
+    // Check if user can vote for another user (15 day rule)
+    async canVoteFor(recipientId) {
+        if (!this.currentUser) return { canVote: false, reason: 'not_logged_in' };
+        if (this.currentUser.id === recipientId) return { canVote: false, reason: 'self_vote' };
+
+        try {
+            const url = `${this.getTableUrl(this.tables.reputation)}?where=(voter_id,eq,${this.currentUser.id})~and(recipient_id,eq,${recipientId})&sort=-created_at&limit=1`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            if (!data.list || data.list.length === 0) {
+                return { canVote: true };
+            }
+
+            const lastVote = data.list[0];
+            const lastVoteDate = new Date(lastVote.created_at);
+            const now = new Date();
+            const daysSinceVote = (now - lastVoteDate) / (1000 * 60 * 60 * 24);
+
+            if (daysSinceVote < 15) {
+                const daysLeft = Math.ceil(15 - daysSinceVote);
+                return { canVote: false, reason: 'cooldown', daysLeft };
+            }
+
+            return { canVote: true };
+        } catch (error) {
+            return { canVote: false, reason: 'error' };
+        }
+    }
+
+    // Cast a vote
+    async castVote(recipientId, voteType, reason = '', tradeReference = '') {
+        if (!this.currentUser) throw new Error('Must be logged in');
+
+        const canVoteResult = await this.canVoteFor(recipientId);
+        if (!canVoteResult.canVote) {
+            throw new Error(canVoteResult.reason === 'cooldown'
+                ? `Aguarde ${canVoteResult.daysLeft} dias para votar novamente neste usuário`
+                : 'Não é possível votar'
+            );
+        }
+
+        return this.createRecord(this.tables.reputation, {
+            voter_id: this.currentUser.id,
+            recipient_id: recipientId,
+            vote_type: voteType, // 'positive' or 'negative'
+            reason: reason.substring(0, 200),
+            trade_reference: tradeReference.substring(0, 200),
+            created_at: new Date().toISOString()
+        });
+    }
+
+    // Get votes received by user (for their own viewing)
+    async getReceivedVotes(userId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.reputation)}?where=(recipient_id,eq,${userId})&sort=-created_at&limit=50`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+            return data.list || [];
+        } catch (error) {
+            return [];
+        }
+    }
+
+    // ==========================================
+    // COMMUNITY: USER LOOKUP
+    // ==========================================
+
+    // Get user by ID (public info only)
+    async getUserById(userId) {
+        try {
+            const url = `${this.getTableUrl(this.tables.users)}/${userId}`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            if (!response.ok) return null;
+
+            const user = await response.json();
+            // Return only public fields
+            return {
+                id: user.Id,
+                displayName: user.display_name,
+                avatarId: user.avatar_id || 1,
+                createdAt: user.created_at
+            };
+        } catch (error) {
+            return null;
+        }
+    }
+
+    // Search users by display name
+    async searchUsers(query) {
+        try {
+            const url = `${this.getTableUrl(this.tables.users)}?where=(display_name,like,%${encodeURIComponent(query)}%)&limit=10`;
+            const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
+            const data = await response.json();
+
+            return (data.list || []).map(u => ({
+                id: u.Id,
+                displayName: u.display_name,
+                avatarId: u.avatar_id || 1
+            }));
+        } catch (error) {
+            return [];
+        }
     }
 
     // ==========================================

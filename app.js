@@ -74,6 +74,10 @@ function setButtonLoading(button, isLoading, loadingText = 'Carregando...') {
 
 // Show loading overlay on a container
 function showContainerLoading(container, message = 'Carregando...') {
+    // Accept either element or string ID
+    if (typeof container === 'string') {
+        container = document.getElementById(container);
+    }
     if (!container) return;
 
     // Remove existing overlay if any
@@ -94,6 +98,10 @@ function showContainerLoading(container, message = 'Carregando...') {
 
 // Hide loading overlay from a container
 function hideContainerLoading(container) {
+    // Accept either element or string ID
+    if (typeof container === 'string') {
+        container = document.getElementById(container);
+    }
     if (!container) return;
     const overlay = container.querySelector('.loading-overlay');
     if (overlay) overlay.remove();
@@ -113,6 +121,17 @@ function hideInlineLoading(element) {
     element.innerHTML = element.dataset.originalContent;
     delete element.dataset.originalContent;
     refreshIcons(element);
+}
+
+// ============================================
+// HTML UTILITIES
+// ============================================
+
+// Escape HTML special characters to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text || '';
+    return div.innerHTML;
 }
 
 // ============================================
@@ -938,6 +957,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setTimeout(checkPriceAlerts, 3000);
 
     // Handle trade links
+    const urlParams = new URLSearchParams(window.location.search);
     const tradeParam = urlParams.get('trade');
     if (tradeParam) {
         setTimeout(() => handleTradeLink(tradeParam), 500);
@@ -1669,6 +1689,7 @@ function switchView(viewName) {
     if (viewName === 'faq') initFAQView();
     if (viewName === 'lore') initLoreView();
     if (viewName === 'quiz') initQuizView();
+    if (viewName === 'boosters') initBoostersView();
     // guides view removed
     if (viewName === 'community') initCommunityView();
     if (viewName === 'meta') initMetaView();
@@ -1679,6 +1700,8 @@ function switchView(viewName) {
     if (viewName === 'promos') initPromosView();
     if (viewName === 'news') initNewsView();
     if (viewName === 'top-cards') initTopCardsView();
+    if (viewName === 'marketplace') initMarketplaceView();
+    if (viewName === 'forum') initForumView();
 
     // Re-initialize Lucide icons for dynamic content
     refreshIcons();
@@ -2665,6 +2688,88 @@ function initTimelineView() {
         `;
     }
 
+    refreshIcons();
+}
+
+// Initialize Boosters View
+function initBoostersView() {
+    const container = document.getElementById('booster-sets-grid');
+    if (!container) return;
+
+    // Get set info from timeline tracker if available
+    const setInfo = typeof SET_INFO !== 'undefined' ? SET_INFO : {
+        "Alpha": { releaseDate: "2023-04-19", color: "#d4af37", icon: "star", edition: "1ª Edição" },
+        "Beta": { releaseDate: "2023-11-10", color: "#9ca3af", icon: "circle", edition: "2ª Edição" },
+        "Arthurian Legends": { releaseDate: "2024-06-01", color: "#3b82f6", icon: "crown", edition: "Expansão" },
+        "Gothic": { releaseDate: "2024-10-15", color: "#8b5cf6", icon: "moon", edition: "Expansão" },
+        "Dragonlord": { releaseDate: "2025-03-01", color: "#dc2626", icon: "flame", edition: "Expansão" }
+    };
+
+    // Count cards per set
+    const setStats = {};
+    allCards.forEach(card => {
+        const setName = card.set;
+        if (!setStats[setName]) {
+            setStats[setName] = { total: 0, byRarity: {} };
+        }
+        setStats[setName].total++;
+        const rarity = card.rarity || 'unknown';
+        setStats[setName].byRarity[rarity] = (setStats[setName].byRarity[rarity] || 0) + 1;
+    });
+
+    // Build cards HTML
+    const setsHtml = Object.entries(setInfo)
+        .filter(([name]) => name !== 'Promotional')
+        .sort((a, b) => {
+            const dateA = a[1].releaseDate ? new Date(a[1].releaseDate) : new Date();
+            const dateB = b[1].releaseDate ? new Date(b[1].releaseDate) : new Date();
+            return dateA - dateB;
+        })
+        .map(([name, info]) => {
+            const stats = setStats[name] || { total: 0, byRarity: {} };
+            const releaseDate = info.releaseDate
+                ? new Date(info.releaseDate).toLocaleDateString('pt-BR', { year: 'numeric', month: 'short' })
+                : 'TBA';
+
+            return `
+                <div class="tl-card" style="--set-color: ${info.color}">
+                    <div class="tl-card-header">
+                        <div class="tl-icon" style="background: ${info.color};">
+                            <i data-lucide="${info.icon}"></i>
+                        </div>
+                        <div class="tl-header-info">
+                            <h3 class="tl-title">${name}</h3>
+                            <span class="tl-edition">${info.edition}</span>
+                        </div>
+                        <div class="tl-date-badge">
+                            <span class="tl-date">${releaseDate}</span>
+                        </div>
+                    </div>
+                    <div class="tl-card-body">
+                        <div class="tl-stats-row">
+                            <div class="tl-stat">
+                                <span class="tl-stat-value">${stats.total}</span>
+                                <span class="tl-stat-label">Cartas</span>
+                            </div>
+                            <div class="tl-stat">
+                                <span class="tl-stat-value">${stats.byRarity.unique || 0}</span>
+                                <span class="tl-stat-label">Únicas</span>
+                            </div>
+                            <div class="tl-stat">
+                                <span class="tl-stat-value">${stats.byRarity.elite || 0}</span>
+                                <span class="tl-stat-label">Elite</span>
+                            </div>
+                            <div class="tl-stat">
+                                <span class="tl-stat-value">${stats.byRarity.exceptional || 0}</span>
+                                <span class="tl-stat-label">Exceptional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+    container.innerHTML = setsHtml;
     refreshIcons();
 }
 
@@ -8174,6 +8279,9 @@ function setupAuthEventListeners() {
         tradeBinder = new Set();
         decks = [];
 
+        // Dispatch logout event for community services
+        document.dispatchEvent(new CustomEvent('userLoggedOut'));
+
         // Refresh current view to show login prompt
         refreshCurrentView();
         showNotification('Sessão encerrada');
@@ -8343,6 +8451,9 @@ async function handleLogin(e) {
             }
         }
 
+        // Dispatch login event for community services
+        document.dispatchEvent(new CustomEvent('userLoggedIn', { detail: { user } }));
+
         // Clear form
         e.target.reset();
     } catch (error) {
@@ -8387,6 +8498,9 @@ async function handleRegister(e) {
         if (typeof profileService !== 'undefined') {
             await profileService.initProfile(user.id, name);
         }
+
+        // Dispatch login event for community services
+        document.dispatchEvent(new CustomEvent('userLoggedIn', { detail: { user } }));
 
         // Clear form
         e.target.reset();
@@ -8794,6 +8908,395 @@ function saveLocalData() {
 
 // Auth UI is now initialized in main DOMContentLoaded handler
 
+// ============================================
+// COMMUNITY FEATURES INTEGRATION
+// ============================================
+
+// Initialize Marketplace View
+function initMarketplaceView() {
+    if (typeof tradeMarketplace !== 'undefined') {
+        tradeMarketplace.loadListings();
+    }
+}
+
+// Initialize Forum View
+function initForumView() {
+    if (typeof forumService !== 'undefined') {
+        forumService.loadPosts();
+    }
+}
+
+// Open modal helper (generic)
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        setupFocusTrap(modal);
+        refreshIcons(modal);
+    }
+}
+
+// Show Terms Modal - optionally with callback after acceptance
+let termsAcceptCallback = null;
+
+function showTermsModal(callback = null) {
+    termsAcceptCallback = callback;
+    openModal('terms-modal');
+}
+
+// Accept Terms
+async function acceptTerms() {
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.isLoggedIn()) {
+        try {
+            await nocoDBService.acceptTerms();
+            closeModal('terms-modal');
+            showSuccessToast('Termos aceitos com sucesso!');
+
+            // Execute callback if provided
+            if (termsAcceptCallback && typeof termsAcceptCallback === 'function') {
+                termsAcceptCallback();
+                termsAcceptCallback = null;
+            }
+        } catch (error) {
+            showErrorToast('Erro ao aceitar termos: ' + error.message);
+        }
+    } else {
+        closeModal('terms-modal');
+        // Still execute callback for non-logged in users viewing terms
+        if (termsAcceptCallback && typeof termsAcceptCallback === 'function') {
+            termsAcceptCallback();
+            termsAcceptCallback = null;
+        }
+    }
+}
+
+// Show Avatar Selector Modal
+function showAvatarModal() {
+    if (typeof renderAvatarSelector === 'function') {
+        const container = document.getElementById('avatar-selector-grid');
+        if (container) {
+            container.innerHTML = renderAvatarSelector();
+            refreshIcons(container);
+        }
+    }
+    openModal('avatar-modal');
+}
+
+// Select Avatar
+function selectAvatar(avatarId) {
+    // Highlight selected
+    document.querySelectorAll('.avatar-option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    document.querySelector(`.avatar-option[data-id="${avatarId}"]`)?.classList.add('selected');
+    document.getElementById('avatar-modal').dataset.selectedId = avatarId;
+}
+
+// Save Selected Avatar
+async function saveSelectedAvatar() {
+    const modal = document.getElementById('avatar-modal');
+    const avatarId = parseInt(modal?.dataset.selectedId);
+
+    if (!avatarId) {
+        showWarningToast('Selecione um avatar');
+        return;
+    }
+
+    if (typeof updateUserAvatar === 'function') {
+        try {
+            await updateUserAvatar(avatarId);
+            closeModal('avatar-modal');
+            showSuccessToast('Avatar atualizado!');
+
+            // Refresh profile if visible
+            const profileView = document.getElementById('profile-view');
+            if (profileView && !profileView.classList.contains('hidden')) {
+                renderProfileView();
+            }
+        } catch (error) {
+            showErrorToast('Erro ao atualizar avatar: ' + error.message);
+        }
+    }
+}
+
+// Open Inbox Modal
+function openInbox() {
+    if (!nocoDBService?.isLoggedIn()) {
+        showWarningToast('Faça login para acessar mensagens');
+        return;
+    }
+    openModal('inbox-modal');
+    if (typeof messagingService !== 'undefined') {
+        messagingService.loadInbox();
+    }
+}
+
+// Open Compose Message Modal - wrapper uses global function from messaging-service.js
+// The global openComposeMessage(recipientId, subject, replyToId) is defined in messaging-service.js
+// This wrapper provides a compatible interface
+
+// View Message
+function viewMessage(messageId, source = 'inbox') {
+    if (typeof messagingService !== 'undefined') {
+        messagingService.openMessage(messageId, source);
+    }
+}
+
+// Reply to Message - triggers the reply button in the message view modal
+function replyToMessage() {
+    const replyBtn = document.getElementById('message-reply-btn');
+    if (replyBtn) {
+        replyBtn.click();
+    }
+}
+
+// Send Message
+async function sendMessage() {
+    if (typeof sendComposedMessage === 'function') {
+        await sendComposedMessage();
+    }
+}
+
+// Delete Message
+async function deleteMessage(messageId, source = 'inbox') {
+    if (typeof messagingService !== 'undefined') {
+        await messagingService.deleteMessage(messageId, source);
+    }
+}
+
+// Open Vote Modal
+function openVoteModal(userId, userName) {
+    if (typeof reputationService !== 'undefined') {
+        reputationService.openVoteModal(userId, userName);
+    }
+}
+
+// Submit Vote
+async function submitVote() {
+    if (typeof reputationService !== 'undefined') {
+        await reputationService.submitVote();
+    }
+}
+
+// Create Forum Post
+async function createForumPost() {
+    if (typeof forumService !== 'undefined') {
+        await forumService.createPost();
+    }
+}
+
+// View Forum Post
+function viewForumPost(postId) {
+    if (typeof forumService !== 'undefined') {
+        forumService.openPost(postId);
+    }
+}
+
+// Add Forum Comment
+async function addForumComment() {
+    if (typeof forumService !== 'undefined') {
+        await forumService.addComment();
+    }
+}
+
+// Filter Forum by Category
+function filterForumCategory(category) {
+    if (typeof forumService !== 'undefined') {
+        forumService.setFilter('category', category);
+    }
+}
+
+// Search Forum
+function searchForum() {
+    if (typeof forumService !== 'undefined') {
+        const query = document.getElementById('forum-search-input')?.value || '';
+        forumService.search(query);
+    }
+}
+
+// Back to Forum List
+function backToForumList() {
+    if (typeof switchForumView === 'function') {
+        switchForumView('list');
+    }
+}
+
+// Publish Trade Listing
+async function publishTradeListing(cardName, type) {
+    if (typeof tradeMarketplace !== 'undefined') {
+        await tradeMarketplace.publishListing(cardName, type);
+    }
+}
+
+// Remove Trade Listing
+async function removeTradeListing(listingId) {
+    if (typeof tradeMarketplace !== 'undefined') {
+        await tradeMarketplace.deactivateListing(listingId);
+    }
+}
+
+// Filter Marketplace - reloads listings with current filters
+function filterMarketplace() {
+    if (typeof tradeMarketplace !== 'undefined') {
+        tradeMarketplace.loadListings();
+    }
+}
+
+// Contact Seller/Buyer - wrapper for marketplace contact
+function contactTrader(userId, cardName) {
+    if (typeof tradeMarketplace !== 'undefined') {
+        tradeMarketplace.contactUser(userId, cardName);
+    } else if (typeof openComposeMessage === 'function') {
+        openComposeMessage(userId, `Interesse em: ${cardName}`);
+    }
+}
+
+// Update Unread Messages Badge
+function updateUnreadBadge(count) {
+    const badge = document.getElementById('inbox-unread-badge');
+    if (badge) {
+        if (count > 0) {
+            badge.textContent = count > 99 ? '99+' : count;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+    }
+}
+
+// Initialize Community Services on Login
+function initCommunityServices() {
+    if (typeof messagingService !== 'undefined' && nocoDBService?.isLoggedIn()) {
+        messagingService.startPolling();
+    }
+}
+
+// Cleanup Community Services on Logout
+function cleanupCommunityServices() {
+    if (typeof messagingService !== 'undefined') {
+        messagingService.stopPolling();
+    }
+    updateUnreadBadge(0);
+}
+
+// Check if user accepted terms
+async function checkTermsAcceptance() {
+    if (nocoDBService?.isLoggedIn()) {
+        const user = nocoDBService.getCurrentUser();
+        if (user && !user.accepted_terms_at) {
+            showTermsModal();
+        }
+    }
+}
+
+// Render Profile View with Avatar
+function renderProfileView() {
+    const container = document.getElementById('profile-content');
+    if (!container) return;
+
+    const user = nocoDBService?.getCurrentUser();
+    if (!user) {
+        container.innerHTML = '<p>Faça login para ver seu perfil</p>';
+        return;
+    }
+
+    const avatarHtml = typeof renderAvatar === 'function'
+        ? renderAvatar(user.avatarId || 1, 'large')
+        : '<div class="avatar-placeholder"></div>';
+
+    const reputationHtml = typeof reputationService !== 'undefined'
+        ? reputationService.renderBadge(user.reputation_score || 0, 'large')
+        : '';
+
+    container.innerHTML = `
+        <div class="profile-header">
+            <div class="profile-avatar" onclick="showAvatarModal()">
+                ${avatarHtml}
+                <div class="avatar-edit-overlay">
+                    <i data-lucide="edit-2"></i>
+                </div>
+            </div>
+            <div class="profile-info">
+                <h2>${escapeHtml(user.displayName || user.username)}</h2>
+                <p class="profile-username">@${escapeHtml(user.username)}</p>
+                ${reputationHtml}
+            </div>
+        </div>
+        <div class="profile-actions">
+            <button class="btn btn-secondary" onclick="showAvatarModal()">
+                <i data-lucide="user-circle"></i> Alterar Avatar
+            </button>
+            <button class="btn btn-secondary" onclick="showView('settings')">
+                <i data-lucide="settings"></i> Configurações
+            </button>
+        </div>
+    `;
+
+    refreshIcons(container);
+}
+
+// Add event listeners for community features
+document.addEventListener('DOMContentLoaded', () => {
+    // Check terms on login
+    document.addEventListener('userLoggedIn', () => {
+        checkTermsAcceptance();
+        initCommunityServices();
+    });
+
+    document.addEventListener('userLoggedOut', () => {
+        cleanupCommunityServices();
+    });
+
+    // Vote type selection
+    document.querySelectorAll('.vote-type-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.vote-type-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        });
+    });
+
+    // Forum search with debounce
+    const forumSearchInput = document.getElementById('forum-search-input');
+    if (forumSearchInput) {
+        forumSearchInput.addEventListener('input', debounce(searchForum, 300));
+    }
+
+    // Marketplace filters
+    const marketplaceFilters = document.querySelectorAll('.marketplace-filter');
+    marketplaceFilters.forEach(filter => {
+        filter.addEventListener('change', filterMarketplace);
+    });
+});
+
 // Export additional functions
 window.sorceryApp.nocoDBService = typeof nocoDBService !== 'undefined' ? nocoDBService : null;
 window.deleteCardPhoto = deleteCardPhoto;
+
+// Export community functions
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.showTermsModal = showTermsModal;
+window.acceptTerms = acceptTerms;
+window.showAvatarModal = showAvatarModal;
+window.selectAvatar = selectAvatar;
+window.saveSelectedAvatar = saveSelectedAvatar;
+window.openInbox = openInbox;
+// openComposeMessage is already global from messaging-service.js
+window.viewMessage = viewMessage;
+window.replyToMessage = replyToMessage;
+window.sendMessage = sendMessage;
+window.deleteMessage = deleteMessage;
+window.openVoteModal = openVoteModal;
+window.submitVote = submitVote;
+window.createForumPost = createForumPost;
+window.viewForumPost = viewForumPost;
+window.addForumComment = addForumComment;
+window.filterForumCategory = filterForumCategory;
+window.searchForum = searchForum;
+window.backToForumList = backToForumList;
+window.publishTradeListing = publishTradeListing;
+window.removeTradeListing = removeTradeListing;
+window.filterMarketplace = filterMarketplace;
+window.contactTrader = contactTrader;
+window.updateUnreadBadge = updateUnreadBadge;
+window.renderProfileView = renderProfileView;
