@@ -16434,43 +16434,59 @@ button:disabled .spin,
 /* Profile avatar grid - 4 elements in a row */
 #profile-avatar-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-4);
+    grid-template-columns: repeat(4, 80px);
+    justify-content: center;
+    gap: var(--space-3);
     padding: var(--space-4);
     background: var(--bg-surface-1);
     border-radius: var(--radius-lg);
     margin-top: var(--space-3);
 }
 
-#profile-avatar-grid .element-option {
+#profile-avatar-grid .element-option,
+#profile-avatar-grid .avatar-option {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--space-3);
+    width: 80px;
+    height: 100px;
+    padding: var(--space-2);
     background: var(--bg-surface-2);
     border: 2px solid transparent;
     border-radius: var(--radius-lg);
     cursor: pointer;
     transition: all var(--duration-fast);
-    aspect-ratio: 1;
+    gap: 0;
 }
 
-#profile-avatar-grid .element-option:hover {
+#profile-avatar-grid .element-option:hover,
+#profile-avatar-grid .avatar-option:hover {
     background: var(--bg-surface-3);
     border-color: var(--text-tertiary);
 }
 
-#profile-avatar-grid .element-option.selected {
+#profile-avatar-grid .element-option.selected,
+#profile-avatar-grid .avatar-option.selected {
     border-color: var(--accent-gold);
     background: rgba(212, 175, 55, 0.15);
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
 }
 
-#profile-avatar-grid .element-option .element-img {
-    width: 56px;
-    height: 56px;
-    margin-bottom: var(--space-2);
+#profile-avatar-grid .element-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+#profile-avatar-grid .element-name {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-top: var(--space-2);
+}
+
+#profile-avatar-grid .selected .element-name {
+    color: var(--accent-gold);
 }
 
 /* User Avatar Display */
