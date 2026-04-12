@@ -1,59 +1,37 @@
 // ============================================
 // SORCERY AVATAR SYSTEM - ELEMENTS
-// 4 Element-based avatars (Fire, Water, Earth, Air)
+// 4 Element-based avatars using PNG images
 // ============================================
 
-// 4 Elements with their SVG icons
+// 4 Elements with their PNG image paths
 const AVATAR_ELEMENTS = {
     fire: {
         id: 1,
         name: 'Fogo',
+        key: 'fire',
         color: '#ff4444',
-        svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs><linearGradient id="fireGrad" x1="50%" y1="100%" x2="50%" y2="0%">
-                <stop offset="0%" stop-color="#ff4500"/><stop offset="100%" stop-color="#ffd700"/>
-            </linearGradient></defs>
-            <circle cx="50" cy="50" r="48" fill="#1a1a2e"/>
-            <path d="M50 15c-5 15-20 25-15 45 3 12 12 20 15 22 3-2 12-10 15-22 5-20-10-30-15-45z" fill="url(#fireGrad)"/>
-            <ellipse cx="50" cy="70" rx="8" ry="12" fill="#fff3" />
-        </svg>`
+        image: 'assets/elements/fire.png'
     },
     water: {
         id: 2,
         name: 'Água',
+        key: 'water',
         color: '#4488ff',
-        svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs><linearGradient id="waterGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                <stop offset="0%" stop-color="#00bfff"/><stop offset="100%" stop-color="#0066cc"/>
-            </linearGradient></defs>
-            <circle cx="50" cy="50" r="48" fill="#1a1a2e"/>
-            <path d="M50 18c0 0-22 28-22 42 0 12 10 22 22 22s22-10 22-22c0-14-22-42-22-42z" fill="url(#waterGrad)"/>
-            <ellipse cx="42" cy="55" rx="6" ry="10" fill="#fff3" />
-        </svg>`
+        image: 'assets/elements/water.png'
     },
     earth: {
         id: 3,
         name: 'Terra',
+        key: 'earth',
         color: '#44aa44',
-        svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs><linearGradient id="earthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#228b22"/><stop offset="100%" stop-color="#006400"/>
-            </linearGradient></defs>
-            <circle cx="50" cy="50" r="48" fill="#1a1a2e"/>
-            <polygon points="50,20 75,45 70,80 30,80 25,45" fill="url(#earthGrad)"/>
-            <polygon points="50,30 65,48 62,70 38,70 35,48" fill="#32cd32" opacity="0.6"/>
-        </svg>`
+        image: 'assets/elements/earth.png'
     },
     air: {
         id: 4,
         name: 'Ar',
+        key: 'air',
         color: '#aa88ff',
-        svg: `<svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="48" fill="#1a1a2e"/>
-            <path d="M20 40 Q35 35 50 40 T80 40" stroke="#87ceeb" stroke-width="4" fill="none" opacity="0.9"/>
-            <path d="M25 50 Q40 45 55 50 T85 50" stroke="#b0e0e6" stroke-width="3" fill="none" opacity="0.7"/>
-            <path d="M15 60 Q30 55 45 60 T75 60" stroke="#87ceeb" stroke-width="4" fill="none" opacity="0.8"/>
-        </svg>`
+        image: 'assets/elements/air.png'
     }
 };
 
@@ -79,12 +57,22 @@ function getElementByKey(key) {
 }
 
 /**
- * Get avatar SVG by ID
+ * Get avatar HTML (img tag) by ID
  * @param {number} id - Element ID (1-4)
- * @returns {string} SVG string
+ * @returns {string} HTML img tag
  */
 function getAvatarSVG(id) {
-    return getElementById(id).svg;
+    const element = getElementById(id);
+    return `<img src="${element.image}" alt="${element.name}" class="element-img">`;
+}
+
+/**
+ * Get avatar image path by ID
+ * @param {number} id - Element ID (1-4)
+ * @returns {string} Image path
+ */
+function getAvatarImage(id) {
+    return getElementById(id).image;
 }
 
 /**
@@ -116,7 +104,7 @@ function renderAvatar(elementId, size = 'medium') {
         <div class="user-avatar user-avatar-${size}"
              style="width:${px}px; height:${px}px;"
              title="${element.name}">
-            ${element.svg}
+            <img src="${element.image}" alt="${element.name}" class="element-img">
         </div>
     `;
 }
@@ -141,7 +129,9 @@ function renderAvatarSelector(currentId = 1) {
                         title="${element.name}"
                         onclick="selectAvatar(${element.id})"
                     >
-                        <div class="element-icon">${element.svg}</div>
+                        <div class="element-icon">
+                            <img src="${element.image}" alt="${element.name}" class="element-img">
+                        </div>
                         <span class="element-name">${element.name}</span>
                     </button>
                 `).join('')}
@@ -196,22 +186,23 @@ function updateAllAvatarDisplays() {
     if (!user) return;
 
     const elementId = user.avatarId || 1;
+    const element = getElementById(elementId);
 
     // Update header avatar
     const headerAvatar = document.querySelector('.user-menu-avatar');
     if (headerAvatar) {
-        headerAvatar.innerHTML = getAvatarSVG(elementId);
+        headerAvatar.innerHTML = `<img src="${element.image}" alt="${element.name}" class="element-img">`;
     }
 
-    // Update profile modal avatar
-    const profileAvatar = document.querySelector('.profile-avatar-display');
+    // Update profile modal avatar (profile-current-avatar)
+    const profileAvatar = document.getElementById('profile-current-avatar');
     if (profileAvatar) {
-        profileAvatar.innerHTML = renderAvatar(elementId, 'large');
+        profileAvatar.innerHTML = `<img src="${element.image}" alt="${element.name}" class="element-img">`;
     }
 
     // Update any other avatar displays
     document.querySelectorAll('[data-user-avatar]').forEach(el => {
-        el.innerHTML = getAvatarSVG(elementId);
+        el.innerHTML = `<img src="${element.image}" alt="${element.name}" class="element-img">`;
     });
 }
 
@@ -232,6 +223,7 @@ if (typeof module !== 'undefined' && module.exports) {
         getElementById,
         getElementByKey,
         getAvatarSVG,
+        getAvatarImage,
         getAvatarById,
         renderAvatar,
         renderAvatarSelector,

@@ -4395,7 +4395,7 @@ function openAvatarSelectorInline() {
     }
 }
 
-// Render avatar options in profile modal (4 Elements)
+// Render avatar options in profile modal (4 Elements with PNG images)
 function renderAvatarOptionsInline() {
     const grid = document.getElementById('profile-avatar-grid');
     if (!grid || typeof AVATAR_ELEMENTS === 'undefined') return;
@@ -4411,7 +4411,7 @@ function renderAvatarOptionsInline() {
              data-avatar-id="${element.id}"
              title="${element.name}"
              onclick="selectAvatarInline(${element.id})">
-            <div class="element-icon">${element.svg}</div>
+            <img src="${element.image}" alt="${element.name}" class="element-img">
             <span class="element-name">${element.name}</span>
         </div>
     `).join('');

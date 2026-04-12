@@ -16411,24 +16411,43 @@ button:disabled .spin,
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
 }
 
-.element-option .element-icon {
-    width: 60px;
-    height: 60px;
-}
-
-.element-option .element-icon svg {
+/* Element image styling */
+.element-img {
     width: 100%;
     height: 100%;
+    object-fit: contain;
 }
 
 .element-option .element-name {
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-secondary);
+    margin-top: var(--space-2);
 }
 
 .element-option.selected .element-name {
     color: var(--accent-gold);
+}
+
+/* Avatar option without .element-icon wrapper */
+.element-option .element-img {
+    width: 48px;
+    height: 48px;
+}
+
+/* Profile avatar grid */
+#profile-avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--bg-surface-1);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-3);
+}
+
+#profile-avatar-grid .element-option {
+    padding: var(--space-2);
 }
 
 /* User Avatar Display */
@@ -16438,9 +16457,11 @@ button:disabled .spin,
     flex-shrink: 0;
 }
 
+.user-avatar img,
 .user-avatar svg {
     width: 100%;
     height: 100%;
+    object-fit: contain;
 }
 
 .user-avatar-small {
