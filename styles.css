@@ -16448,16 +16448,16 @@ button:disabled .spin,
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     width: 80px;
-    height: 100px;
-    padding: var(--space-2);
+    min-height: 90px;
+    padding: 12px 8px 8px 8px;
     background: var(--bg-surface-2);
     border: 2px solid transparent;
     border-radius: var(--radius-lg);
     cursor: pointer;
     transition: all var(--duration-fast);
-    gap: 0;
+    box-sizing: border-box;
 }
 
 #profile-avatar-grid .element-option:hover,
@@ -16473,16 +16473,18 @@ button:disabled .spin,
 }
 
 #profile-avatar-grid .element-img {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
+    flex-shrink: 0;
 }
 
 #profile-avatar-grid .element-name {
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-top: var(--space-2);
+    margin-top: 8px;
+    text-align: center;
 }
 
 #profile-avatar-grid .selected .element-name {
