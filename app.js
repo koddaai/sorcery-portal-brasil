@@ -8873,6 +8873,11 @@ function updateAuthUI() {
         loggedInSection.classList.remove('hidden');
         const user = nocoDBService.getCurrentUser();
         userDisplayName.textContent = user.displayName || user.email;
+
+        // Update avatar display with element SVG
+        if (typeof updateAllAvatarDisplays === 'function') {
+            updateAllAvatarDisplays();
+        }
     } else {
         loggedOutSection.classList.remove('hidden');
         loggedInSection.classList.add('hidden');

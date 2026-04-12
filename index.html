@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=61">
+    <link rel="stylesheet" href="styles.css?v=62">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -73,8 +73,9 @@
                             <i data-lucide="user-cog"></i>
                         </button>
                         <div class="user-avatar user-menu-avatar" onclick="openProfileSettings()" title="Configurações de Perfil">
-                            <span id="user-display-name"></span>
+                            <!-- Avatar SVG will be injected here by updateAllAvatarDisplays() -->
                         </div>
+                        <span id="user-display-name" class="user-display-name"></span>
                         <button id="logout-btn" class="header-icon-btn" title="Sair" aria-label="Sair da conta">
                             <i data-lucide="log-out"></i>
                         </button>
@@ -3905,7 +3906,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=65"></script>
+    <script src="app.js?v=66"></script>
     <script src="offline-manager.js?v=2"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
