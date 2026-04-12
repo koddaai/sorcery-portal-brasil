@@ -4395,54 +4395,54 @@ function openAvatarSelectorInline() {
     }
 }
 
-// Render avatar options in profile modal
+// Render avatar options in profile modal (4 Elements)
 function renderAvatarOptionsInline() {
     const grid = document.getElementById('profile-avatar-grid');
-    if (!grid || typeof AVATARS === 'undefined') return;
+    if (!grid || typeof AVATAR_ELEMENTS === 'undefined') return;
 
     const user = nocoDBService.getCurrentUser();
-    const currentAvatarId = user?.avatar_id || 1;
+    const currentAvatarId = user?.avatar_id || user?.avatarId || 1;
 
-    grid.innerHTML = AVATARS.map(avatar => `
-        <div class="avatar-option ${avatar.id === currentAvatarId ? 'selected' : ''}"
-             data-avatar-id="${avatar.id}"
-             title="${avatar.name}"
-             onclick="selectAvatarInline(${avatar.id})">
-            ${avatar.svg}
+    // Convert AVATAR_ELEMENTS object to array
+    const elements = Object.values(AVATAR_ELEMENTS);
+
+    grid.innerHTML = elements.map(element => `
+        <div class="avatar-option element-option ${element.id === currentAvatarId ? 'selected' : ''}"
+             data-avatar-id="${element.id}"
+             title="${element.name}"
+             onclick="selectAvatarInline(${element.id})">
+            <div class="element-icon">${element.svg}</div>
+            <span class="element-name">${element.name}</span>
         </div>
     `).join('');
 }
 
-// Select avatar inline in profile modal
-async function selectAvatarInline(avatarId) {
+// Select avatar/element inline in profile modal
+async function selectAvatarInline(elementId) {
     // Update visual selection
     const grid = document.getElementById('profile-avatar-grid');
     if (grid) {
         grid.querySelectorAll('.avatar-option').forEach(opt => {
-            opt.classList.toggle('selected', parseInt(opt.dataset.avatarId) === avatarId);
+            opt.classList.toggle('selected', parseInt(opt.dataset.avatarId) === elementId);
         });
     }
 
     // Update preview
     const preview = document.getElementById('profile-current-avatar');
     if (preview && typeof getAvatarSVG === 'function') {
-        preview.innerHTML = getAvatarSVG(avatarId);
+        preview.innerHTML = getAvatarSVG(elementId);
     }
 
-    // Save avatar
-    if (typeof saveUserAvatar === 'function') {
-        await saveUserAvatar(avatarId);
+    // Save and update avatar using avatar-system.js function
+    if (typeof updateUserAvatar === 'function') {
+        await updateUserAvatar(elementId);
     }
-
-    // Update header avatar
-    updateUserAvatar();
 
     // Hide grid after selection
     if (grid) {
         setTimeout(() => grid.classList.add('hidden'), 300);
     }
-
-    showSuccessToast('Avatar atualizado!', 'Perfil');
+    // Toast is shown by updateUserAvatar() in avatar-system.js
 }
 
 // Update last sync time in profile modal
