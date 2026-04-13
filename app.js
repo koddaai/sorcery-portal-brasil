@@ -7,8 +7,8 @@
 // ============================================
 
 // UI Timings (ms)
-const TOAST_DURATION_DEFAULT = 5000;  // 5 seconds for regular messages
-const TOAST_DURATION_ERROR = 7000;    // 7 seconds for error messages
+const TOAST_DURATION_DEFAULT = 6000;  // 6 seconds for regular messages
+const TOAST_DURATION_ERROR = 8000;    // 8 seconds for error messages
 const TOAST_ANIMATION_MS = 200;
 const NOTIFICATION_SHOW_DELAY = 100;
 const NOTIFICATION_HIDE_DELAY = 500;
@@ -6980,15 +6980,27 @@ function renderPreconGrid() {
         // Extract set name from precon ID (beta-fire -> Beta, gothic-necromancer -> Gothic)
         const setName = preconId.startsWith('gothic-') ? 'Gothic' : 'Beta';
 
+        // Show different button based on ownership
+        const actionButton = isOwned
+            ? `<button class="precon-action-btn remove" onclick="event.stopPropagation(); removePreconFromCollection('${preconId}')">
+                   <i data-lucide="trash-2"></i> Remover
+               </button>`
+            : `<button class="precon-action-btn add" onclick="event.stopPropagation(); addPreconToCollection('${preconId}')">
+                   <i data-lucide="plus"></i> Adicionar
+               </button>`;
+
         return `
-            <div class="precon-card ${isOwned ? 'owned' : ''}" onclick="addPreconToCollection('${preconId}')">
+            <div class="precon-card ${isOwned ? 'owned' : ''}">
                 <img src="${imageUrl}" alt="${precon.avatar}" class="precon-avatar" onerror="this.src='placeholder.png'">
                 <div class="precon-name">${precon.name.replace(` [${setName}]`, '')}</div>
                 <div class="precon-set">${setName}</div>
                 <div class="precon-card-count"><strong>${totalCards}</strong> cartas</div>
+                ${actionButton}
             </div>
         `;
     }).join('');
+
+    refreshIcons();
 }
 
 // Add all cards from a precon to collection
@@ -7021,7 +7033,52 @@ function addPreconToCollection(preconId) {
     // Save and update UI
     saveToStorage();
     showSuccessToast(`${precon.name} adicionado!`, `${totalCards} cartas`);
-    closePreconModal();
+    renderPreconGrid(); // Refresh grid to show updated state
+    renderCollection();
+    updateStats();
+}
+
+// Remove all cards from a precon from collection
+function removePreconFromCollection(preconId) {
+    const precon = PRECONS[preconId];
+    if (!precon) return;
+
+    // Remove each card's quantity from collection
+    precon.cards.forEach(card => {
+        const existing = collection.get(card.name);
+        if (!existing) return;
+
+        const currentQty = existing.qty || 0;
+        const cardPreconQty = card.qty || 1;
+        const newQty = currentQty - cardPreconQty;
+
+        // Remove precon from card's precons array
+        const existingPrecons = existing.precons || [];
+        const updatedPrecons = existingPrecons.filter(p => p !== preconId);
+
+        if (newQty <= 0) {
+            // Remove card entirely if qty is 0 or less
+            collection.delete(card.name);
+        } else {
+            // Update with reduced quantity
+            collection.set(card.name, {
+                qty: newQty,
+                addedAt: existing.addedAt,
+                precons: updatedPrecons
+            });
+        }
+    });
+
+    // Remove precon from owned set
+    ownedPrecons.delete(preconId);
+
+    // Calculate total cards removed
+    const totalCards = precon.cards.reduce((sum, c) => sum + (c.qty || 1), 0);
+
+    // Save and update UI
+    saveToStorage();
+    showSuccessToast(`${precon.name} removido!`, `${totalCards} cartas`);
+    renderPreconGrid(); // Refresh grid to show updated state
     renderCollection();
     updateStats();
 }
