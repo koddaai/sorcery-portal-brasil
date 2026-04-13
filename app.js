@@ -6392,10 +6392,12 @@ function renderVariantSelector(card) {
         if (owned && owned.variants && Object.keys(owned.variants).length > 0) {
             ownedList.innerHTML = Object.entries(owned.variants).map(([slug, data]) => {
                 const escapedSlug = slug.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                const finishStr = typeof data.finish === 'string' ? data.finish : 'Standard';
+                const setStr = typeof data.set === 'string' ? data.set : 'Unknown';
                 return `
                 <div class="owned-variant-item">
-                    <span class="variant-finish ${data.finish?.toLowerCase() || 'standard'}">${data.finish || 'Standard'}</span>
-                    <span class="variant-set">${escapeHtml(data.set || 'Unknown')}</span>
+                    <span class="variant-finish ${finishStr.toLowerCase()}">${finishStr}</span>
+                    <span class="variant-set">${escapeHtml(setStr)}</span>
                     <div class="owned-variant-controls">
                         <button class="qty-btn-sm" onclick="adjustOwnedVariant('${escapedCardNameJs}', '${escapedSlug}', -1)" title="Remover 1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
