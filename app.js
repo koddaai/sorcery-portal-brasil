@@ -7800,6 +7800,21 @@ function getTotalVariantsInGame() {
  * Cards with VariantTracker data: count actual variants
  * Cards without: count as 1 variant (default Standard)
  */
+// Mapeamento de códigos de set para código canônico
+// got e gth são ambos Gothic, mas usam códigos diferentes em Booster vs Precon
+const SET_CODE_NORMALIZATION = {
+    'got': 'gth',  // Gothic Booster → Gothic (canonical)
+    'gth': 'gth',  // Gothic Precon → Gothic
+    'bet': 'bet',  // Beta
+    'alp': 'alp',  // Alpha
+    'art': 'art',  // Arthurian Legends
+};
+
+function normalizeSetCode(setCode) {
+    const normalized = setCode.trim().toLowerCase();
+    return SET_CODE_NORMALIZATION[normalized] || normalized;
+}
+
 function getOwnedVariantsCount() {
     const tracker = window.variantTracker;
     let totalVariants = 0;
@@ -7819,13 +7834,14 @@ function getOwnedVariantsCount() {
                 // Ex: bet-lone_tower-b-s = Beta, Lone Tower, Booster, Standard
                 // Ex: bet-lone_tower-p-s = Beta, Lone Tower, Precon, Standard
                 // Ambos devem contar como 1 variante (Beta Standard)
+                // IMPORTANTE: got e gth são ambos Gothic, precisam ser normalizados
 
                 const uniqueSetFinish = new Set();
                 Object.keys(cardVariants).forEach(slug => {
                     const parts = slug.trim().split('-');
                     if (parts.length >= 2) {
-                        const set = parts[0].trim().toLowerCase(); // normalizar
-                        const finish = parts[parts.length - 1].trim().toLowerCase(); // normalizar
+                        const set = normalizeSetCode(parts[0]); // normalizar código do set
+                        const finish = parts[parts.length - 1].trim().toLowerCase();
                         uniqueSetFinish.add(`${set}-${finish}`);
                     }
                 });
@@ -7867,11 +7883,12 @@ function debugVariantCount() {
             stats.totalRawSlugs += slugs.length;
 
             // Contar variantes únicas por SET + FINISH (normalizado)
+            // IMPORTANTE: usa normalizeSetCode() para tratar got/gth como mesmo set
             const uniqueSetFinish = new Set();
             slugs.forEach(slug => {
                 const parts = slug.trim().split('-');
                 if (parts.length >= 2) {
-                    const set = parts[0].trim().toLowerCase();
+                    const set = normalizeSetCode(parts[0]); // usar normalização!
                     const finish = parts[parts.length - 1].trim().toLowerCase();
                     uniqueSetFinish.add(`${set}-${finish}`);
                 }
