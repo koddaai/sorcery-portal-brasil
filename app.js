@@ -2960,7 +2960,18 @@ function setupEventListeners() {
     document.getElementById('collection-type-filter')?.addEventListener('change', renderCollection);
     document.getElementById('collection-element-filter')?.addEventListener('change', renderCollection);
     document.getElementById('collection-rarity-filter')?.addEventListener('change', renderCollection);
+    document.getElementById('collection-precon-filter')?.addEventListener('change', renderCollection);
     document.getElementById('collection-sort')?.addEventListener('change', renderCollection);
+
+    // Precon modal click-outside to close
+    const preconModal = document.getElementById('precon-modal');
+    if (preconModal) {
+        preconModal.addEventListener('click', (e) => {
+            if (e.target === preconModal) {
+                closePreconModal();
+            }
+        });
+    }
 
     // Collection tabs (Cards / Decks)
     document.querySelectorAll('.collection-tab').forEach(tab => {
@@ -5133,12 +5144,14 @@ function clearCollectionFilters() {
     const typeFilter = document.getElementById('collection-type-filter');
     const elementFilter = document.getElementById('collection-element-filter');
     const rarityFilter = document.getElementById('collection-rarity-filter');
+    const preconFilter = document.getElementById('collection-precon-filter');
 
     if (searchInput) searchInput.value = '';
     if (setFilter) setFilter.value = '';
     if (typeFilter) typeFilter.value = '';
     if (elementFilter) elementFilter.value = '';
     if (rarityFilter) rarityFilter.value = '';
+    if (preconFilter) preconFilter.value = '';
 
     renderCollection();
     showSuccessToast('Filtros da coleção limpos');
@@ -6923,6 +6936,96 @@ function handlePreconChange(event) {
     updateStats();
 }
 
+// ============================================
+// PRECON MODAL FUNCTIONS
+// ============================================
+
+// Open precon selection modal
+function openPreconModal() {
+    const modal = document.getElementById('precon-modal');
+    if (!modal) return;
+
+    modal.classList.remove('hidden');
+    renderPreconGrid();
+    refreshIcons();
+}
+
+// Close precon modal
+function closePreconModal() {
+    const modal = document.getElementById('precon-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
+// Render the precon grid
+function renderPreconGrid() {
+    const grid = document.getElementById('precon-grid');
+    if (!grid) return;
+
+    const preconIds = Object.keys(PRECONS);
+
+    grid.innerHTML = preconIds.map(preconId => {
+        const precon = PRECONS[preconId];
+        const isOwned = ownedPrecons.has(preconId);
+
+        // Find the avatar card to get its image
+        const avatarCard = allCards.find(c => c.name === precon.avatar);
+        const imageSlug = avatarCard ? getCardImageSlug(avatarCard) : null;
+        const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : 'placeholder.png';
+
+        // Calculate total cards (sum of quantities)
+        const totalCards = precon.cards.reduce((sum, c) => sum + (c.qty || 1), 0);
+
+        // Extract set name from precon ID (beta-fire -> Beta, gothic-necromancer -> Gothic)
+        const setName = preconId.startsWith('gothic-') ? 'Gothic' : 'Beta';
+
+        return `
+            <div class="precon-card ${isOwned ? 'owned' : ''}" onclick="addPreconToCollection('${preconId}')">
+                <img src="${imageUrl}" alt="${precon.avatar}" class="precon-avatar" onerror="this.src='placeholder.png'">
+                <div class="precon-name">${precon.name.replace(` [${setName}]`, '')}</div>
+                <div class="precon-set">${setName}</div>
+                <div class="precon-card-count"><strong>${totalCards}</strong> cartas</div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Add all cards from a precon to collection
+function addPreconToCollection(preconId) {
+    const precon = PRECONS[preconId];
+    if (!precon) return;
+
+    // Add each card with precon tracking
+    precon.cards.forEach(card => {
+        const existing = collection.get(card.name);
+        const currentQty = existing?.qty || 0;
+        const existingPrecons = existing?.precons || [];
+        const addedAt = existing?.addedAt || new Date().toISOString();
+
+        collection.set(card.name, {
+            qty: currentQty + (card.qty || 1),
+            addedAt: addedAt,
+            precons: existingPrecons.includes(preconId)
+                ? existingPrecons
+                : [...existingPrecons, preconId]
+        });
+    });
+
+    // Mark precon as owned
+    ownedPrecons.add(preconId);
+
+    // Calculate total cards added
+    const totalCards = precon.cards.reduce((sum, c) => sum + (c.qty || 1), 0);
+
+    // Save and update UI
+    saveToStorage();
+    showSuccessToast(`${precon.name} adicionado!`, `${totalCards} cartas`);
+    closePreconModal();
+    renderCollection();
+    updateStats();
+}
+
 // Check if user is logged in - Use the same method as the header
 function checkUserLoggedIn() {
     if (typeof nocoDBService !== 'undefined') {
@@ -6974,6 +7077,7 @@ function renderCollection() {
     const typeFilter = document.getElementById('collection-type-filter')?.value || '';
     const elementFilter = document.getElementById('collection-element-filter')?.value || '';
     const rarityFilter = document.getElementById('collection-rarity-filter')?.value || '';
+    const preconFilter = document.getElementById('collection-precon-filter')?.value || '';
     const sortOption = document.getElementById('collection-sort')?.value || 'name-asc';
 
     // Get variant tracker if available
@@ -7018,6 +7122,14 @@ function renderCollection() {
         // Filter by rarity
         if (rarityFilter && card.guardian?.rarity !== rarityFilter) {
             return false;
+        }
+
+        // Filter by precon
+        if (preconFilter) {
+            const cardData = collection.get(card.name);
+            if (!cardData?.precons?.includes(preconFilter)) {
+                return false;
+            }
         }
 
         return true;

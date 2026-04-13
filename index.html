@@ -475,6 +475,9 @@
                                 <button class="btn btn-secondary" onclick="openExportImportModal()" aria-label="Exportar ou importar coleção">
                                     <i data-lucide="file-down"></i> Exportar/Importar
                                 </button>
+                                <button class="btn btn-secondary" onclick="openPreconModal()">
+                                    <i data-lucide="package"></i> Adicionar Precons
+                                </button>
                                 <button class="btn primary" onclick="openAddCardsModal()">
                                     <i data-lucide="plus"></i> Adicionar Cartas
                                 </button>
@@ -538,6 +541,17 @@
                                     <option value="Beta">Beta</option>
                                     <option value="Arthurian Legends">Arthurian Legends</option>
                                     <option value="Gothic">Gothic</option>
+                                </select>
+                                <select id="collection-precon-filter" class="filter-select">
+                                    <option value="">Precon (Todos)</option>
+                                    <option value="beta-fire">Fire [Beta]</option>
+                                    <option value="beta-air">Air [Beta]</option>
+                                    <option value="beta-water">Water [Beta]</option>
+                                    <option value="beta-earth">Earth [Beta]</option>
+                                    <option value="gothic-necromancer">Necromancer [Gothic]</option>
+                                    <option value="gothic-harbinger">Harbinger [Gothic]</option>
+                                    <option value="gothic-persecutor">Persecutor [Gothic]</option>
+                                    <option value="gothic-savior">Savior [Gothic]</option>
                                 </select>
                             </div>
                         </div>
@@ -2743,6 +2757,19 @@
 
                 <div id="add-cards-results" class="add-cards-grid">
                     <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Precon Selection Modal -->
+        <div id="precon-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content precon-modal-content">
+                <button class="close-modal" onclick="closePreconModal()" aria-label="Fechar modal">&times;</button>
+                <h2><i data-lucide="package"></i> Adicionar Precon à Coleção</h2>
+                <p class="modal-subtitle">Selecione um precon para adicionar todas as cartas de uma vez</p>
+
+                <div id="precon-grid" class="precon-grid">
+                    <!-- Precon cards will be populated by renderPreconGrid() -->
                 </div>
             </div>
         </div>

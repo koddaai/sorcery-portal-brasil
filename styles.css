@@ -3357,6 +3357,100 @@ h5 {
     font-size: 0.9rem;
 }
 
+/* Precon Selection Modal */
+.precon-modal-content {
+    max-width: 900px;
+    padding: var(--space-5);
+}
+
+.precon-modal-content h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.precon-modal-content h2 svg {
+    width: 28px;
+    height: 28px;
+}
+
+.precon-modal-content .modal-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-5);
+}
+
+.precon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-4);
+}
+
+.precon-card {
+    background: var(--bg-surface-3);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+    text-align: center;
+}
+
+.precon-card:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.precon-card.owned {
+    border-color: var(--success-green);
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.precon-card.owned::after {
+    content: 'Adicionado';
+    display: block;
+    margin-top: var(--space-2);
+    font-size: 0.75rem;
+    color: var(--success-green);
+    font-weight: 600;
+}
+
+.precon-avatar {
+    width: 100%;
+    max-width: 140px;
+    aspect-ratio: 0.72;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin: 0 auto var(--space-3);
+    box-shadow: var(--shadow-md);
+}
+
+.precon-name {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin-bottom: var(--space-1);
+}
+
+.precon-set {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+}
+
+.precon-card-count {
+    font-size: 0.85rem;
+    color: var(--text-tertiary);
+}
+
+.precon-card-count strong {
+    color: var(--accent-gold);
+}
+
 /* Card Quantity Modal */
 .card-quantity-modal-content {
     max-width: 400px;
