@@ -10756,44 +10756,95 @@ function renderInvestmentAnalytics() {
         'Site': { value: 0, count: 0 }
     };
 
-    // Analyze collection
+    // Analyze collection usando VariantTracker para saber o SET correto
+    const tracker = window.variantTracker;
+
     collection.forEach((data, cardName) => {
         const card = allCards.find(c => c.name === cardName);
         if (!card) return;
 
-        const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
-        const qty = data.qty || 1;
-        const totalPrice = price * qty;
-
-        // By set - conta apenas no PRIMEIRO set (evita duplicação)
-        if (card.sets && card.sets.length > 0) {
-            const primarySet = card.sets[0].name;
-            if (setValues[primarySet]) {
-                setValues[primarySet].value += totalPrice;
-                setValues[primarySet].count += qty;
+        // Usar VariantTracker para obter os sets reais que o usuário possui
+        let cardVariants = null;
+        if (tracker) {
+            try {
+                cardVariants = tracker.getCollectionByCard(cardName);
+            } catch (e) {
+                // Ignore errors
             }
         }
 
-        // By rarity
-        const rarity = card.guardian?.rarity || 'Ordinary';
-        if (rarityValues[rarity]) {
-            rarityValues[rarity].value += totalPrice;
-            rarityValues[rarity].count += qty;
-        }
+        // Se temos dados de variantes, usar os sets reais
+        if (cardVariants && cardVariants.variants) {
+            for (const [slug, variant] of Object.entries(cardVariants.variants)) {
+                const variantSet = variant.set;
+                const variantQty = variant.qty || 1;
+                const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
+                const totalPrice = price * variantQty;
 
-        // By element
-        const elements = card.elements || '';
-        if (elements.includes('Fire')) { elementValues['Fire'].value += totalPrice; elementValues['Fire'].count += qty; }
-        else if (elements.includes('Water')) { elementValues['Water'].value += totalPrice; elementValues['Water'].count += qty; }
-        else if (elements.includes('Earth')) { elementValues['Earth'].value += totalPrice; elementValues['Earth'].count += qty; }
-        else if (elements.includes('Air')) { elementValues['Air'].value += totalPrice; elementValues['Air'].count += qty; }
-        else { elementValues['Neutral'].value += totalPrice; elementValues['Neutral'].count += qty; }
+                // By set - usar o set da variante
+                if (variantSet && setValues[variantSet]) {
+                    setValues[variantSet].value += totalPrice;
+                    setValues[variantSet].count++;
+                }
 
-        // By type
-        const type = card.guardian?.type || 'Minion';
-        if (typeValues[type]) {
-            typeValues[type].value += totalPrice;
-            typeValues[type].count += qty;
+                // By rarity (mesmo para todas variantes do card)
+                const rarity = card.guardian?.rarity || 'Ordinary';
+                if (rarityValues[rarity]) {
+                    rarityValues[rarity].value += totalPrice;
+                    rarityValues[rarity].count++;
+                }
+
+                // By element
+                const elements = card.elements || '';
+                if (elements.includes('Fire')) { elementValues['Fire'].value += totalPrice; elementValues['Fire'].count++; }
+                else if (elements.includes('Water')) { elementValues['Water'].value += totalPrice; elementValues['Water'].count++; }
+                else if (elements.includes('Earth')) { elementValues['Earth'].value += totalPrice; elementValues['Earth'].count++; }
+                else if (elements.includes('Air')) { elementValues['Air'].value += totalPrice; elementValues['Air'].count++; }
+                else { elementValues['Neutral'].value += totalPrice; elementValues['Neutral'].count++; }
+
+                // By type
+                const type = card.guardian?.type || 'Minion';
+                if (typeValues[type]) {
+                    typeValues[type].value += totalPrice;
+                    typeValues[type].count++;
+                }
+            }
+        } else {
+            // Fallback: sem dados de variantes, usar o set mais recente (último do array)
+            const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
+            const qty = data.qty || 1;
+            const totalPrice = price * qty;
+
+            // By set - usar o ÚLTIMO set (mais recente/provável)
+            if (card.sets && card.sets.length > 0) {
+                const recentSet = card.sets[card.sets.length - 1].name;
+                if (setValues[recentSet]) {
+                    setValues[recentSet].value += totalPrice;
+                    setValues[recentSet].count++;
+                }
+            }
+
+            // By rarity
+            const rarity = card.guardian?.rarity || 'Ordinary';
+            if (rarityValues[rarity]) {
+                rarityValues[rarity].value += totalPrice;
+                rarityValues[rarity].count++;
+            }
+
+            // By element
+            const elements = card.elements || '';
+            if (elements.includes('Fire')) { elementValues['Fire'].value += totalPrice; elementValues['Fire'].count++; }
+            else if (elements.includes('Water')) { elementValues['Water'].value += totalPrice; elementValues['Water'].count++; }
+            else if (elements.includes('Earth')) { elementValues['Earth'].value += totalPrice; elementValues['Earth'].count++; }
+            else if (elements.includes('Air')) { elementValues['Air'].value += totalPrice; elementValues['Air'].count++; }
+            else { elementValues['Neutral'].value += totalPrice; elementValues['Neutral'].count++; }
+
+            // By type
+            const type = card.guardian?.type || 'Minion';
+            if (typeValues[type]) {
+                typeValues[type].value += totalPrice;
+                typeValues[type].count++;
+            }
         }
     });
 
