@@ -7787,17 +7787,31 @@ function getTotalVariantsInGame() {
 }
 
 /**
- * Calculate owned variants count from VariantTracker
+ * Calculate owned variants count
+ * Cards with VariantTracker data: count actual variants
+ * Cards without: count as 1 variant (default Standard)
  */
 function getOwnedVariantsCount() {
     const tracker = window.variantTracker;
-    if (!tracker || !tracker.collection) return 0;
-
     let totalVariants = 0;
-    for (const cardName in tracker.collection) {
-        const variants = tracker.collection[cardName];
-        totalVariants += Object.keys(variants).length;
-    }
+
+    // Para cada card na coleção
+    collection.forEach((data, cardName) => {
+        let variantCount = 1; // Default: 1 variante (Standard)
+
+        if (tracker && tracker.collection) {
+            // Tentar encontrar no VariantTracker
+            const normalizedName = cardName.toLowerCase().trim().replace(/\s+/g, '_');
+            const cardVariants = tracker.collection[normalizedName];
+
+            if (cardVariants && Object.keys(cardVariants).length > 0) {
+                variantCount = Object.keys(cardVariants).length;
+            }
+        }
+
+        totalVariants += variantCount;
+    });
+
     return totalVariants;
 }
 
