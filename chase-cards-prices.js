@@ -351,18 +351,23 @@ const chaseCardsPriceService = new ChaseCardsPriceService();
 
 // Integrar com PriceService existente
 if (typeof priceService !== 'undefined') {
-    // Sobrescrever método getPrice para checar chase cards primeiro
+    // Sobrescrever método getPrice - TCGCSV tem prioridade, chase cards é fallback
     const originalGetPrice = priceService.getPrice.bind(priceService);
 
     priceService.getPrice = function(cardName, variant = 'standard', setName = null) {
-        // Primeiro verifica chase cards
+        // Primeiro tenta o método original (TCGCSV -> NocoDB -> cache)
+        const originalPrice = originalGetPrice(cardName, variant, setName);
+        if (originalPrice !== null) {
+            return originalPrice;
+        }
+
+        // Fallback para chase cards apenas quando não há dados no TCGCSV
         const override = chaseCardsPriceService.getOverridePrice(cardName, setName, variant);
         if (override) {
             return override.price;
         }
 
-        // Fallback para método original
-        return originalGetPrice(cardName, variant, setName);
+        return null;
     };
 
     // Adicionar método para verificar se é chase

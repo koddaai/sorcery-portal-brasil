@@ -27,12 +27,17 @@ class PriceService {
         this.cacheExpiry = 30 * 24 * 60 * 60 * 1000; // 30 dias (preços manuais)
         this.nocodbCacheExpiry = 24 * 60 * 60 * 1000; // 24 horas (NocoDB)
 
-        // NocoDB Configuration (usar config centralizada se disponível)
+        // NocoDB Configuration (usar SecurityConfig centralizada)
+        // SEGURANCA: Token NUNCA deve ser hardcoded aqui
         const config = typeof SecurityConfig !== 'undefined' ? SecurityConfig.api : null;
         this.nocodb = {
             baseUrl: config?.baseUrl || 'https://dados.kodda.ai',
-            token: config?.token || 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-',
-            tableId: 'mh3n77dmh5d9jax'
+            token: config?.token || null, // Token vem de SecurityConfig ou null
+            tableId: 'mh3n77dmh5d9jax',
+            // Flag para verificar se pode fazer chamadas diretas
+            get canMakeDirectCalls() {
+                return this.token !== null || (config?.isUsingProxy === true);
+            }
         };
 
         this.sources = {
@@ -100,12 +105,21 @@ class PriceService {
     // Buscar preços do NocoDB
     async fetchPricesFromNocodb(limit = 1000, offset = 0) {
         try {
+            // SEGURANCA: Verificar se temos token ou estamos usando proxy
+            if (!this.nocodb.canMakeDirectCalls) {
+                console.warn('[PriceService] NocoDB: Token não disponível e não usando proxy. Sync desabilitado.');
+                return null;
+            }
+
             const url = `${this.nocodb.baseUrl}/api/v2/tables/${this.nocodb.tableId}/records?limit=${limit}&offset=${offset}`;
-            const response = await fetch(url, {
-                headers: {
-                    'xc-token': this.nocodb.token
-                }
-            });
+            const headers = {};
+
+            // Só adicionar token se disponível (em modo direto)
+            if (this.nocodb.token) {
+                headers['xc-token'] = this.nocodb.token;
+            }
+
+            const response = await fetch(url, { headers });
 
             if (!response.ok) {
                 throw new Error(`NocoDB API error: ${response.status}`);

@@ -3488,6 +3488,182 @@ h5 {
     opacity: 1;
 }
 
+/* Precon Details Modal */
+.precon-details-content {
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: var(--space-5);
+}
+
+.precon-details-header {
+    display: flex;
+    gap: var(--space-5);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.precon-details-avatar {
+    width: 150px;
+    height: auto;
+    aspect-ratio: 0.72;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    flex-shrink: 0;
+}
+
+.precon-details-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.precon-details-info h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+    margin: 0 0 var(--space-2) 0;
+    font-size: 1.75rem;
+}
+
+.precon-details-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.precon-details-set {
+    background: var(--bg-surface-3);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.precon-details-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.precon-details-owned {
+    color: var(--success-green);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.precon-details-actions {
+    margin-top: auto;
+}
+
+.precon-details-actions .btn {
+    min-width: 200px;
+}
+
+.precon-details-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.precon-detail-type {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+}
+
+.precon-detail-type-header {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+    margin: 0 0 var(--space-3) 0;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: var(--space-2);
+}
+
+.precon-detail-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-3);
+}
+
+.precon-detail-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: var(--bg-surface-3);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.precon-detail-card:hover {
+    border-color: var(--accent-gold);
+    background: var(--bg-surface-4);
+}
+
+.precon-detail-card-img {
+    width: 40px;
+    height: auto;
+    aspect-ratio: 0.72;
+    object-fit: cover;
+    border-radius: var(--radius-xs);
+    flex-shrink: 0;
+}
+
+.precon-detail-card-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.precon-detail-card-qty {
+    font-weight: 700;
+    color: var(--accent-gold);
+    font-size: 0.8rem;
+}
+
+.precon-detail-card-name {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Mobile responsive for precon details */
+@media (max-width: 600px) {
+    .precon-details-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .precon-details-avatar {
+        width: 120px;
+    }
+
+    .precon-details-meta {
+        justify-content: center;
+    }
+
+    .precon-details-actions {
+        width: 100%;
+    }
+
+    .precon-details-actions .btn {
+        width: 100%;
+    }
+
+    .precon-detail-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Card Quantity Modal */
 .card-quantity-modal-content {
     max-width: 400px;

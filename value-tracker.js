@@ -71,8 +71,10 @@ class ValueTracker {
         this.snapshots = [];
         this.settings = {
             retentionDays: 90,
-            snapshotFrequency: 'daily'
+            snapshotFrequency: 'daily',
+            pruneIntervalMs: 60 * 60 * 1000 // 1 hora entre prunes
         };
+        this._lastPruneTime = 0; // Timestamp do último prune
         this.loadFromStorage();
     }
 
@@ -98,6 +100,8 @@ class ValueTracker {
                 this.snapshots = data.snapshots || [];
                 this.settings = { ...this.settings, ...data.settings };
                 console.log('[ValueTracker] Loaded', this.snapshots.length, 'snapshots from', this.storageKey);
+                // PERFORMANCE: Prune forçado na inicialização para limpar snapshots antigos
+                this.pruneOldSnapshots(true);
             }
         } catch (error) {
             console.error('[ValueTracker] Error loading history:', error);
@@ -193,14 +197,28 @@ class ValueTracker {
 
     /**
      * Prune snapshots older than retention period
+     * PERFORMANCE: Só executa se passou mais de 1 hora desde último prune
      */
-    pruneOldSnapshots() {
+    pruneOldSnapshots(force = false) {
+        const now = Date.now();
+
+        // Skip se não forçado e último prune foi recente
+        if (!force && (now - this._lastPruneTime) < this.settings.pruneIntervalMs) {
+            return;
+        }
+
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - this.settings.retentionDays);
         const cutoffStr = cutoffDate.toISOString().split('T')[0];
 
         const before = this.snapshots.length;
         this.snapshots = this.snapshots.filter(s => s.date >= cutoffStr);
+
+        this._lastPruneTime = now;
+
+        if (this.snapshots.length < before) {
+            console.log(`[ValueTracker] Pruned ${before - this.snapshots.length} old snapshots`);
+        }
     }
 
     /**

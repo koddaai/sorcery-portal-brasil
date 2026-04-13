@@ -1715,145 +1715,294 @@ const PRECONS = {
         name: 'Water Precon [Beta]',
         avatar: 'Waveshaper',
         cards: [
+            // Avatar (1)
             { name: 'Waveshaper', qty: 1 },
-            { name: 'Tidal Wave', qty: 1 },
-            { name: 'Tufted Turtles', qty: 2 },
-            { name: 'Brobdingnag Bullfrog', qty: 2 },
-            { name: 'Giant Oyster', qty: 2 },
-            { name: 'Sea Serpent', qty: 1 },
-            { name: 'Kelp Lurker', qty: 2 },
-            { name: 'Gillfolk Raiders', qty: 2 },
-            { name: 'Ice Golem', qty: 1 },
-            { name: 'Polar Bear', qty: 2 },
-            { name: 'Dragonfish', qty: 1 },
-            { name: 'Mermaid', qty: 2 },
-            { name: 'Diluvian Kraken', qty: 1 },
-            { name: 'Coral Golem', qty: 1 },
-            { name: 'Maelstrom Elemental', qty: 1 },
-            { name: 'Sea Witch', qty: 1 },
-            { name: 'Leviathan', qty: 1 },
-            { name: 'Frost Bolt', qty: 2 },
-            { name: 'Mist', qty: 1 },
-            { name: 'Freeze', qty: 2 },
-            { name: 'Hailstorm', qty: 1 },
-            { name: 'Riptide', qty: 1 },
+            // Aura (2)
+            { name: 'Mariner\'s Curse', qty: 1 },
             { name: 'Flood', qty: 1 },
-            { name: 'Ice Storm', qty: 1 },
-            { name: 'Tidal Surge', qty: 1 },
-            { name: 'Coastal Village', qty: 4 },
-            { name: 'Coral Reef', qty: 3 },
-            { name: 'Deep Sea', qty: 4 },
-            { name: 'Frozen Lake', qty: 3 },
-            { name: 'Whirlpool', qty: 2 }
+            // Artifact (1)
+            { name: 'Sunken Treasure', qty: 1 },
+            // Minion (24)
+            { name: 'Porcupine Pufferfish', qty: 1 },
+            { name: 'Sedge Crabs', qty: 1 },
+            { name: 'Swamp Buffalo', qty: 2 },
+            { name: 'Polar Bears', qty: 2 },
+            { name: 'Swan Maidens', qty: 1 },
+            { name: 'Tide Naiads', qty: 2 },
+            { name: 'Brobdingnag Bullfrog', qty: 1 },
+            { name: 'Coral-Reef Kelpie', qty: 2 },
+            { name: 'Deep-Sea Mermaids', qty: 2 },
+            { name: 'Guile Sirens', qty: 1 },
+            { name: 'Tufted Turtles', qty: 1 },
+            { name: 'Pirate Ship', qty: 2 },
+            { name: 'Sea Serpent', qty: 2 },
+            { name: 'Anui Undine', qty: 2 },
+            { name: 'Seirawan Hydra', qty: 1 },
+            { name: 'Diluvian Kraken', qty: 1 },
+            // Magic (9)
+            { name: 'Riptide', qty: 2 },
+            { name: 'Drown', qty: 2 },
+            { name: 'Font of Life', qty: 1 },
+            { name: 'Ice Lance', qty: 2 },
+            { name: 'Stormy Seas', qty: 1 },
+            { name: 'Wrath of the Sea', qty: 1 },
+            // Site (16)
+            { name: 'Autumn River', qty: 3 },
+            { name: 'Floodplain', qty: 2 },
+            { name: 'Island Leviathan', qty: 1 },
+            { name: 'Maelström', qty: 1 },
+            { name: 'Spring River', qty: 3 },
+            { name: 'Summer River', qty: 3 },
+            { name: 'Undertow', qty: 3 }
         ]
     },
     'beta-earth': {
         name: 'Earth Precon [Beta]',
         avatar: 'Geomancer',
         cards: [
+            // Avatar (1)
             { name: 'Geomancer', qty: 1 },
-            { name: 'Earthquake', qty: 1 },
-            { name: 'Border Militia', qty: 3 },
+            // Aura (1)
+            { name: 'Entangle Terrain', qty: 1 },
+            // Artifact (3)
+            { name: 'Siege Ballista', qty: 1 },
+            { name: 'Rolling Boulder', qty: 1 },
+            { name: 'Payload Trebuchet', qty: 1 },
+            // Minion (24)
+            { name: 'Wild Boars', qty: 2 },
+            { name: 'Land Surveyor', qty: 2 },
+            { name: 'Scent Hounds', qty: 2 },
             { name: 'Autumn Unicorn', qty: 2 },
-            { name: 'Giant Spider', qty: 2 },
-            { name: 'Boar', qty: 2 },
-            { name: 'Stone Golem', qty: 1 },
-            { name: 'Centaur', qty: 2 },
-            { name: 'Dryad', qty: 2 },
-            { name: 'Treant', qty: 1 },
-            { name: 'Earth Elemental', qty: 1 },
-            { name: 'Giant', qty: 1 },
-            { name: 'Behemoth', qty: 1 },
-            { name: 'Forest Guardian', qty: 1 },
-            { name: 'Landslide', qty: 2 },
-            { name: 'Entangle', qty: 2 },
-            { name: 'Petrify', qty: 1 },
-            { name: 'Regrowth', qty: 1 },
-            { name: 'Nature\'s Wrath', qty: 1 },
-            { name: 'Earthquake', qty: 1 },
-            { name: 'Ordinary Village', qty: 4 },
-            { name: 'Dense Forest', qty: 4 },
-            { name: 'Mountain', qty: 4 },
-            { name: 'Ancient Grove', qty: 2 },
-            { name: 'Cave', qty: 2 }
+            { name: 'Belmotte Longbowmen', qty: 3 },
+            { name: 'Cave Trolls', qty: 3 },
+            { name: 'Slumbering Giantess', qty: 1 },
+            { name: 'Dalcean Phalanx', qty: 1 },
+            { name: 'House Arn Bannerman', qty: 2 },
+            { name: 'Pudge Butcher', qty: 1 },
+            { name: 'Amazon Warriors', qty: 2 },
+            { name: 'King of the Realm', qty: 1 },
+            { name: 'Wraetannis Titan', qty: 1 },
+            { name: 'Mountain Giant', qty: 1 },
+            // Magic (8)
+            { name: 'Divine Healing', qty: 1 },
+            { name: 'Overpower', qty: 2 },
+            { name: 'Border Militia', qty: 1 },
+            { name: 'Bury', qty: 2 },
+            { name: 'Cave-In', qty: 1 },
+            { name: 'Craterize', qty: 1 },
+            // Site (16)
+            { name: 'Bedrock', qty: 1 },
+            { name: 'Holy Ground', qty: 1 },
+            { name: 'Humble Village', qty: 3 },
+            { name: 'Quagmire', qty: 2 },
+            { name: 'Rustic Village', qty: 3 },
+            { name: 'Simple Village', qty: 3 },
+            { name: 'Sinkhole', qty: 1 },
+            { name: 'Vantage Hills', qty: 2 }
         ]
     },
     'gothic-necromancer': {
         name: 'Necromancer Precon [Gothic]',
         avatar: 'Necromancer',
         cards: [
+            // Avatar (1)
             { name: 'Necromancer', qty: 1 },
+            // Artifact (2)
+            { name: 'Panpipes of Pnom', qty: 1 },
+            { name: 'Corpse Catapult', qty: 1 },
+            // Minion (25)
+            { name: 'Bone Jumble', qty: 1 },
             { name: 'Fowl Bones', qty: 2 },
-            { name: 'Bone Spear', qty: 2 },
-            { name: 'Skeleton Warrior', qty: 3 },
-            { name: 'Grave Robber', qty: 2 },
-            { name: 'Zombie Horde', qty: 2 },
-            { name: 'Death Knight', qty: 1 },
-            { name: 'Lich', qty: 1 },
-            { name: 'Raise Skeleton', qty: 2 },
-            { name: 'Dark Ritual', qty: 2 },
-            { name: 'Soul Drain', qty: 1 },
-            { name: 'Boneyard', qty: 4 },
-            { name: 'Crypt', qty: 4 },
-            { name: 'Haunted Cemetery', qty: 4 },
-            { name: 'Dark Castle', qty: 4 }
+            { name: 'Bitter Departed', qty: 1 },
+            { name: 'Ignited', qty: 2 },
+            { name: 'Novice Necromancer', qty: 2 },
+            { name: 'Noxious Corpse', qty: 1 },
+            { name: 'Khamaseen Mummy', qty: 1 },
+            { name: 'Order of the Pale Worm', qty: 1 },
+            { name: 'Screamer', qty: 3 },
+            { name: 'Snallygaster', qty: 2 },
+            { name: 'Stygian Archers', qty: 1 },
+            { name: 'Hotwheel', qty: 2 },
+            { name: 'Dreadwing', qty: 1 },
+            { name: 'Master Necromancer', qty: 1 },
+            { name: 'Vesper Swarm', qty: 1 },
+            { name: 'Those Who Linger', qty: 1 },
+            { name: 'Draconian Bonekite', qty: 1 },
+            { name: 'Stitched Abomination', qty: 1 },
+            // Magic (9)
+            { name: 'Bone Spear', qty: 3 },
+            { name: 'Detonate', qty: 1 },
+            { name: 'Carrionette', qty: 1 },
+            { name: 'Kiss of Death', qty: 2 },
+            { name: 'Witching Hour', qty: 1 },
+            { name: 'Necronomiconcert', qty: 1 },
+            // Site (16)
+            { name: 'Accursed Desert', qty: 1 },
+            { name: 'Accursed Tower', qty: 1 },
+            { name: 'Darkest Dungeon', qty: 1 },
+            { name: 'Den of Evil', qty: 1 },
+            { name: 'Desert Bloom', qty: 1 },
+            { name: 'Dread Thicket', qty: 1 },
+            { name: 'Forsaken Crypt', qty: 1 },
+            { name: 'Open Mausoleum', qty: 2 },
+            { name: 'Sold-out Cemetery', qty: 1 },
+            { name: 'Spire', qty: 2 },
+            { name: 'Twilight Bloom', qty: 1 },
+            { name: 'Vast Desert', qty: 1 },
+            { name: 'Wasteland', qty: 2 }
         ]
     },
     'gothic-harbinger': {
         name: 'Harbinger Precon [Gothic]',
         avatar: 'Harbinger',
         cards: [
+            // Avatar (1)
             { name: 'Harbinger', qty: 1 },
-            { name: 'Omen', qty: 2 },
-            { name: 'Dark Prophet', qty: 2 },
-            { name: 'Raven Familiar', qty: 3 },
-            { name: 'Storm Crow', qty: 2 },
-            { name: 'Eclipse', qty: 1 },
-            { name: 'Prophecy', qty: 2 },
-            { name: 'Foretell', qty: 2 },
-            { name: 'Doom', qty: 1 },
-            { name: 'Cursed Tower', qty: 4 },
-            { name: 'Blighted Land', qty: 4 },
-            { name: 'Storm Peak', qty: 4 },
-            { name: 'Obsidian Spire', qty: 4 }
+            // Aura (1)
+            { name: 'Falling Star', qty: 1 },
+            // Minion (26)
+            { name: 'Aaj-kegon Ghost Crabs', qty: 1 },
+            { name: 'Forsaken', qty: 2 },
+            { name: 'Sea Witch', qty: 2 },
+            { name: 'Static Servant', qty: 1 },
+            { name: 'Willing Tribute', qty: 2 },
+            { name: 'Mesmer Demon', qty: 2 },
+            { name: 'Nommo Monitor', qty: 2 },
+            { name: 'Bound Spirit', qty: 2 },
+            { name: 'Frozen Horror', qty: 1 },
+            { name: 'Lacuna Entity', qty: 1 },
+            { name: 'Regurgitator', qty: 1 },
+            { name: 'Slimy Mutants', qty: 1 },
+            { name: 'Gnarled Wendigo', qty: 1 },
+            { name: 'Hearkening Kraken', qty: 1 },
+            { name: 'Shoggoth', qty: 2 },
+            { name: 'Dormant Monstrosity', qty: 1 },
+            { name: 'Ten-tonne Slug', qty: 2 },
+            { name: 'Yog-Sothoth', qty: 1 },
+            // Magic (9)
+            { name: 'Gift of the Frog', qty: 2 },
+            { name: 'Ice Shards', qty: 2 },
+            { name: 'Monstermorphosis', qty: 1 },
+            { name: 'Swap', qty: 1 },
+            { name: 'Abyssal Assault', qty: 1 },
+            { name: 'Into the Abyss', qty: 1 },
+            { name: 'Call of the Sea', qty: 1 },
+            // Site (16)
+            { name: 'Accursed Tower', qty: 1 },
+            { name: 'Algae Bloom', qty: 1 },
+            { name: 'Croaking Swamp', qty: 2 },
+            { name: 'Dark Alley', qty: 1 },
+            { name: 'Deep Sea', qty: 1 },
+            { name: 'Den of Evil', qty: 1 },
+            { name: 'Elder Ruins', qty: 1 },
+            { name: 'Peculiar Port', qty: 1 },
+            { name: 'Spire', qty: 2 },
+            { name: 'Stinging Kelp', qty: 2 },
+            { name: 'Stream', qty: 2 },
+            { name: 'Twilight Bloom', qty: 1 }
         ]
     },
     'gothic-persecutor': {
         name: 'Persecutor Precon [Gothic]',
         avatar: 'Persecutor',
         cards: [
+            // Avatar (1)
             { name: 'Persecutor', qty: 1 },
-            { name: 'Accuser', qty: 2 },
-            { name: 'Inquisitor', qty: 2 },
-            { name: 'Witch Hunter', qty: 2 },
-            { name: 'Purifier', qty: 2 },
-            { name: 'Holy Fire', qty: 2 },
-            { name: 'Accusation', qty: 3 },
-            { name: 'Judgment', qty: 1 },
-            { name: 'Purge', qty: 2 },
-            { name: 'Cathedral', qty: 4 },
-            { name: 'Sanctum', qty: 4 },
-            { name: 'Holy Ground', qty: 4 },
-            { name: 'Tribunal', qty: 4 }
+            // Artifact (3)
+            { name: 'Holy Water', qty: 1 },
+            { name: 'Blade of Thorns', qty: 1 },
+            { name: 'Peacemaker Arbalest', qty: 1 },
+            // Minion (23)
+            { name: 'One-shot Wizard', qty: 1 },
+            { name: 'Flagellant', qty: 1 },
+            { name: 'Flaming Skull', qty: 1 },
+            { name: 'Holy Warrior', qty: 2 },
+            { name: 'Kissers of Wounds', qty: 1 },
+            { name: 'Lesser Blood Demon', qty: 2 },
+            { name: 'Redmane Hyena', qty: 1 },
+            { name: 'Wild Fanatic', qty: 2 },
+            { name: 'Intrepid Hero', qty: 1 },
+            { name: 'Martyrs of Tomorrow', qty: 1 },
+            { name: 'Màzuj Ifrit', qty: 1 },
+            { name: 'Angry Mob', qty: 1 },
+            { name: 'Fallen Angel', qty: 1 },
+            { name: 'Flayer', qty: 1 },
+            { name: 'Greater Blood Demon', qty: 1 },
+            { name: 'Shackled Demon', qty: 1 },
+            { name: 'Zeppelin of Zealots', qty: 2 },
+            { name: 'Cherubim', qty: 1 },
+            { name: 'Undesirables', qty: 1 },
+            // Magic (10)
+            { name: 'Bind Evil', qty: 2 },
+            { name: 'Blaze of Glory', qty: 1 },
+            { name: 'Flame Strike', qty: 2 },
+            { name: 'Lash', qty: 1 },
+            { name: 'Trial by Fire', qty: 2 },
+            { name: 'Wreathed in Righteousness', qty: 1 },
+            { name: 'Release the Hounds', qty: 1 },
+            // Site (16)
+            { name: 'Active Volcano', qty: 1 },
+            { name: 'Autumn Bloom', qty: 1 },
+            { name: 'Blessed Village', qty: 1 },
+            { name: 'Consecrated Ground', qty: 1 },
+            { name: 'Desert Bloom', qty: 2 },
+            { name: 'Hillside Chapel', qty: 1 },
+            { name: 'Molten Maar', qty: 1 },
+            { name: 'Purgatory', qty: 1 },
+            { name: 'Road to Perdition', qty: 1 },
+            { name: 'Valley', qty: 2 },
+            { name: 'Vast Desert', qty: 2 },
+            { name: 'Wasteland', qty: 2 }
         ]
     },
     'gothic-savior': {
         name: 'Savior Precon [Gothic]',
         avatar: 'Savior',
         cards: [
+            // Avatar (1)
             { name: 'Savior', qty: 1 },
-            { name: 'Guardian Angel', qty: 2 },
-            { name: 'Protector', qty: 2 },
-            { name: 'Healer', qty: 2 },
-            { name: 'Shield Bearer', qty: 2 },
-            { name: 'Second Wind', qty: 2 },
-            { name: 'Swap', qty: 2 },
-            { name: 'Divine Shield', qty: 2 },
-            { name: 'Resurrection', qty: 1 },
-            { name: 'Sanctuary', qty: 4 },
-            { name: 'Temple', qty: 4 },
-            { name: 'Blessed Grove', qty: 4 },
-            { name: 'Heaven\'s Gate', qty: 4 }
+            // Artifact (2)
+            { name: 'Flame of the First Ones', qty: 1 },
+            { name: 'Makeshift Barricade', qty: 1 },
+            // Minion (26)
+            { name: 'Eltham Townsfolk', qty: 1 },
+            { name: 'Revered Revenant', qty: 2 },
+            { name: 'Serava Townsfolk', qty: 1 },
+            { name: 'Town Priest', qty: 1 },
+            { name: 'Angel Ascendant', qty: 1 },
+            { name: 'Muddy Pigs', qty: 2 },
+            { name: 'Survivors of Serava', qty: 2 },
+            { name: 'Virgin in Prayer', qty: 2 },
+            { name: 'Mayor of Milborne', qty: 1 },
+            { name: 'Nightwatchmen', qty: 1 },
+            { name: 'Order of the White Wing', qty: 1 },
+            { name: 'Rowdy Boys', qty: 1 },
+            { name: 'Search Party', qty: 3 },
+            { name: 'Guardian Angel', qty: 1 },
+            { name: 'Monks of Kobalsa', qty: 2 },
+            { name: 'Weathered Trunks', qty: 2 },
+            { name: 'Faith Incarnate', qty: 1 },
+            { name: 'Malakhim', qty: 1 },
+            // Magic (8)
+            { name: 'Enduring Faith', qty: 1 },
+            { name: 'Wave of Eviction', qty: 1 },
+            { name: 'Baptize', qty: 1 },
+            { name: 'Divine Lance', qty: 1 },
+            { name: 'Holy Nova', qty: 1 },
+            { name: 'Smite', qty: 2 },
+            { name: 'Golden Dawn', qty: 1 },
+            // Site (16)
+            { name: 'Algae Bloom', qty: 1 },
+            { name: 'Autumn Bloom', qty: 2 },
+            { name: 'Blessed Village', qty: 2 },
+            { name: 'Blessed Well', qty: 1 },
+            { name: 'Consecrated Ground', qty: 1 },
+            { name: 'Fertile Earth', qty: 1 },
+            { name: 'Forlorn Keep', qty: 1 },
+            { name: 'Mudslide', qty: 1 },
+            { name: 'Stream', qty: 2 },
+            { name: 'Troubled Town', qty: 2 },
+            { name: 'Valley', qty: 2 }
         ]
     }
 };
@@ -2124,6 +2273,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // IMPORTANT: Initialize auth FIRST before anything else
     initAuthUI();
 
+    // Initialize VariantTracker globally
+    if (typeof VariantTracker !== 'undefined' && !window.variantTracker) {
+        window.variantTracker = new VariantTracker();
+        console.log('[App] VariantTracker initialized');
+    }
+
     // Now load user-specific data
     loadFromStorage();
     loadUserDecks();
@@ -2309,6 +2464,21 @@ function cleanupUserDataOnLogout(userId, clearMemory = true) {
 
     if (typeof priceAlertManager !== 'undefined' && priceAlertManager.reload) {
         priceAlertManager.reload();
+    }
+
+    // Reload price services to clear any user-specific cache
+    // SEGURANCA: Evita vazamento de dados entre usuários
+    if (typeof priceService !== 'undefined') {
+        priceService.nocodbPrices = {};
+        priceService.nocodbLastSync = null;
+        console.log('[Logout] PriceService NocoDB cache cleared');
+    }
+
+    if (typeof tcgcsvPriceService !== 'undefined') {
+        // TCGCSV prices são globais (não user-specific), não precisa limpar
+        // Mas forçar refresh na próxima sessão
+        tcgcsvPriceService.lastUpdate = null;
+        console.log('[Logout] TCGCSV cache invalidated for next session');
     }
 
     // Clear gamification for logged out state
@@ -2713,8 +2883,9 @@ function getCardPrice(cardName, setName = null, finish = 'Standard') {
 // Get total value of a card in collection based on actual variants owned
 function getCardTotalValue(cardName) {
     // If VariantTracker is available, calculate value based on actual variants
-    if (typeof VariantTracker !== 'undefined') {
-        const tracker = new VariantTracker();
+    // Use global instance to ensure data consistency
+    const tracker = window.variantTracker || (typeof VariantTracker !== 'undefined' ? new VariantTracker() : null);
+    if (tracker) {
         const owned = tracker.getCollectionByCard(cardName);
 
         if (owned && owned.variants && Object.keys(owned.variants).length > 0) {
@@ -2969,6 +3140,16 @@ function setupEventListeners() {
         preconModal.addEventListener('click', (e) => {
             if (e.target === preconModal) {
                 closePreconModal();
+            }
+        });
+    }
+
+    // Precon details modal click-outside to close
+    const preconDetailsModal = document.getElementById('precon-details-modal');
+    if (preconDetailsModal) {
+        preconDetailsModal.addEventListener('click', (e) => {
+            if (e.target === preconDetailsModal) {
+                closePreconDetailsModal();
             }
         });
     }
@@ -6958,6 +7139,118 @@ function closePreconModal() {
     }
 }
 
+// Show precon details (all cards in the precon)
+function showPreconDetails(preconId) {
+    const precon = PRECONS[preconId];
+    if (!precon) return;
+
+    const modal = document.getElementById('precon-details-modal');
+    if (!modal) return;
+
+    const isOwned = ownedPrecons.has(preconId);
+    const totalCards = precon.cards.reduce((sum, c) => sum + (c.qty || 1), 0);
+    const setName = preconId.startsWith('gothic-') ? 'Gothic' : 'Beta';
+
+    // Find avatar card for header image
+    const avatarCard = allCards.find(c => c.name === precon.avatar);
+    const avatarSlug = avatarCard ? getCardImageSlug(avatarCard) : null;
+    const avatarUrl = avatarSlug ? `${IMAGE_CDN}${avatarSlug}.png` : 'placeholder.png';
+
+    // Build card list grouped by type
+    const cardsByType = {};
+    precon.cards.forEach(card => {
+        const cardData = allCards.find(c => c.name === card.name);
+        const type = cardData?.type || 'Outro';
+        if (!cardsByType[type]) {
+            cardsByType[type] = [];
+        }
+        cardsByType[type].push({ ...card, cardData });
+    });
+
+    // Order types
+    const typeOrder = ['Avatar', 'Aura', 'Artifact', 'Minion', 'Magic', 'Site'];
+    const sortedTypes = Object.keys(cardsByType).sort((a, b) => {
+        const aIndex = typeOrder.indexOf(a);
+        const bIndex = typeOrder.indexOf(b);
+        return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex);
+    });
+
+    // Generate HTML for cards
+    const cardsHtml = sortedTypes.map(type => {
+        const typeCards = cardsByType[type];
+        const typeTotal = typeCards.reduce((sum, c) => sum + (c.qty || 1), 0);
+
+        const cardsListHtml = typeCards.map(card => {
+            const cardData = card.cardData;
+            const imageSlug = cardData ? getCardImageSlug(cardData) : null;
+            const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : 'placeholder.png';
+
+            return `
+                <div class="precon-detail-card" onclick="event.stopPropagation(); ${cardData ? `openCardModal(allCards.find(c => c.name === '${card.name.replace(/'/g, "\\'")}'))` : ''}">
+                    <img src="${imageUrl}" alt="${card.name}" class="precon-detail-card-img" onerror="this.src='placeholder.png'">
+                    <div class="precon-detail-card-info">
+                        <span class="precon-detail-card-qty">${card.qty}x</span>
+                        <span class="precon-detail-card-name">${card.name}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        return `
+            <div class="precon-detail-type">
+                <h4 class="precon-detail-type-header">${type} (${typeTotal})</h4>
+                <div class="precon-detail-cards-grid">
+                    ${cardsListHtml}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Action button
+    const actionButton = isOwned
+        ? `<button class="btn btn-danger" onclick="removePreconFromCollection('${preconId}'); closePreconDetailsModal();">
+               <i data-lucide="trash-2"></i> Remover da Coleção
+           </button>`
+        : `<button class="btn btn-primary" onclick="addPreconToCollection('${preconId}'); closePreconDetailsModal();">
+               <i data-lucide="plus"></i> Adicionar à Coleção
+           </button>`;
+
+    // Set modal content
+    modal.innerHTML = `
+        <div class="modal-content precon-details-content">
+            <button class="close-modal" onclick="closePreconDetailsModal()">×</button>
+            <div class="precon-details-header">
+                <img src="${avatarUrl}" alt="${precon.avatar}" class="precon-details-avatar" onerror="this.src='placeholder.png'">
+                <div class="precon-details-info">
+                    <h2>${precon.name}</h2>
+                    <p class="precon-details-meta">
+                        <span class="precon-details-set">${setName}</span>
+                        <span class="precon-details-count">${totalCards} cartas</span>
+                        ${isOwned ? '<span class="precon-details-owned">✓ Na coleção</span>' : ''}
+                    </p>
+                    <div class="precon-details-actions">
+                        ${actionButton}
+                    </div>
+                </div>
+            </div>
+            <div class="precon-details-cards">
+                ${cardsHtml}
+            </div>
+        </div>
+    `;
+
+    modal.classList.remove('hidden');
+    refreshIcons();
+}
+
+// Close precon details modal
+function closePreconDetailsModal() {
+    const modal = document.getElementById('precon-details-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
 // Render the precon grid
 function renderPreconGrid() {
     const grid = document.getElementById('precon-grid');
@@ -6990,7 +7283,7 @@ function renderPreconGrid() {
                </button>`;
 
         return `
-            <div class="precon-card ${isOwned ? 'owned' : ''}">
+            <div class="precon-card ${isOwned ? 'owned' : ''}" onclick="showPreconDetails('${preconId}')">
                 <img src="${imageUrl}" alt="${precon.avatar}" class="precon-avatar" onerror="this.src='placeholder.png'">
                 <div class="precon-name">${precon.name.replace(` [${setName}]`, '')}</div>
                 <div class="precon-set">${setName}</div>
@@ -7003,10 +7296,27 @@ function renderPreconGrid() {
     refreshIcons();
 }
 
+// Helper function to convert card name to slug format
+function cardNameToSlug(cardName) {
+    return cardName
+        .toLowerCase()
+        .trim()
+        .replace(/[''`]/g, '')        // Remove apostrophes
+        .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+        .replace(/\s+/g, '_');        // Spaces to underscores
+}
+
 // Add all cards from a precon to collection
 function addPreconToCollection(preconId) {
     const precon = PRECONS[preconId];
     if (!precon) return;
+
+    // Determine set code from preconId (beta-fire -> bet, gothic-necromancer -> gth)
+    const setCode = preconId.startsWith('beta-') ? 'bet' : 'gth';
+    const setName = preconId.startsWith('beta-') ? 'Beta' : 'Gothic';
+
+    // Get variantTracker instance
+    const tracker = window.variantTracker;
 
     // Add each card with precon tracking
     precon.cards.forEach(card => {
@@ -7014,14 +7324,28 @@ function addPreconToCollection(preconId) {
         const currentQty = existing?.qty || 0;
         const existingPrecons = existing?.precons || [];
         const addedAt = existing?.addedAt || new Date().toISOString();
+        const cardQty = card.qty || 1;
 
+        // Add to basic collection
         collection.set(card.name, {
-            qty: currentQty + (card.qty || 1),
+            qty: currentQty + cardQty,
             addedAt: addedAt,
             precons: existingPrecons.includes(preconId)
                 ? existingPrecons
                 : [...existingPrecons, preconId]
         });
+
+        // Add to VariantTracker with Beta/Gothic Standard pricing
+        // Slug format: {set_code}-{card_slug}-p-s (p=precon, s=standard)
+        if (tracker) {
+            try {
+                const cardSlug = cardNameToSlug(card.name);
+                const variantSlug = `${setCode}-${cardSlug}-p-s`;
+                tracker.addToCollection(card.name, variantSlug, 'Standard', cardQty);
+            } catch (err) {
+                console.warn(`[Precon] Could not add variant for ${card.name}:`, err.message);
+            }
+        }
     });
 
     // Mark precon as owned
@@ -7042,6 +7366,12 @@ function addPreconToCollection(preconId) {
 function removePreconFromCollection(preconId) {
     const precon = PRECONS[preconId];
     if (!precon) return;
+
+    // Determine set code from preconId
+    const setCode = preconId.startsWith('beta-') ? 'bet' : 'gth';
+
+    // Get variantTracker instance
+    const tracker = window.variantTracker;
 
     // Remove each card's quantity from collection
     precon.cards.forEach(card => {
@@ -7066,6 +7396,17 @@ function removePreconFromCollection(preconId) {
                 addedAt: existing.addedAt,
                 precons: updatedPrecons
             });
+        }
+
+        // Also remove from VariantTracker
+        if (tracker) {
+            try {
+                const cardSlug = cardNameToSlug(card.name);
+                const variantSlug = `${setCode}-${cardSlug}-p-s`;
+                tracker.removeFromCollection(card.name, variantSlug, cardPreconQty);
+            } catch (err) {
+                // Variant may not exist, ignore
+            }
         }
     });
 
@@ -7418,8 +7759,20 @@ function renderWishlist() {
     refreshIcons();
 }
 
-// Update Stats
-function updateStats() {
+// ============================================
+// STATS UPDATE FUNCTIONS
+// ============================================
+// updateStats() - Atualiza contadores básicos (rápido, sem preços)
+// updateStatsWithPrices() - Atualiza página de estatísticas completa (com preços)
+//
+// PERFORMANCE: updateStats tem debounce de 100ms para evitar múltiplas chamadas
+
+// Track last update time for debounce
+let _lastStatsUpdate = 0;
+let _statsUpdateTimeout = null;
+
+// Core stats update (internal)
+function _updateStatsCore() {
     const totalCards = allCards.length;
     const collectedCount = collection.size;
     const completion = totalCards > 0 ? ((collectedCount / totalCards) * 100).toFixed(1) : 0;
@@ -7472,6 +7825,29 @@ function updateStats() {
                 </div>
             `;
         }).join('');
+    }
+}
+
+// Debounced stats update wrapper - prevents multiple rapid updates
+function updateStats() {
+    const now = Date.now();
+    const DEBOUNCE_MS = 100;
+
+    // Clear any pending update
+    if (_statsUpdateTimeout) {
+        clearTimeout(_statsUpdateTimeout);
+    }
+
+    // If last update was recent, debounce
+    if (now - _lastStatsUpdate < DEBOUNCE_MS) {
+        _statsUpdateTimeout = setTimeout(() => {
+            _lastStatsUpdate = Date.now();
+            _updateStatsCore();
+        }, DEBOUNCE_MS);
+    } else {
+        // Execute immediately
+        _lastStatsUpdate = now;
+        _updateStatsCore();
     }
 }
 
@@ -11803,6 +12179,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('userLoggedIn', () => {
         checkTermsAcceptance();
         initCommunityServices();
+
+        // Reload price services with new user context
+        // SEGURANCA: Garante que dados do usuário anterior não vazem
+        if (typeof valueTracker !== 'undefined' && valueTracker.reload) {
+            valueTracker.reload();
+        }
+        if (typeof window.variantTracker !== 'undefined') {
+            window.variantTracker = new VariantTracker();
+        }
+        // Trigger price refresh in background
+        if (typeof tcgcsvPriceService !== 'undefined') {
+            tcgcsvPriceService.fetchAllPrices(false);
+        }
+        console.log('[Login] Services reloaded for new user');
     });
 
     document.addEventListener('userLoggedOut', () => {
