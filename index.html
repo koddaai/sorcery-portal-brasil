@@ -73,7 +73,7 @@
                             <i data-lucide="user-cog"></i>
                         </button>
                         <div class="user-avatar user-menu-avatar" onclick="openProfileSettings()" title="Configurações de Perfil">
-                            <!-- Avatar SVG will be injected here by updateAllAvatarDisplays() -->
+                            <i data-lucide="user" class="avatar-fallback"></i>
                         </div>
                         <span id="user-display-name" class="user-display-name"></span>
                         <button id="logout-btn" class="header-icon-btn" title="Sair" aria-label="Sair da conta">
@@ -167,9 +167,6 @@
                             <button class="nav-dropdown-item" data-view="forum" role="menuitem">
                                 <i data-lucide="message-square"></i> Fórum
                             </button>
-                            <button class="nav-dropdown-item" data-view="marketplace" role="menuitem">
-                                <i data-lucide="store"></i> Marketplace
-                            </button>
                             <button class="nav-dropdown-item" data-view="community" role="menuitem">
                                 <i data-lucide="users"></i> Discord & Links
                             </button>
@@ -192,9 +189,6 @@
                             </button>
                             <button class="nav-dropdown-item" data-view="top-cards" role="menuitem">
                                 <i data-lucide="trending-up"></i> Top Cards
-                            </button>
-                            <button class="nav-dropdown-item" data-view="timeline" role="menuitem">
-                                <i data-lucide="calendar"></i> Timeline
                             </button>
                             <button class="nav-dropdown-item" data-view="news" role="menuitem">
                                 <i data-lucide="newspaper"></i> Notícias
@@ -2523,18 +2517,6 @@
                 <!-- Redirects to art-view -->
             </section>
 
-            <!-- Release Timeline View -->
-            <section id="timeline-view" class="view">
-                <div class="section-header">
-                    <h2 data-i18n="timelineTitle">Timeline de Lançamentos</h2>
-                    <p class="subtitle">Histórico de expansões e lançamentos de Sorcery: Contested Realm</p>
-                </div>
-
-                <div id="timeline-content" class="timeline-container">
-                    <!-- Will be populated by JS -->
-                </div>
-            </section>
-
             <!-- News View -->
             <section id="news-view" class="view">
                 <div class="section-header">
@@ -2624,51 +2606,6 @@
                         <p>Este perfil não existe ou foi configurado como privado.</p>
                         <button class="btn primary" onclick="showView('home')">Voltar ao Inicio</button>
                     </div>
-                </div>
-            </section>
-
-            <!-- Marketplace View -->
-            <section id="marketplace-view" class="view">
-                <div class="view-header">
-                    <h2><i data-lucide="store"></i> Marketplace</h2>
-                    <p class="subtitle">Ofertas e demandas da comunidade brasileira</p>
-                </div>
-
-                <div class="marketplace-toolbar">
-                    <div class="marketplace-filters">
-                        <input type="text" id="marketplace-search" placeholder="Buscar carta..." class="search-input" aria-label="Buscar no marketplace">
-                        <select id="marketplace-type-filter" class="filter-select">
-                            <option value="">Todos</option>
-                            <option value="offering">Oferecendo</option>
-                            <option value="looking_for">Procurando</option>
-                        </select>
-                    </div>
-                    <div class="marketplace-actions">
-                        <button class="btn btn-secondary" onclick="tradeMarketplace.publishFromTradeBinder()">
-                            <i data-lucide="upload"></i>
-                            Publicar Trade Binder
-                        </button>
-                        <button class="btn btn-secondary" onclick="tradeMarketplace.publishFromWants()">
-                            <i data-lucide="search"></i>
-                            Publicar Procuras
-                        </button>
-                    </div>
-                </div>
-
-                <div id="marketplace-content" class="marketplace-content">
-                    <div id="marketplace-grid" class="marketplace-grid">
-                        <!-- Populated by trade-marketplace.js -->
-                    </div>
-                </div>
-
-                <div class="legal-disclaimer">
-                    <i data-lucide="alert-triangle"></i>
-                    <p>
-                        <strong>Aviso:</strong> Este portal apenas conecta jogadores.
-                        Transações ocorrem fora da plataforma sob responsabilidade
-                        exclusiva das partes envolvidas.
-                        <a href="#" onclick="showTermsModal(); return false;">Ver termos completos</a>
-                    </p>
                 </div>
             </section>
 
@@ -3709,11 +3646,12 @@
                     <div class="form-group">
                         <label for="post-category">Categoria:</label>
                         <select id="post-category" class="select">
-                            <option value="geral">Geral</option>
+                            <option value="duvidas">Dúvidas sobre Cartas</option>
+                            <option value="classificados">Classificados (Compra/Venda/Troca)</option>
+                            <option value="promocoes">Promoções</option>
                             <option value="dicas">Dicas e Estratégias</option>
-                            <option value="compra_venda">Compra e Venda</option>
                             <option value="eventos">Eventos e Torneios</option>
-                            <option value="regras">Dúvidas de Regras</option>
+                            <option value="geral">Geral</option>
                         </select>
                     </div>
 

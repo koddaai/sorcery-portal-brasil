@@ -4,11 +4,12 @@
 // ============================================
 
 const FORUM_CATEGORIES = {
-    geral: { name: 'Geral', icon: 'message-circle', description: 'Discussões gerais sobre Sorcery' },
-    dicas: { name: 'Dicas', icon: 'lightbulb', description: 'Estratégias, combos e dicas de jogo' },
-    compra_venda: { name: 'Compra/Venda', icon: 'shopping-bag', description: 'Anúncios P2P de compra e venda' },
+    duvidas: { name: 'Dúvidas sobre Cartas', icon: 'help-circle', description: 'Perguntas sobre mecânicas, regras e interações de cartas' },
+    classificados: { name: 'Classificados', icon: 'tag', description: 'Anúncios de compra, venda e troca P2P' },
+    promocoes: { name: 'Promoções', icon: 'percent', description: 'Ofertas, cupons e promoções de lojas' },
+    dicas: { name: 'Dicas & Estratégias', icon: 'lightbulb', description: 'Estratégias, combos e dicas de jogo' },
     eventos: { name: 'Eventos', icon: 'calendar', description: 'Torneios, encontros e eventos' },
-    regras: { name: 'Regras', icon: 'book-open', description: 'Dúvidas sobre regras do jogo' }
+    geral: { name: 'Geral', icon: 'message-circle', description: 'Discussões gerais sobre Sorcery' }
 };
 
 class ForumService {
