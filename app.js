@@ -7774,14 +7774,30 @@ let _statsUpdateTimeout = null;
 // Core stats update (internal)
 function _updateStatsCore() {
     const totalCards = allCards.length;
-    const collectedCount = collection.size;
+    const collectedCount = collection.size; // Cards únicos
     const completion = totalCards > 0 ? ((collectedCount / totalCards) * 100).toFixed(1) : 0;
     const preconsOwned = ownedPrecons.size;
+
+    // Calcular total com cópias (soma de todas as quantidades)
+    let totalWithCopies = 0;
+    collection.forEach((data) => {
+        totalWithCopies += data.qty || 1;
+    });
 
     document.getElementById('stat-total').textContent = collectedCount;
     document.getElementById('stat-completion').textContent = `${completion}%`;
     document.getElementById('stat-precons').textContent = `${preconsOwned}/8`;
     document.getElementById('stat-wishlist').textContent = wishlist.size;
+
+    // Mostrar total com cópias se diferente do único
+    const copiesEl = document.getElementById('stat-total-copies');
+    if (copiesEl) {
+        if (totalWithCopies > collectedCount) {
+            copiesEl.textContent = `(${totalWithCopies} total com cópias)`;
+        } else {
+            copiesEl.textContent = '';
+        }
+    }
 
     // Set progress
     const sets = ['Alpha', 'Beta', 'Arthurian Legends', 'Gothic', 'Dragonlord', 'Promotional'];

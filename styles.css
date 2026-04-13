@@ -2942,6 +2942,12 @@ h5 {
     font-size: 0.85rem;
 }
 
+.stat-sublabel {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    margin-top: var(--space-1);
+}
+
 .stats-breakdown {
     background: var(--bg-card);
     border-radius: 12px;
