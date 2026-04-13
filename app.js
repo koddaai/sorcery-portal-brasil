@@ -7799,48 +7799,102 @@ function _updateStatsCore() {
         }
     }
 
-    // Set progress
+    // Set distribution - cada card conta UMA vez no set que o usuário possui
     const sets = ['Alpha', 'Beta', 'Arthurian Legends', 'Gothic', 'Dragonlord', 'Promotional'];
     const setProgressEl = document.getElementById('set-progress');
 
     if (setProgressEl) {
-        setProgressEl.innerHTML = sets.map(setName => {
-            const setCards = allCards.filter(c => c.sets.some(s => s.name === setName));
-            const ownedInSet = setCards.filter(c => hasCard(c.name)).length;
-            const percent = setCards.length > 0 ? ((ownedInSet / setCards.length) * 100).toFixed(0) : 0;
+        // Calcular distribuição real usando VariantTracker
+        const setDistribution = {};
+        sets.forEach(s => setDistribution[s] = 0);
 
-            return `
+        const tracker = window.variantTracker;
+        const totalUniqueCards = collection.size;
+
+        collection.forEach((data, cardName) => {
+            const card = allCards.find(c => c.name === cardName);
+            if (!card) return;
+
+            // Determinar o SET real do card via VariantTracker
+            let primarySet = null;
+            if (tracker) {
+                try {
+                    const cardVariants = tracker.getCollectionByCard(cardName);
+                    if (cardVariants && cardVariants.variants) {
+                        const firstVariant = Object.values(cardVariants.variants)[0];
+                        if (firstVariant && firstVariant.set) {
+                            primarySet = firstVariant.set;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            // Fallback: usar o set mais recente
+            if (!primarySet && card.sets && card.sets.length > 0) {
+                primarySet = card.sets[card.sets.length - 1].name;
+            }
+
+            if (primarySet && setDistribution.hasOwnProperty(primarySet)) {
+                setDistribution[primarySet]++;
+            }
+        });
+
+        setProgressEl.innerHTML = sets
+            .filter(setName => setDistribution[setName] > 0)
+            .sort((a, b) => setDistribution[b] - setDistribution[a])
+            .map(setName => {
+                const count = setDistribution[setName];
+                const percent = totalUniqueCards > 0 ? ((count / totalUniqueCards) * 100).toFixed(0) : 0;
+
+                return `
                 <div class="progress-item">
                     <span class="progress-label">${setName}</span>
                     <div class="progress-bar">
                         <div class="progress-fill default" style="width: ${percent}%"></div>
                     </div>
-                    <span class="progress-text">${ownedInSet}/${setCards.length}</span>
+                    <span class="progress-text">${count} (${percent}%)</span>
                 </div>
             `;
-        }).join('');
+            }).join('');
     }
 
-    // Element progress
+    // Element distribution - distribuição da coleção por elemento
     const elements = ['Fire', 'Water', 'Earth', 'Air'];
     const elementProgressEl = document.getElementById('element-progress');
 
     if (elementProgressEl) {
-        elementProgressEl.innerHTML = elements.map(element => {
-            const elementCards = allCards.filter(c => (c.elements || '').includes(element));
-            const ownedInElement = elementCards.filter(c => hasCard(c.name)).length;
-            const percent = elementCards.length > 0 ? ((ownedInElement / elementCards.length) * 100).toFixed(0) : 0;
+        const elementDistribution = { Fire: 0, Water: 0, Earth: 0, Air: 0, Neutral: 0 };
+        const totalUniqueCards = collection.size;
 
-            return `
+        collection.forEach((data, cardName) => {
+            const card = allCards.find(c => c.name === cardName);
+            if (!card) return;
+
+            const cardElements = card.elements || '';
+            if (cardElements.includes('Fire')) elementDistribution.Fire++;
+            else if (cardElements.includes('Water')) elementDistribution.Water++;
+            else if (cardElements.includes('Earth')) elementDistribution.Earth++;
+            else if (cardElements.includes('Air')) elementDistribution.Air++;
+            else elementDistribution.Neutral++;
+        });
+
+        elementProgressEl.innerHTML = [...elements, 'Neutral']
+            .filter(el => elementDistribution[el] > 0)
+            .sort((a, b) => elementDistribution[b] - elementDistribution[a])
+            .map(element => {
+                const count = elementDistribution[element];
+                const percent = totalUniqueCards > 0 ? ((count / totalUniqueCards) * 100).toFixed(0) : 0;
+
+                return `
                 <div class="progress-item">
                     <span class="progress-label">${element}</span>
                     <div class="progress-bar">
                         <div class="progress-fill ${element.toLowerCase()}" style="width: ${percent}%"></div>
                     </div>
-                    <span class="progress-text">${ownedInElement}/${elementCards.length}</span>
+                    <span class="progress-text">${count} (${percent}%)</span>
                 </div>
             `;
-        }).join('');
+            }).join('');
     }
 }
 
@@ -10055,30 +10109,40 @@ function downloadFile(content, filename, mimeType) {
 function updateStatsEnhanced() {
     updateStats();
 
-    // Rarity progress
-    const rarities = ['Ordinary', 'Elite', 'Exceptional', 'Unique'];
+    // Rarity distribution - distribuição da coleção por raridade
+    const rarities = ['Unique', 'Exceptional', 'Elite', 'Ordinary'];
     const rarityProgressEl = document.getElementById('rarity-progress');
 
     if (rarityProgressEl && allCards.length > 0) {
-        rarityProgressEl.innerHTML = rarities.map(rarity => {
-            const stats = typeof collectionTracker !== 'undefined'
-                ? collectionTracker.getRarityStats(allCards, rarity)
-                : { totalCards: 0, ownedUnique: 0, completionPercent: 0 };
+        const rarityDistribution = { Unique: 0, Exceptional: 0, Elite: 0, Ordinary: 0 };
+        const totalUniqueCards = collection.size;
 
-            const rarityCards = allCards.filter(c => c.guardian.rarity === rarity);
-            const ownedInRarity = rarityCards.filter(c => hasCard(c.name)).length;
-            const percent = rarityCards.length > 0 ? ((ownedInRarity / rarityCards.length) * 100).toFixed(0) : 0;
+        collection.forEach((data, cardName) => {
+            const card = allCards.find(c => c.name === cardName);
+            if (!card) return;
 
-            return `
+            const rarity = card.guardian?.rarity || 'Ordinary';
+            if (rarityDistribution.hasOwnProperty(rarity)) {
+                rarityDistribution[rarity]++;
+            }
+        });
+
+        rarityProgressEl.innerHTML = rarities
+            .filter(rarity => rarityDistribution[rarity] > 0)
+            .map(rarity => {
+                const count = rarityDistribution[rarity];
+                const percent = totalUniqueCards > 0 ? ((count / totalUniqueCards) * 100).toFixed(0) : 0;
+
+                return `
                 <div class="progress-item">
                     <span class="progress-label">${rarity}</span>
                     <div class="progress-bar">
                         <div class="progress-fill default" style="width: ${percent}%"></div>
                     </div>
-                    <span class="progress-text">${ownedInRarity}/${rarityCards.length}</span>
+                    <span class="progress-text">${count} (${percent}%)</span>
                 </div>
             `;
-        }).join('');
+            }).join('');
     }
 }
 
