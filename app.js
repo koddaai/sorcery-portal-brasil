@@ -10756,95 +10756,67 @@ function renderInvestmentAnalytics() {
         'Site': { value: 0, count: 0 }
     };
 
-    // Analyze collection usando VariantTracker para saber o SET correto
+    // Analyze collection - cada card único conta UMA vez
+    // Valor total usa getCardTotalValue (mesmo cálculo do valor da coleção)
     const tracker = window.variantTracker;
 
     collection.forEach((data, cardName) => {
         const card = allCards.find(c => c.name === cardName);
         if (!card) return;
 
-        // Usar VariantTracker para obter os sets reais que o usuário possui
-        let cardVariants = null;
+        // Valor total do card (inclui todas as cópias/variantes)
+        const cardTotalValue = getCardTotalValue(cardName);
+
+        // Determinar o SET principal do card
+        let primarySet = null;
+
+        // Tentar obter o set real do VariantTracker
         if (tracker) {
             try {
-                cardVariants = tracker.getCollectionByCard(cardName);
+                const cardVariants = tracker.getCollectionByCard(cardName);
+                if (cardVariants && cardVariants.variants) {
+                    // Pegar o set da primeira variante encontrada
+                    const firstVariant = Object.values(cardVariants.variants)[0];
+                    if (firstVariant && firstVariant.set) {
+                        primarySet = firstVariant.set;
+                    }
+                }
             } catch (e) {
                 // Ignore errors
             }
         }
 
-        // Se temos dados de variantes, usar os sets reais
-        if (cardVariants && cardVariants.variants) {
-            for (const [slug, variant] of Object.entries(cardVariants.variants)) {
-                const variantSet = variant.set;
-                const variantQty = variant.qty || 1;
-                const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
-                const totalPrice = price * variantQty;
+        // Fallback: usar o set mais recente (último do array)
+        if (!primarySet && card.sets && card.sets.length > 0) {
+            primarySet = card.sets[card.sets.length - 1].name;
+        }
 
-                // By set - usar o set da variante
-                if (variantSet && setValues[variantSet]) {
-                    setValues[variantSet].value += totalPrice;
-                    setValues[variantSet].count++;
-                }
+        // By set - contar 1 card único, valor total
+        if (primarySet && setValues[primarySet]) {
+            setValues[primarySet].value += cardTotalValue;
+            setValues[primarySet].count++;
+        }
 
-                // By rarity (mesmo para todas variantes do card)
-                const rarity = card.guardian?.rarity || 'Ordinary';
-                if (rarityValues[rarity]) {
-                    rarityValues[rarity].value += totalPrice;
-                    rarityValues[rarity].count++;
-                }
+        // By rarity - 1 card único
+        const rarity = card.guardian?.rarity || 'Ordinary';
+        if (rarityValues[rarity]) {
+            rarityValues[rarity].value += cardTotalValue;
+            rarityValues[rarity].count++;
+        }
 
-                // By element
-                const elements = card.elements || '';
-                if (elements.includes('Fire')) { elementValues['Fire'].value += totalPrice; elementValues['Fire'].count++; }
-                else if (elements.includes('Water')) { elementValues['Water'].value += totalPrice; elementValues['Water'].count++; }
-                else if (elements.includes('Earth')) { elementValues['Earth'].value += totalPrice; elementValues['Earth'].count++; }
-                else if (elements.includes('Air')) { elementValues['Air'].value += totalPrice; elementValues['Air'].count++; }
-                else { elementValues['Neutral'].value += totalPrice; elementValues['Neutral'].count++; }
+        // By element - 1 card único
+        const elements = card.elements || '';
+        if (elements.includes('Fire')) { elementValues['Fire'].value += cardTotalValue; elementValues['Fire'].count++; }
+        else if (elements.includes('Water')) { elementValues['Water'].value += cardTotalValue; elementValues['Water'].count++; }
+        else if (elements.includes('Earth')) { elementValues['Earth'].value += cardTotalValue; elementValues['Earth'].count++; }
+        else if (elements.includes('Air')) { elementValues['Air'].value += cardTotalValue; elementValues['Air'].count++; }
+        else { elementValues['Neutral'].value += cardTotalValue; elementValues['Neutral'].count++; }
 
-                // By type
-                const type = card.guardian?.type || 'Minion';
-                if (typeValues[type]) {
-                    typeValues[type].value += totalPrice;
-                    typeValues[type].count++;
-                }
-            }
-        } else {
-            // Fallback: sem dados de variantes, usar o set mais recente (último do array)
-            const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
-            const qty = data.qty || 1;
-            const totalPrice = price * qty;
-
-            // By set - usar o ÚLTIMO set (mais recente/provável)
-            if (card.sets && card.sets.length > 0) {
-                const recentSet = card.sets[card.sets.length - 1].name;
-                if (setValues[recentSet]) {
-                    setValues[recentSet].value += totalPrice;
-                    setValues[recentSet].count++;
-                }
-            }
-
-            // By rarity
-            const rarity = card.guardian?.rarity || 'Ordinary';
-            if (rarityValues[rarity]) {
-                rarityValues[rarity].value += totalPrice;
-                rarityValues[rarity].count++;
-            }
-
-            // By element
-            const elements = card.elements || '';
-            if (elements.includes('Fire')) { elementValues['Fire'].value += totalPrice; elementValues['Fire'].count++; }
-            else if (elements.includes('Water')) { elementValues['Water'].value += totalPrice; elementValues['Water'].count++; }
-            else if (elements.includes('Earth')) { elementValues['Earth'].value += totalPrice; elementValues['Earth'].count++; }
-            else if (elements.includes('Air')) { elementValues['Air'].value += totalPrice; elementValues['Air'].count++; }
-            else { elementValues['Neutral'].value += totalPrice; elementValues['Neutral'].count++; }
-
-            // By type
-            const type = card.guardian?.type || 'Minion';
-            if (typeValues[type]) {
-                typeValues[type].value += totalPrice;
-                typeValues[type].count++;
-            }
+        // By type - 1 card único
+        const type = card.guardian?.type || 'Minion';
+        if (typeValues[type]) {
+            typeValues[type].value += cardTotalValue;
+            typeValues[type].count++;
         }
     });
 
