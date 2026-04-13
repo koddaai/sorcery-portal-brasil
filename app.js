@@ -7816,6 +7816,56 @@ function getOwnedVariantsCount() {
 }
 
 /**
+ * Debug function - run in console: debugVariantCount()
+ */
+function debugVariantCount() {
+    const tracker = window.variantTracker;
+    const stats = {
+        collectionSize: collection.size,
+        cardsWithVariantData: 0,
+        cardsWithoutVariantData: 0,
+        cardsWithMultipleVariants: [],
+        totalVariants: 0,
+        variantTrackerEntries: tracker?.collection ? Object.keys(tracker.collection).length : 0
+    };
+
+    collection.forEach((data, cardName) => {
+        const normalizedName = cardName.toLowerCase().trim().replace(/\s+/g, '_');
+        const cardVariants = tracker?.collection?.[normalizedName];
+
+        if (cardVariants && Object.keys(cardVariants).length > 0) {
+            stats.cardsWithVariantData++;
+            const count = Object.keys(cardVariants).length;
+            stats.totalVariants += count;
+
+            if (count > 1) {
+                stats.cardsWithMultipleVariants.push({
+                    name: cardName,
+                    variants: count,
+                    slugs: Object.keys(cardVariants)
+                });
+            }
+        } else {
+            stats.cardsWithoutVariantData++;
+            stats.totalVariants += 1;
+        }
+    });
+
+    console.log('=== DEBUG VARIANT COUNT ===');
+    console.log('Collection size:', stats.collectionSize);
+    console.log('Cards with variant data:', stats.cardsWithVariantData);
+    console.log('Cards without variant data:', stats.cardsWithoutVariantData);
+    console.log('Total variants calculated:', stats.totalVariants);
+    console.log('VariantTracker total entries:', stats.variantTrackerEntries);
+    console.log('Cards with multiple variants:', stats.cardsWithMultipleVariants.length);
+    if (stats.cardsWithMultipleVariants.length > 0) {
+        console.log('Multiple variants detail:', stats.cardsWithMultipleVariants);
+    }
+
+    return stats;
+}
+
+/**
  * Set stats display mode and refresh
  */
 function setStatsMode(mode) {
