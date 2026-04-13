@@ -6026,8 +6026,15 @@ function toggleQRCode(cardName) {
 
 // Open Card Modal
 function openCardModal(cardName, updateHash = true) {
+    console.log('[openCardModal] Looking for card:', cardName, 'Type:', typeof cardName);
     const card = allCards.find(c => c.name === cardName);
-    if (!card) return;
+    if (!card) {
+        console.error('[openCardModal] Card NOT FOUND:', cardName);
+        console.log('[openCardModal] allCards length:', allCards.length);
+        console.log('[openCardModal] Sample cards:', allCards.slice(0, 3).map(c => c.name));
+        return;
+    }
+    console.log('[openCardModal] Card found:', card.name);
 
     // Update URL hash for deep linking
     if (updateHash) {
@@ -7149,6 +7156,7 @@ function renderCollection() {
     gridEl.querySelectorAll('.card-item').forEach(el => {
         el.addEventListener('click', () => {
             const cardName = el.dataset.cardName;
+            console.log('[Collection Click] Card name from dataset:', cardName);
             openCardModal(cardName);
         });
     });
