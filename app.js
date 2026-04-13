@@ -7,8 +7,8 @@
 // ============================================
 
 // UI Timings (ms)
-const TOAST_DURATION_DEFAULT = 4000;
-const TOAST_DURATION_ERROR = 6000;
+const TOAST_DURATION_DEFAULT = 5000;  // 5 seconds for regular messages
+const TOAST_DURATION_ERROR = 7000;    // 7 seconds for error messages
 const TOAST_ANIMATION_MS = 200;
 const NOTIFICATION_SHOW_DELAY = 100;
 const NOTIFICATION_HIDE_DELAY = 500;
@@ -193,8 +193,8 @@ function showToast(message, type = 'info', title = '', duration = TOAST_DURATION
 }
 
 // Convenience methods
-function showSuccessToast(message, title = '') {
-    return showToast(message, 'success', title);
+function showSuccessToast(message, title = '', duration = TOAST_DURATION_DEFAULT) {
+    return showToast(message, 'success', title, duration);
 }
 
 function showErrorToast(message, title = 'Erro') {
@@ -570,59 +570,1053 @@ function closeDropdown(dropdown) {
 }
 
 // ============================================
-// MOBILE MENU
+// NOTIFICATIONS CENTER
 // ============================================
 
-// Initialize mobile menu
-function initMobileMenu() {
-    const menuBtn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    const closeBtn = document.getElementById('mobile-menu-close');
-    const overlay = menu?.querySelector('.mobile-menu-overlay');
+// Notifications state
+let notifications = [];
+let notificationFilter = 'all';
 
-    if (!menuBtn || !menu) return;
+// Initialize notifications view
+function initNotificationsView() {
+    loadNotifications();
+    renderNotifications();
+    setupNotificationFilters();
+}
 
-    // Open menu
-    menuBtn.addEventListener('click', () => {
-        menu.classList.add('open');
-        menuBtn.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden'; // Prevent scroll
-        trapFocus(menu.querySelector('.mobile-menu-content'));
+// Load notifications from storage and generate dynamic ones
+function loadNotifications() {
+    // Load stored notifications
+    const stored = localStorage.getItem('sorcery-notifications');
+    if (stored) {
+        try {
+            notifications = JSON.parse(stored);
+        } catch (e) {
+            notifications = [];
+        }
+    }
+
+    // Generate dynamic notifications based on user data
+    generateDynamicNotifications();
+}
+
+// Generate notifications based on price changes, etc.
+function generateDynamicNotifications() {
+    const now = Date.now();
+
+    // Check for price alerts
+    if (typeof priceService !== 'undefined' && priceService.priceAlerts) {
+        const alerts = priceService.priceAlerts;
+        alerts.forEach(alert => {
+            // Check if we already have a notification for this
+            const exists = notifications.some(n =>
+                n.type === 'price' && n.cardName === alert.cardName && n.timestamp > now - 86400000
+            );
+            if (!exists && alert.triggered) {
+                notifications.unshift({
+                    id: `price-${alert.cardName}-${now}`,
+                    type: 'price',
+                    icon: alert.direction === 'up' ? 'trending-up' : 'trending-down',
+                    iconClass: alert.direction === 'up' ? 'price-up' : 'price-down',
+                    title: `${alert.cardName} ${alert.direction === 'up' ? 'subiu' : 'caiu'} de preço`,
+                    body: `O preço ${alert.direction === 'up' ? 'aumentou' : 'diminuiu'} para $${alert.currentPrice?.toFixed(2) || '?.??'}`,
+                    cardName: alert.cardName,
+                    timestamp: now,
+                    read: false
+                });
+            }
+        });
+    }
+
+    // Add tips if user is new (fewer than 5 notifications ever)
+    if (notifications.length < 3) {
+        const tips = [
+            {
+                id: 'tip-scan',
+                type: 'tip',
+                icon: 'lightbulb',
+                iconClass: 'tip',
+                title: 'Escaneie suas cartas!',
+                body: 'Use o Scanner para adicionar cartas à sua coleção rapidamente pela câmera.',
+                timestamp: now - 86400000 * 2,
+                read: false
+            },
+            {
+                id: 'tip-alerts',
+                type: 'tip',
+                icon: 'lightbulb',
+                iconClass: 'tip',
+                title: 'Alertas de Preço',
+                body: 'Configure alertas para ser notificado quando cartas da sua wishlist mudarem de valor.',
+                timestamp: now - 86400000 * 5,
+                read: false
+            },
+            {
+                id: 'tip-sync',
+                type: 'tip',
+                icon: 'lightbulb',
+                iconClass: 'tip',
+                title: 'Sincronize sua coleção',
+                body: 'Faça login para sincronizar sua coleção na nuvem e acessar de qualquer dispositivo.',
+                timestamp: now - 86400000 * 10,
+                read: false
+            }
+        ];
+
+        tips.forEach(tip => {
+            if (!notifications.some(n => n.id === tip.id)) {
+                notifications.push(tip);
+            }
+        });
+    }
+
+    // Sort by timestamp (newest first)
+    notifications.sort((a, b) => b.timestamp - a.timestamp);
+
+    // Update badge
+    updateNotificationBadge();
+}
+
+// Render notifications list
+function renderNotifications() {
+    const container = document.getElementById('notifications-list');
+    if (!container) return;
+
+    // Filter notifications
+    let filtered = notifications;
+    if (notificationFilter !== 'all') {
+        filtered = notifications.filter(n => n.type === notificationFilter);
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div class="notifications-empty">
+                <i data-lucide="bell-off"></i>
+                <p>Nenhuma notificação ${notificationFilter !== 'all' ? 'nesta categoria' : 'no momento'}</p>
+                <span class="text-secondary">Ative alertas de preço para receber atualizações</span>
+            </div>
+        `;
+        refreshIcons();
+        return;
+    }
+
+    container.innerHTML = filtered.map(notification => {
+        const timeAgo = getTimeAgo(notification.timestamp);
+        const unreadClass = notification.read ? '' : 'unread';
+
+        return `
+            <div class="notification-item ${unreadClass}" data-id="${notification.id}" onclick="handleNotificationClick('${notification.id}')">
+                <div class="notification-icon ${notification.iconClass || ''}">
+                    <i data-lucide="${notification.icon || 'bell'}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${escapeHtml(notification.title)}</div>
+                    <div class="notification-body">${escapeHtml(notification.body)}</div>
+                    <div class="notification-time">${timeAgo}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    refreshIcons();
+}
+
+// Setup notification filter buttons
+function setupNotificationFilters() {
+    document.querySelectorAll('.notification-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            notificationFilter = filter;
+
+            // Update active state
+            document.querySelectorAll('.notification-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            renderNotifications();
+        });
     });
+}
 
-    // Close menu
-    const closeMobileMenu = () => {
-        menu.classList.remove('open');
-        menuBtn.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-        releaseFocusTrap();
+// Handle notification click
+function handleNotificationClick(id) {
+    const notification = notifications.find(n => n.id === id);
+    if (!notification) return;
+
+    // Mark as read
+    notification.read = true;
+    saveNotifications();
+    updateNotificationBadge();
+
+    // Handle action based on type
+    if (notification.type === 'price' && notification.cardName) {
+        // Open card modal
+        const card = allCards.find(c => c.name === notification.cardName);
+        if (card) {
+            openCardModal(card);
+        }
+    }
+
+    // Re-render to show read state
+    renderNotifications();
+}
+
+// Mark all notifications as read
+function markAllNotificationsRead() {
+    notifications.forEach(n => n.read = true);
+    saveNotifications();
+    updateNotificationBadge();
+    renderNotifications();
+    showToast('Todas as notificações marcadas como lidas', 'success');
+}
+
+// Save notifications to storage
+function saveNotifications() {
+    // Only keep last 50 notifications
+    const toSave = notifications.slice(0, 50);
+    localStorage.setItem('sorcery-notifications', JSON.stringify(toSave));
+}
+
+// Update notification badge count
+function updateNotificationBadge() {
+    const badge = document.getElementById('notifications-badge');
+    if (!badge) return;
+
+    const unreadCount = notifications.filter(n => !n.read).length;
+
+    if (unreadCount > 0) {
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+// Get relative time string
+function getTimeAgo(timestamp) {
+    const seconds = Math.floor((Date.now() - timestamp) / 1000);
+
+    if (seconds < 60) return 'Agora';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} min`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
+    if (seconds < 604800) return `${Math.floor(seconds / 86400)}d`;
+
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+}
+
+// Open notification settings
+function openNotificationSettings() {
+    // For now, show a toast with info
+    showToast('Configurações de notificação em breve!', 'info');
+}
+
+// Add a new notification programmatically
+function addNotification(notification) {
+    const newNotification = {
+        id: `${notification.type}-${Date.now()}`,
+        timestamp: Date.now(),
+        read: false,
+        ...notification
     };
 
-    closeBtn?.addEventListener('click', closeMobileMenu);
-    overlay?.addEventListener('click', closeMobileMenu);
+    notifications.unshift(newNotification);
+    saveNotifications();
+    updateNotificationBadge();
 
-    // Close on escape
-    menu.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeMobileMenu();
-            menuBtn.focus();
-        }
+    // If on notifications view, re-render
+    if (document.getElementById('notifications-view')?.classList.contains('active')) {
+        renderNotifications();
+    }
+}
+
+// ============================================
+// MOBILE CARD DETAIL (TABS)
+// ============================================
+
+// Initialize mobile card detail tabs
+function initMobileCardDetail() {
+    // Setup tab switching
+    document.querySelectorAll('.mobile-card-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.dataset.tab;
+            switchMobileCardTab(tabName);
+
+            // Haptic feedback
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
     });
 
-    // Handle menu item clicks
-    menu.querySelectorAll('.mobile-nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const view = item.dataset.view;
-            if (view) {
-                switchView(view);
-                closeMobileMenu();
+    // Setup back button
+    const backBtn = document.getElementById('mobile-card-back');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            closeCardModal();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
+    }
 
-                // Update active state
-                menu.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
+    // Setup action buttons
+    const bookmarkBtn = document.getElementById('mobile-card-bookmark');
+    if (bookmarkBtn) {
+        bookmarkBtn.addEventListener('click', () => {
+            const cardName = document.getElementById('modal-card-name')?.textContent;
+            if (cardName) {
+                toggleWishlistFromModal(cardName);
+                updateMobileCardBookmark(cardName);
+            }
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
+    }
+
+    const shareBtn = document.getElementById('mobile-card-share');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            shareCurrentCard();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
+    }
+
+    // Setup mobile FAB buttons
+    const addToCollectionFab = document.querySelector('.mobile-card-fab-btn.primary');
+    if (addToCollectionFab) {
+        addToCollectionFab.addEventListener('click', () => {
+            const cardName = document.getElementById('modal-card-name')?.textContent;
+            if (cardName) {
+                addCardFromModal(cardName);
+            }
+            if ('vibrate' in navigator) navigator.vibrate(15);
+        });
+    }
+}
+
+// ============================================
+// MOBILE SEARCH & FILTERS
+// ============================================
+
+// Mobile filter state
+let mobileFilters = {
+    set: '',
+    type: '',
+    element: '',
+    rarity: ''
+};
+
+// Initialize mobile search
+function initMobileSearch() {
+    // Mobile search input
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', debounce((e) => {
+            // Sync with desktop search
+            const desktopInput = document.getElementById('search-input');
+            if (desktopInput) {
+                desktopInput.value = e.target.value;
+            }
+            applyFilters();
+        }, 150));
+    }
+
+    // Filter toggle button
+    const filterToggle = document.getElementById('mobile-filter-toggle');
+    const filterPanel = document.getElementById('mobile-filter-panel');
+    if (filterToggle && filterPanel) {
+        filterToggle.addEventListener('click', () => {
+            const isOpen = !filterPanel.classList.contains('hidden');
+            filterPanel.classList.toggle('hidden');
+            filterToggle.classList.toggle('active', !isOpen);
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
+    }
+
+    // Quick filters
+    document.querySelectorAll('.mobile-quick-filter').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            handleQuickFilter(filter);
+
+            // Update active state
+            document.querySelectorAll('.mobile-quick-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
+    });
+
+    // Filter chips
+    document.querySelectorAll('.mobile-filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const container = chip.closest('.mobile-filter-chips');
+            const filterType = container.dataset.filterType;
+            const value = chip.dataset.value;
+
+            // Update active state in this group
+            container.querySelectorAll('.mobile-filter-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+
+            // Update filter state
+            mobileFilters[filterType] = value;
+
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
+    });
+
+    // Clear filters button
+    const clearBtn = document.getElementById('mobile-clear-filters');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            clearMobileFilters();
+            if ('vibrate' in navigator) navigator.vibrate(10);
+        });
+    }
+
+    // Apply filters button
+    const applyBtn = document.getElementById('mobile-apply-filters');
+    if (applyBtn) {
+        applyBtn.addEventListener('click', () => {
+            applyMobileFilters();
+            // Close panel
+            document.getElementById('mobile-filter-panel')?.classList.add('hidden');
+            document.getElementById('mobile-filter-toggle')?.classList.remove('active');
+            if ('vibrate' in navigator) navigator.vibrate(15);
+        });
+    }
+}
+
+// Handle quick filter selection
+function handleQuickFilter(filter) {
+    // Reset all filters first
+    clearMobileFilters(false);
+
+    switch (filter) {
+        case 'all':
+            // No filters
+            break;
+        case 'minion':
+        case 'magic':
+        case 'avatar':
+        case 'site':
+        case 'artifact':
+        case 'aura':
+            mobileFilters.type = filter.charAt(0).toUpperCase() + filter.slice(1);
+            break;
+        case 'fire':
+        case 'water':
+        case 'earth':
+        case 'air':
+            mobileFilters.element = filter.charAt(0).toUpperCase() + filter.slice(1);
+            break;
+    }
+
+    applyMobileFilters();
+    updateMobileFilterCount();
+}
+
+// Apply mobile filters to desktop filters and trigger search
+function applyMobileFilters() {
+    // Sync to desktop filters
+    const setFilter = document.getElementById('set-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const elementFilter = document.getElementById('element-filter');
+    const rarityFilter = document.getElementById('rarity-filter');
+
+    if (setFilter) setFilter.value = mobileFilters.set;
+    if (typeFilter) typeFilter.value = mobileFilters.type;
+    if (elementFilter) elementFilter.value = mobileFilters.element;
+    if (rarityFilter) rarityFilter.value = mobileFilters.rarity;
+
+    // Dispatch change event to trigger filter application
+    // This ensures the desktop filter handlers are triggered
+    const changeEvent = new Event('change', { bubbles: true });
+    if (elementFilter) elementFilter.dispatchEvent(changeEvent);
+
+    updateMobileFilterCount();
+    updateMobileActiveFilters();
+}
+
+// Clear all mobile filters
+function clearMobileFilters(apply = true) {
+    mobileFilters = {
+        set: '',
+        type: '',
+        element: '',
+        rarity: ''
+    };
+
+    // Reset all chip active states
+    document.querySelectorAll('.mobile-filter-chips').forEach(container => {
+        container.querySelectorAll('.mobile-filter-chip').forEach((chip, index) => {
+            if (index === 0) {
+                chip.classList.add('active'); // First chip is "All"
+            } else {
+                chip.classList.remove('active');
             }
         });
     });
+
+    // Reset quick filters
+    document.querySelectorAll('.mobile-quick-filter').forEach((btn, index) => {
+        if (index === 0) {
+            btn.classList.add('active'); // "Todos" button
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    if (apply) {
+        applyMobileFilters();
+    }
+}
+
+// Update filter count badge
+function updateMobileFilterCount() {
+    const badge = document.getElementById('mobile-filter-count');
+    if (!badge) return;
+
+    const count = Object.values(mobileFilters).filter(v => v !== '').length;
+
+    if (count > 0) {
+        badge.textContent = count;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
+}
+
+// Update active filters display
+function updateMobileActiveFilters() {
+    const container = document.getElementById('mobile-active-filters');
+    if (!container) return;
+
+    const activeFilters = Object.entries(mobileFilters).filter(([key, value]) => value !== '');
+
+    if (activeFilters.length === 0) {
+        container.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+    }
+
+    container.classList.remove('hidden');
+    container.innerHTML = activeFilters.map(([key, value]) => `
+        <div class="mobile-active-filter">
+            <span>${value}</span>
+            <button onclick="removeMobileFilter('${key}')" aria-label="Remover filtro">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+    `).join('');
+
+    refreshIcons();
+}
+
+// Remove a specific mobile filter
+function removeMobileFilter(filterType) {
+    mobileFilters[filterType] = '';
+
+    // Update corresponding chip
+    const container = document.querySelector(`.mobile-filter-chips[data-filter-type="${filterType}"]`);
+    if (container) {
+        container.querySelectorAll('.mobile-filter-chip').forEach((chip, index) => {
+            if (index === 0) {
+                chip.classList.add('active');
+            } else {
+                chip.classList.remove('active');
+            }
+        });
+    }
+
+    applyMobileFilters();
+}
+
+// Sync desktop filters to mobile (when desktop changes)
+function syncDesktopToMobileFilters() {
+    const setFilter = document.getElementById('set-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const elementFilter = document.getElementById('element-filter');
+    const rarityFilter = document.getElementById('rarity-filter');
+
+    if (setFilter) mobileFilters.set = setFilter.value;
+    if (typeFilter) mobileFilters.type = typeFilter.value;
+    if (elementFilter) mobileFilters.element = elementFilter.value;
+    if (rarityFilter) mobileFilters.rarity = rarityFilter.value;
+
+    updateMobileFilterCount();
+    updateMobileActiveFilters();
+}
+
+// Switch mobile card tab
+function switchMobileCardTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.mobile-card-tab').forEach(tab => {
+        if (tab.dataset.tab === tabName) {
+            tab.classList.add('active');
+        } else {
+            tab.classList.remove('active');
+        }
+    });
+
+    // Update tab content
+    document.querySelectorAll('.mobile-tab-content').forEach(content => {
+        if (content.dataset.tab === tabName) {
+            content.classList.add('active');
+        } else {
+            content.classList.remove('active');
+        }
+    });
+}
+
+// Populate mobile card detail content
+function populateMobileCardDetail(card) {
+    if (!card) return;
+
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) return;
+
+    // Update mobile header
+    const mobileTitle = document.querySelector('.mobile-card-title h3');
+    const mobileSubtitle = document.querySelector('.mobile-card-title span');
+    if (mobileTitle) mobileTitle.textContent = card.name;
+    if (mobileSubtitle) mobileSubtitle.textContent = card.guardian?.type || '';
+
+    // Update bookmark state
+    updateMobileCardBookmark(card.name);
+
+    // Reset to details tab
+    switchMobileCardTab('details');
+
+    // Populate Details tab
+    populateMobileDetailsTab(card);
+
+    // Populate Prices tab
+    populateMobilePricesTab(card);
+
+    // Populate Lists tab
+    populateMobileListsTab(card);
+}
+
+// Populate mobile details tab
+function populateMobileDetailsTab(card) {
+    const imageSlug = getCardImageSlug(card);
+    const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
+
+    // Update card image
+    const mobileCardImage = document.getElementById('mobile-card-image');
+    if (mobileCardImage) {
+        mobileCardImage.src = imageUrl;
+        mobileCardImage.alt = card.name;
+    }
+
+    // Update card info rows
+    const infoContainer = document.querySelector('.mobile-card-info');
+    if (!infoContainer) return;
+
+    const element = (card.elements || 'None').split(',')[0].trim();
+    const rarity = card.guardian?.rarity || 'Common';
+    const set = card.sets?.[0]?.name || '-';
+
+    // Get artist
+    let artistName = '';
+    if (card.sets && card.sets.length > 0) {
+        for (const setData of card.sets) {
+            if (setData.cards && setData.cards.length > 0) {
+                for (const variant of setData.cards) {
+                    if (variant.artist) {
+                        artistName = variant.artist;
+                        break;
+                    }
+                }
+            }
+            if (artistName) break;
+        }
+    }
+
+    // Cost/Attack/Defense
+    const cost = card.guardian?.cost;
+    const attack = card.guardian?.attack;
+    const defence = card.guardian?.defence;
+
+    let infoHTML = `
+        <div class="mobile-card-info-row">
+            <span class="mobile-card-info-label">Elemento</span>
+            <span class="mobile-card-info-value">
+                <i data-lucide="${getElementIcon(element)}"></i>
+                ${element}
+            </span>
+        </div>
+        <div class="mobile-card-info-row">
+            <span class="mobile-card-info-label">Raridade</span>
+            <span class="mobile-card-info-value">${rarity}</span>
+        </div>
+        <div class="mobile-card-info-row">
+            <span class="mobile-card-info-label">Coleção</span>
+            <span class="mobile-card-info-value">${set}</span>
+        </div>
+    `;
+
+    if (cost !== null && cost !== undefined) {
+        infoHTML += `
+            <div class="mobile-card-info-row">
+                <span class="mobile-card-info-label">Custo</span>
+                <span class="mobile-card-info-value">${cost}</span>
+            </div>
+        `;
+    }
+
+    if (attack !== null && attack !== undefined) {
+        infoHTML += `
+            <div class="mobile-card-info-row">
+                <span class="mobile-card-info-label">Ataque</span>
+                <span class="mobile-card-info-value">${attack}</span>
+            </div>
+        `;
+    }
+
+    if (defence !== null && defence !== undefined) {
+        infoHTML += `
+            <div class="mobile-card-info-row">
+                <span class="mobile-card-info-label">Defesa</span>
+                <span class="mobile-card-info-value">${defence}</span>
+            </div>
+        `;
+    }
+
+    if (artistName) {
+        infoHTML += `
+            <div class="mobile-card-info-row">
+                <span class="mobile-card-info-label">Artista</span>
+                <span class="mobile-card-info-value">
+                    <i data-lucide="palette"></i>
+                    ${artistName}
+                </span>
+            </div>
+        `;
+    }
+
+    // Rules text
+    const rulesText = card.guardian?.rulesText;
+    if (rulesText) {
+        infoHTML += `
+            <div class="mobile-card-ability">
+                <div class="mobile-card-ability-label">Habilidade</div>
+                <div class="mobile-card-ability-text">${escapeHtml(rulesText.replace(/\\r\\n/g, '\n').replace(/\\n/g, '\n'))}</div>
+            </div>
+        `;
+    }
+
+    // Flavor text (if available)
+    const flavorText = card.guardian?.flavorText;
+    if (flavorText) {
+        infoHTML += `
+            <div class="mobile-card-flavor">${escapeHtml(flavorText)}</div>
+        `;
+    }
+
+    infoContainer.innerHTML = infoHTML;
+    refreshIcons();
+}
+
+// Get element icon
+function getElementIcon(element) {
+    const icons = {
+        'Fire': 'flame',
+        'Water': 'droplet',
+        'Earth': 'mountain',
+        'Air': 'wind',
+        'None': 'circle'
+    };
+    return icons[element] || 'circle';
+}
+
+// Populate mobile prices tab
+function populateMobilePricesTab(card) {
+    const container = document.querySelector('.mobile-prices-content');
+    if (!container) return;
+
+    const imageSlug = getCardImageSlug(card);
+    const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
+
+    // Get prices from TCG service
+    let prices = { standard: null, foil: null, rainbow: null };
+    if (typeof tcgPriceService !== 'undefined') {
+        const priceData = tcgPriceService.getPricesForCard(card.name);
+        if (priceData) {
+            prices = priceData;
+        }
+    }
+
+    const formatPrice = (price) => price ? `$${price.toFixed(2)}` : '-';
+
+    let html = `
+        <div class="mobile-price-card-preview">
+            <img src="${imageUrl}" alt="${card.name}">
+            <div class="mobile-price-card-info">
+                <h4>${escapeHtml(card.name)}</h4>
+                <span>${card.guardian?.type || ''} • ${card.sets?.[0]?.name || ''}</span>
+            </div>
+        </div>
+
+        <div class="mobile-price-table">
+            <div class="mobile-price-table-header">
+                <span>Variante</span>
+                <span>LOW</span>
+                <span>MID</span>
+                <span>MARKET</span>
+            </div>
+
+            <div class="mobile-price-row">
+                <div class="mobile-price-variant">
+                    <span class="mobile-price-variant-dot standard"></span>
+                    <span>Standard</span>
+                </div>
+                <span class="mobile-price-cell low">${formatPrice(prices.standard?.low)}</span>
+                <span class="mobile-price-cell mid">${formatPrice(prices.standard?.mid)}</span>
+                <span class="mobile-price-cell market">${formatPrice(prices.standard?.market)}</span>
+            </div>
+
+            <div class="mobile-price-row">
+                <div class="mobile-price-variant">
+                    <span class="mobile-price-variant-dot foil"></span>
+                    <span>Foil</span>
+                </div>
+                <span class="mobile-price-cell low">${formatPrice(prices.foil?.low)}</span>
+                <span class="mobile-price-cell mid">${formatPrice(prices.foil?.mid)}</span>
+                <span class="mobile-price-cell market">${formatPrice(prices.foil?.market)}</span>
+            </div>
+
+            <div class="mobile-price-row">
+                <div class="mobile-price-variant">
+                    <span class="mobile-price-variant-dot rainbow"></span>
+                    <span>Rainbow</span>
+                </div>
+                <span class="mobile-price-cell low">${formatPrice(prices.rainbow?.low)}</span>
+                <span class="mobile-price-cell mid">${formatPrice(prices.rainbow?.mid)}</span>
+                <span class="mobile-price-cell market">${formatPrice(prices.rainbow?.market)}</span>
+            </div>
+        </div>
+
+        <div class="mobile-price-history">
+            <div class="mobile-price-history-label">
+                <i data-lucide="trending-up"></i>
+                Tendência (7 dias)
+            </div>
+            <div class="mobile-price-trend">
+                <span class="mobile-price-trend-value">${formatPrice(prices.standard?.market)}</span>
+                <span class="mobile-price-trend-change up">
+                    <i data-lucide="arrow-up"></i>
+                    +2.5%
+                </span>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+    refreshIcons();
+}
+
+// Populate mobile lists tab
+function populateMobileListsTab(card) {
+    const container = document.querySelector('.mobile-lists-content');
+    if (!container) return;
+
+    const cardName = card.name;
+    const isInCollection = hasCard(cardName);
+    const collectionQty = getCardQuantity(cardName);
+    const isInWishlist = wishlist.has(cardName);
+    const isInTradeBinder = tradeBinder.has(cardName);
+
+    // Get decks that contain this card
+    const decksWithCard = [];
+    if (typeof deckService !== 'undefined' && deckService.decks) {
+        deckService.decks.forEach(deck => {
+            const cardInDeck = deck.cards?.find(c => c.name === cardName || c.cardName === cardName);
+            if (cardInDeck) {
+                decksWithCard.push({
+                    name: deck.name,
+                    qty: cardInDeck.qty || cardInDeck.quantity || 1
+                });
+            }
+        });
+    }
+
+    let html = `
+        <div class="mobile-lists-section">
+            <div class="mobile-lists-section-header">
+                <span class="mobile-lists-section-title">
+                    <i data-lucide="folder"></i>
+                    Coleção
+                </span>
+            </div>
+
+            <div class="mobile-list-item ${isInCollection ? 'in-list' : ''}" onclick="toggleCollectionFromMobile('${escapeHtml(cardName)}')">
+                <div class="mobile-list-item-icon">
+                    <i data-lucide="${isInCollection ? 'check-circle' : 'plus-circle'}"></i>
+                </div>
+                <div class="mobile-list-item-info">
+                    <div class="mobile-list-item-name">Minha Coleção</div>
+                    <div class="mobile-list-item-meta">${isInCollection ? `${collectionQty}x na coleção` : 'Toque para adicionar'}</div>
+                </div>
+                <div class="mobile-list-item-status">
+                    <i data-lucide="${isInCollection ? 'check' : 'plus'}"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="mobile-lists-section">
+            <div class="mobile-lists-section-header">
+                <span class="mobile-lists-section-title">
+                    <i data-lucide="heart"></i>
+                    Listas
+                </span>
+            </div>
+
+            <div class="mobile-list-item ${isInWishlist ? 'in-list' : ''}" onclick="toggleWishlistFromMobile('${escapeHtml(cardName)}')">
+                <div class="mobile-list-item-icon">
+                    <i data-lucide="heart"></i>
+                </div>
+                <div class="mobile-list-item-info">
+                    <div class="mobile-list-item-name">Wishlist</div>
+                    <div class="mobile-list-item-meta">${isInWishlist ? 'Na sua lista de desejos' : 'Toque para adicionar'}</div>
+                </div>
+                <div class="mobile-list-item-status">
+                    <i data-lucide="${isInWishlist ? 'check' : 'plus'}"></i>
+                </div>
+            </div>
+
+            <div class="mobile-list-item ${isInTradeBinder ? 'in-list' : ''}" onclick="toggleTradeFromMobile('${escapeHtml(cardName)}')">
+                <div class="mobile-list-item-icon">
+                    <i data-lucide="repeat"></i>
+                </div>
+                <div class="mobile-list-item-info">
+                    <div class="mobile-list-item-name">Trade Binder</div>
+                    <div class="mobile-list-item-meta">${isInTradeBinder ? 'Disponível para troca' : 'Toque para adicionar'}</div>
+                </div>
+                <div class="mobile-list-item-status">
+                    <i data-lucide="${isInTradeBinder ? 'check' : 'plus'}"></i>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Decks section
+    if (decksWithCard.length > 0) {
+        html += `
+            <div class="mobile-lists-section">
+                <div class="mobile-lists-section-header">
+                    <span class="mobile-lists-section-title">
+                        <i data-lucide="layers"></i>
+                        Decks
+                    </span>
+                    <span class="mobile-lists-count">${decksWithCard.length}</span>
+                </div>
+        `;
+
+        decksWithCard.forEach(deck => {
+            html += `
+                <div class="mobile-list-item in-list">
+                    <div class="mobile-list-item-icon">
+                        <i data-lucide="layers"></i>
+                    </div>
+                    <div class="mobile-list-item-info">
+                        <div class="mobile-list-item-name">${escapeHtml(deck.name)}</div>
+                        <div class="mobile-list-item-meta">${deck.qty}x neste deck</div>
+                    </div>
+                    <div class="mobile-list-item-status">
+                        <i data-lucide="chevron-right"></i>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `</div>`;
+    }
+
+    container.innerHTML = html;
+    refreshIcons();
+}
+
+// Update mobile card bookmark state
+function updateMobileCardBookmark(cardName) {
+    const bookmarkBtn = document.getElementById('mobile-card-bookmark');
+    if (!bookmarkBtn) return;
+
+    const isInWishlist = wishlist.has(cardName);
+    if (isInWishlist) {
+        bookmarkBtn.classList.add('bookmarked');
+        bookmarkBtn.innerHTML = '<i data-lucide="bookmark-check"></i>';
+    } else {
+        bookmarkBtn.classList.remove('bookmarked');
+        bookmarkBtn.innerHTML = '<i data-lucide="bookmark"></i>';
+    }
+    refreshIcons(bookmarkBtn);
+}
+
+// Toggle collection from mobile lists tab
+function toggleCollectionFromMobile(cardName) {
+    if (hasCard(cardName)) {
+        // Show quantity controls or remove
+        addCardFromModal(cardName);
+    } else {
+        addCardFromModal(cardName);
+    }
+
+    // Update the lists tab
+    const card = allCards.find(c => c.name === cardName);
+    if (card) {
+        setTimeout(() => populateMobileListsTab(card), 100);
+    }
+}
+
+// Toggle wishlist from mobile lists tab
+function toggleWishlistFromMobile(cardName) {
+    toggleWishlistFromModal(cardName);
+
+    // Update the lists tab
+    const card = allCards.find(c => c.name === cardName);
+    if (card) {
+        setTimeout(() => {
+            populateMobileListsTab(card);
+            updateMobileCardBookmark(cardName);
+        }, 100);
+    }
+}
+
+// Toggle trade from mobile lists tab
+function toggleTradeFromMobile(cardName) {
+    toggleTradeFromModal(cardName);
+
+    // Update the lists tab
+    const card = allCards.find(c => c.name === cardName);
+    if (card) {
+        setTimeout(() => populateMobileListsTab(card), 100);
+    }
+}
+
+// Share current card
+function shareCurrentCard() {
+    const cardName = document.getElementById('modal-card-name')?.textContent;
+    if (!cardName) return;
+
+    const card = allCards.find(c => c.name === cardName);
+    if (!card) return;
+
+    const slug = getCardSlug(card);
+    const url = `${window.location.origin}${window.location.pathname}#card/${slug}`;
+
+    if (navigator.share) {
+        navigator.share({
+            title: cardName,
+            text: `Veja ${cardName} no Sorcery Portal Brasil`,
+            url: url
+        }).catch(() => {
+            // User cancelled or error
+        });
+    } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Link copiado!', 'success');
+        }).catch(() => {
+            showToast('Erro ao copiar link', 'error');
+        });
+    }
 }
 
 // Precon card lists (from Curiosa.io official lists)
@@ -1068,7 +2062,7 @@ async function saveCardsToCache(cards) {
             request.onsuccess = () => resolve();
         });
     } catch (e) {
-        // Silently fail - cache is optional
+        console.warn('[Cache] Failed to save cards to IndexedDB:', e.message);
     }
 }
 
@@ -1126,7 +2120,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     setupConfirmModalHandlers(); // Confirmation dialog handlers
     initDropdownAccessibility(); // Keyboard navigation for dropdowns
-    initMobileMenu(); // Mobile hamburger menu
     restoreFilterState(); // Restore saved filter state
     loadPriceAlerts(); // Load price alerts
     loadTradeWants(); // Load trade wants
@@ -1265,14 +2258,116 @@ function getCurrentUserId() {
         try {
             const user = JSON.parse(session);
             return user.id || user.Id;
-        } catch (e) {}
+        } catch (e) {
+            console.warn('[Session] Failed to parse session:', e.message);
+        }
     }
     return null;
+}
+
+/**
+ * Clean up user-specific data on logout
+ * This ensures data from one user doesn't leak to the next
+ * @param {string} userId - The ID of the user logging out
+ * @param {boolean} clearMemory - Whether to also clear in-memory data
+ */
+function cleanupUserDataOnLogout(userId, clearMemory = true) {
+    console.log('[Logout] Cleaning up data for user:', userId);
+
+    // Clear in-memory data
+    if (clearMemory) {
+        collection = new Map();
+        wishlist = new Set();
+        tradeBinder = new Set();
+        tradeWants = new Set();
+        ownedPrecons = new Set();
+        decks = [];
+    }
+
+    // Reload services that cache user-specific data
+    // This reloads them with empty user context
+    if (typeof valueTracker !== 'undefined' && valueTracker.reload) {
+        valueTracker.reload();
+    }
+
+    if (typeof window.variantTracker !== 'undefined' && window.variantTracker.loadFromStorage) {
+        // Create new instance to get fresh storage key
+        window.variantTracker = new VariantTracker();
+    }
+
+    if (typeof priceAlertManager !== 'undefined' && priceAlertManager.reload) {
+        priceAlertManager.reload();
+    }
+
+    // Clear gamification for logged out state
+    if (typeof gamification !== 'undefined' && gamification.loadProgress) {
+        gamification.unlockedAchievements = new Set();
+        gamification.loadProgress();
+    }
+
+    console.log('[Logout] User data cleanup complete');
+}
+
+// Migrate data from old storage keys if needed
+// This handles cases where userId was stored as uppercase 'Id' vs lowercase 'id'
+function migrateOldStorageKeys() {
+    const userId = getCurrentUserId();
+    if (!userId) return;
+
+    // Check if current key has data
+    const currentKey = `sorcery-collection-${userId}`;
+    if (localStorage.getItem(currentKey)) return; // Already has data, no migration needed
+
+    // Try to find data with alternate key formats
+    // The userId might have been stored differently in old sessions
+    const allKeys = Object.keys(localStorage);
+    const collectionKeys = allKeys.filter(k => k.startsWith('sorcery-collection-') && k !== currentKey);
+
+    for (const oldKey of collectionKeys) {
+        const data = localStorage.getItem(oldKey);
+        if (data) {
+            // Found data with a different key, migrate it
+            console.log(`[Migration] Found collection data in ${oldKey}, migrating to ${currentKey}`);
+            localStorage.setItem(currentKey, data);
+
+            // Also migrate wishlist and trade binder
+            const oldSuffix = oldKey.replace('sorcery-collection-', '');
+            const oldWishlist = localStorage.getItem(`sorcery-wishlist-${oldSuffix}`);
+            const oldTradeBinder = localStorage.getItem(`sorcery-trade-binder-${oldSuffix}`);
+            const oldPrecons = localStorage.getItem(`sorcery-precons-${oldSuffix}`);
+
+            if (oldWishlist) {
+                localStorage.setItem(`sorcery-wishlist-${userId}`, oldWishlist);
+            }
+            if (oldTradeBinder) {
+                localStorage.setItem(`sorcery-trade-binder-${userId}`, oldTradeBinder);
+            }
+            if (oldPrecons) {
+                localStorage.setItem(`sorcery-precons-${userId}`, oldPrecons);
+            }
+
+            // Also migrate variant collection
+            const oldVariantKey = `sorcery_variant_collection_${oldSuffix}`;
+            const newVariantKey = `sorcery_variant_collection_${userId}`;
+            const oldVariants = localStorage.getItem(oldVariantKey);
+            if (oldVariants && !localStorage.getItem(newVariantKey)) {
+                localStorage.setItem(newVariantKey, oldVariants);
+            }
+
+            console.log('[Migration] Data migration complete');
+            break; // Only migrate from the first found key
+        }
+    }
 }
 
 // Load data from localStorage (per-user if logged in)
 function loadFromStorage() {
     const userId = getCurrentUserId();
+
+    // Try to migrate old data if needed
+    if (userId) {
+        migrateOldStorageKeys();
+    }
 
     // If logged in, load user-specific data
     if (userId) {
@@ -1385,25 +2480,44 @@ function saveUserDecks() {
 
 // Check if card is in collection
 function hasCard(cardName) {
-    const data = collection.get(cardName);
-    if (!data) return false;
-    const qty = typeof data === 'object' ? data.qty : data;
+    const result = findCardInCollection(cardName);
+    if (!result) return false;
+    const qty = typeof result.data === 'object' ? result.data.qty : result.data;
     return qty > 0;
+}
+
+// Helper function to find card in collection (case-insensitive fallback)
+function findCardInCollection(cardName) {
+    // Try exact match first
+    let data = collection.get(cardName);
+    if (data) return { key: cardName, data };
+
+    // Try case-insensitive match
+    const lowerName = cardName.toLowerCase();
+    for (const [key, value] of collection.entries()) {
+        if (key.toLowerCase() === lowerName) {
+            // Fix the key for future lookups
+            collection.delete(key);
+            collection.set(cardName, value);
+            return { key: cardName, data: value };
+        }
+    }
+    return null;
 }
 
 // Get quantity of a card in collection
 function getCardQuantity(cardName) {
-    const data = collection.get(cardName);
-    if (!data) return 0;
-    return typeof data === 'object' ? data.qty : data;
+    const result = findCardInCollection(cardName);
+    if (!result) return 0;
+    return typeof result.data === 'object' ? result.data.qty : result.data;
 }
 
 // Get card data (qty and addedAt)
 function getCardData(cardName) {
-    const data = collection.get(cardName);
-    if (!data) return null;
-    if (typeof data === 'object') return data;
-    return { qty: data, addedAt: new Date().toISOString() };
+    const result = findCardInCollection(cardName);
+    if (!result) return null;
+    if (typeof result.data === 'object') return result.data;
+    return { qty: result.data, addedAt: new Date().toISOString() };
 }
 
 // Add cards to collection (accumulates quantity)
@@ -1567,15 +2681,59 @@ function getUniqueCardCount() {
 }
 
 // Get card price (helper for sorting)
-function getCardPrice(cardName) {
+// If variant info is available, uses the specific variant's set for pricing
+function getCardPrice(cardName, setName = null, finish = 'Standard') {
     if (typeof priceService === 'undefined') return 0;
     const card = allCards.find(c => c.name === cardName);
     if (!card) return 0;
-    return priceService.getPrice(cardName) || priceService.getEstimatedPrice(card) || 0;
+
+    // Ensure finish is a string
+    const finishStr = typeof finish === 'string' ? finish : 'Standard';
+    // Try to get price for specific set/finish
+    const variant = finishStr.toLowerCase() || 'standard';
+    const price = priceService.getPrice(cardName, variant, setName);
+    if (price) return price;
+
+    // Fallback to estimated price
+    return priceService.getEstimatedPrice(card, finishStr) || 0;
 }
 
-// Get total value of a card in collection (price * qty)
+// Get total value of a card in collection based on actual variants owned
 function getCardTotalValue(cardName) {
+    // If VariantTracker is available, calculate value based on actual variants
+    if (typeof VariantTracker !== 'undefined') {
+        const tracker = new VariantTracker();
+        const owned = tracker.getCollectionByCard(cardName);
+
+        if (owned && owned.variants && Object.keys(owned.variants).length > 0) {
+            let totalValue = 0;
+
+            for (const [slug, variantData] of Object.entries(owned.variants)) {
+                const qty = variantData.qty || 1;
+                // Get set name from variant data or parse from slug
+                let setName = variantData.set;
+                if (!setName && slug) {
+                    // Try to parse set from slug (format: set-cardname-product-finish)
+                    try {
+                        const parsed = typeof parseSlug === 'function' ? parseSlug(slug) : null;
+                        setName = parsed?.setName || null;
+                    } catch (e) {
+                        setName = null;
+                    }
+                }
+                // Ensure finish is a string
+                const finish = typeof variantData.finish === 'string' ? variantData.finish : 'Standard';
+
+                // Get price for this specific variant
+                const price = getCardPrice(cardName, setName, finish);
+                totalValue += price * qty;
+            }
+
+            return totalValue;
+        }
+    }
+
+    // Fallback: use generic price * quantity
     const qty = getCardQuantity(cardName);
     const price = getCardPrice(cardName);
     return price * qty;
@@ -1586,18 +2744,30 @@ function getCardTotalValue(cardName) {
 // ============================================
 
 let addCardsModalCard = null; // Track which card is being added
+let cameFromAddCardsModal = false; // Track if card modal was opened from add cards modal
+let addCardsModalState = null; // Preserve search/filter state
 
 // Open the add cards modal
-function openAddCardsModal() {
+function openAddCardsModal(preserveState = false) {
     const modal = document.getElementById('add-cards-modal');
     if (!modal) return;
 
     modal.classList.remove('hidden');
 
-    // Clear and focus search
     const searchInput = document.getElementById('add-cards-search');
-    if (searchInput) {
-        searchInput.value = '';
+    const elementFilter = document.getElementById('add-cards-element-filter');
+    const typeFilter = document.getElementById('add-cards-type-filter');
+
+    // Restore previous state if preserving, otherwise reset
+    if (preserveState && addCardsModalState) {
+        if (searchInput) searchInput.value = addCardsModalState.search || '';
+        if (elementFilter) elementFilter.value = addCardsModalState.element || '';
+        if (typeFilter) typeFilter.value = addCardsModalState.type || '';
+    } else {
+        // Clear and reset filters
+        if (searchInput) searchInput.value = '';
+        if (elementFilter) elementFilter.value = '';
+        if (typeFilter) typeFilter.value = '';
     }
 
     // Trap focus for accessibility
@@ -1606,13 +2776,7 @@ function openAddCardsModal() {
         if (searchInput) searchInput.focus();
     });
 
-    // Reset filters
-    const elementFilter = document.getElementById('add-cards-element-filter');
-    const typeFilter = document.getElementById('add-cards-type-filter');
-    if (elementFilter) elementFilter.value = '';
-    if (typeFilter) typeFilter.value = '';
-
-    // Show initial results (empty or all)
+    // Show results based on current filters
     filterAddCardsResults();
 
     // Initialize Lucide icons
@@ -1678,20 +2842,20 @@ function filterAddCardsResults() {
         return `
             <div class="add-card-item" data-card-name="${card.name}">
                 <span class="add-card-item-qty ${qty > 0 ? '' : 'hidden'}" id="qty-${card.name.replace(/\s+/g, '-')}">${qty}x</span>
-                <div class="add-card-item-preview" onclick="openCardQuantityModal('${escapedName}')">
+                <div class="add-card-item-preview" onclick="openCardQuantityModal('${escapedName}', event)">
                     <img src="${imageUrl}" alt="${card.name}" onerror="this.src='placeholder.png'">
                 </div>
                 <div class="add-card-item-info">
-                    <div class="add-card-item-name" onclick="openCardQuantityModal('${escapedName}')">${card.name}</div>
+                    <div class="add-card-item-name" onclick="openCardQuantityModal('${escapedName}', event)">${card.name}</div>
                     <div class="add-card-item-type">${card.guardian?.type || ''}</div>
                 </div>
                 <div class="add-card-item-actions">
                     <button class="quick-add-btn remove" onclick="quickRemoveFromCollection('${escapedName}', event)" aria-label="Remover 1" ${qty === 0 ? 'disabled' : ''}>
-                        <i data-lucide="minus"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </button>
                     <span class="quick-qty">${qty}</span>
                     <button class="quick-add-btn add" onclick="quickAddToCollection('${escapedName}', event)" aria-label="Adicionar 1">
-                        <i data-lucide="plus"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </button>
                 </div>
             </div>
@@ -1718,11 +2882,34 @@ function filterAddCardsResults() {
 }
 
 // Open card detail from add cards modal - just opens the regular card modal
-function openCardQuantityModal(cardName) {
+function openCardQuantityModal(cardName, event) {
+    // Stop event propagation to prevent the click from closing the card modal
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
+
+    // Save current search/filter state before closing
+    const searchInput = document.getElementById('add-cards-search');
+    const elementFilter = document.getElementById('add-cards-element-filter');
+    const typeFilter = document.getElementById('add-cards-type-filter');
+
+    addCardsModalState = {
+        search: searchInput?.value || '',
+        element: elementFilter?.value || '',
+        type: typeFilter?.value || ''
+    };
+
+    // Mark that we came from add cards modal
+    cameFromAddCardsModal = true;
+
     // Close the add cards modal first
     closeAddCardsModal();
-    // Open the full card detail modal
-    openCardModal(cardName);
+
+    // Open the full card detail modal with a small delay to prevent click propagation issues
+    setTimeout(() => {
+        openCardModal(cardName);
+    }, 50);
 }
 
 // Setup Event Listeners
@@ -1782,12 +2969,12 @@ function setupEventListeners() {
 
     // Modal close
     document.querySelectorAll('.close-modal').forEach(btn => {
-        btn.addEventListener('click', closeModal);
+        btn.addEventListener('click', closeCardAndDeckModals);
     });
 
     // Close modal on outside click
     cardModal.addEventListener('click', (e) => {
-        if (e.target === cardModal) closeModal();
+        if (e.target === cardModal) closeCardAndDeckModals();
     });
 
     // Close any modal with ESC key (accessibility)
@@ -1795,7 +2982,7 @@ function setupEventListeners() {
         if (e.key === 'Escape') {
             // Close card modal
             if (!cardModal.classList.contains('hidden')) {
-                closeModal();
+                closeCardAndDeckModals();
                 releaseFocusTrap();
                 return;
             }
@@ -2031,6 +3218,11 @@ function switchView(viewName) {
     if (viewName === 'top-cards') initTopCardsView();
     if (viewName === 'marketplace') initMarketplaceView();
     if (viewName === 'forum') initForumView();
+    if (viewName === 'notifications') initNotificationsView();
+
+    // Update mobile app UI state
+    updateBottomNavActiveState(viewName);
+    updateFABVisibility(viewName);
 
     // Re-initialize Lucide icons for dynamic content
     refreshIcons();
@@ -3378,6 +4570,7 @@ function loadPriceAlerts() {
             priceAlerts = new Map(Object.entries(data));
         }
     } catch (e) {
+        console.warn('[PriceAlerts] Failed to load price alerts:', e.message);
         priceAlerts = new Map();
     }
 }
@@ -3390,7 +4583,7 @@ function savePriceAlerts() {
         const data = Object.fromEntries(priceAlerts);
         localStorage.setItem(key, JSON.stringify(data));
     } catch (e) {
-        // Silently fail
+        console.warn('[PriceAlerts] Failed to save price alerts:', e.message);
     }
 }
 
@@ -4328,14 +5521,23 @@ function renderProfileDecks(decks) {
 // ============================================
 
 // Open profile settings modal
-function openProfileSettings() {
+async function openProfileSettings() {
     if (!nocoDBService.isLoggedIn()) {
         alert('Você precisa estar logado para configurar seu perfil.');
         return;
     }
 
     const modal = document.getElementById('profile-modal');
-    const profile = profileService.getProfile();
+    let profile = profileService.getProfile();
+
+    // Initialize profile if it doesn't exist
+    if (!profile) {
+        const user = nocoDBService.getCurrentUser();
+        if (user) {
+            await profileService.initProfile(user.id || user.Id, user.displayName || user.username);
+            profile = profileService.getProfile();
+        }
+    }
 
     if (profile) {
         // Fill in current values
@@ -4348,10 +5550,20 @@ function openProfileSettings() {
         document.getElementById('profile-show-top-cards').checked = profile.privacySettings?.showTopCards ?? true;
         document.getElementById('profile-show-decks').checked = profile.privacySettings?.showDeckLists ?? false;
 
-        // Set share URL
+        // Always set share URL (user can toggle profile to public to use it)
         const shareUrl = profileService.getShareUrl();
-        document.getElementById('profile-share-url').value = shareUrl || '';
-        document.getElementById('profile-share-section').style.display = profile.isPublic ? '' : 'none';
+        const shareSection = document.getElementById('profile-share-section');
+        const shareUrlInput = document.getElementById('profile-share-url');
+
+        shareUrlInput.value = shareUrl || '';
+
+        // Always show share section, but with different styling/message
+        shareSection.style.display = '';
+        if (!profile.isPublic) {
+            shareSection.classList.add('share-disabled');
+        } else {
+            shareSection.classList.remove('share-disabled');
+        }
     }
 
     // Render current avatar
@@ -4577,55 +5789,129 @@ async function saveProfileSettings() {
     const displayName = document.getElementById('profile-display-name').value.trim();
     const bio = document.getElementById('profile-bio').value.trim();
     const isPublic = document.getElementById('profile-is-public').checked;
-
-    const privacySettings = {
-        showCollectionValue: document.getElementById('profile-show-value').checked,
-        showCompletionStats: document.getElementById('profile-show-completion').checked,
-        showTopCards: document.getElementById('profile-show-top-cards').checked,
-        showDeckLists: document.getElementById('profile-show-decks').checked
-    };
-
-    profileService.updateProfile({
-        displayName: displayName,
-        bio: bio,
-        isPublic: isPublic
-    });
-
-    profileService.updatePrivacy(privacySettings);
-
-    // Sync to cloud
-    await profileService.syncProfileToCloud();
-
-    // Update share URL visibility
-    document.getElementById('profile-share-section').style.display = isPublic ? '' : 'none';
-    document.getElementById('profile-share-url').value = profileService.getShareUrl() || '';
-
-    // Show success feedback
     const btn = document.getElementById('save-profile-btn');
+
+    // Validate display name
+    if (!displayName || displayName.length < 2) {
+        showToast('Nome de exibição deve ter pelo menos 2 caracteres', 'error');
+        return;
+    }
+
+    // Check for duplicate username (if changed)
+    const currentProfile = profileService.getProfile();
+    if (currentProfile && displayName !== currentProfile.displayName) {
+        const isDuplicate = await checkDuplicateUsername(displayName);
+        if (isDuplicate) {
+            showToast('Este nome de usuário já está em uso', 'error');
+            return;
+        }
+    }
+
+    // Show loading state
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i data-lucide="check"></i> Salvo!';
-    btn.style.background = 'var(--success)';
+    btn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Salvando...';
+    btn.disabled = true;
     refreshIcons();
 
-    setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.background = '';
+    try {
+        const privacySettings = {
+            showCollectionValue: document.getElementById('profile-show-value').checked,
+            showCompletionStats: document.getElementById('profile-show-completion').checked,
+            showTopCards: document.getElementById('profile-show-top-cards').checked,
+            showDeckLists: document.getElementById('profile-show-decks').checked
+        };
+
+        profileService.updateProfile({
+            displayName: displayName,
+            bio: bio,
+            isPublic: isPublic
+        });
+
+        profileService.updatePrivacy(privacySettings);
+
+        // Sync to cloud
+        await profileService.syncProfileToCloud();
+
+        // Update share URL and section visibility
+        const shareUrl = profileService.getShareUrl();
+        const shareSection = document.getElementById('profile-share-section');
+        document.getElementById('profile-share-url').value = shareUrl || '';
+
+        if (isPublic) {
+            shareSection.classList.remove('share-disabled');
+        } else {
+            shareSection.classList.add('share-disabled');
+        }
+
+        // Show success and close modal
+        btn.innerHTML = '<i data-lucide="check"></i> Salvo!';
+        btn.style.background = 'var(--success)';
         refreshIcons();
-    }, 2000);
+
+        showToast('Configurações salvas com sucesso!', 'success');
+
+        // Close modal after delay
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '';
+            btn.disabled = false;
+            refreshIcons();
+            closeModal('profile-modal');
+        }, 1000);
+
+    } catch (error) {
+        console.error('Error saving profile:', error);
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        refreshIcons();
+        showToast('Erro ao salvar configurações', 'error');
+    }
+}
+
+// Check if username is already taken
+async function checkDuplicateUsername(displayName) {
+    if (typeof nocoDBService === 'undefined') return false;
+
+    try {
+        const currentUser = nocoDBService.getCurrentUser();
+        const profiles = await nocoDBService.getRecords('profiles', {
+            where: `(display_name,eq,${displayName})`,
+            limit: 1
+        });
+
+        // If found and it's not the current user's profile
+        if (profiles && profiles.length > 0) {
+            return profiles[0].user_id !== currentUser?.id;
+        }
+        return false;
+    } catch (error) {
+        console.error('Error checking duplicate username:', error);
+        return false;
+    }
 }
 
 // Copy profile share URL
 async function copyProfileUrl() {
-    const success = await profileService.copyShareUrl();
+    const shareUrl = profileService.getShareUrl();
     const btn = document.getElementById('copy-profile-url');
+
+    if (!shareUrl) {
+        showToast('Link de perfil não disponível', 'error');
+        return;
+    }
+
+    const success = await profileService.copyShareUrl();
 
     if (success) {
         btn.innerHTML = '<i data-lucide="check"></i>';
         refreshIcons();
+        showToast('Link copiado para a área de transferência!', 'success');
         setTimeout(() => {
             btn.innerHTML = '<i data-lucide="copy"></i>';
             refreshIcons();
         }, 2000);
+    } else {
+        showToast('Erro ao copiar link', 'error');
     }
 }
 
@@ -4865,11 +6151,13 @@ function openCardModal(cardName, updateHash = true) {
     if (collectionBtn) {
         if (hasCard(cardName)) {
             const qty = getCardQuantity(cardName);
-            collectionBtn.innerHTML = `<i data-lucide="check"></i> ${qty}x na Coleção`;
+            collectionBtn.innerHTML = `<i data-lucide="package"></i> ${qty}x na Coleção`;
             collectionBtn.classList.add('in-collection');
+            collectionBtn.title = 'Clique para ver os controles de quantidade';
         } else {
-            collectionBtn.innerHTML = '<i data-lucide="plus"></i> Coleção';
+            collectionBtn.innerHTML = '<i data-lucide="plus"></i> Adicionar';
             collectionBtn.classList.remove('in-collection');
+            collectionBtn.title = 'Adicionar 1 cópia à coleção';
         }
         refreshIcons(collectionBtn);
     }
@@ -4920,17 +6208,63 @@ function openCardModal(cardName, updateHash = true) {
     // Highlight keywords in rules text
     highlightKeywordsInModal(card);
 
+    // === RESET ALL CARD-SPECIFIC STATES ===
     // Hide QR code from previous card
     document.getElementById('qr-code-container')?.classList.add('hidden');
 
+    // Reset currency to USD
+    const currencyBtns = document.querySelectorAll('.currency-btn');
+    currencyBtns.forEach(btn => {
+        if (btn.dataset.currency === 'USD') {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    document.getElementById('brl-rate-info')?.style.setProperty('display', 'none');
+
+    // Force scroll reset on ALL scrollable elements in the modal
+    const resetModalScroll = () => {
+        const modal = document.getElementById('card-modal');
+        const content = modal?.querySelector('.modal-content');
+        const cardInfo = modal?.querySelector('.card-info');
+
+        // Reset .card-info (this is the main scrollable area!)
+        if (cardInfo) {
+            cardInfo.scrollTop = 0;
+            cardInfo.scrollTo(0, 0);
+        }
+        // Reset .modal-content
+        if (content) {
+            content.scrollTop = 0;
+            content.scrollTo(0, 0);
+        }
+        // Reset modal itself
+        if (modal) {
+            modal.scrollTop = 0;
+        }
+    };
+
+    // Reset before showing
+    resetModalScroll();
+
     cardModal.classList.remove('hidden');
 
-    // Trap focus for accessibility
-    requestAnimationFrame(() => trapFocus(cardModal));
+    // Reset multiple times to ensure it works
+    resetModalScroll();
+    setTimeout(resetModalScroll, 10);
+    setTimeout(resetModalScroll, 50);
+    setTimeout(resetModalScroll, 100);
+
+    // Populate mobile card detail (for mobile users)
+    populateMobileCardDetail(card);
+
+    // Trap focus after modal is visible
+    setTimeout(() => trapFocus(cardModal), 50);
 }
 
-// Close Modal
-function closeModal() {
+// Close Card Modal (legacy - used by onclick handlers)
+function closeCardAndDeckModals() {
     cardModal.classList.add('hidden');
     document.getElementById('deck-builder-modal')?.classList.add('hidden');
 
@@ -4940,6 +6274,14 @@ function closeModal() {
     // Clear URL hash if it's a card deep link
     if (window.location.hash.startsWith('#card/')) {
         history.pushState(null, '', window.location.pathname);
+    }
+
+    // If we came from the add cards modal, reopen it with preserved state
+    if (cameFromAddCardsModal) {
+        cameFromAddCardsModal = false;
+        setTimeout(() => {
+            openAddCardsModal(true); // true = preserve state
+        }, 100);
     }
 }
 
@@ -4952,6 +6294,15 @@ function closeCardModal() {
     // Clear URL hash if it's a card deep link
     if (window.location.hash.startsWith('#card/')) {
         history.pushState(null, '', window.location.pathname);
+    }
+
+    // If we came from the add cards modal, reopen it with preserved state
+    if (cameFromAddCardsModal) {
+        cameFromAddCardsModal = false;
+        // Small delay to allow the modal close animation to complete
+        setTimeout(() => {
+            openAddCardsModal(true); // true = preserve state
+        }, 100);
     }
 }
 window.closeCardModal = closeCardModal;
@@ -4984,11 +6335,20 @@ function renderVariantSelector(card) {
         Rainbow: allVariants.filter(v => v.finish === 'Rainbow')
     };
 
+    // Reset tabs to Standard (important: do this BEFORE rendering)
+    const tabs = document.querySelectorAll('.variant-tab');
+    tabs.forEach(tab => {
+        if (tab.dataset.finish === 'Standard') {
+            tab.classList.add('active');
+        } else {
+            tab.classList.remove('active');
+        }
+    });
+
     // Render variant list (default to Standard)
     renderVariantList('Standard', variantsByFinish, card.name);
 
     // Setup tab handlers
-    const tabs = document.querySelectorAll('.variant-tab');
     tabs.forEach(tab => {
         tab.onclick = () => {
             tabs.forEach(t => t.classList.remove('active'));
@@ -5007,10 +6367,15 @@ function renderVariantSelector(card) {
                 <div class="owned-variant-item">
                     <span class="variant-finish ${data.finish?.toLowerCase() || 'standard'}">${data.finish || 'Standard'}</span>
                     <span class="variant-set">${data.set || 'Unknown'}</span>
-                    <span class="variant-qty">x${data.qty || 1}</span>
-                    <button class="btn-remove-variant" onclick="removeVariantFromCollection('${card.name}', '${slug}')">
-                        <i data-lucide="minus"></i>
-                    </button>
+                    <div class="owned-variant-controls">
+                        <button class="qty-btn-sm" onclick="adjustOwnedVariant('${card.name}', '${slug}', -1)" title="Remover 1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                        <span class="owned-variant-qty">${data.qty || 1}</span>
+                        <button class="qty-btn-sm" onclick="adjustOwnedVariant('${card.name}', '${slug}', 1)" title="Adicionar 1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
                 </div>
             `).join('');
             document.getElementById('owned-variants').style.display = 'block';
@@ -5037,13 +6402,14 @@ function renderVariantList(finish, variantsByFinish, cardName) {
         return;
     }
 
-    // Sets that are rare - start at 0
+    // Sets that are rare - always start at 0
     const rareSets = ['Alpha', 'Promotional'];
 
     variantList.innerHTML = variants.map((v, index) => {
         const inputId = `qty-${finish}-${index}`;
-        // Alpha and Promotional start at 0, others at 1
-        const defaultQty = rareSets.includes(v.setName) ? 0 : 1;
+        // Only the FIRST variant starts at 1 (unless it's a rare set)
+        // All other variants start at 0 to avoid user accidentally adding multiple
+        const defaultQty = (index === 0 && !rareSets.includes(v.setName)) ? 1 : 0;
         return `
             <div class="variant-item" data-slug="${v.slug}">
                 <div class="variant-info">
@@ -5109,13 +6475,19 @@ function addVariantWithQty(cardName, slug, finish, inputId) {
         // Also add to main collection for compatibility (no toast, we show custom one)
         addToCollection(cardName, qty, false);
 
-        // Refresh modal
-        const card = allCards.find(c => c.name === cardName);
-        if (card) renderVariantSelector(card);
-
-        // Show feedback
-        const totalQty = getCardQuantity(cardName);
-        showSuccessToast(`${qty}x ${finish} adicionado! Total: ${totalQty}x`);
+        // If we came from add cards modal, close and return to search
+        if (cameFromAddCardsModal) {
+            const totalQty = getCardQuantity(cardName);
+            showSuccessToast(`${qty}x ${finish} adicionado! Total: ${totalQty}x`, '', 3000);
+            addCardsModalState = null; // Clear state so search bar is empty
+            closeCardAndDeckModals();
+        } else {
+            // Refresh modal normally
+            const card = allCards.find(c => c.name === cardName);
+            if (card) renderVariantSelector(card);
+            const totalQty = getCardQuantity(cardName);
+            showSuccessToast(`${qty}x ${finish} adicionado! Total: ${totalQty}x`);
+        }
     }
 }
 
@@ -5135,51 +6507,72 @@ function addVariantToCollection(cardName, slug, finish) {
         // Also add to legacy collection for compatibility (no toast, we show custom one)
         addToCollection(cardName, 1, false);
 
-        // Refresh modal
-        const card = allCards.find(c => c.name === cardName);
-        if (card) renderVariantSelector(card);
-
-        // Show feedback
-        showSuccessToast(`${finish} adicionado à coleção!`);
+        // If we came from add cards modal, close and return to search
+        if (cameFromAddCardsModal) {
+            // Show success toast with longer duration
+            showSuccessToast(`${finish} adicionado à coleção!`, '', 3000);
+            // Clear the search state so user gets a fresh search
+            addCardsModalState = null;
+            // Close the card modal (this will trigger reopening add cards modal)
+            closeCardAndDeckModals();
+        } else {
+            // Refresh modal normally
+            const card = allCards.find(c => c.name === cardName);
+            if (card) renderVariantSelector(card);
+            // Show feedback
+            showSuccessToast(`${finish} adicionado à coleção!`);
+        }
     }
 }
 
-// Remove variant from collection
-function removeVariantFromCollection(cardName, slug) {
+// Adjust owned variant quantity (+/-)
+function adjustOwnedVariant(cardName, slug, delta) {
     if (typeof VariantTracker !== 'undefined') {
         const tracker = new VariantTracker();
-        tracker.removeFromCollection(cardName, slug, 1);
+        const owned = tracker.getCollectionByCard(cardName);
 
-        // Check if any variants remain
-        const remaining = tracker.getCollectionByCard(cardName);
-        if (!remaining || !remaining.variants || Object.keys(remaining.variants).length === 0) {
-            collection.delete(cardName);
-            saveToStorage();
+        if (!owned || !owned.variants || !owned.variants[slug]) {
+            if (delta > 0) {
+                // Adding to a variant that doesn't exist - use add function
+                tracker.addToCollection(cardName, slug, delta);
+            }
+            return;
+        }
+
+        const currentQty = owned.variants[slug].qty || 1;
+        const newQty = currentQty + delta;
+
+        if (newQty <= 0) {
+            // Remove the variant entirely
+            tracker.removeFromCollection(cardName, slug, currentQty);
+
+            // Check if any variants remain for this card
+            const remaining = tracker.getCollectionByCard(cardName);
+            if (!remaining || !remaining.variants || Object.keys(remaining.variants).length === 0) {
+                collection.delete(cardName);
+                saveToStorage();
+            }
+
+            showToast('Variante removida da coleção', 'success');
+        } else if (delta > 0) {
+            // Adding more
+            tracker.addToCollection(cardName, slug, delta);
+            showToast(`+${delta} adicionado`, 'success');
+        } else {
+            // Removing some (but not all)
+            tracker.removeFromCollection(cardName, slug, Math.abs(delta));
+            showToast(`${Math.abs(delta)} removido`, 'success');
         }
 
         // Refresh modal
         const card = allCards.find(c => c.name === cardName);
         if (card) renderVariantSelector(card);
-
-        showToast('Variante removida');
     }
 }
 
-// Show toast notification
-function showToast(message) {
-    const existing = document.querySelector('.toast');
-    if (existing) existing.remove();
-
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    document.body.appendChild(toast);
-
-    setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 2000);
+// Remove variant from collection (legacy - still used for backwards compatibility)
+function removeVariantFromCollection(cardName, slug) {
+    adjustOwnedVariant(cardName, slug, -1);
 }
 
 // Highlight keywords in modal
@@ -5397,22 +6790,54 @@ function filterMissingCards(setName) {
 
 // Toggle Collection (simple toggle for quick add/remove from cards view)
 function toggleCollection(cardName) {
-    // Check login for adding (not for removing)
-    if (!hasCard(cardName)) {
-        if (typeof nocoDBService !== 'undefined' && !nocoDBService.isLoggedIn()) {
-            showNotification('Faça login para adicionar cards à coleção');
-            openAuthModal('login');
-            return;
+    // If card is already in collection, scroll to the variant controls instead of removing
+    if (hasCard(cardName)) {
+        // Scroll to the "Na sua coleção" section so user can edit there
+        const ownedSection = document.getElementById('owned-variants');
+        if (ownedSection) {
+            ownedSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Flash the section to draw attention
+            ownedSection.classList.add('highlight-flash');
+            setTimeout(() => ownedSection.classList.remove('highlight-flash'), 1500);
         }
+        showToast('Use os controles acima para ajustar a quantidade', 'info');
+        return;
     }
 
-    if (hasCard(cardName)) {
-        removeFromCollection(cardName, getCardQuantity(cardName)); // Remove all copies
-    } else {
-        addToCollection(cardName, 1); // Add 1 copy
+    // Check login for adding
+    if (typeof nocoDBService !== 'undefined' && !nocoDBService.isLoggedIn()) {
+        showNotification('Faça login para adicionar cards à coleção');
+        openAuthModal('login');
+        return;
     }
+
+    // Add 1 copy of the first available variant
+    const card = allCards.find(c => c.name === cardName);
+    if (card && typeof VariantTracker !== 'undefined') {
+        // Find first available variant
+        const firstSet = card.sets?.[0];
+        const firstVariant = firstSet?.variants?.[0];
+        if (firstVariant?.slug) {
+            const tracker = new VariantTracker();
+            tracker.addToCollection(cardName, firstVariant.slug, 1);
+            addToCollection(cardName, 1, false);
+        } else {
+            addToCollection(cardName, 1, false);
+        }
+    } else {
+        addToCollection(cardName, 1, false);
+    }
+
     renderCards();
-    openCardModal(cardName); // Refresh modal
+
+    // If we came from add cards modal, close and return
+    if (cameFromAddCardsModal) {
+        showSuccessToast(`${cardName} adicionado à coleção!`, '', 3000);
+        addCardsModalState = null;
+        closeCardAndDeckModals();
+    } else {
+        openCardModal(cardName); // Refresh modal normally
+    }
 }
 
 // Toggle Wishlist
@@ -5476,6 +6901,13 @@ function checkUserLoggedIn() {
 function renderCollection() {
     const loginPrompt = document.getElementById('collection-login-prompt');
     const collectionContent = document.getElementById('collection-content');
+    // Get grid element fresh each time (in case DOM wasn't ready when script loaded)
+    const gridEl = document.getElementById('collection-grid');
+
+    if (!gridEl) {
+        console.error('[renderCollection] CRITICAL: collection-grid element not found!');
+        return;
+    }
 
     // Check if user is logged in
     const isLoggedIn = checkUserLoggedIn();
@@ -5513,6 +6945,21 @@ function renderCollection() {
     // Get variant tracker if available
     const variantTracker = window.variantTracker || (typeof VariantTracker !== 'undefined' ? new VariantTracker() : null);
 
+    // Debug: Log collection state
+    console.log('[renderCollection] allCards count:', allCards.length);
+    console.log('[renderCollection] collection size:', collection.size);
+    console.log('[renderCollection] gridEl exists:', !!gridEl);
+    if (collection.size > 0) {
+        const firstKey = collection.keys().next().value;
+        console.log('[renderCollection] First collection key:', JSON.stringify(firstKey));
+        console.log('[renderCollection] First allCards name:', JSON.stringify(allCards[0]?.name));
+        // Test if keys match
+        const testCard = allCards[0];
+        if (testCard) {
+            console.log('[renderCollection] hasCard test for first allCard:', hasCard(testCard.name));
+        }
+    }
+
     // Filter cards
     let collectionCards = allCards.filter(card => {
         if (!hasCard(card.name)) return false;
@@ -5541,6 +6988,18 @@ function renderCollection() {
 
         return true;
     });
+
+    console.log('[renderCollection] collectionCards after filter:', collectionCards.length);
+    if (collectionCards.length === 0 && collection.size > 0) {
+        // Debug: Check why no cards matched
+        console.log('[renderCollection] No cards matched! Checking first 3 collection keys:');
+        let i = 0;
+        for (const key of collection.keys()) {
+            if (i >= 3) break;
+            console.log(`  Key ${i}: "${key}"`);
+            i++;
+        }
+    }
 
     // Rarity order for sorting
     const rarityOrder = { 'Unique': 4, 'Elite': 3, 'Exceptional': 2, 'Ordinary': 1 };
@@ -5605,7 +7064,7 @@ function renderCollection() {
 
     if (collectionCards.length === 0) {
         if (hasFilters) {
-            collectionGridEl.innerHTML = `
+            gridEl.innerHTML = `
                 <div class="empty-state centered">
                     <i data-lucide="filter-x" class="empty-icon"></i>
                     <h3>Nenhuma carta encontrada</h3>
@@ -5616,7 +7075,7 @@ function renderCollection() {
                 </div>
             `;
         } else {
-            collectionGridEl.innerHTML = `
+            gridEl.innerHTML = `
                 <div class="empty-state centered">
                     <i data-lucide="library" class="empty-icon"></i>
                     <h3>Sua coleção está vazia</h3>
@@ -5627,15 +7086,17 @@ function renderCollection() {
                 </div>
             `;
         }
-        refreshIcons(collectionGridEl);
+        refreshIcons(gridEl);
         return;
     }
 
     // Render cards with quantity badges
-    collectionGridEl.innerHTML = collectionCards.map(card => {
-        let html = createCardHTML(card);
-        const cardQty = getCardQuantity(card.name);
-        const cardValue = getCardTotalValue(card.name);
+    console.log('[renderCollection] Rendering', collectionCards.length, 'cards to grid');
+    try {
+        gridEl.innerHTML = collectionCards.map(card => {
+            let html = createCardHTML(card);
+            const cardQty = getCardQuantity(card.name);
+            const cardValue = getCardTotalValue(card.name);
 
         // Add quantity badge if more than 1
         if (cardQty > 1) {
@@ -5653,10 +7114,14 @@ function renderCollection() {
             );
         }
 
-        return html;
-    }).join('');
+            return html;
+        }).join('');
+        console.log('[renderCollection] Grid innerHTML set, length:', gridEl.innerHTML.length);
+    } catch (err) {
+        console.error('[renderCollection] Error rendering cards:', err);
+    }
 
-    collectionGridEl.querySelectorAll('.card-item').forEach(el => {
+    gridEl.querySelectorAll('.card-item').forEach(el => {
         el.addEventListener('click', () => {
             const cardName = el.dataset.cardName;
             openCardModal(cardName);
@@ -5995,8 +7460,17 @@ async function submitSharedDeck(e) {
     });
 
     if (!name || !description) {
-        showNotification('Nome e descrição são obrigatórios.', 'error');
+        showToast('Nome e descrição são obrigatórios', 'error');
         return;
+    }
+
+    // Get submit button and show loading state
+    const submitBtn = document.querySelector('#share-deck-modal button[type="submit"]');
+    const originalBtnText = submitBtn?.innerHTML;
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Compartilhando...';
+        refreshIcons();
     }
 
     // Get current user info
@@ -6010,7 +7484,7 @@ async function submitSharedDeck(e) {
     const communityDeck = {
         name,
         author: user.name || user.email?.split('@')[0] || 'Anônimo',
-        authorId: user.Id || user.id,
+        authorId: user.id || user.Id,
         format,
         tier: tier || null,
         description,
@@ -6053,11 +7527,20 @@ async function submitSharedDeck(e) {
 
             closeModal('share-deck-modal');
             renderUserDecks();
-            showNotification(`Deck "${name}" compartilhado com a comunidade!`, 'success');
+            showToast(`Deck "${name}" compartilhado com a comunidade!`, 'success');
+        } else {
+            showToast('Erro ao compartilhar deck', 'error');
         }
     } catch (error) {
         console.error('Error sharing deck:', error);
-        showNotification('Erro ao compartilhar deck. Tente novamente.', 'error');
+        showToast('Erro ao compartilhar deck. Tente novamente.', 'error');
+    } finally {
+        // Reset button state
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+            refreshIcons();
+        }
     }
 }
 
@@ -8929,14 +10412,15 @@ function setupAuthEventListeners() {
 
     // Logout button
     document.getElementById('logout-btn')?.addEventListener('click', () => {
+        // Get user ID before logging out (for cleanup)
+        const userId = getCurrentUserId();
+
+        // Perform logout
         nocoDBService.logout();
         updateAuthUI();
 
-        // Clear user-specific data from memory
-        collection = new Map(); // FIXED: was new Set(), but collection is now a Map
-        wishlist = new Set();
-        tradeBinder = new Set();
-        decks = [];
+        // Clean up all user-specific data
+        cleanupUserDataOnLogout(userId, true);
 
         // Dispatch logout event for community services
         document.dispatchEvent(new CustomEvent('userLoggedOut'));
@@ -9007,11 +10491,15 @@ function setupAuthEventListeners() {
         document.getElementById('bio-char-count').textContent = e.target.value.length;
     });
 
-    // Profile public toggle - show/hide share section
+    // Profile public toggle - enable/disable share section
     document.getElementById('profile-is-public')?.addEventListener('change', (e) => {
         const shareSection = document.getElementById('profile-share-section');
         if (shareSection) {
-            shareSection.style.display = e.target.checked ? '' : 'none';
+            if (e.target.checked) {
+                shareSection.classList.remove('share-disabled');
+            } else {
+                shareSection.classList.add('share-disabled');
+            }
         }
     });
 
@@ -9155,7 +10643,7 @@ async function handleRegister(e) {
         closeModal('auth-modal');
         updateAuthUI();
         refreshCurrentView();
-        showSuccessToast('Bem-vindo ao Sorcery Portal Brasil!', 'Conta criada');
+        showSuccessToast('Bem-vindo ao Sorcery Contested Realm Brasil!', 'Conta criada');
 
         // Initialize profile for new user
         if (typeof profileService !== 'undefined') {
@@ -9267,55 +10755,127 @@ function openSyncModal() {
         lastSyncEl.textContent = 'Nunca';
     }
 
-    // Hide status
+    // Hide status and result summary
     document.getElementById('sync-status').classList.add('hidden');
+    document.getElementById('sync-result-summary')?.classList.add('hidden');
+
+    // Update strategy hint
+    updateSyncStrategyHint();
+
+    // Refresh icons
+    refreshIcons(modal);
 
     // Trap focus for accessibility
     requestAnimationFrame(() => trapFocus(modal));
 }
 
-// Handle sync upload
+// Update sync strategy hint based on selected strategy
+function updateSyncStrategyHint() {
+    const strategySelect = document.getElementById('sync-strategy');
+    const hintEl = document.getElementById('sync-strategy-hint');
+    if (!strategySelect || !hintEl) return;
+
+    const hints = {
+        'newest_wins': 'Quando houver conflitos, a versao mais recente sera mantida.',
+        'local_wins': 'Dados locais sempre sobreescrevem os dados da nuvem.',
+        'cloud_wins': 'Dados da nuvem sempre sobreescrevem os dados locais.',
+        'merge_add': 'Combina os dados, mantendo a maior quantidade de cada carta.',
+        'manual': 'Voce sera perguntado sobre cada conflito individualmente.'
+    };
+
+    hintEl.textContent = hints[strategySelect.value] || hints['newest_wins'];
+}
+
+// Initialize sync strategy selector
+document.addEventListener('DOMContentLoaded', () => {
+    const strategySelect = document.getElementById('sync-strategy');
+    if (strategySelect) {
+        strategySelect.addEventListener('change', updateSyncStrategyHint);
+    }
+});
+
+// Handle sync upload (Smart Sync)
 async function handleSyncUpload() {
     const uploadBtn = document.getElementById('sync-upload-btn');
     const statusEl = document.getElementById('sync-status');
     const messageEl = statusEl.querySelector('.sync-message');
+    const resultSummary = document.getElementById('sync-result-summary');
 
-    setButtonLoading(uploadBtn, true, 'Enviando...');
+    // Get selected strategy
+    const strategySelect = document.getElementById('sync-strategy');
+    const strategy = strategySelect?.value || 'newest_wins';
+
+    setButtonLoading(uploadBtn, true, 'Sincronizando...');
     statusEl.classList.remove('hidden');
-    messageEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Enviando coleção para a nuvem...';
+    resultSummary?.classList.add('hidden');
+    messageEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Analisando diferencas...';
     refreshIcons(messageEl);
 
     try {
-        // Convert collection Map to object format (preserves qty and addedAt)
+        // Check if SmartSyncService is available
+        if (typeof smartSyncService === 'undefined' || !smartSyncService) {
+            throw new Error('Servico de sincronizacao nao disponivel');
+        }
+
+        // Convert collection Map to object format
         const collectionObj = {};
         collection.forEach((data, cardName) => {
             collectionObj[cardName] = {
                 qty: typeof data === 'object' ? data.qty : data,
-                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString()
+                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString(),
+                updatedAt: typeof data === 'object' ? (data.updatedAt || data.addedAt) : new Date().toISOString()
             };
         });
 
-        const results = await nocoDBService.fullSyncToCloud(
-            collectionObj,
-            wishlist,
-            tradeBinder,
-            decks
-        );
-
-        // Save last sync time (per-user)
-        const userId = getCurrentUserId();
-        if (userId) {
-            localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
-        }
-
-        messageEl.innerHTML = '<i data-lucide="check-circle"></i> Upload completo!';
+        // Use Smart Sync
+        messageEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Sincronizando com a nuvem...';
         refreshIcons(messageEl);
-        setTimeout(() => {
-            closeModal('sync-modal');
-            showSuccessToast('Coleção sincronizada com a nuvem!', 'Sync completo');
-        }, 1000);
+
+        const result = await smartSyncService.syncCollection(collectionObj, {
+            strategy: strategy,
+            deleteRemoved: true
+        });
+
+        if (result.success) {
+            // Save last sync time (per-user)
+            const userId = getCurrentUserId();
+            if (userId) {
+                localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+            }
+
+            // Update result summary
+            if (resultSummary) {
+                document.getElementById('sync-stat-added').textContent = result.stats.added;
+                document.getElementById('sync-stat-updated').textContent = result.stats.updated;
+                document.getElementById('sync-stat-deleted').textContent = result.stats.deleted;
+                document.getElementById('sync-stat-unchanged').textContent = result.stats.unchanged;
+                resultSummary.classList.remove('hidden');
+            }
+
+            messageEl.innerHTML = '<i data-lucide="check-circle"></i> Sincronizacao completa!';
+            refreshIcons(messageEl);
+
+            // Show success message
+            const totalChanges = result.stats.added + result.stats.updated + result.stats.deleted;
+            if (totalChanges > 0) {
+                showSuccessToast(
+                    `${result.stats.added} adicionadas, ${result.stats.updated} atualizadas, ${result.stats.deleted} removidas`,
+                    'Sync completo'
+                );
+            } else {
+                showSuccessToast('Nenhuma alteracao necessaria', 'Tudo sincronizado');
+            }
+        } else if (result.conflicts && result.conflicts.length > 0) {
+            // Show conflict resolution modal
+            messageEl.innerHTML = `<i data-lucide="alert-triangle"></i> ${result.conflicts.length} conflitos encontrados`;
+            refreshIcons(messageEl);
+            showConflictResolutionModal(result.conflicts);
+        } else {
+            throw new Error(result.message || 'Erro desconhecido na sincronizacao');
+        }
     } catch (error) {
-        messageEl.innerHTML = `<i data-lucide="x-circle"></i> Erro: ${error.message}`;
+        console.error('[Sync] Upload error:', error);
+        messageEl.innerHTML = `<i data-lucide="x-circle"></i> Erro: ${escapeHtml(error.message)}`;
         refreshIcons(messageEl);
         showErrorToast(error.message, 'Erro no sync');
     } finally {
@@ -9323,32 +10883,72 @@ async function handleSyncUpload() {
     }
 }
 
-// Handle sync download
+// Handle sync download (Smart Sync with Merge)
 async function handleSyncDownload() {
     const downloadBtn = document.getElementById('sync-download-btn');
     const statusEl = document.getElementById('sync-status');
     const messageEl = statusEl.querySelector('.sync-message');
+    const resultSummary = document.getElementById('sync-result-summary');
+
+    // Get selected strategy
+    const strategySelect = document.getElementById('sync-strategy');
+    const strategy = strategySelect?.value || 'cloud_wins';
 
     setButtonLoading(downloadBtn, true, 'Baixando...');
     statusEl.classList.remove('hidden');
+    resultSummary?.classList.add('hidden');
     messageEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Baixando da nuvem...';
     refreshIcons(messageEl);
 
     try {
-        const data = await nocoDBService.fullDownloadFromCloud();
-
-        // Update local collection (supports quantities with addedAt)
-        collection = new Map();
-        const now = new Date().toISOString();
-        Object.entries(data.collection).forEach(([cardName, cardData]) => {
-            if (typeof cardData === 'number') {
-                collection.set(cardName, { qty: cardData, addedAt: now });
-            } else if (typeof cardData === 'object') {
-                collection.set(cardName, { qty: cardData.qty || 1, addedAt: cardData.addedAt || now });
-            } else {
-                collection.set(cardName, { qty: 1, addedAt: now });
-            }
+        // Convert current collection to object
+        const currentCollectionObj = {};
+        collection.forEach((data, cardName) => {
+            currentCollectionObj[cardName] = {
+                qty: typeof data === 'object' ? data.qty : data,
+                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString()
+            };
         });
+
+        let mergedCollection;
+
+        // Use Smart Sync if available, otherwise fallback
+        if (typeof smartSyncService !== 'undefined' && smartSyncService) {
+            messageEl.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Mesclando dados...';
+            refreshIcons(messageEl);
+
+            mergedCollection = await smartSyncService.downloadAndMerge(currentCollectionObj, strategy);
+        } else {
+            // Fallback to direct download (no merge)
+            const data = await nocoDBService.fullDownloadFromCloud();
+            mergedCollection = {};
+            const now = new Date().toISOString();
+            Object.entries(data.collection).forEach(([cardName, cardData]) => {
+                if (typeof cardData === 'number') {
+                    mergedCollection[cardName] = { qty: cardData, addedAt: now };
+                } else if (typeof cardData === 'object') {
+                    mergedCollection[cardName] = { qty: cardData.qty || 1, addedAt: cardData.addedAt || now };
+                } else {
+                    mergedCollection[cardName] = { qty: 1, addedAt: now };
+                }
+            });
+        }
+
+        // Calculate stats
+        const prevCount = collection.size;
+        const newCount = Object.keys(mergedCollection).length;
+
+        // Update local collection
+        collection = new Map();
+        Object.entries(mergedCollection).forEach(([cardName, cardData]) => {
+            collection.set(cardName, {
+                qty: cardData.qty || 1,
+                addedAt: cardData.addedAt || new Date().toISOString()
+            });
+        });
+
+        // Also download wishlist, trade binder, and decks
+        const data = await nocoDBService.fullDownloadFromCloud();
 
         // Update wishlist
         wishlist.clear();
@@ -9382,18 +10982,87 @@ async function handleSyncDownload() {
             localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
         }
 
+        // Update result summary
+        if (resultSummary) {
+            const added = Math.max(0, newCount - prevCount);
+            const updated = Math.min(prevCount, newCount);
+            document.getElementById('sync-stat-added').textContent = added;
+            document.getElementById('sync-stat-updated').textContent = updated;
+            document.getElementById('sync-stat-deleted').textContent = 0;
+            document.getElementById('sync-stat-unchanged').textContent = Math.max(0, prevCount - updated);
+            resultSummary.classList.remove('hidden');
+        }
+
         messageEl.innerHTML = '<i data-lucide="check-circle"></i> Download completo!';
         refreshIcons(messageEl);
-        setTimeout(() => {
-            closeModal('sync-modal');
-            showSuccessToast('Coleção baixada da nuvem!', 'Download completo');
-        }, 1000);
+
+        showSuccessToast(`${newCount} cartas carregadas da nuvem!`, 'Download completo');
     } catch (error) {
-        messageEl.innerHTML = `<i data-lucide="x-circle"></i> Erro: ${error.message}`;
+        console.error('[Sync] Download error:', error);
+        messageEl.innerHTML = `<i data-lucide="x-circle"></i> Erro: ${escapeHtml(error.message)}`;
         refreshIcons(messageEl);
         showErrorToast(error.message, 'Erro no download');
     } finally {
         setButtonLoading(downloadBtn, false);
+    }
+}
+
+// Resolve conflict UI handler
+async function resolveConflictUI(cardName, resolution) {
+    if (!smartSyncService) return;
+
+    try {
+        const result = await smartSyncService.resolveConflict(cardName, resolution);
+
+        // Remove the conflict item from UI
+        const conflictItem = document.querySelector(`.conflict-item[data-card="${cardName}"]`);
+        if (conflictItem) {
+            conflictItem.remove();
+        }
+
+        // Check if all conflicts resolved
+        const remainingConflicts = document.querySelectorAll('.conflict-item');
+        if (remainingConflicts.length === 0) {
+            closeConflictModal();
+            showSuccessToast('Todos os conflitos resolvidos!', 'Sync completo');
+
+            // Update last sync time
+            const userId = getCurrentUserId();
+            if (userId) {
+                localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+            }
+        }
+    } catch (error) {
+        showErrorToast(error.message, 'Erro ao resolver conflito');
+    }
+}
+
+// Resolve all conflicts with same resolution
+async function resolveAllConflicts(resolution) {
+    if (!smartSyncService) return;
+
+    const conflicts = smartSyncService.getConflicts();
+    let resolved = 0;
+
+    for (const conflict of conflicts) {
+        try {
+            await smartSyncService.resolveConflict(conflict.cardName, resolution);
+            resolved++;
+        } catch (error) {
+            console.error('[Sync] Failed to resolve:', conflict.cardName, error);
+        }
+    }
+
+    closeConflictModal();
+
+    if (resolved > 0) {
+        showSuccessToast(`${resolved} conflitos resolvidos!`, 'Sync completo');
+
+        // Update last sync time
+        const userId = getCurrentUserId();
+        if (userId) {
+            localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+        }
     }
 }
 
@@ -9545,7 +11214,7 @@ function closeModal(modalId) {
 }
 
 // Show notification
-function showNotification(message) {
+function showNotification(message, duration = 5000) {
     // Create notification element
     const notification = document.createElement('div');
     notification.className = 'notification';
@@ -9561,7 +11230,7 @@ function showNotification(message) {
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
-    }, 3000);
+    }, duration);
 }
 
 // Save local data helper (uses per-user storage)
@@ -9931,6 +11600,370 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// =============================================
+// COOKIE CONSENT
+// =============================================
+
+const COOKIE_CONSENT_KEY = 'sorcery-cookie-consent';
+
+function initCookieConsent() {
+    const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+    if (!consent) {
+        // Show cookie banner after a short delay
+        setTimeout(() => {
+            const banner = document.getElementById('cookie-consent');
+            if (banner) {
+                banner.classList.remove('hidden');
+                refreshIcons();
+            }
+        }, 1000);
+    }
+}
+
+function acceptCookies(type) {
+    const consentData = {
+        type: type, // 'all' or 'essential'
+        timestamp: new Date().toISOString(),
+        version: '1.0'
+    };
+    localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consentData));
+
+    const banner = document.getElementById('cookie-consent');
+    if (banner) {
+        banner.style.animation = 'slideUp 0.3s var(--ease-out-expo) reverse';
+        setTimeout(() => {
+            banner.classList.add('hidden');
+            banner.style.animation = '';
+        }, 300);
+    }
+
+    showToast(type === 'all'
+        ? 'Preferências de cookies salvas'
+        : 'Apenas cookies essenciais serão utilizados', 'success');
+}
+
+function manageCookies() {
+    // Remove current consent to show banner again
+    localStorage.removeItem(COOKIE_CONSENT_KEY);
+    const banner = document.getElementById('cookie-consent');
+    if (banner) {
+        banner.classList.remove('hidden');
+        refreshIcons();
+    }
+}
+
+function getCookieConsent() {
+    try {
+        const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+        return consent ? JSON.parse(consent) : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+// =============================================
+// LEGAL PAGES
+// =============================================
+
+const LEGAL_CONTENT = {
+    terms: {
+        title: 'Termos de Uso',
+        icon: 'file-text',
+        lastUpdate: '11 de Abril de 2026',
+        content: `
+            <h3>1. ACEITAÇÃO DOS TERMOS</h3>
+            <p>Ao acessar e utilizar o Sorcery Contested Realm Brasil ("Portal"), você concorda em cumprir e estar vinculado a estes Termos de Uso. Se você não concordar com qualquer parte destes termos, não deverá utilizar o Portal.</p>
+
+            <h3>2. DESCRIÇÃO DO SERVIÇO</h3>
+            <p>O Sorcery Contested Realm Brasil é uma plataforma gratuita que oferece:</p>
+            <ul>
+                <li>Gerenciamento de coleção de cards de Sorcery: Contested Realm</li>
+                <li>Ferramentas para criação e compartilhamento de decks</li>
+                <li>Fórum de discussão para a comunidade</li>
+                <li>Sistema de trocas e marketplace entre usuários</li>
+                <li>Informações sobre o jogo, regras e estratégias</li>
+            </ul>
+
+            <h3>3. CADASTRO E CONTA</h3>
+            <ul>
+                <li>Você é responsável por manter a confidencialidade de suas credenciais de acesso</li>
+                <li>Todas as atividades realizadas em sua conta são de sua responsabilidade</li>
+                <li>Você deve fornecer informações verdadeiras durante o cadastro</li>
+                <li>O Portal reserva-se o direito de suspender ou encerrar contas que violem estes termos</li>
+            </ul>
+
+            <h3>4. TROCAS E NEGOCIAÇÕES</h3>
+            <div class="legal-highlight">
+                <p><strong>IMPORTANTE:</strong> O Sorcery Contested Realm Brasil é apenas uma plataforma de conexão entre jogadores. Todas as transações, trocas e negociações ocorrem FORA da plataforma e são de responsabilidade exclusiva das partes envolvidas.</p>
+            </div>
+            <ul>
+                <li>O Portal não intermedia, garante ou se responsabiliza por qualquer transação</li>
+                <li>Recomendamos encontros em locais públicos ou envios com rastreamento</li>
+                <li>O Portal não oferece garantias, reembolsos ou mediação de disputas</li>
+                <li>Avalie cuidadosamente a reputação do outro usuário antes de negociar</li>
+            </ul>
+
+            <h3>5. SISTEMA DE REPUTAÇÃO</h3>
+            <ul>
+                <li>A reputação é baseada em avaliações de outros usuários</li>
+                <li>Um histórico positivo não garante segurança em transações futuras</li>
+                <li>O Portal não verifica identidades ou informações dos usuários</li>
+                <li>Avaliações falsas ou manipuladas são proibidas</li>
+            </ul>
+
+            <h3>6. CONDUTA DO USUÁRIO</h3>
+            <p>Ao utilizar o Portal, você concorda em não:</p>
+            <ul>
+                <li>Publicar conteúdo ofensivo, difamatório ou ilegal</li>
+                <li>Assediar, ameaçar ou intimidar outros usuários</li>
+                <li>Realizar spam ou publicidade não autorizada</li>
+                <li>Tentar acessar contas de outros usuários</li>
+                <li>Interferir no funcionamento do Portal</li>
+                <li>Violar direitos autorais ou propriedade intelectual</li>
+            </ul>
+
+            <h3>7. PROPRIEDADE INTELECTUAL</h3>
+            <p>Sorcery: Contested Realm é uma marca registrada de Erik's Curiosa. O Sorcery Contested Realm Brasil não é afiliado, endossado ou patrocinado por Erik's Curiosa. Imagens de cards são utilizadas para fins informativos e de gerenciamento de coleção.</p>
+
+            <h3>8. ISENÇÃO DE RESPONSABILIDADE</h3>
+            <p>O Portal é fornecido "como está". Não garantimos:</p>
+            <ul>
+                <li>Disponibilidade contínua ou ininterrupta do serviço</li>
+                <li>Precisão das informações de preços ou valores</li>
+                <li>Segurança em transações entre usuários</li>
+                <li>Integridade dos dados armazenados</li>
+            </ul>
+
+            <h3>9. LIMITAÇÃO DE RESPONSABILIDADE</h3>
+            <p>Em nenhuma circunstância o Sorcery Contested Realm Brasil ou seus administradores serão responsáveis por danos diretos, indiretos, incidentais ou consequenciais decorrentes do uso do Portal.</p>
+
+            <h3>10. MODIFICAÇÕES DOS TERMOS</h3>
+            <p>Reservamo-nos o direito de modificar estes termos a qualquer momento. Alterações significativas serão comunicadas aos usuários. O uso continuado do Portal após alterações constitui aceitação dos novos termos.</p>
+
+            <h3>11. CONTATO</h3>
+            <p>Para dúvidas sobre estes termos, entre em contato através do nosso Discord oficial.</p>
+        `
+    },
+    privacy: {
+        title: 'Política de Privacidade',
+        icon: 'shield',
+        lastUpdate: '11 de Abril de 2026',
+        content: `
+            <h3>1. INFORMAÇÕES QUE COLETAMOS</h3>
+            <p>Coletamos as seguintes informações:</p>
+
+            <p><strong>Dados fornecidos por você:</strong></p>
+            <ul>
+                <li>Email e nome de usuário (durante o cadastro)</li>
+                <li>Informações do perfil (bio, avatar)</li>
+                <li>Dados da coleção de cards</li>
+                <li>Mensagens e posts no fórum</li>
+                <li>Listagens de troca</li>
+            </ul>
+
+            <p><strong>Dados coletados automaticamente:</strong></p>
+            <ul>
+                <li>Dados de uso e navegação</li>
+                <li>Endereço IP (para segurança)</li>
+                <li>Informações do dispositivo e navegador</li>
+            </ul>
+
+            <h3>2. COMO USAMOS SUAS INFORMAÇÕES</h3>
+            <ul>
+                <li>Fornecer e manter os serviços do Portal</li>
+                <li>Personalizar sua experiência</li>
+                <li>Sincronizar sua coleção entre dispositivos</li>
+                <li>Enviar notificações sobre atividades relevantes</li>
+                <li>Melhorar nossos serviços</li>
+                <li>Garantir a segurança da plataforma</li>
+            </ul>
+
+            <h3>3. ARMAZENAMENTO DE DADOS</h3>
+            <p>Seus dados são armazenados de duas formas:</p>
+            <ul>
+                <li><strong>Localmente:</strong> No seu navegador (localStorage) para funcionamento offline</li>
+                <li><strong>Na nuvem:</strong> Em servidores seguros para sincronização (quando logado)</li>
+            </ul>
+
+            <h3>4. COMPARTILHAMENTO DE DADOS</h3>
+            <p><strong>Não vendemos suas informações pessoais.</strong></p>
+            <p>Podemos compartilhar dados limitados:</p>
+            <ul>
+                <li>Com outros usuários (apenas informações do perfil público)</li>
+                <li>Quando exigido por lei ou ordem judicial</li>
+                <li>Para proteger direitos e segurança do Portal e usuários</li>
+            </ul>
+
+            <h3>5. COOKIES E TECNOLOGIAS SIMILARES</h3>
+            <p>Utilizamos:</p>
+            <ul>
+                <li><strong>Cookies essenciais:</strong> Necessários para o funcionamento básico</li>
+                <li><strong>Cookies de preferência:</strong> Salvam suas configurações</li>
+                <li><strong>LocalStorage:</strong> Armazena sua coleção e configurações</li>
+            </ul>
+            <p>Você pode gerenciar suas preferências de cookies a qualquer momento.</p>
+
+            <h3>6. SEUS DIREITOS</h3>
+            <p>Você tem direito a:</p>
+            <ul>
+                <li>Acessar seus dados pessoais</li>
+                <li>Corrigir dados incorretos</li>
+                <li>Excluir sua conta e dados</li>
+                <li>Exportar sua coleção</li>
+                <li>Revogar consentimentos</li>
+            </ul>
+
+            <h3>7. SEGURANÇA</h3>
+            <p>Implementamos medidas de segurança incluindo:</p>
+            <ul>
+                <li>Criptografia de senhas (PBKDF2)</li>
+                <li>Proteção contra tentativas de login em massa</li>
+                <li>Validação de dados de entrada</li>
+                <li>Sessões com expiração automática</li>
+            </ul>
+
+            <h3>8. MENORES DE IDADE</h3>
+            <p>O Portal não é direcionado a menores de 13 anos. Se identificarmos dados de menores, eles serão excluídos.</p>
+
+            <h3>9. ALTERAÇÕES NESTA POLÍTICA</h3>
+            <p>Podemos atualizar esta política periodicamente. Alterações significativas serão comunicadas aos usuários.</p>
+
+            <h3>10. CONTATO</h3>
+            <p>Para questões sobre privacidade, entre em contato através do nosso Discord oficial.</p>
+        `
+    },
+    lgpd: {
+        title: 'LGPD - Lei Geral de Proteção de Dados',
+        icon: 'lock',
+        lastUpdate: '11 de Abril de 2026',
+        content: `
+            <div class="legal-highlight">
+                <p>O Sorcery Contested Realm Brasil está comprometido com a conformidade à Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD).</p>
+            </div>
+
+            <h3>1. CONTROLADOR DOS DADOS</h3>
+            <p>O Sorcery Contested Realm Brasil atua como controlador dos dados pessoais coletados através da plataforma.</p>
+
+            <h3>2. BASES LEGAIS PARA TRATAMENTO</h3>
+            <p>Tratamos seus dados pessoais com base em:</p>
+            <ul>
+                <li><strong>Consentimento:</strong> Quando você se cadastra e aceita os termos</li>
+                <li><strong>Execução de contrato:</strong> Para fornecer os serviços do Portal</li>
+                <li><strong>Legítimo interesse:</strong> Para melhorar a segurança e experiência</li>
+                <li><strong>Cumprimento de obrigação legal:</strong> Quando exigido por lei</li>
+            </ul>
+
+            <h3>3. SEUS DIREITOS (Art. 18 da LGPD)</h3>
+            <p>Como titular dos dados, você tem direito a:</p>
+            <ul>
+                <li><strong>Confirmação:</strong> Saber se tratamos seus dados</li>
+                <li><strong>Acesso:</strong> Obter cópia dos seus dados</li>
+                <li><strong>Correção:</strong> Corrigir dados incompletos ou incorretos</li>
+                <li><strong>Anonimização:</strong> Solicitar anonimização de dados desnecessários</li>
+                <li><strong>Portabilidade:</strong> Exportar seus dados (função disponível no perfil)</li>
+                <li><strong>Eliminação:</strong> Excluir dados tratados com consentimento</li>
+                <li><strong>Informação:</strong> Saber com quem compartilhamos dados</li>
+                <li><strong>Revogação:</strong> Revogar consentimento a qualquer momento</li>
+            </ul>
+
+            <h3>4. COMO EXERCER SEUS DIREITOS</h3>
+            <p>Para exercer qualquer direito previsto na LGPD:</p>
+            <ul>
+                <li><strong>Acesso e correção:</strong> Através das configurações do perfil</li>
+                <li><strong>Exportação:</strong> Use a função "Exportar Coleção" nas configurações</li>
+                <li><strong>Exclusão de conta:</strong> Entre em contato pelo Discord oficial</li>
+                <li><strong>Outras solicitações:</strong> Entre em contato pelo Discord oficial</li>
+            </ul>
+            <p>Responderemos às solicitações em até 15 dias.</p>
+
+            <h3>5. DADOS COLETADOS E FINALIDADES</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: var(--space-4) 0;">
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <th style="text-align: left; padding: var(--space-2); color: var(--text-primary);">Dado</th>
+                    <th style="text-align: left; padding: var(--space-2); color: var(--text-primary);">Finalidade</th>
+                    <th style="text-align: left; padding: var(--space-2); color: var(--text-primary);">Base Legal</th>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Email</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Autenticação e comunicação</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Execução de contrato</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Nome de usuário</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Identificação na plataforma</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Execução de contrato</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Coleção de cards</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Funcionamento do serviço</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Execução de contrato</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Endereço IP</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Segurança e prevenção de fraudes</td>
+                    <td style="padding: var(--space-2); color: var(--text-secondary);">Legítimo interesse</td>
+                </tr>
+            </table>
+
+            <h3>6. RETENÇÃO DE DADOS</h3>
+            <ul>
+                <li><strong>Dados de conta:</strong> Mantidos enquanto a conta estiver ativa</li>
+                <li><strong>Coleção:</strong> Mantida até exclusão pelo usuário ou da conta</li>
+                <li><strong>Logs de acesso:</strong> Mantidos por 6 meses (Art. 15, Marco Civil)</li>
+                <li><strong>Posts e mensagens:</strong> Mantidos até exclusão ou encerramento da conta</li>
+            </ul>
+
+            <h3>7. TRANSFERÊNCIA INTERNACIONAL</h3>
+            <p>Alguns dados podem ser processados em servidores fora do Brasil. Garantimos que esses provedores seguem padrões adequados de proteção de dados.</p>
+
+            <h3>8. SEGURANÇA DOS DADOS</h3>
+            <p>Implementamos medidas técnicas e organizacionais para proteger seus dados:</p>
+            <ul>
+                <li>Criptografia de senhas com PBKDF2 (100.000 iterações)</li>
+                <li>Proteção contra ataques de força bruta</li>
+                <li>Sessões com expiração automática</li>
+                <li>Validação e sanitização de dados</li>
+            </ul>
+
+            <h3>9. INCIDENTES DE SEGURANÇA</h3>
+            <p>Em caso de incidente de segurança que possa causar dano relevante, notificaremos:</p>
+            <ul>
+                <li>A Autoridade Nacional de Proteção de Dados (ANPD)</li>
+                <li>Os titulares afetados</li>
+            </ul>
+
+            <h3>10. CONTATO DO ENCARREGADO (DPO)</h3>
+            <p>Para questões relacionadas à LGPD, entre em contato através do nosso Discord oficial. Responderemos às solicitações em conformidade com os prazos legais.</p>
+
+            <h3>11. AUTORIDADE NACIONAL</h3>
+            <p>Você pode registrar reclamações junto à Autoridade Nacional de Proteção de Dados (ANPD): <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">www.gov.br/anpd</a></p>
+        `
+    }
+};
+
+function showLegalPage(type) {
+    const content = LEGAL_CONTENT[type];
+    if (!content) return;
+
+    const container = document.getElementById('legal-content');
+    if (!container) return;
+
+    container.innerHTML = `
+        <h2><i data-lucide="${content.icon}"></i> ${content.title}</h2>
+        <p class="legal-date">Última atualização: ${content.lastUpdate}</p>
+        ${content.content}
+        <div class="legal-actions">
+            <button class="btn btn-secondary" onclick="closeModal('legal-modal')">Fechar</button>
+        </div>
+    `;
+
+    openModal('legal-modal');
+    refreshIcons();
+}
+
+// Initialize cookie consent on page load
+document.addEventListener('DOMContentLoaded', initCookieConsent);
+
 // Export additional functions
 window.sorceryApp.nocoDBService = typeof nocoDBService !== 'undefined' ? nocoDBService : null;
 window.deleteCardPhoto = deleteCardPhoto;
@@ -9963,3 +11996,8 @@ window.filterMarketplace = filterMarketplace;
 window.contactTrader = contactTrader;
 window.updateUnreadBadge = updateUnreadBadge;
 window.renderProfileView = renderProfileView;
+
+// Export cookie and legal functions
+window.acceptCookies = acceptCookies;
+window.manageCookies = manageCookies;
+window.showLegalPage = showLegalPage;

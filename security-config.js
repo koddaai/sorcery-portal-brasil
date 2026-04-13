@@ -28,15 +28,43 @@
 // ```
 // ============================================
 
+// Detectar ambiente automaticamente
+const isLocalhost = typeof window !== 'undefined' &&
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+const isProduction = typeof window !== 'undefined' &&
+    (window.location.hostname.includes('github.io') || window.location.hostname.includes('sorcery-portal'));
+
 const SecurityConfig = {
+    // Modo de operação
+    // 'proxy' = usar proxy backend (recomendado para produção)
+    // 'direct' = conexão direta com NocoDB (apenas desenvolvimento)
+    mode: isProduction ? 'proxy' : 'direct',
+
     // API Configuration
-    // Em produção, substituir por URL do proxy
     api: {
-        baseUrl: 'https://dados.kodda.ai',
-        // ⚠️ TOKEN EXPOSTO - Apenas para desenvolvimento
-        // Em produção, usar proxy backend
-        token: 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-',
-        baseId: 'pybbgkutded1ay0'
+        // URLs baseadas no modo
+        // IMPORTANTE: Após fazer deploy do proxy, atualize proxyUrl
+        proxyUrl: 'https://sorcery-api-proxy.kodda.workers.dev',  // URL do Cloudflare Worker
+        directUrl: 'https://dados.kodda.ai',
+
+        // Getter para URL ativa
+        get baseUrl() {
+            return SecurityConfig.mode === 'proxy'
+                ? SecurityConfig.api.proxyUrl
+                : SecurityConfig.api.directUrl;
+        },
+
+        // Token - só necessário em modo direto
+        // Em modo proxy, o token fica no servidor
+        token: isProduction ? null : 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-',
+
+        baseId: 'pybbgkutded1ay0',
+
+        // Verificar se está usando proxy
+        get isUsingProxy() {
+            return SecurityConfig.mode === 'proxy';
+        }
     },
 
     // Password Hashing Configuration
@@ -317,6 +345,185 @@ function validatePassword(password) {
 }
 
 // ============================================
+// CSRF PROTECTION
+// ============================================
+
+/**
+ * Configuração CSRF
+ */
+const CSRFConfig = {
+    tokenKey: 'sorcery-csrf-token',
+    headerName: 'X-CSRF-Token',
+    customHeaderName: 'X-Requested-With',
+    customHeaderValue: 'SorceryPortal',
+    allowedOrigins: [
+        'https://koddaai.github.io',
+        'https://sorcery-portal.com.br',
+        'http://localhost:8080',
+        'http://127.0.0.1:8080'
+    ]
+};
+
+/**
+ * Gera um token CSRF único
+ * @returns {string} Token CSRF
+ */
+function generateCSRFToken() {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    const token = Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+
+    // Armazenar token com timestamp
+    const tokenData = {
+        token,
+        created: Date.now(),
+        expires: Date.now() + (60 * 60 * 1000) // 1 hora
+    };
+    sessionStorage.setItem(CSRFConfig.tokenKey, JSON.stringify(tokenData));
+
+    return token;
+}
+
+/**
+ * Obtém o token CSRF atual ou gera um novo
+ * @returns {string} Token CSRF válido
+ */
+function getCSRFToken() {
+    try {
+        const tokenData = sessionStorage.getItem(CSRFConfig.tokenKey);
+        if (tokenData) {
+            const { token, expires } = JSON.parse(tokenData);
+            if (Date.now() < expires) {
+                return token;
+            }
+        }
+    } catch (e) {
+        console.warn('[CSRF] Error reading token:', e);
+    }
+
+    return generateCSRFToken();
+}
+
+/**
+ * Valida o token CSRF
+ * @param {string} token - Token a ser validado
+ * @returns {boolean} True se válido
+ */
+function validateCSRFToken(token) {
+    try {
+        const tokenData = sessionStorage.getItem(CSRFConfig.tokenKey);
+        if (!tokenData) return false;
+
+        const { token: storedToken, expires } = JSON.parse(tokenData);
+
+        // Verificar expiração
+        if (Date.now() > expires) {
+            sessionStorage.removeItem(CSRFConfig.tokenKey);
+            return false;
+        }
+
+        // Comparação em tempo constante
+        if (token.length !== storedToken.length) return false;
+        let result = 0;
+        for (let i = 0; i < token.length; i++) {
+            result |= token.charCodeAt(i) ^ storedToken.charCodeAt(i);
+        }
+        return result === 0;
+    } catch (e) {
+        console.warn('[CSRF] Error validating token:', e);
+        return false;
+    }
+}
+
+/**
+ * Adiciona headers de segurança a uma requisição
+ * @param {Headers|Object} headers - Headers existentes
+ * @returns {Object} Headers com proteções adicionadas
+ */
+function addSecurityHeaders(headers = {}) {
+    const secureHeaders = { ...headers };
+
+    // Adicionar custom header para identificar requisições legítimas
+    secureHeaders[CSRFConfig.customHeaderName] = CSRFConfig.customHeaderValue;
+
+    // Adicionar CSRF token para requisições mutativas
+    secureHeaders[CSRFConfig.headerName] = getCSRFToken();
+
+    return secureHeaders;
+}
+
+/**
+ * Verifica se a origem da requisição é permitida
+ * @param {string} origin - Origem da requisição
+ * @returns {boolean} True se permitida
+ */
+function isAllowedOrigin(origin) {
+    if (!origin) return false;
+
+    // Permitir localhost em desenvolvimento
+    if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return true;
+    }
+
+    return CSRFConfig.allowedOrigins.includes(origin);
+}
+
+/**
+ * Fetch seguro com proteções CSRF
+ * @param {string} url - URL da requisição
+ * @param {Object} options - Opções do fetch
+ * @returns {Promise<Response>} Resposta da requisição
+ */
+async function secureFetch(url, options = {}) {
+    // Verificar rate limiting
+    if (!rateLimiter.checkLimit(url)) {
+        throw new Error('Rate limit exceeded. Please wait before making more requests.');
+    }
+
+    // Preparar headers com proteções
+    const headers = new Headers(options.headers || {});
+
+    // Adicionar headers de segurança
+    headers.set(CSRFConfig.customHeaderName, CSRFConfig.customHeaderValue);
+
+    // Para requisições mutativas, adicionar CSRF token
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(options.method?.toUpperCase())) {
+        headers.set(CSRFConfig.headerName, getCSRFToken());
+    }
+
+    // Executar requisição
+    const response = await fetch(url, {
+        ...options,
+        headers,
+        credentials: 'same-origin' // Não enviar cookies para outras origens
+    });
+
+    return response;
+}
+
+/**
+ * Wrapper para o nocoDBService que adiciona proteções
+ * @param {function} apiCall - Função de chamada à API
+ * @returns {Promise<any>} Resultado da chamada
+ */
+async function secureAPICall(apiCall) {
+    // Verificar rate limit
+    if (!rateLimiter.checkLimit('api')) {
+        throw new Error('Muitas requisições. Aguarde um momento.');
+    }
+
+    try {
+        return await apiCall();
+    } catch (error) {
+        // Log de erros de segurança
+        if (error.message.includes('401') || error.message.includes('403')) {
+            console.error('[Security] Authentication/Authorization error:', error);
+        }
+        throw error;
+    }
+}
+
+// ============================================
 // SECURE SESSION MANAGEMENT
 // ============================================
 
@@ -389,6 +596,7 @@ const rateLimiter = new RateLimiter();
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         SecurityConfig,
+        CSRFConfig,
         generateSalt,
         hashPasswordSecure,
         verifyPassword,
@@ -399,6 +607,23 @@ if (typeof module !== 'undefined' && module.exports) {
         validatePassword,
         saveSecureSession,
         loadSecureSession,
-        clearSecureSession
+        clearSecureSession,
+        // CSRF exports
+        generateCSRFToken,
+        getCSRFToken,
+        validateCSRFToken,
+        addSecurityHeaders,
+        isAllowedOrigin,
+        secureFetch,
+        secureAPICall
     };
+}
+
+// Initialize CSRF token on page load
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        // Generate initial CSRF token
+        getCSRFToken();
+        console.log('[Security] CSRF protection initialized');
+    });
 }

@@ -12,9 +12,16 @@ class NocoDBService {
     constructor() {
         // Usar configuração centralizada se disponível
         const config = typeof SecurityConfig !== 'undefined' ? SecurityConfig.api : null;
+
+        // Detectar modo de operação (proxy vs direct)
+        this.isProxyMode = config?.isUsingProxy || false;
         this.baseUrl = config?.baseUrl || 'https://dados.kodda.ai';
-        this.apiToken = config?.token || 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-';
+        this.apiToken = config?.token || null;
         this.baseId = config?.baseId || 'pybbgkutded1ay0';
+
+        // Log do modo de operação
+        console.log('[NocoDB] Mode:', this.isProxyMode ? 'PROXY' : 'DIRECT');
+        console.log('[NocoDB] Base URL:', this.baseUrl);
 
         // Table names as they appear in NocoDB
         this.tables = {
@@ -38,11 +45,26 @@ class NocoDBService {
     }
 
     // Get headers for API requests
+    // Em modo proxy, não enviamos o token (o proxy adiciona)
     getHeaders() {
-        return {
-            'xc-token': this.apiToken,
+        const headers = {
             'Content-Type': 'application/json'
         };
+
+        // Adicionar token apenas em modo direto
+        if (!this.isProxyMode && this.apiToken) {
+            headers['xc-token'] = this.apiToken;
+        }
+
+        // Adicionar headers de segurança (CSRF)
+        if (typeof addSecurityHeaders === 'function') {
+            return addSecurityHeaders(headers);
+        }
+
+        // Headers básicos para identificação
+        headers['X-Requested-With'] = 'SorceryPortal';
+
+        return headers;
     }
 
     // Build API URL for table operations (NocoDB v1 API)
@@ -52,9 +74,33 @@ class NocoDBService {
 
     // Load session from localStorage
     loadSession() {
-        const session = localStorage.getItem('sorcery-session');
-        if (session) {
-            this.currentUser = JSON.parse(session);
+        // Use secure session loading if available
+        if (typeof loadSecureSession === 'function') {
+            const session = loadSecureSession();
+            if (session) {
+                // Normalize user ID (ensure lowercase 'id' is available)
+                if (session.Id && !session.id) {
+                    session.id = session.Id;
+                }
+                this.currentUser = session;
+            }
+            return;
+        }
+
+        // Fallback to direct localStorage
+        const sessionStr = localStorage.getItem('sorcery-session');
+        if (sessionStr) {
+            try {
+                const session = JSON.parse(sessionStr);
+                // Normalize user ID (ensure lowercase 'id' is available)
+                if (session.Id && !session.id) {
+                    session.id = session.Id;
+                }
+                this.currentUser = session;
+            } catch (e) {
+                console.warn('[Session] Failed to parse session:', e.message);
+                this.currentUser = null;
+            }
         }
     }
 

@@ -4,17 +4,18 @@
 // ============================================
 
 // Get per-user storage key
+// IMPORTANT: Use lowercase 'id' first for consistency with getCurrentUserId()
 function getProfileStorageKey() {
     let userId = null;
     if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
-        userId = nocoDBService.currentUser.Id || nocoDBService.currentUser.id;
+        userId = nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
     }
     if (!userId) {
         try {
             const session = localStorage.getItem('sorcery-session');
             if (session) {
                 const user = JSON.parse(session);
-                userId = user.Id || user.id;
+                userId = user.id || user.Id;
             }
         } catch (e) {}
     }

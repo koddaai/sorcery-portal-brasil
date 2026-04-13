@@ -3,6 +3,27 @@
 // PWA Offline Support & Install Prompt
 // ============================================
 
+// Storage key constants
+const SYNC_QUEUE_PREFIX = 'sorcery-sync-queue';
+
+// Get user-specific storage key for sync queue
+function getSyncQueueStorageKey() {
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.id || user.Id;
+            }
+        } catch (e) {}
+    }
+    return userId ? `${SYNC_QUEUE_PREFIX}-${userId}` : SYNC_QUEUE_PREFIX;
+}
+
 class OfflineManager {
     constructor() {
         this.isOnline = navigator.onLine;
@@ -138,15 +159,38 @@ class OfflineManager {
     }
 
     loadSyncQueue() {
-        const saved = localStorage.getItem('sorcery-sync-queue');
+        const storageKey = getSyncQueueStorageKey();
+        const saved = localStorage.getItem(storageKey);
         if (saved) {
             this.syncQueue = JSON.parse(saved);
-            console.log('[Offline] Loaded sync queue:', this.syncQueue.length, 'items');
+            console.log('[Offline] Loaded sync queue from', storageKey, ':', this.syncQueue.length, 'items');
+        }
+        // Also try to migrate from global key if user-specific is empty
+        this.migrateSyncQueue();
+    }
+
+    migrateSyncQueue() {
+        const userKey = getSyncQueueStorageKey();
+        const globalKey = SYNC_QUEUE_PREFIX;
+
+        // Only migrate if we have a user-specific key and global data exists
+        if (userKey !== globalKey) {
+            const globalData = localStorage.getItem(globalKey);
+            if (globalData && this.syncQueue.length === 0) {
+                try {
+                    this.syncQueue = JSON.parse(globalData);
+                    this.saveSyncQueue();
+                    console.log('[Offline] Migrated sync queue from global to', userKey);
+                } catch (e) {
+                    console.error('[Offline] Failed to migrate sync queue:', e);
+                }
+            }
         }
     }
 
     saveSyncQueue() {
-        localStorage.setItem('sorcery-sync-queue', JSON.stringify(this.syncQueue));
+        const storageKey = getSyncQueueStorageKey();
+        localStorage.setItem(storageKey, JSON.stringify(this.syncQueue));
     }
 
     getLastSyncTime() {
@@ -156,7 +200,8 @@ class OfflineManager {
             const session = localStorage.getItem('sorcery-session');
             if (session) {
                 const user = JSON.parse(session);
-                userId = user.Id || user.id;
+                // IMPORTANT: Use lowercase 'id' first for consistency
+                userId = user.id || user.Id;
             }
         } catch (e) {}
         const key = userId ? `sorcery-last-sync-${userId}` : 'sorcery-last-sync';
@@ -170,7 +215,8 @@ class OfflineManager {
             const session = localStorage.getItem('sorcery-session');
             if (session) {
                 const user = JSON.parse(session);
-                userId = user.Id || user.id;
+                // IMPORTANT: Use lowercase 'id' first for consistency
+                userId = user.id || user.Id;
             }
         } catch (e) {}
         const now = new Date().toISOString();

@@ -168,14 +168,47 @@ class PriceService {
 
     // Obter preço do NocoDB por nome da carta e acabamento
     getNocodbPrice(cardName, setName = null, finish = 'Standard') {
-        // Tentar encontrar pelo nome, set e finish
+        const normalizedSetName = setName?.toLowerCase() || null;
+        const normalizedFinish = finish?.toLowerCase() || 'standard';
+
+        // Priority order for sets (prefer main sets over promos)
+        const setOrder = ['beta', 'gothic', 'dragonlord', 'arthurian legends', 'alpha', 'promotional'];
+
+        let matches = [];
+
+        // Find all matching entries
         for (const [slug, data] of Object.entries(this.nocodbPrices)) {
-            if (data.card_name === cardName &&
-                data.finish === finish &&
-                (setName === null || data.set_name === setName)) {
-                return data.price_usd;
+            const dataSetName = data.set_name?.toLowerCase() || '';
+            const dataFinish = data.finish?.toLowerCase() || 'standard';
+
+            if (data.card_name === cardName && dataFinish === normalizedFinish) {
+                // If setName specified, only match exact set
+                if (normalizedSetName !== null) {
+                    if (dataSetName === normalizedSetName) {
+                        return data.price_usd;
+                    }
+                } else {
+                    // Collect all matches for later sorting
+                    matches.push({ data, setName: dataSetName });
+                }
             }
         }
+
+        // If no specific set requested, return cheapest from common sets
+        if (matches.length > 0) {
+            // Sort by set priority, then by price (cheapest first)
+            matches.sort((a, b) => {
+                const aOrder = setOrder.indexOf(a.setName);
+                const bOrder = setOrder.indexOf(b.setName);
+                const aPriority = aOrder === -1 ? 999 : aOrder;
+                const bPriority = bOrder === -1 ? 999 : bOrder;
+
+                if (aPriority !== bPriority) return aPriority - bPriority;
+                return a.data.price_usd - b.data.price_usd;
+            });
+            return matches[0].data.price_usd;
+        }
+
         return null;
     }
 
@@ -919,6 +952,26 @@ class PriceService {
 }
 
 // Price Alerts Manager
+const PRICE_ALERTS_PREFIX = 'sorcery-price-alerts';
+
+// Get user-specific storage key for price alerts
+function getPriceAlertsStorageKey() {
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.id || user.Id;
+            }
+        } catch (e) {}
+    }
+    return userId ? `${PRICE_ALERTS_PREFIX}-${userId}` : PRICE_ALERTS_PREFIX;
+}
+
 class PriceAlertManager {
     constructor(priceService) {
         this.priceService = priceService;
@@ -926,15 +979,47 @@ class PriceAlertManager {
         this.loadAlerts();
     }
 
+    getStorageKey() {
+        return getPriceAlertsStorageKey();
+    }
+
     loadAlerts() {
-        const saved = localStorage.getItem('sorcery-price-alerts');
+        const storageKey = this.getStorageKey();
+        const saved = localStorage.getItem(storageKey);
         if (saved) {
             this.alerts = JSON.parse(saved);
+            console.log('[PriceAlerts] Loaded', this.alerts.length, 'alerts from', storageKey);
+        }
+        // Migrate from global key if user-specific is empty
+        this.migrateAlerts();
+    }
+
+    migrateAlerts() {
+        const userKey = this.getStorageKey();
+        const globalKey = PRICE_ALERTS_PREFIX;
+
+        if (userKey !== globalKey) {
+            const globalData = localStorage.getItem(globalKey);
+            if (globalData && this.alerts.length === 0) {
+                try {
+                    this.alerts = JSON.parse(globalData);
+                    this.saveAlerts();
+                    console.log('[PriceAlerts] Migrated alerts from global to', userKey);
+                } catch (e) {}
+            }
         }
     }
 
+    /**
+     * Reload alerts (call after login/logout)
+     */
+    reload() {
+        this.loadAlerts();
+    }
+
     saveAlerts() {
-        localStorage.setItem('sorcery-price-alerts', JSON.stringify(this.alerts));
+        const storageKey = this.getStorageKey();
+        localStorage.setItem(storageKey, JSON.stringify(this.alerts));
     }
 
     // Adicionar alerta
@@ -1006,6 +1091,18 @@ class PriceAlertManager {
 // Instâncias globais
 const priceService = new PriceService();
 const priceAlertManager = new PriceAlertManager(priceService);
+
+// Listen for login/logout events to reload user-specific data
+if (typeof document !== 'undefined') {
+    document.addEventListener('userLoggedIn', () => {
+        console.log('[PriceAlerts] User logged in, reloading alerts');
+        priceAlertManager.reload();
+    });
+    document.addEventListener('userLoggedOut', () => {
+        console.log('[PriceAlerts] User logged out, clearing alerts');
+        priceAlertManager.reload();
+    });
+}
 
 // Export
 if (typeof module !== 'undefined' && module.exports) {

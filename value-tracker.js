@@ -3,9 +3,71 @@
 // Historical collection value tracking
 // ============================================
 
+// Storage key prefix - user-specific
+const VALUE_TRACKER_PREFIX = 'sorcery-value-history';
+const VALUE_TRACKER_PREFIX_OLD = 'sorcery-value-history'; // Same, but for global fallback
+
+// Get user-specific storage key for value history
+function getValueTrackerStorageKey() {
+    // Try to get user ID from nocoDBService or session
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.id || user.Id;
+            }
+        } catch (e) {}
+    }
+    // Return user-specific key if logged in, otherwise global key
+    return userId ? `${VALUE_TRACKER_PREFIX}-${userId}` : VALUE_TRACKER_PREFIX;
+}
+
+// Migrate from global storage to user-specific storage
+function migrateValueTrackerStorage() {
+    const userId = (() => {
+        if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+            return nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
+        }
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                return user.id || user.Id;
+            }
+        } catch (e) {}
+        return null;
+    })();
+
+    // Only migrate if we have a user ID
+    if (!userId) return false;
+
+    const globalKey = VALUE_TRACKER_PREFIX;
+    const userKey = `${VALUE_TRACKER_PREFIX}-${userId}`;
+
+    const globalData = localStorage.getItem(globalKey);
+    const userData = localStorage.getItem(userKey);
+
+    // Migrate global data to user-specific key if user key is empty
+    if (globalData && !userData) {
+        console.log('[ValueTracker] Migrating global data to user-specific key:', userKey);
+        localStorage.setItem(userKey, globalData);
+        // Don't remove global data - other users may need it too
+        return true;
+    }
+    return false;
+}
+
 class ValueTracker {
     constructor() {
-        this.storageKey = 'sorcery-value-history';
+        // Migrate data if needed
+        migrateValueTrackerStorage();
+        // Get user-specific storage key
+        this.storageKey = getValueTrackerStorageKey();
         this.snapshots = [];
         this.settings = {
             retentionDays: 90,
@@ -15,15 +77,27 @@ class ValueTracker {
     }
 
     /**
+     * Reload with new storage key (call after login/logout)
+     */
+    reload() {
+        migrateValueTrackerStorage();
+        this.storageKey = getValueTrackerStorageKey();
+        this.loadFromStorage();
+    }
+
+    /**
      * Load history from localStorage
      */
     loadFromStorage() {
         try {
+            // Ensure we have the latest storage key
+            this.storageKey = getValueTrackerStorageKey();
             const stored = localStorage.getItem(this.storageKey);
             if (stored) {
                 const data = JSON.parse(stored);
                 this.snapshots = data.snapshots || [];
                 this.settings = { ...this.settings, ...data.settings };
+                console.log('[ValueTracker] Loaded', this.snapshots.length, 'snapshots from', this.storageKey);
             }
         } catch (error) {
             console.error('[ValueTracker] Error loading history:', error);
@@ -36,6 +110,8 @@ class ValueTracker {
      */
     saveToStorage() {
         try {
+            // Ensure we have the latest storage key
+            this.storageKey = getValueTrackerStorageKey();
             const data = {
                 snapshots: this.snapshots,
                 settings: this.settings,
@@ -473,3 +549,16 @@ class ValueChartRenderer {
 const valueTracker = new ValueTracker();
 window.valueTracker = valueTracker;
 window.ValueChartRenderer = ValueChartRenderer;
+window.getValueTrackerStorageKey = getValueTrackerStorageKey;
+
+// Listen for login/logout events to reload data
+if (typeof document !== 'undefined') {
+    document.addEventListener('userLoggedIn', () => {
+        console.log('[ValueTracker] User logged in, reloading data');
+        valueTracker.reload();
+    });
+    document.addEventListener('userLoggedOut', () => {
+        console.log('[ValueTracker] User logged out, reloading data');
+        valueTracker.reload();
+    });
+}

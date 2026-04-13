@@ -3,23 +3,67 @@
  * Tracks individual card variants by slug with finish type, product, and quantity
  */
 
+// Storage key constants - STANDARDIZED format with hyphens
+const VARIANT_STORAGE_PREFIX = 'sorcery-variant-collection';
+const VARIANT_STORAGE_PREFIX_OLD = 'sorcery_variant_collection'; // Legacy format with underscores
+
 // Get storage key for localStorage (per-user if logged in)
 function getVariantStorageKey() {
     // Try to get user ID from nocoDBService or session
+    // IMPORTANT: Use lowercase 'id' first for consistency with getCurrentUserId()
     let userId = null;
     if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
-        userId = nocoDBService.currentUser.Id || nocoDBService.currentUser.id;
+        userId = nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
     }
     if (!userId) {
         try {
             const session = localStorage.getItem('sorcery-session');
             if (session) {
                 const user = JSON.parse(session);
-                userId = user.Id || user.id;
+                userId = user.id || user.Id;
             }
         } catch (e) {}
     }
-    return userId ? `sorcery_variant_collection_${userId}` : 'sorcery_variant_collection';
+    // FIXED: Use hyphens instead of underscores for consistency with other services
+    return userId ? `${VARIANT_STORAGE_PREFIX}-${userId}` : VARIANT_STORAGE_PREFIX;
+}
+
+// Get old storage key for migration purposes
+function getOldVariantStorageKey() {
+    let userId = null;
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser) {
+        userId = nocoDBService.currentUser.id || nocoDBService.currentUser.Id;
+    }
+    if (!userId) {
+        try {
+            const session = localStorage.getItem('sorcery-session');
+            if (session) {
+                const user = JSON.parse(session);
+                userId = user.id || user.Id;
+            }
+        } catch (e) {}
+    }
+    return userId ? `${VARIANT_STORAGE_PREFIX_OLD}_${userId}` : VARIANT_STORAGE_PREFIX_OLD;
+}
+
+// Migrate from old underscore format to new hyphen format
+function migrateVariantStorageKey() {
+    const oldKey = getOldVariantStorageKey();
+    const newKey = getVariantStorageKey();
+
+    // Only migrate if old key exists and new key doesn't
+    if (oldKey !== newKey) {
+        const oldData = localStorage.getItem(oldKey);
+        const newData = localStorage.getItem(newKey);
+
+        if (oldData && !newData) {
+            console.log('[VariantTracker] Migrating storage key from', oldKey, 'to', newKey);
+            localStorage.setItem(newKey, oldData);
+            localStorage.removeItem(oldKey);
+            return true;
+        }
+    }
+    return false;
 }
 
 /**
@@ -170,6 +214,8 @@ function getFinishBadgeColor(finish) {
 class VariantTracker {
     constructor() {
         this.collection = {};
+        // Migrate from old storage format if needed
+        migrateVariantStorageKey();
         this.loadFromStorage();
     }
 
@@ -182,6 +228,7 @@ class VariantTracker {
             const stored = localStorage.getItem(storageKey);
             if (stored) {
                 this.collection = JSON.parse(stored);
+                console.log('[VariantTracker] Loaded', Object.keys(this.collection).length, 'cards from storage');
             }
         } catch (error) {
             console.error('Error loading variant collection from storage:', error);
@@ -798,7 +845,9 @@ if (typeof module !== 'undefined' && module.exports) {
         getFinishBadgeColor,
         migrateToVariantFormat,
         applyMigration,
-        VARIANT_STORAGE_KEY
+        VARIANT_STORAGE_PREFIX,
+        getVariantStorageKey,
+        migrateVariantStorageKey
     };
 }
 

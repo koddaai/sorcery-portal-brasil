@@ -1,4 +1,4 @@
-# Sorcery Portal Brasil - Contexto do Projeto
+# Sorcery Contested Realm Brasil - Contexto do Projeto
 
 > Última atualização: Abril 2026
 

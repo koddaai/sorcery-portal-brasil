@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Sorcery BR">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Sorcery Portal Brasil">
+    <meta name="application-name" content="Sorcery Contested Realm Brasil">
     <meta name="msapplication-TileColor" content="#0d0d0f">
     <meta name="msapplication-TileImage" content="/icons/icon-144.png">
 
@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=66">
+    <link rel="stylesheet" href="styles.css?v=83">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -85,11 +85,6 @@
 
             <!-- Navigation Bar -->
             <nav class="nav-bar">
-                <!-- Mobile Hamburger Menu Button -->
-                <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Abrir menu de navegação" aria-expanded="false">
-                    <i data-lucide="menu"></i>
-                </button>
-
                 <!-- Primary Navigation -->
                 <div class="nav-primary">
                     <button class="nav-btn" data-view="cards">
@@ -215,90 +210,6 @@
                 </button>
             </nav>
         </header>
-
-        <!-- Mobile Navigation Menu (Slide-out) -->
-        <div id="mobile-menu" class="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu de navegação">
-            <div class="mobile-menu-overlay"></div>
-            <div class="mobile-menu-content">
-                <div class="mobile-menu-header">
-                    <span class="mobile-menu-title">Menu</span>
-                    <button id="mobile-menu-close" class="mobile-menu-close" aria-label="Fechar menu">
-                        <i data-lucide="x"></i>
-                    </button>
-                </div>
-                <div class="mobile-menu-nav">
-                    <!-- Principal -->
-                    <span class="mobile-menu-section-title">Principal</span>
-                    <button class="mobile-nav-item" data-view="home">
-                        <i data-lucide="home"></i> Início
-                    </button>
-                    <button class="mobile-nav-item" data-view="cards">
-                        <i data-lucide="layers"></i> Cards
-                    </button>
-                    <button class="mobile-nav-item" data-view="art">
-                        <i data-lucide="brush"></i> Artistas
-                    </button>
-                    <button class="mobile-nav-item" data-view="decks">
-                        <i data-lucide="layout-grid"></i> Decks
-                    </button>
-                    <button class="mobile-nav-item" data-view="collection">
-                        <i data-lucide="folder-heart"></i> Coleção
-                    </button>
-
-                    <!-- Ferramentas -->
-                    <div class="mobile-menu-divider"></div>
-                    <span class="mobile-menu-section-title">Ferramentas</span>
-                    <button class="mobile-nav-item" data-view="wishlist">
-                        <i data-lucide="heart"></i> Wishlist
-                    </button>
-                    <button class="mobile-nav-item" data-view="trade">
-                        <i data-lucide="repeat"></i> Trocas
-                    </button>
-                    <button class="mobile-nav-item" data-view="stats">
-                        <i data-lucide="bar-chart-3"></i> Estatísticas
-                    </button>
-
-                    <!-- Aprender -->
-                    <div class="mobile-menu-divider"></div>
-                    <span class="mobile-menu-section-title">Aprender</span>
-                    <button class="mobile-nav-item" data-view="codex">
-                        <i data-lucide="book-open"></i> Codex
-                    </button>
-                    <button class="mobile-nav-item" data-view="rulebook">
-                        <i data-lucide="scroll-text"></i> Rulebook
-                    </button>
-                    <button class="mobile-nav-item" data-view="faq">
-                        <i data-lucide="help-circle"></i> FAQ
-                    </button>
-
-                    <!-- Comunidade -->
-                    <div class="mobile-menu-divider"></div>
-                    <span class="mobile-menu-section-title">Comunidade</span>
-                    <button class="mobile-nav-item" data-view="forum">
-                        <i data-lucide="message-square"></i> Fórum
-                    </button>
-                    <button class="mobile-nav-item" data-view="marketplace">
-                        <i data-lucide="store"></i> Marketplace
-                    </button>
-                    <button class="mobile-nav-item" data-view="community">
-                        <i data-lucide="users"></i> Discord & Links
-                    </button>
-                    <button class="mobile-nav-item" data-view="locator">
-                        <i data-lucide="map-pin"></i> Lojas Brasil
-                    </button>
-
-                    <!-- Explorar -->
-                    <div class="mobile-menu-divider"></div>
-                    <span class="mobile-menu-section-title">Explorar</span>
-                    <button class="mobile-nav-item" data-view="meta">
-                        <i data-lucide="trophy"></i> Meta & Tier List
-                    </button>
-                    <button class="mobile-nav-item" data-view="news">
-                        <i data-lucide="newspaper"></i> Notícias
-                    </button>
-                </div>
-            </div>
-        </div>
 
         <!-- Main Content -->
         <main class="main">
@@ -1430,23 +1341,23 @@
                     <h3>Visão Geral dos Elementos</h3>
                     <div class="elements-grid">
                         <div class="element-card fire">
-                            <div class="element-icon"><i data-lucide="flame"></i></div>
-                            <h4>Fire</h4>
+                            <div class="element-icon"><img src="/assets/elements/fire.png" alt="Fogo" class="element-icon-img"></div>
+                            <h4>Fogo</h4>
                             <p>Agressivo, dano direto, remoção eficiente</p>
                         </div>
                         <div class="element-card water">
-                            <div class="element-icon"><i data-lucide="droplet"></i></div>
-                            <h4>Water</h4>
+                            <div class="element-icon"><img src="/assets/elements/water.png" alt="Água" class="element-icon-img"></div>
+                            <h4>Água</h4>
                             <p>Controle, draw, manipulação de mão</p>
                         </div>
                         <div class="element-card earth">
-                            <div class="element-icon"><i data-lucide="mountain"></i></div>
-                            <h4>Earth</h4>
+                            <div class="element-icon"><img src="/assets/elements/earth.png" alt="Terra" class="element-icon-img"></div>
+                            <h4>Terra</h4>
                             <p>Criaturas resilientes, ramp, midrange</p>
                         </div>
                         <div class="element-card air">
-                            <div class="element-icon"><i data-lucide="wind"></i></div>
-                            <h4>Air</h4>
+                            <div class="element-icon"><img src="/assets/elements/air.png" alt="Ar" class="element-icon-img"></div>
+                            <h4>Ar</h4>
                             <p>Evasão, tempo, spells versáteis</p>
                         </div>
                     </div>
@@ -1608,10 +1519,10 @@
                         <div class="codex-entry">
                             <h4>Os Quatro Elementos</h4>
                             <div class="element-list">
-                                <div class="element-item fire"><i data-lucide="flame"></i> <strong>Fogo:</strong> Dano direto, agressividade, destruição</div>
-                                <div class="element-item water"><i data-lucide="droplet"></i> <strong>Água:</strong> Controle, compra de cards, manipulação</div>
-                                <div class="element-item earth"><i data-lucide="mountain"></i> <strong>Terra:</strong> Resistência, crescimento, criaturas poderosas</div>
-                                <div class="element-item air"><i data-lucide="wind"></i> <strong>Ar:</strong> Evasão, velocidade, versatilidade</div>
+                                <div class="element-item fire"><img src="/assets/elements/fire.png" alt="Fogo" class="element-icon-img"> <strong>Fogo:</strong> Dano direto, agressividade, destruição</div>
+                                <div class="element-item water"><img src="/assets/elements/water.png" alt="Água" class="element-icon-img"> <strong>Água:</strong> Controle, compra de cards, manipulação</div>
+                                <div class="element-item earth"><img src="/assets/elements/earth.png" alt="Terra" class="element-icon-img"> <strong>Terra:</strong> Resistência, crescimento, criaturas poderosas</div>
+                                <div class="element-item air"><img src="/assets/elements/air.png" alt="Ar" class="element-icon-img"> <strong>Ar:</strong> Evasão, velocidade, versatilidade</div>
                             </div>
                         </div>
 
@@ -2046,26 +1957,26 @@
                     </div>
 
                     <div class="lore-section elements-intro">
-                        <h3><i data-lucide="palette"></i> Os Quatro Elementos</h3>
+                        <h3><i data-lucide="sparkles"></i> Os Quatro Elementos</h3>
                         <p>Os quatro elementos representam diferentes filosofias de magia:</p>
                         <div class="elements-lore-grid">
                             <div class="element-lore fire">
-                                <i data-lucide="flame"></i>
+                                <img src="/assets/elements/fire.png" alt="Fogo" class="element-lore-img">
                                 <h4>Fogo</h4>
                                 <p>Focado em <strong>dano direto</strong> e destruição. Agressivo e implacável.</p>
                             </div>
                             <div class="element-lore air">
-                                <i data-lucide="wind"></i>
+                                <img src="/assets/elements/air.png" alt="Ar" class="element-lore-img">
                                 <h4>Ar</h4>
                                 <p>Focado em <strong>movimento</strong> e efeitos indiretos. Relâmpagos e evasão.</p>
                             </div>
                             <div class="element-lore water">
-                                <i data-lucide="droplets"></i>
+                                <img src="/assets/elements/water.png" alt="Água" class="element-lore-img">
                                 <h4>Água</h4>
                                 <p>Focado em <strong>controle</strong> e manipulação. Afoga e empurra.</p>
                             </div>
                             <div class="element-lore earth">
-                                <i data-lucide="mountain"></i>
+                                <img src="/assets/elements/earth.png" alt="Terra" class="element-lore-img">
                                 <h4>Terra</h4>
                                 <p>Focado no <strong>físico</strong>. Criaturas, sites e resistência.</p>
                             </div>
@@ -2816,6 +2727,48 @@
                     </p>
                 </div>
             </section>
+            <!-- Notifications/Alerts View -->
+            <section id="notifications-view" class="view">
+                <div class="view-header">
+                    <h2><i data-lucide="bell"></i> Notificações</h2>
+                    <div class="view-header-actions">
+                        <button class="btn btn-sm ghost" onclick="markAllNotificationsRead()" title="Marcar todas como lidas">
+                            <i data-lucide="check-check"></i>
+                            <span class="hide-mobile">Marcar como lidas</span>
+                        </button>
+                        <button class="btn btn-sm ghost" onclick="openNotificationSettings()" title="Configurações">
+                            <i data-lucide="settings"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Notification Filters -->
+                <div class="notification-filters">
+                    <button class="notification-filter-btn active" data-filter="all">
+                        Todas
+                    </button>
+                    <button class="notification-filter-btn" data-filter="price">
+                        <i data-lucide="trending-up"></i> Preços
+                    </button>
+                    <button class="notification-filter-btn" data-filter="news">
+                        <i data-lucide="newspaper"></i> Novidades
+                    </button>
+                    <button class="notification-filter-btn" data-filter="tips">
+                        <i data-lucide="lightbulb"></i> Dicas
+                    </button>
+                </div>
+
+                <!-- Notifications List -->
+                <div id="notifications-list" class="notifications-list">
+                    <!-- Notifications will be rendered here -->
+                    <div class="notifications-empty">
+                        <i data-lucide="bell-off"></i>
+                        <p>Nenhuma notificação no momento</p>
+                        <span class="text-secondary">Ative alertas de preço para receber atualizações</span>
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <!-- Add Cards to Collection Modal -->
@@ -2859,8 +2812,9 @@
 
         <!-- Card Detail Modal -->
         <div id="card-modal" class="modal hidden" role="dialog" aria-modal="true">
-            <div class="modal-content">
+            <div class="modal-content card-modal-content">
                 <button class="close-modal" onclick="closeCardModal()" aria-label="Fechar modal">&times;</button>
+
                 <div class="card-detail">
                     <div class="card-image-container">
                         <img id="modal-card-image" src="" alt="">
@@ -2872,6 +2826,8 @@
                             <span id="modal-card-rarity" class="badge"></span>
                             <span id="modal-card-element" class="badge"></span>
                         </div>
+
+                        <!-- Card Details -->
                         <div class="card-stats">
                             <span id="modal-card-cost"></span>
                             <span id="modal-card-attack"></span>
@@ -2879,20 +2835,6 @@
                         </div>
                         <p id="modal-card-rules" class="rules-text"></p>
 
-                        <!-- Artist Info -->
-                        <div class="card-artist-section" id="modal-artist-section">
-                            <a href="#" id="modal-artist-link" class="artist-link-modal">
-                                <i data-lucide="brush"></i>
-                                <span id="modal-artist-name"></span>
-                            </a>
-                        </div>
-
-                        <div class="card-price-section">
-                            <h4>Preços por Versão</h4>
-                            <div id="modal-price-table">
-                                <!-- Price table will be rendered by JS -->
-                            </div>
-                        </div>
                         <div class="card-sets">
                             <h4>Disponível em:</h4>
                             <div id="modal-card-sets"></div>
@@ -2914,6 +2856,14 @@
                                 <div class="owned-list" id="owned-list">
                                     <!-- Will be populated by JS -->
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Price and Actions Section -->
+                        <div class="card-price-section">
+                            <h4>Preços por Versão</h4>
+                            <div id="modal-price-table">
+                                <!-- Price table will be rendered by JS -->
                             </div>
                         </div>
 
@@ -3224,19 +3174,36 @@
         <div id="sync-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content sync-modal-content">
                 <button class="close-modal" aria-label="Fechar modal">&times;</button>
-                <h3>Sincronização na Nuvem</h3>
-                <p class="subtitle">Sincronize sua coleção com a nuvem</p>
+                <h3><i data-lucide="cloud"></i> Sincronização na Nuvem</h3>
+                <p class="subtitle">Sincronize sua coleção com a nuvem de forma inteligente</p>
+
+                <!-- Sync Strategy Selector -->
+                <div class="sync-strategy-section">
+                    <label for="sync-strategy" class="sync-strategy-label">
+                        <i data-lucide="settings-2"></i> Estratégia de Conflitos:
+                    </label>
+                    <select id="sync-strategy" class="sync-strategy-select">
+                        <option value="newest_wins" selected>Mais Recente Ganha (Recomendado)</option>
+                        <option value="local_wins">Local Sempre Ganha</option>
+                        <option value="cloud_wins">Nuvem Sempre Ganha</option>
+                        <option value="merge_add">Mesclar (Maior Quantidade)</option>
+                        <option value="manual">Resolver Manualmente</option>
+                    </select>
+                    <p class="sync-strategy-hint" id="sync-strategy-hint">
+                        Quando houver conflitos, a versão mais recente será mantida.
+                    </p>
+                </div>
 
                 <div class="sync-options">
                     <button id="sync-upload-btn" class="btn sync-btn">
-                        <span class="sync-icon">&#8593;</span>
+                        <span class="sync-icon"><i data-lucide="upload-cloud"></i></span>
                         <span class="sync-label">Enviar para Nuvem</span>
-                        <span class="sync-desc">Salvar coleção local na nuvem</span>
+                        <span class="sync-desc">Sincroniza alterações locais com a nuvem</span>
                     </button>
                     <button id="sync-download-btn" class="btn sync-btn">
-                        <span class="sync-icon">&#8595;</span>
+                        <span class="sync-icon"><i data-lucide="download-cloud"></i></span>
                         <span class="sync-label">Baixar da Nuvem</span>
-                        <span class="sync-desc">Substituir dados locais pelos da nuvem</span>
+                        <span class="sync-desc">Mescla dados da nuvem com dados locais</span>
                     </button>
                 </div>
 
@@ -3245,9 +3212,32 @@
                     <span class="sync-message">Sincronizando...</span>
                 </div>
 
+                <!-- Sync Result Summary -->
+                <div id="sync-result-summary" class="sync-result-summary hidden">
+                    <h4><i data-lucide="check-circle"></i> Resultado da Sincronização</h4>
+                    <div class="sync-stats-grid">
+                        <div class="sync-stat">
+                            <span class="sync-stat-value" id="sync-stat-added">0</span>
+                            <span class="sync-stat-label">Adicionadas</span>
+                        </div>
+                        <div class="sync-stat">
+                            <span class="sync-stat-value" id="sync-stat-updated">0</span>
+                            <span class="sync-stat-label">Atualizadas</span>
+                        </div>
+                        <div class="sync-stat">
+                            <span class="sync-stat-value" id="sync-stat-deleted">0</span>
+                            <span class="sync-stat-label">Removidas</span>
+                        </div>
+                        <div class="sync-stat">
+                            <span class="sync-stat-value" id="sync-stat-unchanged">0</span>
+                            <span class="sync-stat-label">Inalteradas</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="sync-info">
-                    <h4>Last Sync</h4>
-                    <span id="last-sync-time">Never</span>
+                    <h4><i data-lucide="clock"></i> Ultima Sincronizacao</h4>
+                    <span id="last-sync-time">Nunca</span>
                 </div>
             </div>
         </div>
@@ -3462,7 +3452,8 @@
                             <i data-lucide="copy"></i>
                         </button>
                     </div>
-                    <p class="share-hint">Seu link único para compartilhar com amigos</p>
+                    <p class="share-hint share-hint-enabled">Seu link único para compartilhar com amigos</p>
+                    <p class="share-hint share-hint-disabled"><i data-lucide="info" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i> Ative "Perfil Público" acima para compartilhar seu link</p>
                 </div>
 
                 <!-- Sync Section -->
@@ -3814,7 +3805,7 @@
                     </ul>
 
                     <h3>4. ISENÇÃO DE RESPONSABILIDADE</h3>
-                    <p>O Sorcery Portal Brasil e seus administradores não se responsabilizam por:</p>
+                    <p>O Sorcery Contested Realm Brasil e seus administradores não se responsabilizam por:</p>
                     <ul>
                         <li>Perdas financeiras em transações</li>
                         <li>Produtos não entregues ou diferentes do anunciado</li>
@@ -3866,29 +3857,92 @@
             <div class="loading-spinner"></div>
             <p>Carregando cards da API do Sorcery...</p>
         </div>
+
+        <!-- Cookie Consent Banner -->
+        <div id="cookie-consent" class="cookie-consent hidden">
+            <div class="cookie-content">
+                <div class="cookie-text">
+                    <i data-lucide="cookie"></i>
+                    <div>
+                        <strong>Este site utiliza cookies</strong>
+                        <p>Utilizamos cookies para melhorar sua experiência, salvar suas preferências e coleção localmente. Ao continuar navegando, você concorda com nossa <a href="#" onclick="showLegalPage('privacy'); return false;">Política de Privacidade</a> e <a href="#" onclick="showLegalPage('lgpd'); return false;">conformidade com a LGPD</a>.</p>
+                    </div>
+                </div>
+                <div class="cookie-actions">
+                    <button class="btn btn-secondary cookie-btn" onclick="acceptCookies('essential')">
+                        Apenas Essenciais
+                    </button>
+                    <button class="btn btn-primary cookie-btn" onclick="acceptCookies('all')">
+                        <i data-lucide="check"></i> Aceitar Todos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legal Page Modal -->
+        <div id="legal-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content legal-modal-content">
+                <button class="close-modal" onclick="closeModal('legal-modal')" aria-label="Fechar modal">&times;</button>
+                <div id="legal-content">
+                    <!-- Legal content will be rendered here -->
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Sorcery Contested Realm Brasil</h4>
+                <p>A maior comunidade brasileira de Sorcery: Contested Realm</p>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showLegalPage('terms'); return false;">Termos de Uso</a></li>
+                    <li><a href="#" onclick="showLegalPage('privacy'); return false;">Política de Privacidade</a></li>
+                    <li><a href="#" onclick="showLegalPage('lgpd'); return false;">LGPD</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Comunidade</h4>
+                <ul class="footer-links">
+                    <li><a href="https://discord.gg/qvYVGFAS5n" target="_blank" rel="noopener">Discord Oficial</a></li>
+                    <li><a href="https://sorcerytcg.com" target="_blank" rel="noopener">Site Oficial Sorcery</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sorcery Contested Realm Brasil. Este site não é afiliado à Erik's Curiosa.</p>
+            <button class="btn btn-ghost btn-sm" onclick="manageCookies()">
+                <i data-lucide="settings"></i> Gerenciar Cookies
+            </button>
+        </div>
+    </footer>
 
     <!-- Tesseract.js for OCR -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <script src="recommended-decks.js?v=5"></script>
     <script src="top-cards.js"></script>
-    <script src="collection-tracker.js?v=2"></script>
-    <script src="price-service.js?v=2"></script>
-    <script src="value-tracker.js"></script>
-    <script src="gamification.js?v=2"></script>
+    <script src="collection-tracker.js?v=3"></script>
+    <script src="price-service.js?v=4"></script>
+    <script src="value-tracker.js?v=2"></script>
+    <script src="gamification.js?v=3"></script>
     <!-- Security Configuration (deve ser carregado antes dos serviços) -->
     <script src="security-config.js"></script>
-    <script src="nocodb-service.js?v=2"></script>
+    <script src="nocodb-service.js?v=3"></script>
+    <script src="smart-sync-service.js?v=1"></script>
     <script src="community-deck-service.js"></script>
-    <script src="profile-service.js?v=2"></script>
+    <script src="profile-service.js?v=3"></script>
     <script src="card-scanner.js"></script>
     <script src="brazilian-stores.js"></script>
     <script src="i18n.js"></script>
     <script src="rulebook-pt.js"></script>
     <script src="faq-pt.js"></script>
     <!-- New Feature Modules -->
-    <script src="variant-tracker.js?v=2"></script>
+    <script src="variant-tracker.js?v=4"></script>
     <script src="keyword-parser.js?v=2"></script>
     <script src="set-progress.js"></script>
     <script src="threshold-calculator.js?v=2"></script>
@@ -3906,8 +3960,8 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=68"></script>
-    <script src="offline-manager.js?v=2"></script>
+    <script src="app.js?v=106"></script>
+    <script src="offline-manager.js?v=4"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
