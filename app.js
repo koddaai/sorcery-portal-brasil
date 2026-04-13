@@ -7814,7 +7814,23 @@ function getOwnedVariantsCount() {
             const cardVariants = tracker.collection[normalizedName];
 
             if (cardVariants && Object.keys(cardVariants).length > 0) {
-                variantCount = Object.keys(cardVariants).length;
+                // Contar variantes únicas por SET + FINISH (ignorar produto)
+                // Formato do slug: {set}-{card_name}-{product}-{finish}
+                // Ex: bet-lone_tower-b-s = Beta, Lone Tower, Booster, Standard
+                // Ex: bet-lone_tower-p-s = Beta, Lone Tower, Precon, Standard
+                // Ambos devem contar como 1 variante (Beta Standard)
+
+                const uniqueSetFinish = new Set();
+                Object.keys(cardVariants).forEach(slug => {
+                    const parts = slug.split('-');
+                    if (parts.length >= 2) {
+                        const set = parts[0]; // primeiro elemento é o set
+                        const finish = parts[parts.length - 1]; // último elemento é o finish
+                        uniqueSetFinish.add(`${set}-${finish}`);
+                    }
+                });
+
+                variantCount = uniqueSetFinish.size || 1;
             }
         }
 
@@ -7834,7 +7850,8 @@ function debugVariantCount() {
         cardsWithVariantData: 0,
         cardsWithoutVariantData: 0,
         cardsWithMultipleVariants: [],
-        totalVariants: 0,
+        totalRawSlugs: 0, // Total de slugs brutos (inclui produto)
+        totalUniqueSetFinish: 0, // Total de set+finish únicos (ignora produto)
         variantTrackerEntries: tracker?.collection ? Object.keys(tracker.collection).length : 0
     };
 
@@ -7844,19 +7861,34 @@ function debugVariantCount() {
 
         if (cardVariants && Object.keys(cardVariants).length > 0) {
             stats.cardsWithVariantData++;
-            const count = Object.keys(cardVariants).length;
-            stats.totalVariants += count;
+            const slugs = Object.keys(cardVariants);
+            stats.totalRawSlugs += slugs.length;
 
-            if (count > 1) {
+            // Contar variantes únicas por SET + FINISH (ignorar produto)
+            const uniqueSetFinish = new Set();
+            slugs.forEach(slug => {
+                const parts = slug.split('-');
+                if (parts.length >= 2) {
+                    const set = parts[0];
+                    const finish = parts[parts.length - 1];
+                    uniqueSetFinish.add(`${set}-${finish}`);
+                }
+            });
+            stats.totalUniqueSetFinish += uniqueSetFinish.size || 1;
+
+            if (slugs.length > 1) {
                 stats.cardsWithMultipleVariants.push({
                     name: cardName,
-                    variants: count,
-                    slugs: Object.keys(cardVariants)
+                    rawSlugs: slugs.length,
+                    uniqueSetFinish: uniqueSetFinish.size,
+                    slugs: slugs,
+                    setFinishes: Array.from(uniqueSetFinish)
                 });
             }
         } else {
             stats.cardsWithoutVariantData++;
-            stats.totalVariants += 1;
+            stats.totalRawSlugs += 1;
+            stats.totalUniqueSetFinish += 1;
         }
     });
 
@@ -7864,11 +7896,17 @@ function debugVariantCount() {
     console.log('Collection size:', stats.collectionSize);
     console.log('Cards with variant data:', stats.cardsWithVariantData);
     console.log('Cards without variant data:', stats.cardsWithoutVariantData);
-    console.log('Total variants calculated:', stats.totalVariants);
+    console.log('');
+    console.log('CONTAGEM DE VARIANTES:');
+    console.log('  Slugs brutos (com produto):', stats.totalRawSlugs);
+    console.log('  Set+Finish únicos:', stats.totalUniqueSetFinish);
+    console.log('');
     console.log('VariantTracker total entries:', stats.variantTrackerEntries);
-    console.log('Cards with multiple variants:', stats.cardsWithMultipleVariants.length);
-    if (stats.cardsWithMultipleVariants.length > 0) {
-        console.log('Multiple variants detail:', stats.cardsWithMultipleVariants);
+    console.log('Cards with multiple slugs:', stats.cardsWithMultipleVariants.length);
+    if (stats.cardsWithMultipleVariants.length > 0 && stats.cardsWithMultipleVariants.length <= 10) {
+        console.log('Detail:', stats.cardsWithMultipleVariants);
+    } else if (stats.cardsWithMultipleVariants.length > 10) {
+        console.log('First 5:', stats.cardsWithMultipleVariants.slice(0, 5));
     }
 
     return stats;
