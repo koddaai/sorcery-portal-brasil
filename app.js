@@ -10486,8 +10486,11 @@ function updateStatsWithPrices() {
             cardCount++;
 
             if (cardValue > 0) {
+                const qty = data.qty || 1;
                 topCards.push({
                     name: cardName,
+                    qty: qty,
+                    total: cardValue,
                     price: cardValue,
                     value: cardValue
                 });
@@ -10579,9 +10582,15 @@ function updateValueTracking(valueData, brlRate) {
     const changePeriodEl = document.getElementById('value-change-period');
 
     if (changeAmountEl) {
-        const sign = trend.change >= 0 ? '+' : '';
-        changeAmountEl.textContent = sign + '$' + trend.change.toFixed(2);
-        changeAmountEl.style.color = trend.trend === 'up' ? '#22c55e' : trend.trend === 'down' ? '#ef4444' : 'inherit';
+        if (trend.noData) {
+            // Sem dados suficientes para comparação
+            changeAmountEl.textContent = 'N/A';
+            changeAmountEl.style.color = 'var(--text-secondary)';
+        } else {
+            const sign = trend.change >= 0 ? '+' : '';
+            changeAmountEl.textContent = sign + '$' + trend.change.toFixed(2);
+            changeAmountEl.style.color = trend.trend === 'up' ? '#22c55e' : trend.trend === 'down' ? '#ef4444' : 'inherit';
+        }
     }
 
     if (changePeriodEl) {
@@ -10753,37 +10762,38 @@ function renderInvestmentAnalytics() {
         if (!card) return;
 
         const price = priceService.getPrice(cardName) || priceService.getEstimatedPrice(card);
+        const qty = data.qty || 1;
+        const totalPrice = price * qty;
 
-        // By set
-        if (card.sets) {
-            card.sets.forEach(s => {
-                if (setValues[s.name]) {
-                    setValues[s.name].value += price;
-                    setValues[s.name].count++;
-                }
-            });
+        // By set - conta apenas no PRIMEIRO set (evita duplicação)
+        if (card.sets && card.sets.length > 0) {
+            const primarySet = card.sets[0].name;
+            if (setValues[primarySet]) {
+                setValues[primarySet].value += totalPrice;
+                setValues[primarySet].count += qty;
+            }
         }
 
         // By rarity
         const rarity = card.guardian?.rarity || 'Ordinary';
         if (rarityValues[rarity]) {
-            rarityValues[rarity].value += price;
-            rarityValues[rarity].count++;
+            rarityValues[rarity].value += totalPrice;
+            rarityValues[rarity].count += qty;
         }
 
         // By element
         const elements = card.elements || '';
-        if (elements.includes('Fire')) { elementValues['Fire'].value += price; elementValues['Fire'].count++; }
-        else if (elements.includes('Water')) { elementValues['Water'].value += price; elementValues['Water'].count++; }
-        else if (elements.includes('Earth')) { elementValues['Earth'].value += price; elementValues['Earth'].count++; }
-        else if (elements.includes('Air')) { elementValues['Air'].value += price; elementValues['Air'].count++; }
-        else { elementValues['Neutral'].value += price; elementValues['Neutral'].count++; }
+        if (elements.includes('Fire')) { elementValues['Fire'].value += totalPrice; elementValues['Fire'].count += qty; }
+        else if (elements.includes('Water')) { elementValues['Water'].value += totalPrice; elementValues['Water'].count += qty; }
+        else if (elements.includes('Earth')) { elementValues['Earth'].value += totalPrice; elementValues['Earth'].count += qty; }
+        else if (elements.includes('Air')) { elementValues['Air'].value += totalPrice; elementValues['Air'].count += qty; }
+        else { elementValues['Neutral'].value += totalPrice; elementValues['Neutral'].count += qty; }
 
         // By type
         const type = card.guardian?.type || 'Minion';
         if (typeValues[type]) {
-            typeValues[type].value += price;
-            typeValues[type].count++;
+            typeValues[type].value += totalPrice;
+            typeValues[type].count += qty;
         }
     });
 

@@ -226,7 +226,7 @@ class ValueTracker {
      */
     getValueTrend(days = 7) {
         if (this.snapshots.length < 2) {
-            return { change: 0, changePercent: 0, trend: 'neutral', data: [] };
+            return { change: 0, changePercent: 0, trend: 'neutral', data: [], noData: true };
         }
 
         // Get snapshots within the period
@@ -234,16 +234,23 @@ class ValueTracker {
         cutoffDate.setDate(cutoffDate.getDate() - days);
         const cutoffStr = cutoffDate.toISOString().split('T')[0];
 
+        // Filter snapshots with valid values (> 0)
         const periodSnapshots = this.snapshots
-            .filter(s => s.date >= cutoffStr)
+            .filter(s => s.date >= cutoffStr && s.totalValueUSD > 0)
             .sort((a, b) => new Date(a.date) - new Date(b.date));
 
         if (periodSnapshots.length < 2) {
-            return { change: 0, changePercent: 0, trend: 'neutral', data: periodSnapshots };
+            // Não há dados suficientes para comparação
+            return { change: 0, changePercent: 0, trend: 'neutral', data: periodSnapshots, noData: true };
         }
 
         const oldest = periodSnapshots[0];
         const newest = periodSnapshots[periodSnapshots.length - 1];
+
+        // Se o snapshot mais antigo e mais novo são do mesmo dia, não há variação
+        if (oldest.date === newest.date) {
+            return { change: 0, changePercent: 0, trend: 'neutral', data: periodSnapshots, noData: true };
+        }
 
         const change = newest.totalValueUSD - oldest.totalValueUSD;
         const changePercent = oldest.totalValueUSD > 0
@@ -259,7 +266,8 @@ class ValueTracker {
             endValue: newest.totalValueUSD,
             startDate: oldest.date,
             endDate: newest.date,
-            data: periodSnapshots
+            data: periodSnapshots,
+            noData: false
         };
     }
 
