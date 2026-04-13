@@ -7822,10 +7822,10 @@ function getOwnedVariantsCount() {
 
                 const uniqueSetFinish = new Set();
                 Object.keys(cardVariants).forEach(slug => {
-                    const parts = slug.split('-');
+                    const parts = slug.trim().split('-');
                     if (parts.length >= 2) {
-                        const set = parts[0]; // primeiro elemento é o set
-                        const finish = parts[parts.length - 1]; // último elemento é o finish
+                        const set = parts[0].trim().toLowerCase(); // normalizar
+                        const finish = parts[parts.length - 1].trim().toLowerCase(); // normalizar
                         uniqueSetFinish.add(`${set}-${finish}`);
                     }
                 });
@@ -7850,9 +7850,11 @@ function debugVariantCount() {
         cardsWithVariantData: 0,
         cardsWithoutVariantData: 0,
         cardsWithMultipleVariants: [],
-        totalRawSlugs: 0, // Total de slugs brutos (inclui produto)
-        totalUniqueSetFinish: 0, // Total de set+finish únicos (ignora produto)
-        variantTrackerEntries: tracker?.collection ? Object.keys(tracker.collection).length : 0
+        cardsWithMultipleFinishes: [], // Cards com genuínos múltiplos finishes
+        totalRawSlugs: 0,
+        totalUniqueSetFinish: 0,
+        variantTrackerEntries: tracker?.collection ? Object.keys(tracker.collection).length : 0,
+        finishDistribution: {} // Quantos cards têm 1, 2, 3... finishes
     };
 
     collection.forEach((data, cardName) => {
@@ -7864,31 +7866,48 @@ function debugVariantCount() {
             const slugs = Object.keys(cardVariants);
             stats.totalRawSlugs += slugs.length;
 
-            // Contar variantes únicas por SET + FINISH (ignorar produto)
+            // Contar variantes únicas por SET + FINISH (normalizado)
             const uniqueSetFinish = new Set();
             slugs.forEach(slug => {
-                const parts = slug.split('-');
+                const parts = slug.trim().split('-');
                 if (parts.length >= 2) {
-                    const set = parts[0];
-                    const finish = parts[parts.length - 1];
+                    const set = parts[0].trim().toLowerCase();
+                    const finish = parts[parts.length - 1].trim().toLowerCase();
                     uniqueSetFinish.add(`${set}-${finish}`);
                 }
             });
-            stats.totalUniqueSetFinish += uniqueSetFinish.size || 1;
 
+            const finishCount = uniqueSetFinish.size || 1;
+            stats.totalUniqueSetFinish += finishCount;
+
+            // Track distribution
+            stats.finishDistribution[finishCount] = (stats.finishDistribution[finishCount] || 0) + 1;
+
+            // Cards com múltiplos slugs (Booster + Precon)
             if (slugs.length > 1) {
                 stats.cardsWithMultipleVariants.push({
                     name: cardName,
                     rawSlugs: slugs.length,
-                    uniqueSetFinish: uniqueSetFinish.size,
+                    uniqueSetFinish: finishCount,
                     slugs: slugs,
                     setFinishes: Array.from(uniqueSetFinish)
+                });
+            }
+
+            // Cards com múltiplos finishes REAIS (Standard + Foil, etc)
+            if (finishCount > 1) {
+                stats.cardsWithMultipleFinishes.push({
+                    name: cardName,
+                    finishCount: finishCount,
+                    setFinishes: Array.from(uniqueSetFinish),
+                    slugs: slugs
                 });
             }
         } else {
             stats.cardsWithoutVariantData++;
             stats.totalRawSlugs += 1;
             stats.totalUniqueSetFinish += 1;
+            stats.finishDistribution[1] = (stats.finishDistribution[1] || 0) + 1;
         }
     });
 
@@ -7900,13 +7919,23 @@ function debugVariantCount() {
     console.log('CONTAGEM DE VARIANTES:');
     console.log('  Slugs brutos (com produto):', stats.totalRawSlugs);
     console.log('  Set+Finish únicos:', stats.totalUniqueSetFinish);
+    console.log('  Esperado (se todos 1 finish):', stats.collectionSize);
+    console.log('  Diferença:', stats.totalUniqueSetFinish - stats.collectionSize);
     console.log('');
-    console.log('VariantTracker total entries:', stats.variantTrackerEntries);
-    console.log('Cards with multiple slugs:', stats.cardsWithMultipleVariants.length);
-    if (stats.cardsWithMultipleVariants.length > 0 && stats.cardsWithMultipleVariants.length <= 10) {
-        console.log('Detail:', stats.cardsWithMultipleVariants);
-    } else if (stats.cardsWithMultipleVariants.length > 10) {
-        console.log('First 5:', stats.cardsWithMultipleVariants.slice(0, 5));
+    console.log('DISTRIBUIÇÃO DE FINISHES:');
+    Object.entries(stats.finishDistribution).sort((a,b) => a[0]-b[0]).forEach(([count, cards]) => {
+        console.log(`  ${count} finish(es): ${cards} cards`);
+    });
+    console.log('');
+    console.log('Cards with multiple slugs (Booster+Precon):', stats.cardsWithMultipleVariants.length);
+    console.log('Cards with multiple FINISHES (Standard+Foil):', stats.cardsWithMultipleFinishes.length);
+
+    if (stats.cardsWithMultipleFinishes.length > 0) {
+        console.log('');
+        console.log('CARDS COM MÚLTIPLOS FINISHES:');
+        stats.cardsWithMultipleFinishes.slice(0, 10).forEach(c => {
+            console.log(`  ${c.name}: ${c.setFinishes.join(', ')}`);
+        });
     }
 
     return stats;
