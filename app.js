@@ -7771,80 +7771,171 @@ function renderWishlist() {
 let _lastStatsUpdate = 0;
 let _statsUpdateTimeout = null;
 
+// Stats mode: 'illustrations' (unique arts) or 'variants' (all printings)
+let _statsMode = 'illustrations';
+
+/**
+ * Calculate total variants in the game (all sets × finishes combinations)
+ */
+function getTotalVariantsInGame() {
+    if (!allCards || allCards.length === 0) return 0;
+    return allCards.reduce((total, card) => {
+        const setsCount = card.sets?.length || 1;
+        const finishesCount = card.finishes?.length || 1;
+        return total + (setsCount * finishesCount);
+    }, 0);
+}
+
+/**
+ * Calculate owned variants count from VariantTracker
+ */
+function getOwnedVariantsCount() {
+    const tracker = window.variantTracker;
+    if (!tracker || !tracker.collection) return 0;
+
+    let totalVariants = 0;
+    for (const cardName in tracker.collection) {
+        const variants = tracker.collection[cardName];
+        totalVariants += Object.keys(variants).length;
+    }
+    return totalVariants;
+}
+
+/**
+ * Set stats display mode and refresh
+ */
+function setStatsMode(mode) {
+    _statsMode = mode;
+
+    // Update toggle buttons
+    document.querySelectorAll('.stats-mode-toggle .mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+    });
+
+    // Update hint text
+    const hint = document.getElementById('stats-mode-hint');
+    if (hint) {
+        hint.textContent = mode === 'illustrations'
+            ? 'Cards únicos por arte'
+            : 'Todas as impressões (set × finish)';
+    }
+
+    // Refresh stats
+    _updateStatsCore();
+    updateStatsEnhanced();
+}
+
 // Core stats update (internal)
 function _updateStatsCore() {
-    const totalCards = allCards.length;
-    const collectedCount = collection.size; // Cards únicos
-    const completion = totalCards > 0 ? ((collectedCount / totalCards) * 100).toFixed(1) : 0;
     const preconsOwned = ownedPrecons.size;
 
-    // Calcular total com cópias (soma de todas as quantidades)
+    // Modo Ilustrações: conta cards únicos (artes diferentes)
+    // Modo Variantes: conta todas as impressões (set × finish)
+    const isVariantsMode = _statsMode === 'variants';
+
+    let displayCount, displayTotal, completion;
+
+    if (isVariantsMode) {
+        // Modo Variantes
+        displayCount = getOwnedVariantsCount();
+        displayTotal = getTotalVariantsInGame();
+        completion = displayTotal > 0 ? ((displayCount / displayTotal) * 100).toFixed(1) : 0;
+    } else {
+        // Modo Ilustrações (padrão)
+        displayCount = collection.size;
+        displayTotal = allCards.length;
+        completion = displayTotal > 0 ? ((displayCount / displayTotal) * 100).toFixed(1) : 0;
+    }
+
+    // Calcular total com cópias para info adicional
     let totalWithCopies = 0;
     collection.forEach((data) => {
         totalWithCopies += data.qty || 1;
     });
 
-    document.getElementById('stat-total').textContent = collectedCount;
+    document.getElementById('stat-total').textContent = displayCount;
     document.getElementById('stat-completion').textContent = `${completion}%`;
     document.getElementById('stat-precons').textContent = `${preconsOwned}/8`;
     document.getElementById('stat-wishlist').textContent = wishlist.size;
 
-    // Mostrar total com cópias se diferente do único
+    // Atualizar label baseado no modo
+    const statTotalCard = document.querySelector('#stat-total')?.closest('.stat-card');
+    if (statTotalCard) {
+        const h3 = statTotalCard.querySelector('h3');
+        const label = statTotalCard.querySelector('.stat-label');
+        if (h3) h3.textContent = isVariantsMode ? 'Variantes' : 'Ilustrações';
+        if (label) label.textContent = `de ${displayTotal.toLocaleString()}`;
+    }
+
+    // Mostrar total com cópias
     const copiesEl = document.getElementById('stat-total-copies');
     if (copiesEl) {
-        if (totalWithCopies > collectedCount) {
-            copiesEl.textContent = `(${totalWithCopies} total com cópias)`;
+        if (!isVariantsMode && totalWithCopies > collection.size) {
+            copiesEl.textContent = `(${totalWithCopies} cópias totais)`;
         } else {
             copiesEl.textContent = '';
         }
     }
 
-    // Set distribution - cada card conta UMA vez no set que o usuário possui
+    // Set distribution
     const sets = ['Alpha', 'Beta', 'Arthurian Legends', 'Gothic', 'Dragonlord', 'Promotional'];
     const setProgressEl = document.getElementById('set-progress');
 
     if (setProgressEl) {
-        // Calcular distribuição real usando VariantTracker
         const setDistribution = {};
         sets.forEach(s => setDistribution[s] = 0);
 
         const tracker = window.variantTracker;
-        const totalUniqueCards = collection.size;
+        let totalCount = 0;
 
-        collection.forEach((data, cardName) => {
-            const card = allCards.find(c => c.name === cardName);
-            if (!card) return;
-
-            // Determinar o SET real do card via VariantTracker
-            let primarySet = null;
-            if (tracker) {
-                try {
-                    const cardVariants = tracker.getCollectionByCard(cardName);
-                    if (cardVariants && cardVariants.variants) {
-                        const firstVariant = Object.values(cardVariants.variants)[0];
-                        if (firstVariant && firstVariant.set) {
-                            primarySet = firstVariant.set;
-                        }
+        if (isVariantsMode && tracker && tracker.collection) {
+            // Modo Variantes: contar cada variante no seu set
+            for (const cardName in tracker.collection) {
+                const variants = tracker.collection[cardName];
+                for (const slug in variants) {
+                    const variant = variants[slug];
+                    if (variant.set && setDistribution.hasOwnProperty(variant.set)) {
+                        setDistribution[variant.set]++;
+                        totalCount++;
                     }
-                } catch (e) {}
+                }
             }
+        } else {
+            // Modo Ilustrações: cada card único conta uma vez
+            totalCount = collection.size;
+            collection.forEach((data, cardName) => {
+                const card = allCards.find(c => c.name === cardName);
+                if (!card) return;
 
-            // Fallback: usar o set mais recente
-            if (!primarySet && card.sets && card.sets.length > 0) {
-                primarySet = card.sets[card.sets.length - 1].name;
-            }
+                let primarySet = null;
+                if (tracker) {
+                    try {
+                        const cardVariants = tracker.getCollectionByCard(cardName);
+                        if (cardVariants && cardVariants.variants) {
+                            const firstVariant = Object.values(cardVariants.variants)[0];
+                            if (firstVariant && firstVariant.set) {
+                                primarySet = firstVariant.set;
+                            }
+                        }
+                    } catch (e) {}
+                }
 
-            if (primarySet && setDistribution.hasOwnProperty(primarySet)) {
-                setDistribution[primarySet]++;
-            }
-        });
+                if (!primarySet && card.sets && card.sets.length > 0) {
+                    primarySet = card.sets[card.sets.length - 1].name;
+                }
+
+                if (primarySet && setDistribution.hasOwnProperty(primarySet)) {
+                    setDistribution[primarySet]++;
+                }
+            });
+        }
 
         setProgressEl.innerHTML = sets
             .filter(setName => setDistribution[setName] > 0)
             .sort((a, b) => setDistribution[b] - setDistribution[a])
             .map(setName => {
                 const count = setDistribution[setName];
-                const percent = totalUniqueCards > 0 ? ((count / totalUniqueCards) * 100).toFixed(0) : 0;
+                const percent = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : 0;
 
                 return `
                 <div class="progress-item">
@@ -7858,32 +7949,58 @@ function _updateStatsCore() {
             }).join('');
     }
 
-    // Element distribution - distribuição da coleção por elemento
+    // Element distribution
     const elements = ['Fire', 'Water', 'Earth', 'Air'];
     const elementProgressEl = document.getElementById('element-progress');
 
     if (elementProgressEl) {
         const elementDistribution = { Fire: 0, Water: 0, Earth: 0, Air: 0, Neutral: 0 };
-        const totalUniqueCards = collection.size;
+        let totalCount = 0;
 
-        collection.forEach((data, cardName) => {
-            const card = allCards.find(c => c.name === cardName);
-            if (!card) return;
+        if (isVariantsMode) {
+            // Modo Variantes: contar cada variante
+            const tracker = window.variantTracker;
+            if (tracker && tracker.collection) {
+                for (const normalizedName in tracker.collection) {
+                    // Encontrar o card original pelo nome normalizado
+                    const cardName = normalizedName.replace(/_/g, ' ');
+                    const card = allCards.find(c => c.name.toLowerCase() === cardName.toLowerCase());
+                    if (!card) continue;
 
-            const cardElements = card.elements || '';
-            if (cardElements.includes('Fire')) elementDistribution.Fire++;
-            else if (cardElements.includes('Water')) elementDistribution.Water++;
-            else if (cardElements.includes('Earth')) elementDistribution.Earth++;
-            else if (cardElements.includes('Air')) elementDistribution.Air++;
-            else elementDistribution.Neutral++;
-        });
+                    const variants = tracker.collection[normalizedName];
+                    const variantCount = Object.keys(variants).length;
+                    totalCount += variantCount;
+
+                    const cardElements = card.elements || '';
+                    if (cardElements.includes('Fire')) elementDistribution.Fire += variantCount;
+                    else if (cardElements.includes('Water')) elementDistribution.Water += variantCount;
+                    else if (cardElements.includes('Earth')) elementDistribution.Earth += variantCount;
+                    else if (cardElements.includes('Air')) elementDistribution.Air += variantCount;
+                    else elementDistribution.Neutral += variantCount;
+                }
+            }
+        } else {
+            // Modo Ilustrações: cada card único conta uma vez
+            totalCount = collection.size;
+            collection.forEach((data, cardName) => {
+                const card = allCards.find(c => c.name === cardName);
+                if (!card) return;
+
+                const cardElements = card.elements || '';
+                if (cardElements.includes('Fire')) elementDistribution.Fire++;
+                else if (cardElements.includes('Water')) elementDistribution.Water++;
+                else if (cardElements.includes('Earth')) elementDistribution.Earth++;
+                else if (cardElements.includes('Air')) elementDistribution.Air++;
+                else elementDistribution.Neutral++;
+            });
+        }
 
         elementProgressEl.innerHTML = [...elements, 'Neutral']
             .filter(el => elementDistribution[el] > 0)
             .sort((a, b) => elementDistribution[b] - elementDistribution[a])
             .map(element => {
                 const count = elementDistribution[element];
-                const percent = totalUniqueCards > 0 ? ((count / totalUniqueCards) * 100).toFixed(0) : 0;
+                const percent = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : 0;
 
                 return `
                 <div class="progress-item">
@@ -10109,29 +10226,53 @@ function downloadFile(content, filename, mimeType) {
 function updateStatsEnhanced() {
     updateStats();
 
-    // Rarity distribution - distribuição da coleção por raridade
+    // Rarity distribution
     const rarities = ['Unique', 'Exceptional', 'Elite', 'Ordinary'];
     const rarityProgressEl = document.getElementById('rarity-progress');
+    const isVariantsMode = _statsMode === 'variants';
 
     if (rarityProgressEl && allCards.length > 0) {
         const rarityDistribution = { Unique: 0, Exceptional: 0, Elite: 0, Ordinary: 0 };
-        const totalUniqueCards = collection.size;
+        let totalCount = 0;
 
-        collection.forEach((data, cardName) => {
-            const card = allCards.find(c => c.name === cardName);
-            if (!card) return;
+        if (isVariantsMode) {
+            // Modo Variantes: contar cada variante
+            const tracker = window.variantTracker;
+            if (tracker && tracker.collection) {
+                for (const normalizedName in tracker.collection) {
+                    const cardName = normalizedName.replace(/_/g, ' ');
+                    const card = allCards.find(c => c.name.toLowerCase() === cardName.toLowerCase());
+                    if (!card) continue;
 
-            const rarity = card.guardian?.rarity || 'Ordinary';
-            if (rarityDistribution.hasOwnProperty(rarity)) {
-                rarityDistribution[rarity]++;
+                    const variants = tracker.collection[normalizedName];
+                    const variantCount = Object.keys(variants).length;
+                    totalCount += variantCount;
+
+                    const rarity = card.guardian?.rarity || 'Ordinary';
+                    if (rarityDistribution.hasOwnProperty(rarity)) {
+                        rarityDistribution[rarity] += variantCount;
+                    }
+                }
             }
-        });
+        } else {
+            // Modo Ilustrações: cada card único conta uma vez
+            totalCount = collection.size;
+            collection.forEach((data, cardName) => {
+                const card = allCards.find(c => c.name === cardName);
+                if (!card) return;
+
+                const rarity = card.guardian?.rarity || 'Ordinary';
+                if (rarityDistribution.hasOwnProperty(rarity)) {
+                    rarityDistribution[rarity]++;
+                }
+            });
+        }
 
         rarityProgressEl.innerHTML = rarities
             .filter(rarity => rarityDistribution[rarity] > 0)
             .map(rarity => {
                 const count = rarityDistribution[rarity];
-                const percent = totalUniqueCards > 0 ? ((count / totalUniqueCards) * 100).toFixed(0) : 0;
+                const percent = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : 0;
 
                 return `
                 <div class="progress-item">

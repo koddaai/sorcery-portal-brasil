@@ -2948,6 +2948,55 @@ h5 {
     margin-top: var(--space-1);
 }
 
+/* Stats Mode Toggle */
+.stats-mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    padding: var(--space-2);
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    width: fit-content;
+}
+
+.stats-mode-toggle .mode-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.stats-mode-toggle .mode-btn:hover {
+    background: var(--bg-surface-3);
+    color: var(--text-primary);
+}
+
+.stats-mode-toggle .mode-btn.active {
+    background: var(--accent-gold);
+    color: var(--bg-primary);
+    font-weight: 600;
+}
+
+.stats-mode-toggle .mode-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.stats-mode-toggle .mode-hint {
+    margin-left: var(--space-2);
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
 .stats-breakdown {
     background: var(--bg-card);
     border-radius: 12px;

@@ -900,6 +900,18 @@
                 </div>
                 <div id="stats-content" class="hidden">
                 <h2>Estatísticas da Coleção</h2>
+
+                <!-- Toggle Ilustrações / Variantes -->
+                <div class="stats-mode-toggle">
+                    <button class="mode-btn active" data-mode="illustrations" onclick="setStatsMode('illustrations')">
+                        <i data-lucide="image"></i> Ilustrações
+                    </button>
+                    <button class="mode-btn" data-mode="variants" onclick="setStatsMode('variants')">
+                        <i data-lucide="layers"></i> Variantes
+                    </button>
+                    <span class="mode-hint" id="stats-mode-hint">Cards únicos por arte</span>
+                </div>
+
                 <div class="stats-grid">
                     <div class="stat-card">
                         <h3>Cards Únicos</h3>
