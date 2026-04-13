@@ -3434,6 +3434,15 @@ function switchView(viewName) {
     refreshIcons();
 }
 
+// Stub functions for mobile app UI (not yet implemented)
+function updateBottomNavActiveState(viewName) {
+    // TODO: Update bottom navigation active state for mobile app
+}
+
+function updateFABVisibility(viewName) {
+    // TODO: Update floating action button visibility for mobile app
+}
+
 // Global function for onclick handlers in HTML
 function showView(viewName) {
     switchView(viewName);
