@@ -603,13 +603,11 @@ class NocoDBService {
     }
 
     async updateRecord(tableName, recordId, data) {
-        const response = await fetch(this.getTableUrl(tableName), {
+        // NocoDB v1 API: single record update requires ID in URL path
+        const response = await fetch(`${this.getTableUrl(tableName)}/${recordId}`, {
             method: 'PATCH',
             headers: this.getHeaders(),
-            body: JSON.stringify({
-                Id: recordId,
-                ...data
-            })
+            body: JSON.stringify(data)
         });
 
         if (!response.ok) {
@@ -621,10 +619,10 @@ class NocoDBService {
     }
 
     async deleteRecord(tableName, recordId) {
-        const response = await fetch(this.getTableUrl(tableName), {
+        // NocoDB v1 API: single record delete requires ID in URL path
+        const response = await fetch(`${this.getTableUrl(tableName)}/${recordId}`, {
             method: 'DELETE',
-            headers: this.getHeaders(),
-            body: JSON.stringify({ Id: recordId })
+            headers: this.getHeaders()
         });
 
         if (!response.ok) {

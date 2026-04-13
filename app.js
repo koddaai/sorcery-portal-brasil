@@ -9912,21 +9912,31 @@ function updateStatsWithPrices() {
     updateStats();
     updateStatsEnhanced();
 
-    // Calculate collection value
+    // Calculate collection value using same method as Collection page (getCardTotalValue)
     if (typeof priceService !== 'undefined' && allCards.length > 0) {
-        // Build collection object for price calculation
-        const collectionObj = {};
+        // Calculate total value using getCardTotalValue (same as Collection page)
+        let combinedValue = 0;
+        let cardCount = 0;
+        const topCards = [];
+
         collection.forEach((data, cardName) => {
-            collectionObj[cardName] = { qty: data.qty || 1 };
+            const cardValue = getCardTotalValue(cardName);
+            combinedValue += cardValue;
+            cardCount++;
+
+            if (cardValue > 0) {
+                topCards.push({
+                    name: cardName,
+                    price: cardValue,
+                    value: cardValue
+                });
+            }
         });
 
-        // Use enhanced method for tracking if available
-        const valueData = typeof priceService.getCollectionValueForTracking === 'function'
-            ? priceService.getCollectionValueForTracking(collectionObj, allCards)
-            : priceService.calculateCollectionValue(collectionObj, allCards);
+        // Sort top cards by value descending
+        topCards.sort((a, b) => b.value - a.value);
 
-        const combinedValue = parseFloat(valueData.combinedValue) || 0;
-        const avgValue = parseFloat(valueData.averageCardValue) || 0;
+        const avgValue = cardCount > 0 ? combinedValue / cardCount : 0;
 
         document.getElementById('collection-value').textContent = '$' + combinedValue.toFixed(2);
         document.getElementById('average-card-value').textContent = '$' + avgValue.toFixed(2);
@@ -9950,9 +9960,14 @@ function updateStatsWithPrices() {
         document.getElementById('wishlist-value').textContent = priceService.formatPrice(wishlistValue);
 
         // Render most valuable cards in collection
-        renderValuableCards(valueData.topCards);
+        renderValuableCards(topCards.slice(0, 10));
 
-        // Value Tracking Integration
+        // Value Tracking Integration - build valueData object for compatibility
+        const valueData = {
+            combinedValue: combinedValue,
+            averageCardValue: avgValue,
+            topCards: topCards.slice(0, 10)
+        };
         if (typeof valueTracker !== 'undefined') {
             updateValueTracking(valueData, brlRate);
         }
