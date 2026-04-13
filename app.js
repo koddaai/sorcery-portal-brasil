@@ -134,6 +134,17 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// Escape text for use in HTML attributes
+function escapeAttr(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
 // ============================================
 // TOAST NOTIFICATIONS
 // ============================================
@@ -1418,6 +1429,7 @@ function populateMobileListsTab(card) {
     if (!container) return;
 
     const cardName = card.name;
+    const escapedCardName = cardName.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     const isInCollection = hasCard(cardName);
     const collectionQty = getCardQuantity(cardName);
     const isInWishlist = wishlist.has(cardName);
@@ -1446,7 +1458,7 @@ function populateMobileListsTab(card) {
                 </span>
             </div>
 
-            <div class="mobile-list-item ${isInCollection ? 'in-list' : ''}" onclick="toggleCollectionFromMobile('${escapeHtml(cardName)}')">
+            <div class="mobile-list-item ${isInCollection ? 'in-list' : ''}" onclick="toggleCollectionFromMobile('${escapedCardName}')">
                 <div class="mobile-list-item-icon">
                     <i data-lucide="${isInCollection ? 'check-circle' : 'plus-circle'}"></i>
                 </div>
@@ -1468,7 +1480,7 @@ function populateMobileListsTab(card) {
                 </span>
             </div>
 
-            <div class="mobile-list-item ${isInWishlist ? 'in-list' : ''}" onclick="toggleWishlistFromMobile('${escapeHtml(cardName)}')">
+            <div class="mobile-list-item ${isInWishlist ? 'in-list' : ''}" onclick="toggleWishlistFromMobile('${escapedCardName}')">
                 <div class="mobile-list-item-icon">
                     <i data-lucide="heart"></i>
                 </div>
@@ -1481,7 +1493,7 @@ function populateMobileListsTab(card) {
                 </div>
             </div>
 
-            <div class="mobile-list-item ${isInTradeBinder ? 'in-list' : ''}" onclick="toggleTradeFromMobile('${escapeHtml(cardName)}')">
+            <div class="mobile-list-item ${isInTradeBinder ? 'in-list' : ''}" onclick="toggleTradeFromMobile('${escapedCardName}')">
                 <div class="mobile-list-item-icon">
                     <i data-lucide="repeat"></i>
                 </div>
@@ -2611,7 +2623,7 @@ function updateAddCardModalItem(cardName) {
     }
 
     // Update quick add buttons
-    const cardItem = document.querySelector(`.add-card-item[data-card-name="${cardName}"]`);
+    const cardItem = document.querySelector(`.add-card-item[data-card-name="${CSS.escape(cardName)}"]`);
     if (cardItem) {
         const qtySpan = cardItem.querySelector('.quick-qty');
         if (qtySpan) qtySpan.textContent = qty;
@@ -2651,7 +2663,7 @@ function setCardQuantity(cardName, quantity, showFeedback = true) {
 
 // Highlight card in grid with animation
 function highlightCardInGrid(cardName, type = 'added') {
-    const cardEl = document.querySelector(`.card-item[data-card-name="${cardName}"]`);
+    const cardEl = document.querySelector(`.card-item[data-card-name="${CSS.escape(cardName)}"]`);
     if (!cardEl) return;
 
     // Remove existing highlight classes
@@ -2837,24 +2849,26 @@ function filterAddCardsResults() {
         const imageSlug = getCardImageSlug(card);
         const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
         const qty = getCardQuantity(card.name);
-        const escapedName = card.name.replace(/'/g, "\\'");
+        const escapedNameAttr = escapeAttr(card.name);
+        const escapedNameJs = card.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        const safeId = card.name.replace(/[^a-zA-Z0-9]/g, '-');
 
         return `
-            <div class="add-card-item" data-card-name="${card.name}">
-                <span class="add-card-item-qty ${qty > 0 ? '' : 'hidden'}" id="qty-${card.name.replace(/\s+/g, '-')}">${qty}x</span>
-                <div class="add-card-item-preview" onclick="openCardQuantityModal('${escapedName}', event)">
-                    <img src="${imageUrl}" alt="${card.name}" onerror="this.src='placeholder.png'">
+            <div class="add-card-item" data-card-name="${escapedNameAttr}">
+                <span class="add-card-item-qty ${qty > 0 ? '' : 'hidden'}" id="qty-${safeId}">${qty}x</span>
+                <div class="add-card-item-preview" onclick="openCardQuantityModal('${escapedNameJs}', event)">
+                    <img src="${imageUrl}" alt="${escapedNameAttr}" onerror="this.src='placeholder.png'">
                 </div>
                 <div class="add-card-item-info">
-                    <div class="add-card-item-name" onclick="openCardQuantityModal('${escapedName}', event)">${card.name}</div>
+                    <div class="add-card-item-name" onclick="openCardQuantityModal('${escapedNameJs}', event)">${escapeHtml(card.name)}</div>
                     <div class="add-card-item-type">${card.guardian?.type || ''}</div>
                 </div>
                 <div class="add-card-item-actions">
-                    <button class="quick-add-btn remove" onclick="quickRemoveFromCollection('${escapedName}', event)" aria-label="Remover 1" ${qty === 0 ? 'disabled' : ''}>
+                    <button class="quick-add-btn remove" onclick="quickRemoveFromCollection('${escapedNameJs}', event)" aria-label="Remover 1" ${qty === 0 ? 'disabled' : ''}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </button>
                     <span class="quick-qty">${qty}</span>
-                    <button class="quick-add-btn add" onclick="quickAddToCollection('${escapedName}', event)" aria-label="Adicionar 1">
+                    <button class="quick-add-btn add" onclick="quickAddToCollection('${escapedNameJs}', event)" aria-label="Adicionar 1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </button>
                 </div>
@@ -4109,13 +4123,14 @@ function showArtistCards(artistName) {
             <div class="artist-cards-grid">
                 ${artistCards.map(card => {
                     const totalVariants = card.sets.length * card.finishes.length;
+                    const escapedName = card.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
                     return `
-                    <div class="artist-card-item" onclick="showCardDetailByName('${card.name.replace(/'/g, "\\'")}')">
+                    <div class="artist-card-item" onclick="showCardDetailByName('${escapedName}')">
                         <div class="card-image-placeholder">
-                            ${card.image ? `<img src="${card.image}" alt="${card.name}" loading="lazy">` : `<span>${card.name.substring(0, 2).toUpperCase()}</span>`}
+                            ${card.image ? `<img src="${card.image}" alt="${escapeAttr(card.name)}" loading="lazy">` : `<span>${card.name.substring(0, 2).toUpperCase()}</span>`}
                         </div>
                         <div class="card-info">
-                            <h4>${card.name}</h4>
+                            <h4>${escapeHtml(card.name)}</h4>
                             <span class="card-type-rarity">${card.type} • <span class="rarity-text rarity-${card.rarity.toLowerCase()}">${card.rarity}</span></span>
                             <div class="card-variants">
                                 ${card.sets.map(s => `<span class="variant-badge set-badge">${s}</span>`).join('')}
@@ -4758,10 +4773,13 @@ function renderPriceAlerts() {
 
     container.innerHTML = `
         <div class="alerts-grid">
-            ${alerts.map(alert => `
-                <div class="alert-card" data-card="${alert.cardName}">
+            ${alerts.map(alert => {
+                const escapedNameAttr = escapeAttr(alert.cardName);
+                const escapedNameJs = alert.cardName.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                return `
+                <div class="alert-card" data-card="${escapedNameAttr}">
                     <div class="alert-info">
-                        <span class="alert-card-name">${alert.cardName}</span>
+                        <span class="alert-card-name">${escapeHtml(alert.cardName)}</span>
                         <div class="alert-details">
                             <span class="alert-condition">
                                 ${alert.direction === 'below' ? '↓ Abaixo de' : '↑ Acima de'}
@@ -4773,15 +4791,15 @@ function renderPriceAlerts() {
                         </div>
                     </div>
                     <div class="alert-actions">
-                        <button class="btn btn-icon" onclick="openPriceAlertModal('${alert.cardName}')" aria-label="Editar alerta">
+                        <button class="btn btn-icon" onclick="openPriceAlertModal('${escapedNameJs}')" aria-label="Editar alerta">
                             <i data-lucide="edit-2"></i>
                         </button>
-                        <button class="btn btn-icon btn-danger" onclick="removePriceAlert('${alert.cardName}'); renderPriceAlerts();" aria-label="Remover alerta">
+                        <button class="btn btn-icon btn-danger" onclick="removePriceAlert('${escapedNameJs}'); renderPriceAlerts();" aria-label="Remover alerta">
                             <i data-lucide="trash-2"></i>
                         </button>
                     </div>
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
     `;
     refreshIcons(container);
@@ -5230,18 +5248,19 @@ function createCardHTML(card) {
     const inWishlist = wishlist.has(card.name);
     const imageSlug = getCardImageSlug(card);
     const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
+    const escapedName = escapeAttr(card.name);
 
     const elementClass = (card.elements || 'None').toLowerCase().split(',')[0].trim();
 
     return `
         <div class="card-item ${inCollection ? 'in-collection' : ''} ${inWishlist ? 'in-wishlist' : ''}"
-             data-card-name="${card.name}">
+             data-card-name="${escapedName}">
             <img class="card-image"
                  src="${imageUrl}"
-                 alt="${card.name}"
-                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 280%22><rect fill=%22%231a1a1f%22 width=%22200%22 height=%22280%22/><text x=%2250%%22 y=%2250%%22 fill=%22%23666%22 text-anchor=%22middle%22 font-size=%2214%22>${card.name}</text></svg>'">
+                 alt="${escapedName}"
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 280%22><rect fill=%22%231a1a1f%22 width=%22200%22 height=%22280%22/><text x=%2250%%22 y=%2250%%22 fill=%22%23666%22 text-anchor=%22middle%22 font-size=%2214%22>${escapeAttr(card.name)}</text></svg>'">
             <div class="card-item-info">
-                <div class="card-item-name">${card.name}</div>
+                <div class="card-item-name">${escapeHtml(card.name)}</div>
                 <div class="card-item-meta">
                     <span class="badge ${elementClass}">${card.guardian.type}</span>
                 </div>
@@ -6361,23 +6380,26 @@ function renderVariantSelector(card) {
     if (typeof VariantTracker !== 'undefined') {
         const tracker = new VariantTracker();
         const owned = tracker.getCollectionByCard(card.name);
+        const escapedCardNameJs = card.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
         if (owned && owned.variants && Object.keys(owned.variants).length > 0) {
-            ownedList.innerHTML = Object.entries(owned.variants).map(([slug, data]) => `
+            ownedList.innerHTML = Object.entries(owned.variants).map(([slug, data]) => {
+                const escapedSlug = slug.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                return `
                 <div class="owned-variant-item">
                     <span class="variant-finish ${data.finish?.toLowerCase() || 'standard'}">${data.finish || 'Standard'}</span>
-                    <span class="variant-set">${data.set || 'Unknown'}</span>
+                    <span class="variant-set">${escapeHtml(data.set || 'Unknown')}</span>
                     <div class="owned-variant-controls">
-                        <button class="qty-btn-sm" onclick="adjustOwnedVariant('${card.name}', '${slug}', -1)" title="Remover 1">
+                        <button class="qty-btn-sm" onclick="adjustOwnedVariant('${escapedCardNameJs}', '${escapedSlug}', -1)" title="Remover 1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         </button>
                         <span class="owned-variant-qty">${data.qty || 1}</span>
-                        <button class="qty-btn-sm" onclick="adjustOwnedVariant('${card.name}', '${slug}', 1)" title="Adicionar 1">
+                        <button class="qty-btn-sm" onclick="adjustOwnedVariant('${escapedCardNameJs}', '${escapedSlug}', 1)" title="Adicionar 1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
             document.getElementById('owned-variants').style.display = 'block';
         } else {
             ownedList.innerHTML = '<span class="empty-text">Nenhuma variante na coleção</span>';
@@ -6396,6 +6418,7 @@ function renderVariantSelector(card) {
 function renderVariantList(finish, variantsByFinish, cardName) {
     const variantList = document.getElementById('variant-list');
     const variants = variantsByFinish[finish] || [];
+    const escapedCardName = cardName.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
     if (variants.length === 0) {
         variantList.innerHTML = '<span class="empty-text">Nenhuma variante disponível</span>';
@@ -6407,14 +6430,15 @@ function renderVariantList(finish, variantsByFinish, cardName) {
 
     variantList.innerHTML = variants.map((v, index) => {
         const inputId = `qty-${finish}-${index}`;
+        const escapedSlug = v.slug.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         // Only the FIRST variant starts at 1 (unless it's a rare set)
         // All other variants start at 0 to avoid user accidentally adding multiple
         const defaultQty = (index === 0 && !rareSets.includes(v.setName)) ? 1 : 0;
         return `
-            <div class="variant-item" data-slug="${v.slug}">
+            <div class="variant-item" data-slug="${escapeAttr(v.slug)}">
                 <div class="variant-info">
-                    <span class="variant-set">${v.setName}</span>
-                    <span class="variant-product">${(v.product || 'Booster').replace(/_/g, ' ')}</span>
+                    <span class="variant-set">${escapeHtml(v.setName)}</span>
+                    <span class="variant-product">${escapeHtml((v.product || 'Booster').replace(/_/g, ' '))}</span>
                 </div>
                 <div class="variant-add-controls">
                     <div class="variant-qty-selector">
@@ -6422,7 +6446,7 @@ function renderVariantList(finish, variantsByFinish, cardName) {
                         <input type="number" id="${inputId}" class="variant-qty-input" value="${defaultQty}" min="0" max="99">
                         <button class="qty-btn-sm" onclick="adjustVariantQty('${inputId}', 1)">+</button>
                     </div>
-                    <button class="btn-add-variant" onclick="addVariantWithQty('${cardName}', '${v.slug}', '${finish}', '${inputId}')" ${defaultQty === 0 ? 'disabled' : ''}>
+                    <button class="btn-add-variant" onclick="addVariantWithQty('${escapedCardName}', '${escapedSlug}', '${finish}', '${inputId}')" ${defaultQty === 0 ? 'disabled' : ''}>
                         Adicionar
                     </button>
                 </div>
@@ -6759,10 +6783,11 @@ function renderMissingCardsList(cards) {
     return cards.map(card => {
         const rarity = card.guardian?.rarity || 'Unknown';
         const rarityClass = rarity.toLowerCase();
+        const escapedName = card.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 
         return `
-            <div class="missing-card-item" onclick="openCardModal('${card.name.replace(/'/g, "\\'")}')">
-                <span class="missing-card-name">${card.name}</span>
+            <div class="missing-card-item" onclick="openCardModal('${escapedName}')">
+                <span class="missing-card-name">${escapeHtml(card.name)}</span>
                 <span class="rarity-badge ${rarityClass}">${getRarityIcon(rarity)} ${rarity}</span>
             </div>
         `;
@@ -8403,10 +8428,11 @@ function openDeckDetail(deckId) {
             const qty = card.qty || 1;
             const elements = showElements ? getCardElements(card.name) : [];
             const elementIcons = renderElementIcons(elements);
+            const escapedName = card.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
             return `
                 <li>
                     <span class="card-qty">${qty}</span>
-                    <span class="card-name" onclick="searchCardByName('${card.name.replace(/'/g, "\\'")}')">${card.name}</span>
+                    <span class="card-name" onclick="searchCardByName('${escapedName}')">${escapeHtml(card.name)}</span>
                     ${elementIcons}
                 </li>
             `;
@@ -8480,13 +8506,15 @@ function openDeckDetail(deckId) {
             // Key Cards
             const keyCardsEl = document.getElementById('primer-key-cards');
             if (primer.keyCards && primer.keyCards.length > 0) {
-                keyCardsEl.innerHTML = primer.keyCards.map(card => `
+                keyCardsEl.innerHTML = primer.keyCards.map(card => {
+                    const escapedName = card.name.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                    return `
                     <li>
                         <span class="key-card-copies">${card.copies}x</span>
-                        <span class="key-card-name" onclick="searchCardByName('${card.name.replace(/'/g, "\\'")}')">${card.name}</span>
-                        <span class="key-card-role">${card.role}</span>
+                        <span class="key-card-name" onclick="searchCardByName('${escapedName}')">${escapeHtml(card.name)}</span>
+                        <span class="key-card-role">${escapeHtml(card.role)}</span>
                     </li>
-                `).join('');
+                `}).join('');
             } else {
                 keyCardsEl.innerHTML = '';
             }
@@ -9878,8 +9906,8 @@ function updateStatsWithPrices() {
     if (typeof priceService !== 'undefined' && allCards.length > 0) {
         // Build collection object for price calculation
         const collectionObj = {};
-        collection.forEach(cardName => {
-            collectionObj[cardName] = { qty: 1 };
+        collection.forEach((data, cardName) => {
+            collectionObj[cardName] = { qty: data.qty || 1 };
         });
 
         // Use enhanced method for tracking if available
@@ -10134,7 +10162,7 @@ function renderInvestmentAnalytics() {
     };
 
     // Analyze collection
-    collection.forEach(cardName => {
+    collection.forEach((data, cardName) => {
         const card = allCards.find(c => c.name === cardName);
         if (!card) return;
 
@@ -10548,6 +10576,14 @@ function setupAuthEventListeners() {
 
     // Save photo button
     document.getElementById('save-photo-btn')?.addEventListener('click', handleSavePhoto);
+
+    // Terms checkbox - enable/disable accept button
+    document.getElementById('terms-checkbox')?.addEventListener('change', (e) => {
+        const acceptBtn = document.getElementById('terms-accept-btn');
+        if (acceptBtn) {
+            acceptBtn.disabled = !e.target.checked;
+        }
+    });
 }
 
 // Open auth modal
