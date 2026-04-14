@@ -4024,66 +4024,341 @@ function initCuriosTab() {
     const container = document.getElementById('curios-content');
     if (!container) return;
 
+    // Curio cards data from Collector Arthouse
+    const curioData = {
+        alpha: [
+            {
+                name: 'Grim Tangle',
+                type: 'Protótipo',
+                artist: 'Drew Tucker',
+                description: 'Nome original do card que virou "Entangle Terrain". Drew Tucker foi o 3º artista comissionado para Sorcery. Footer mostra "KS2019 Full Art 25/300".',
+                comparison: 'vs Entangle Terrain',
+                url: 'https://www.collectorarthouse.com/curio/alpha/grim-tangle'
+            },
+            {
+                name: 'Bloom of Frogs',
+                type: 'Sketch Conceito',
+                artist: 'Michal Nagypál',
+                description: 'Sketch conceitual do card "Plague of Frogs". Michal foi o 2º artista comissionado. Apresenta símbolos de custo dramaticamente diferentes do design atual.',
+                comparison: 'vs Plague of Frogs',
+                url: 'https://www.collectorarthouse.com/curio/alpha/bloom-of-frogs'
+            },
+            {
+                name: 'Bridge Troll',
+                type: 'Arte Alternativa',
+                artist: 'Vasiliy Ermolaev',
+                description: 'Versão alternativa com cena da floresta, possivelmente uma das primeiras versões da arte de Vasiliy para criaturas do bosque.',
+                comparison: 'vs Bridge Troll padrão',
+                url: 'https://www.collectorarthouse.com/curio/alpha/bridge-troll'
+            },
+            {
+                name: "Devil's Egg",
+                type: 'Arte Alternativa',
+                artist: 'Desconhecido',
+                description: 'Uma das curios mais raras do Alpha, com arte completamente diferente da versão final.',
+                comparison: "vs Devil's Egg padrão",
+                url: 'https://www.collectorarthouse.com/curio/alpha/devils-egg'
+            }
+        ],
+        beta: [
+            {
+                name: 'Avatar of Earth',
+                type: 'Sketch Não-Colorido',
+                artist: 'Séverine Pineaux',
+                description: 'Sketch minimalista do Avatar de Terra dos precons Alpha. Mostra o processo criativo com linhas cruas e detalhadas.',
+                comparison: 'vs Avatar of Earth colorido',
+                url: 'https://www.collectorarthouse.com/curio/beta/avatar-of-earth'
+            },
+            {
+                name: 'Avatar of Water',
+                type: 'Sketch Não-Colorido',
+                artist: 'Séverine Pineaux',
+                description: 'Versão sketch do Avatar de Água, destacando a arte conceitual por trás desta figura elemental.',
+                comparison: 'vs Avatar of Water colorido',
+                url: 'https://www.collectorarthouse.com/curio/beta/avatar-of-water'
+            },
+            {
+                name: 'Avatar of Fire',
+                type: 'Sketch Não-Colorido',
+                artist: 'Séverine Pineaux',
+                description: 'Sketch do Avatar de Fogo mostrando as linhas cruas e detalhadas da arte original.',
+                comparison: 'vs Avatar of Fire colorido',
+                url: 'https://www.collectorarthouse.com/curio/beta/avatar-of-fire'
+            },
+            {
+                name: 'Avatar of Air',
+                type: 'Sketch Não-Colorido',
+                artist: 'Séverine Pineaux',
+                description: 'Completa o set de avatares elementais em versão sketch artística e colecionável.',
+                comparison: 'vs Avatar of Air colorido',
+                url: 'https://www.collectorarthouse.com/curio/beta/avatar-of-air'
+            },
+            {
+                name: 'Adept Illusionist',
+                type: 'Arte Invertida + Erro de Texto',
+                artist: 'Original',
+                description: 'Arte espelhada com erro proposital: texto diz "Duplicious means" em vez de "Duplicious Skills", combinando com o tema de ilusionista.',
+                comparison: 'vs Adept Illusionist padrão',
+                url: 'https://www.collectorarthouse.com/curio/beta/adept-illusionist'
+            },
+            {
+                name: 'Black Obelisk',
+                type: 'Símbolo de Set Errado',
+                artist: 'Original',
+                description: 'Carta Beta com símbolo do set Alpha! Anomalia de impressão altamente colecionável.',
+                comparison: 'Símbolo Alpha em carta Beta',
+                url: 'https://www.collectorarthouse.com/curio/beta/black-obelisk'
+            },
+            {
+                name: 'Sirian Templar',
+                type: 'Foil Híbrido',
+                artist: 'Original',
+                description: 'Foil com verso Spellbook e arte Alpha. Mistura única de estéticas de ambos os sets.',
+                comparison: 'Arte Alpha + Verso Beta',
+                url: 'https://www.collectorarthouse.com/curio/beta/sirian-templar'
+            },
+            {
+                name: 'Critical Strike',
+                type: 'Foil Híbrido',
+                artist: 'Jeff Easley',
+                description: 'Similar ao Sirian Templar: arte Alpha em foil com verso Spellbook Beta.',
+                comparison: 'Arte Alpha + Verso Beta',
+                url: 'https://www.collectorarthouse.com/curio/beta/critical-strike'
+            },
+            {
+                name: 'Water Castle',
+                type: 'Orientação Diferente',
+                artist: 'Original',
+                description: 'Status "Legendary" com orientação retrato única, diferente do layout paisagem típico.',
+                comparison: 'Retrato vs Paisagem',
+                url: 'https://www.collectorarthouse.com/curio/beta/water-castle'
+            },
+            {
+                name: 'Far East Assassin',
+                type: 'Arte Alternativa Sutil',
+                artist: 'Original',
+                description: 'Arte alternativa que remove o reflexo da espada, criando exclusividade sutil.',
+                comparison: 'Sem reflexo da espada',
+                url: 'https://www.collectorarthouse.com/curio/beta/far-east-assassin'
+            },
+            {
+                name: 'Infernal Legion',
+                type: 'Arte Alternativa',
+                artist: 'Original',
+                description: 'Arte mais antiga com cores mais claras e temática diferente da versão padrão.',
+                comparison: 'Arte antiga vs atual',
+                url: 'https://www.collectorarthouse.com/curio/beta/infernal-legion'
+            },
+            {
+                name: 'West-East Dragon',
+                type: 'Arte Invertida',
+                artist: 'Original',
+                description: 'Arte completamente espelhada com orientação do nome invertida.',
+                comparison: 'Espelhado horizontalmente',
+                url: 'https://www.collectorarthouse.com/curio/beta/west-east-dragon'
+            },
+            {
+                name: 'Steppe',
+                type: 'Arte Dupla',
+                artist: 'Original',
+                description: 'Arte alternativa mostrando os cards Crusade e Jihad lado a lado, criando dualidade visual impressionante.',
+                comparison: 'Duas artes em uma',
+                url: 'https://www.collectorarthouse.com/curio/beta/steppe'
+            },
+            {
+                name: 'Extinguish',
+                type: 'Variação de Cor/Texto',
+                artist: 'Original',
+                description: 'Cores mais escuras com texto alterado: "flickering" em vez de "guttering".',
+                comparison: 'Cores e texto diferentes',
+                url: 'https://www.collectorarthouse.com/curio/beta/extinguish'
+            }
+        ]
+    };
+
+    const typeIcons = {
+        'Sketch Não-Colorido': 'pencil',
+        'Sketch Conceito': 'pencil',
+        'Protótipo': 'file-text',
+        'Arte Alternativa': 'image',
+        'Arte Alternativa Sutil': 'image',
+        'Arte Invertida': 'flip-horizontal',
+        'Arte Invertida + Erro de Texto': 'flip-horizontal',
+        'Foil Híbrido': 'sparkles',
+        'Símbolo de Set Errado': 'alert-circle',
+        'Orientação Diferente': 'rotate-cw',
+        'Arte Dupla': 'columns',
+        'Variação de Cor/Texto': 'palette'
+    };
+
+    const typeColors = {
+        'Sketch Não-Colorido': '#9CA3AF',
+        'Sketch Conceito': '#9CA3AF',
+        'Protótipo': '#F59E0B',
+        'Arte Alternativa': '#8B5CF6',
+        'Arte Alternativa Sutil': '#8B5CF6',
+        'Arte Invertida': '#EC4899',
+        'Arte Invertida + Erro de Texto': '#EC4899',
+        'Foil Híbrido': '#D4AF37',
+        'Símbolo de Set Errado': '#EF4444',
+        'Orientação Diferente': '#06B6D4',
+        'Arte Dupla': '#10B981',
+        'Variação de Cor/Texto': '#F97316'
+    };
+
+    const renderCurioCard = (curio) => `
+        <a href="${curio.url}" target="_blank" rel="noopener noreferrer" class="curio-card-link">
+            <div class="curio-card">
+                <div class="curio-card-header">
+                    <span class="curio-type-badge" style="background: ${typeColors[curio.type] || '#6B7280'}20; color: ${typeColors[curio.type] || '#6B7280'}; border-color: ${typeColors[curio.type] || '#6B7280'}">
+                        <i data-lucide="${typeIcons[curio.type] || 'help-circle'}" style="width:12px;height:12px"></i>
+                        ${curio.type}
+                    </span>
+                </div>
+                <h4 class="curio-card-name">${curio.name}</h4>
+                <p class="curio-card-artist"><i data-lucide="palette" style="width:12px;height:12px"></i> ${curio.artist}</p>
+                <p class="curio-card-description">${curio.description}</p>
+                <div class="curio-card-comparison">
+                    <i data-lucide="git-compare" style="width:14px;height:14px"></i>
+                    <span>${curio.comparison}</span>
+                </div>
+                <div class="curio-card-link-indicator">
+                    <i data-lucide="external-link" style="width:14px;height:14px"></i>
+                    Ver no Collector Arthouse
+                </div>
+            </div>
+        </a>
+    `;
+
     container.innerHTML = `
         <div class="curios-intro">
-            <h3><i data-lucide="sparkles"></i> O Que São Curios?</h3>
-            <p>
-                Curios são cartas <strong>extremamente raras</strong> encontradas em boosters de Sorcery.
-                São "cartas mistério" que celebram a história da criação do jogo, incluindo artes alternativas,
-                sketches, erros intencionais de impressão e variantes únicas.
-            </p>
-            <p>
-                A Erik's Curiosa não publica lista oficial de Curios, preferindo que a comunidade
-                descubra e catalogue essas raridades, evocando a era dourada dos TCGs nos anos 90.
-            </p>
+            <div class="curios-intro-content">
+                <h3><i data-lucide="sparkles"></i> O Mistério dos Curios</h3>
+                <p>
+                    Curios são cartas <strong>extremamente raras</strong> escondidas em boosters de Sorcery: Contested Realm.
+                    A Erik's Curiosa <em>não reconhece oficialmente</em> a existência dessas cartas, deixando que a comunidade
+                    descubra e catalogue cada uma — uma experiência que remete à era dourada dos TCGs nos anos 90.
+                </p>
+                <p>
+                    Descritas apenas como <em>"cartas mistério muito raras celebrando a história da criação de Sorcery"</em>,
+                    os Curios incluem sketches de desenvolvimento, artes alternativas, erros propositais de impressão,
+                    protótipos com nomes antigos e variantes únicas que contam a evolução do jogo.
+                </p>
+            </div>
             <div class="curios-stats">
                 <div class="curio-stat">
                     <div class="curio-stat-value">~1:50</div>
-                    <div class="curio-stat-label">boxes (estimado)</div>
+                    <div class="curio-stat-label">caixas (estimado)</div>
                 </div>
                 <div class="curio-stat">
-                    <div class="curio-stat-value">$2k-$5k</div>
-                    <div class="curio-stat-label">valor médio</div>
+                    <div class="curio-stat-value">$500-$5k+</div>
+                    <div class="curio-stat-label">valor de mercado</div>
                 </div>
                 <div class="curio-stat">
-                    <div class="curio-stat-value">???</div>
-                    <div class="curio-stat-label">total descobertos</div>
+                    <div class="curio-stat-value">${curioData.alpha.length + curioData.beta.length}+</div>
+                    <div class="curio-stat-label">descobertos</div>
                 </div>
             </div>
         </div>
 
-        <h3 class="curios-types-header">Tipos de Curios Conhecidos</h3>
-        <div class="curios-types">
-            <div class="curio-type-card">
-                <h4><i data-lucide="pencil"></i> Sketches</h4>
-                <p>Versões não coloridas de cards, mostrando o processo criativo. Ex: Avatar of Earth sketch do Alpha.</p>
-            </div>
-            <div class="curio-type-card">
-                <h4><i data-lucide="image"></i> Arte Alternativa</h4>
-                <p>Cards com ilustrações diferentes das versões padrão, às vezes de sets anteriores.</p>
-            </div>
-            <div class="curio-type-card">
-                <h4><i data-lucide="flip-horizontal"></i> Impressão Invertida</h4>
-                <p>Artes impressas em espelho, criando um efeito visual único e colecionável.</p>
-            </div>
-            <div class="curio-type-card">
-                <h4><i data-lucide="type"></i> Texto Alterado</h4>
-                <p>Cards com texto diferente do padrão. Ex: "Duplicious means" em vez de "Duplicious Skills".</p>
-            </div>
-            <div class="curio-type-card">
-                <h4><i data-lucide="sparkles"></i> Foil Especial</h4>
-                <p>Versões foil com características únicas, como arte Alpha com verso Spellbook Beta.</p>
-            </div>
-            <div class="curio-type-card">
-                <h4><i data-lucide="help-circle"></i> Mistério</h4>
-                <p>Curios ainda não catalogados pela comunidade. A descoberta faz parte da experiência!</p>
+        <div class="curios-types-section">
+            <h3><i data-lucide="layers"></i> Tipos de Curios</h3>
+            <div class="curios-types-grid">
+                <div class="curio-type-item">
+                    <i data-lucide="pencil" style="color: #9CA3AF"></i>
+                    <div>
+                        <strong>Sketches</strong>
+                        <span>Versões não-coloridas mostrando o processo criativo</span>
+                    </div>
+                </div>
+                <div class="curio-type-item">
+                    <i data-lucide="image" style="color: #8B5CF6"></i>
+                    <div>
+                        <strong>Arte Alternativa</strong>
+                        <span>Ilustrações diferentes ou versões anteriores</span>
+                    </div>
+                </div>
+                <div class="curio-type-item">
+                    <i data-lucide="flip-horizontal" style="color: #EC4899"></i>
+                    <div>
+                        <strong>Arte Invertida</strong>
+                        <span>Artes espelhadas, às vezes com erros de texto</span>
+                    </div>
+                </div>
+                <div class="curio-type-item">
+                    <i data-lucide="file-text" style="color: #F59E0B"></i>
+                    <div>
+                        <strong>Protótipos</strong>
+                        <span>Cards com nomes ou designs antigos de desenvolvimento</span>
+                    </div>
+                </div>
+                <div class="curio-type-item">
+                    <i data-lucide="sparkles" style="color: #D4AF37"></i>
+                    <div>
+                        <strong>Foils Híbridos</strong>
+                        <span>Misturas de elementos de diferentes sets</span>
+                    </div>
+                </div>
+                <div class="curio-type-item">
+                    <i data-lucide="alert-circle" style="color: #EF4444"></i>
+                    <div>
+                        <strong>Anomalias</strong>
+                        <span>Erros propositais de símbolo, cor ou texto</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <a href="https://www.collectorarthouse.com/curio-cards" target="_blank" rel="noopener noreferrer" class="curios-external-link">
-            <i data-lucide="external-link"></i>
-            Ver Catálogo Completo no Collector Arthouse
-        </a>
+        <div class="curios-gallery-section">
+            <div class="curios-set-header">
+                <h3><i data-lucide="box"></i> Curios do Alpha</h3>
+                <span class="curios-set-count">${curioData.alpha.length} descobertos</span>
+            </div>
+            <div class="curios-gallery">
+                ${curioData.alpha.map(renderCurioCard).join('')}
+            </div>
+        </div>
+
+        <div class="curios-gallery-section">
+            <div class="curios-set-header">
+                <h3><i data-lucide="box"></i> Curios do Beta</h3>
+                <span class="curios-set-count">${curioData.beta.length} descobertos</span>
+            </div>
+            <div class="curios-gallery">
+                ${curioData.beta.map(renderCurioCard).join('')}
+            </div>
+        </div>
+
+        <div class="curios-resources">
+            <h3><i data-lucide="bookmark"></i> Recursos da Comunidade</h3>
+            <p>O <strong>Collector Arthouse</strong>, mantido por Mike Servati, é a principal fonte de informações sobre Curios, com arquivo completo de todas as descobertas e comparações detalhadas.</p>
+            <div class="curios-links">
+                <a href="https://www.collectorarthouse.com/curio-cards" target="_blank" rel="noopener noreferrer" class="curios-resource-link primary">
+                    <i data-lucide="archive"></i>
+                    <div>
+                        <strong>Catálogo Completo de Curios</strong>
+                        <span>Arquivo oficial com todas as descobertas</span>
+                    </div>
+                    <i data-lucide="external-link"></i>
+                </a>
+                <a href="https://www.collectorarthouse.com/sorcery-cards/alpha-beta" target="_blank" rel="noopener noreferrer" class="curios-resource-link">
+                    <i data-lucide="image"></i>
+                    <div>
+                        <strong>Galeria Alpha/Beta</strong>
+                        <span>Comparar artes originais vs curios</span>
+                    </div>
+                    <i data-lucide="external-link"></i>
+                </a>
+                <a href="https://discord.gg/collectorarthouse" target="_blank" rel="noopener noreferrer" class="curios-resource-link">
+                    <i data-lucide="message-circle"></i>
+                    <div>
+                        <strong>Discord Collector Arthouse</strong>
+                        <span>Comunidade para identificar novos curios</span>
+                    </div>
+                    <i data-lucide="external-link"></i>
+                </a>
+            </div>
+        </div>
     `;
 
     refreshIcons();
