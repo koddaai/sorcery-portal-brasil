@@ -3407,6 +3407,308 @@ h5 {
     }
 }
 
+/* ============================================
+   ENHANCED STATS DESIGN
+   Stat cards, progress bars, and artist cards
+   ============================================ */
+
+/* Enhanced Stat Cards with Icons */
+.stat-card {
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(212, 175, 55, 0.1);
+    border-color: var(--accent-gold-dim);
+}
+
+.stat-card:hover::before {
+    opacity: 1;
+}
+
+/* Stat Card Icon Container */
+.stat-card-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent-gold);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-card-icon {
+    background: rgba(212, 175, 55, 0.2);
+    transform: scale(1.05);
+}
+
+.stat-card-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.stat-card.mini .stat-card-icon {
+    width: 36px;
+    height: 36px;
+    top: 0.75rem;
+    right: 0.75rem;
+}
+
+.stat-card.mini .stat-card-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Stat value with glow */
+.stat-value {
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+/* Enhanced Progress Bars with Colors */
+.progress-bar-enhanced {
+    position: relative;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: visible;
+}
+
+.progress-fill-enhanced {
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Progress color by completion level */
+.progress-fill-enhanced.progress-low,
+.artist-progress-bar-container .progress-fill.progress-low {
+    background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+.progress-fill-enhanced.progress-medium,
+.artist-progress-bar-container .progress-fill.progress-medium {
+    background: linear-gradient(90deg, #f97316, #fb923c);
+}
+
+.progress-fill-enhanced.progress-good,
+.artist-progress-bar-container .progress-fill.progress-good {
+    background: linear-gradient(90deg, #eab308, #facc15);
+}
+
+.progress-fill-enhanced.progress-high,
+.artist-progress-bar-container .progress-fill.progress-high {
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.progress-fill-enhanced.progress-complete,
+.artist-progress-bar-container .progress-fill.progress-complete {
+    background: linear-gradient(90deg, #d4af37, #f4d03f);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
+}
+
+/* Glow tip on progress bar */
+.artist-progress-bar-container .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+    opacity: 0.7;
+}
+
+/* Progress milestone markers */
+.progress-bar-with-milestones {
+    position: relative;
+}
+
+.progress-milestones {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    pointer-events: none;
+}
+
+.progress-milestone {
+    position: absolute;
+    top: -3px;
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.progress-milestone:nth-child(1) { left: 25%; }
+.progress-milestone:nth-child(2) { left: 50%; }
+.progress-milestone:nth-child(3) { left: 75%; }
+
+/* Progress Badge with contextual colors */
+.progress-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 52px;
+    justify-content: center;
+}
+
+.progress-badge.badge-low {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.progress-badge.badge-medium {
+    background: rgba(249, 115, 22, 0.2);
+    color: #fb923c;
+}
+
+.progress-badge.badge-good {
+    background: rgba(234, 179, 8, 0.2);
+    color: #facc15;
+}
+
+.progress-badge.badge-high {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+.progress-badge.badge-complete {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(244, 208, 63, 0.3));
+    color: var(--accent-gold);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+/* Enhanced Artist Progress Cards */
+.artist-progress-card {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.artist-progress-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+.artist-progress-card.artist-complete {
+    border-color: var(--accent-gold);
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(212, 175, 55, 0.05) 100%);
+}
+
+.artist-progress-card.artist-complete::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 32px 32px 0;
+    border-color: transparent var(--accent-gold) transparent transparent;
+    opacity: 0.8;
+}
+
+.artist-progress-card.artist-complete .complete-ribbon-icon {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    color: var(--bg-primary);
+    z-index: 1;
+}
+
+/* Section Headers with gold accent */
+.stats-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.stats-section-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--accent-gold);
+}
+
+.stats-section-header h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.stats-section-header .section-icon {
+    color: var(--accent-gold);
+    width: 20px;
+    height: 20px;
+}
+
+/* Stats view specific enhancements */
+#stats-view .stats-grid .stat-card,
+#artist-stats-view .stats-grid .stat-card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, rgba(212, 175, 55, 0.02) 100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stat-card-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .stat-card-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .stat-card.mini .stat-card-icon {
+        display: none;
+    }
+
+    .progress-badge {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.5rem;
+        min-width: 45px;
+    }
+}
+
 /* Modal - Modern with sophisticated animations */
 .modal {
     position: fixed;

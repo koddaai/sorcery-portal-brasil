@@ -4439,6 +4439,28 @@ function initArtistStatsView() {
 }
 
 /**
+ * Retorna a classe de cor da barra de progresso baseada no percentual
+ */
+function getProgressColorClass(percent) {
+    if (percent === 100) return 'progress-complete';
+    if (percent >= 75) return 'progress-high';
+    if (percent >= 50) return 'progress-good';
+    if (percent >= 25) return 'progress-medium';
+    return 'progress-low';
+}
+
+/**
+ * Retorna a classe do badge baseada no percentual
+ */
+function getProgressBadgeClass(percent) {
+    if (percent === 100) return 'badge-complete';
+    if (percent >= 75) return 'badge-high';
+    if (percent >= 50) return 'badge-good';
+    if (percent >= 25) return 'badge-medium';
+    return 'badge-low';
+}
+
+/**
  * Calcula e renderiza estatísticas por artista
  */
 function renderArtistStats() {
@@ -4575,19 +4597,30 @@ function renderArtistStats() {
     }
 
     // Renderizar lista
-    listEl.innerHTML = filtered.map(artist => `
-        <div class="artist-progress-card" data-artist="${escapeAttr(artist.name)}">
+    listEl.innerHTML = filtered.map(artist => {
+        const progressClass = getProgressColorClass(artist.completion);
+        const badgeClass = getProgressBadgeClass(artist.completion);
+        const isComplete = artist.completion === 100 && artist.totalCards > 0;
+
+        return `
+        <div class="artist-progress-card ${isComplete ? 'artist-complete' : ''}" data-artist="${escapeAttr(artist.name)}">
+            ${isComplete ? '<i data-lucide="award" class="complete-ribbon-icon"></i>' : ''}
             <div class="artist-progress-header" onclick="toggleArtistChecklist('${escapeAttr(artist.name)}')">
                 <div class="artist-progress-info">
                     <span class="artist-name" onclick="goToArtistPage('${escapeAttr(artist.name)}'); event.stopPropagation();">${escapeHtml(artist.name)}</span>
                     <span class="artist-count">${artist.ownedCards}/${artist.totalCards}</span>
                 </div>
                 <div class="artist-progress-bar-container">
-                    <div class="progress-bar">
-                        <div class="progress-fill ${artist.completion === 100 ? 'complete' : ''}"
+                    <div class="progress-bar progress-bar-with-milestones">
+                        <div class="progress-fill ${progressClass}"
                              style="width: ${artist.completion}%"></div>
+                        <div class="progress-milestones">
+                            <div class="progress-milestone"></div>
+                            <div class="progress-milestone"></div>
+                            <div class="progress-milestone"></div>
+                        </div>
                     </div>
-                    <span class="progress-percent">${artist.completion.toFixed(0)}%</span>
+                    <span class="progress-badge ${badgeClass}">${artist.completion.toFixed(0)}%</span>
                 </div>
                 <i data-lucide="chevron-down" class="expand-icon"></i>
             </div>
@@ -4615,8 +4648,8 @@ function renderArtistStats() {
                 </div>
                 ` : '<p class="complete-message"><i data-lucide="trophy"></i> Coleção completa deste artista!</p>'}
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 
     // Reinicializar ícones Lucide
     refreshIcons();
