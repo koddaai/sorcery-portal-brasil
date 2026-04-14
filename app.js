@@ -4529,7 +4529,7 @@ function renderArtistStats() {
         <div class="artist-progress-card" data-artist="${escapeAttr(artist.name)}">
             <div class="artist-progress-header" onclick="toggleArtistChecklist('${escapeAttr(artist.name)}')">
                 <div class="artist-progress-info">
-                    <span class="artist-name">${escapeHtml(artist.name)}</span>
+                    <span class="artist-name" onclick="goToArtistPage('${escapeAttr(artist.name)}'); event.stopPropagation();">${escapeHtml(artist.name)}</span>
                     <span class="artist-count">${artist.ownedCards}/${artist.totalCards}</span>
                 </div>
                 <div class="artist-progress-bar-container">
@@ -4584,6 +4584,18 @@ function toggleArtistChecklist(artistName) {
 
     checklist?.classList.toggle('hidden');
     icon?.classList.toggle('rotated');
+}
+
+/**
+ * Navega para a página do artista na view de Artes
+ */
+function goToArtistPage(artistName) {
+    // Muda para a view de artes e mostra a página do artista
+    switchView('art');
+    // Aguarda a view carregar e então mostra o artista
+    setTimeout(() => {
+        showArtistCards(artistName);
+    }, 100);
 }
 
 /**

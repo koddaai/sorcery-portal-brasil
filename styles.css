@@ -3128,7 +3128,14 @@ h5 {
 
 .artist-progress-info .artist-name {
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--accent-gold);
+    cursor: pointer;
+    transition: color 0.2s, text-decoration 0.2s;
+}
+
+.artist-progress-info .artist-name:hover {
+    color: var(--accent-gold-light, #f4d794);
+    text-decoration: underline;
 }
 
 .artist-progress-info .artist-count {
