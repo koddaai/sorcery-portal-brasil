@@ -4481,16 +4481,35 @@ function renderArtistStats() {
         });
     });
 
-    // Atualizar resumo
-    document.getElementById('artist-stats-total').textContent = totalArtistsWithCards;
-    document.getElementById('artist-stats-total-label').textContent =
-        `de ${artViewData.artists.length} artistas`;
-    document.getElementById('artist-stats-complete').textContent = completeArtists;
+    // Calcular estatísticas adicionais
+    const almostComplete = artistProgress.filter(a => a.completion >= 80 && a.completion < 100).length;
+    const totalCardsOwned = artistProgress.reduce((sum, a) => sum + a.ownedCards, 0);
+    const totalCardsAll = artistProgress.reduce((sum, a) => sum + a.totalCards, 0);
+    const avgCompletion = totalArtistsWithCards > 0
+        ? artistProgress.filter(a => a.ownedCards > 0).reduce((sum, a) => sum + a.completion, 0) / totalArtistsWithCards
+        : 0;
+
+    // Artista com mais cards na coleção
+    const mostCards = artistProgress
+        .filter(a => a.ownedCards > 0)
+        .sort((a, b) => b.ownedCards - a.ownedCards)[0];
+
+    // Próximo a completar (quem falta menos cards, mas não está completo)
+    const nextToComplete = artistProgress
+        .filter(a => a.completion > 0 && a.completion < 100 && a.totalCards >= 2)
+        .sort((a, b) => a.missingList.length - b.missingList.length || b.completion - a.completion)[0];
 
     // Encontrar artista mais completo (mínimo 3 cards para ser relevante)
     const best = artistProgress
         .filter(a => a.totalCards >= 3 && a.ownedCards > 0)
         .sort((a, b) => b.completion - a.completion || b.ownedCards - a.ownedCards)[0];
+
+    // Atualizar resumo - Row 1
+    document.getElementById('artist-stats-total').textContent = totalArtistsWithCards;
+    document.getElementById('artist-stats-total-label').textContent =
+        `de ${artViewData.artists.length} artistas`;
+    document.getElementById('artist-stats-complete').textContent = completeArtists;
+    document.getElementById('artist-stats-almost').textContent = almostComplete;
 
     if (best) {
         document.getElementById('artist-stats-best').textContent = best.name;
@@ -4501,13 +4520,44 @@ function renderArtistStats() {
         document.getElementById('artist-stats-best-pct').textContent = 'Sem dados';
     }
 
+    // Atualizar resumo - Row 2
+    document.getElementById('artist-stats-cards-owned').textContent = totalCardsOwned;
+    document.getElementById('artist-stats-cards-total').textContent = `de ${totalCardsAll} ilustrações`;
+    document.getElementById('artist-stats-avg-completion').textContent = `${avgCompletion.toFixed(0)}%`;
+
+    if (mostCards) {
+        document.getElementById('artist-stats-most-cards').textContent = mostCards.name;
+        document.getElementById('artist-stats-most-cards-count').textContent = `${mostCards.ownedCards} cards`;
+    } else {
+        document.getElementById('artist-stats-most-cards').textContent = '-';
+        document.getElementById('artist-stats-most-cards-count').textContent = '0 cards';
+    }
+
+    if (nextToComplete) {
+        document.getElementById('artist-stats-next-complete').textContent = nextToComplete.name;
+        document.getElementById('artist-stats-next-complete-info').textContent =
+            `falta ${nextToComplete.missingList.length} (${nextToComplete.completion.toFixed(0)}%)`;
+    } else {
+        document.getElementById('artist-stats-next-complete').textContent = '-';
+        document.getElementById('artist-stats-next-complete-info').textContent = '-';
+    }
+
     // Aplicar ordenação e filtros
     const sortBy = document.getElementById('artist-stats-sort')?.value || 'completion-desc';
     const hideZero = document.getElementById('artist-stats-hide-zero')?.checked || false;
+    const searchQuery = document.getElementById('artist-stats-search')?.value.trim().toLowerCase() || '';
 
-    let filtered = hideZero
-        ? artistProgress.filter(a => a.ownedCards > 0)
-        : artistProgress;
+    let filtered = artistProgress;
+
+    // Filtrar por busca
+    if (searchQuery) {
+        filtered = filtered.filter(a => a.name.toLowerCase().includes(searchQuery));
+    }
+
+    // Esconder zeros
+    if (hideZero) {
+        filtered = filtered.filter(a => a.ownedCards > 0);
+    }
 
     switch (sortBy) {
         case 'completion-desc':
@@ -4604,6 +4654,16 @@ function goToArtistPage(artistName) {
 function setupArtistStatsFilters() {
     document.getElementById('artist-stats-sort')?.addEventListener('change', renderArtistStats);
     document.getElementById('artist-stats-hide-zero')?.addEventListener('change', renderArtistStats);
+
+    // Search com debounce
+    const searchInput = document.getElementById('artist-stats-search');
+    if (searchInput) {
+        let debounceTimer;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(renderArtistStats, 200);
+        });
+    }
 }
 
 // Initialize Timeline View

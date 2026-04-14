@@ -3088,6 +3088,82 @@ h5 {
     cursor: pointer;
 }
 
+/* Search input */
+.artist-stats-filters .search-input-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+.artist-stats-filters .search-input-wrapper svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.artist-stats-filters .search-input-wrapper input {
+    width: 100%;
+    padding: 0.5rem 1rem 0.5rem 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.artist-stats-filters .search-input-wrapper input::placeholder {
+    color: var(--text-tertiary);
+}
+
+.artist-stats-filters .search-input-wrapper input:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+}
+
+/* Secondary stats row */
+.artist-stats-summary.secondary-stats {
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.artist-stats-summary .stat-card.mini {
+    padding: 1rem;
+}
+
+.artist-stats-summary .stat-card.mini h3 {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+.artist-stats-summary .stat-card.mini .stat-value {
+    font-size: 1.4rem;
+}
+
+.artist-stats-summary .stat-card.mini .stat-label {
+    font-size: 0.7rem;
+}
+
+/* Artist name in stat cards */
+.stat-value.artist-name-value {
+    font-size: 1.2rem;
+    font-family: 'Cinzel', serif;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.stat-card.mini .stat-value.artist-name-value {
+    font-size: 1rem;
+}
+
 .artist-stats-list {
     display: flex;
     flex-direction: column;

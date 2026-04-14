@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=85">
+    <link rel="stylesheet" href="styles.css?v=86">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -1119,7 +1119,7 @@
                     <h2>Coleção por Artista</h2>
                     <p class="subtitle">Acompanhe seu progresso em completar a coleção de cada artista</p>
 
-                    <!-- Resumo geral -->
+                    <!-- Resumo geral - Row 1 -->
                     <div class="stats-grid artist-stats-summary">
                         <div class="stat-card">
                             <h3>Artistas na Coleção</h3>
@@ -1128,7 +1128,7 @@
                         </div>
                         <div class="stat-card">
                             <h3>Artista Mais Completo</h3>
-                            <div class="stat-value" id="artist-stats-best">-</div>
+                            <div class="stat-value artist-name-value" id="artist-stats-best">-</div>
                             <div class="stat-label" id="artist-stats-best-pct">0%</div>
                         </div>
                         <div class="stat-card">
@@ -1136,10 +1136,43 @@
                             <div class="stat-value" id="artist-stats-complete">0</div>
                             <div class="stat-label">100% completados</div>
                         </div>
+                        <div class="stat-card">
+                            <h3>Quase Completos</h3>
+                            <div class="stat-value" id="artist-stats-almost">0</div>
+                            <div class="stat-label">80%+ falta pouco!</div>
+                        </div>
+                    </div>
+
+                    <!-- Resumo geral - Row 2 -->
+                    <div class="stats-grid artist-stats-summary secondary-stats">
+                        <div class="stat-card mini">
+                            <h3>Cards de Artistas</h3>
+                            <div class="stat-value" id="artist-stats-cards-owned">0</div>
+                            <div class="stat-label" id="artist-stats-cards-total">de 0 ilustrações</div>
+                        </div>
+                        <div class="stat-card mini">
+                            <h3>Progresso Médio</h3>
+                            <div class="stat-value" id="artist-stats-avg-completion">0%</div>
+                            <div class="stat-label">média de conclusão</div>
+                        </div>
+                        <div class="stat-card mini">
+                            <h3>Maior Coleção</h3>
+                            <div class="stat-value artist-name-value" id="artist-stats-most-cards">-</div>
+                            <div class="stat-label" id="artist-stats-most-cards-count">0 cards</div>
+                        </div>
+                        <div class="stat-card mini">
+                            <h3>Próximo a Completar</h3>
+                            <div class="stat-value artist-name-value" id="artist-stats-next-complete">-</div>
+                            <div class="stat-label" id="artist-stats-next-complete-info">falta 0</div>
+                        </div>
                     </div>
 
                     <!-- Filtros -->
                     <div class="artist-stats-filters">
+                        <div class="search-input-wrapper">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="artist-stats-search" placeholder="Buscar artista..." autocomplete="off">
+                        </div>
                         <select id="artist-stats-sort">
                             <option value="completion-desc">Mais Completo</option>
                             <option value="completion-asc">Menos Completo</option>
@@ -1148,7 +1181,7 @@
                         </select>
                         <label class="checkbox-label">
                             <input type="checkbox" id="artist-stats-hide-zero">
-                            <span>Esconder artistas sem cards</span>
+                            <span>Esconder sem cards</span>
                         </label>
                     </div>
 
@@ -4012,7 +4045,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=108"></script>
+    <script src="app.js?v=109"></script>
     <script src="offline-manager.js?v=4"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
