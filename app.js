@@ -146,6 +146,68 @@ function escapeAttr(text) {
 }
 
 // ============================================
+// SKELETON & EMPTY STATE UTILITIES
+// ============================================
+
+/**
+ * Generate skeleton cards HTML for loading state
+ */
+function createSkeletonCards(count = 12) {
+    let html = '<div class="skeleton-cards-grid">';
+    for (let i = 0; i < count; i++) {
+        html += `
+            <div class="skeleton-card-item">
+                <div class="skeleton-card-image"></div>
+                <div class="skeleton-card-info">
+                    <div class="skeleton-card-title"></div>
+                    <div class="skeleton-card-subtitle"></div>
+                </div>
+            </div>
+        `;
+    }
+    html += '</div>';
+    return html;
+}
+
+/**
+ * Show skeleton loading in a container
+ */
+function showSkeletonLoading(container, count = 12) {
+    if (!container) return;
+    container.innerHTML = createSkeletonCards(count);
+}
+
+/**
+ * Create enhanced empty state HTML
+ * @param {Object} options - Empty state options
+ * @param {string} options.icon - Lucide icon name
+ * @param {string} options.title - Title text
+ * @param {string} options.description - Description text
+ * @param {Array} options.actions - Array of action buttons [{label, onclick, primary}]
+ * @param {boolean} options.compact - Use compact variant
+ */
+function createEmptyState(options) {
+    const { icon = 'inbox', title = 'Nada aqui', description = '', actions = [], compact = false } = options;
+
+    const actionsHtml = actions.map(action => {
+        const btnClass = action.primary ? 'btn primary' : 'btn secondary';
+        const iconHtml = action.icon ? `<i data-lucide="${action.icon}"></i>` : '';
+        return `<button class="${btnClass}" onclick="${action.onclick}">${iconHtml} ${action.label}</button>`;
+    }).join('');
+
+    return `
+        <div class="empty-state-enhanced${compact ? ' compact' : ''}">
+            <div class="empty-state-icon">
+                <i data-lucide="${icon}"></i>
+            </div>
+            <h3 class="empty-state-title">${title}</h3>
+            ${description ? `<p class="empty-state-description">${description}</p>` : ''}
+            ${actionsHtml ? `<div class="empty-state-cta">${actionsHtml}</div>` : ''}
+        </div>
+    `;
+}
+
+// ============================================
 // TOAST NOTIFICATIONS
 // ============================================
 
@@ -3228,7 +3290,7 @@ function setupEventListeners() {
         const btn = document.getElementById('share-card-btn');
         if (success) {
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="check"></i> Copied!';
+            btn.innerHTML = '<i data-lucide="check"></i> Copiado!';
             btn.classList.add('success');
             refreshIcons();
             setTimeout(() => {
@@ -4596,8 +4658,11 @@ function renderArtistStats() {
             break;
     }
 
-    // Renderizar lista
-    listEl.innerHTML = filtered.map(artist => {
+    // Check if sorted by name for alphabetical grouping
+    const useAlphaNav = sortBy === 'name-asc' && !searchQuery;
+
+    // Helper to render single artist card
+    const renderArtistCard = (artist) => {
         const progressClass = getProgressColorClass(artist.completion);
         const badgeClass = getProgressBadgeClass(artist.completion);
         const isComplete = artist.completion === 100 && artist.totalCards > 0;
@@ -4649,7 +4714,61 @@ function renderArtistStats() {
                 ` : '<p class="complete-message"><i data-lucide="trophy"></i> Coleção completa deste artista!</p>'}
             </div>
         </div>`;
-    }).join('');
+    };
+
+    // Render with alphabetical navigation if sorted by name
+    if (useAlphaNav && filtered.length > 20) {
+        // Group by first letter
+        const grouped = {};
+        const letters = [];
+        filtered.forEach(artist => {
+            const letter = artist.name.charAt(0).toUpperCase();
+            if (!grouped[letter]) {
+                grouped[letter] = [];
+                letters.push(letter);
+            }
+            grouped[letter].push(artist);
+        });
+
+        // Build alphabet nav
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        const alphaNavHtml = `
+            <nav class="alpha-nav" aria-label="Navegação alfabética">
+                ${alphabet.map(l => {
+                    const hasArtists = letters.includes(l);
+                    return `<button class="alpha-nav-btn ${hasArtists ? '' : 'disabled'}"
+                                    data-letter="${l}"
+                                    ${hasArtists ? `onclick="scrollToArtistLetter('${l}')"` : 'disabled'}
+                                    ${hasArtists ? '' : 'tabindex="-1"'}>${l}</button>`;
+                }).join('')}
+            </nav>
+        `;
+
+        // Build content with section headers
+        let contentHtml = '';
+        letters.forEach(letter => {
+            contentHtml += `
+                <div class="alpha-section-header" id="artist-letter-${letter}">
+                    <span class="alpha-section-letter">${letter}</span>
+                </div>
+            `;
+            grouped[letter].forEach(artist => {
+                contentHtml += renderArtistCard(artist);
+            });
+        });
+
+        listEl.innerHTML = `
+            <div class="alpha-nav-container">
+                ${alphaNavHtml}
+                <div class="alpha-nav-content">
+                    ${contentHtml}
+                </div>
+            </div>
+        `;
+    } else {
+        // Standard render without alpha nav
+        listEl.innerHTML = filtered.map(artist => renderArtistCard(artist)).join('');
+    }
 
     // Reinicializar ícones Lucide
     refreshIcons();
@@ -4680,6 +4799,53 @@ function goToArtistPage(artistName) {
         showArtistCards(artistName);
     }, 100);
 }
+
+/**
+ * Scroll para uma letra na navegação alfabética de artistas
+ */
+function scrollToArtistLetter(letter) {
+    const header = document.getElementById(`artist-letter-${letter}`);
+    if (header) {
+        // Update active state
+        document.querySelectorAll('.alpha-nav-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.letter === letter);
+        });
+
+        // Scroll with offset for sticky header
+        const offset = 100;
+        const y = header.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+}
+
+/**
+ * Setup back to top button
+ */
+function setupBackToTop() {
+    // Create button if not exists
+    let btn = document.getElementById('back-to-top-btn');
+    if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'back-to-top-btn';
+        btn.className = 'back-to-top';
+        btn.innerHTML = '<i data-lucide="arrow-up"></i>';
+        btn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+        btn.setAttribute('aria-label', 'Voltar ao topo');
+        document.body.appendChild(btn);
+        refreshIcons(btn);
+    }
+
+    // Show/hide based on scroll position
+    const toggleVisibility = () => {
+        btn.classList.toggle('visible', window.scrollY > 500);
+    };
+
+    window.addEventListener('scroll', toggleVisibility, { passive: true });
+    toggleVisibility();
+}
+
+// Initialize back to top on load
+document.addEventListener('DOMContentLoaded', setupBackToTop);
 
 /**
  * Setup dos filtros de estatísticas por artista
@@ -5663,16 +5829,14 @@ function renderCards() {
 
     // Show empty state if no cards match filters
     if (filteredCards.length === 0 && allCards.length > 0) {
-        cardsGridEl.innerHTML = `
-            <div class="empty-state centered" style="grid-column: 1/-1;">
-                <i data-lucide="search-x" class="empty-icon"></i>
-                <h3>Nenhuma carta encontrada</h3>
-                <p>Tente ajustar os filtros ou buscar por outro termo.</p>
-                <button class="btn secondary" onclick="clearAllFilters()" style="margin-top: 1rem;">
-                    <i data-lucide="x"></i> Limpar filtros
-                </button>
-            </div>
-        `;
+        cardsGridEl.innerHTML = createEmptyState({
+            icon: 'search-x',
+            title: 'Nenhuma carta encontrada',
+            description: 'Tente ajustar os filtros ou buscar por outro termo.',
+            actions: [
+                { label: 'Limpar filtros', onclick: 'clearAllFilters()', icon: 'x', primary: false }
+            ]
+        });
         refreshIcons(cardsGridEl);
         return;
     }
@@ -7918,27 +8082,24 @@ function renderCollection() {
 
     if (collectionCards.length === 0) {
         if (hasFilters) {
-            gridEl.innerHTML = `
-                <div class="empty-state centered">
-                    <i data-lucide="filter-x" class="empty-icon"></i>
-                    <h3>Nenhuma carta encontrada</h3>
-                    <p>Nenhuma carta corresponde aos filtros selecionados.</p>
-                    <button class="btn secondary" onclick="clearCollectionFilters()" style="margin-top: 1rem;">
-                        <i data-lucide="x"></i> Limpar filtros
-                    </button>
-                </div>
-            `;
+            gridEl.innerHTML = createEmptyState({
+                icon: 'filter-x',
+                title: 'Nenhuma carta encontrada',
+                description: 'Nenhuma carta corresponde aos filtros selecionados.',
+                actions: [
+                    { label: 'Limpar filtros', onclick: 'clearCollectionFilters()', icon: 'x' }
+                ]
+            });
         } else {
-            gridEl.innerHTML = `
-                <div class="empty-state centered">
-                    <i data-lucide="library" class="empty-icon"></i>
-                    <h3>Sua coleção está vazia</h3>
-                    <p>Adicione cartas para começar a montar sua coleção!</p>
-                    <button class="btn primary" onclick="openAddCardsModal()" style="margin-top: 1rem;">
-                        <i data-lucide="plus"></i> Adicionar Cartas
-                    </button>
-                </div>
-            `;
+            gridEl.innerHTML = createEmptyState({
+                icon: 'sparkles',
+                title: 'Comece sua coleção!',
+                description: 'Adicione suas primeiras cartas e acompanhe o progresso da sua coleção de Sorcery.',
+                actions: [
+                    { label: 'Adicionar Cartas', onclick: 'openAddCardsModal()', icon: 'plus', primary: true },
+                    { label: 'Adicionar Precon', onclick: 'openPreconModal()', icon: 'package' }
+                ]
+            });
         }
         refreshIcons(gridEl);
         return;
@@ -8505,13 +8666,15 @@ function renderUserDecks() {
     loadUserDecks();
 
     if (decks.length === 0) {
-        decksListEl.innerHTML = `
-            <div class="empty-state centered">
-                <i data-lucide="layers" class="empty-icon"></i>
-                <h3>Nenhum deck ainda</h3>
-                <p>Crie seu primeiro deck para começar!</p>
-            </div>
-        `;
+        decksListEl.innerHTML = createEmptyState({
+            icon: 'wand-2',
+            title: 'Crie seu primeiro deck!',
+            description: 'Monte decks personalizados, acompanhe quais cartas você possui e compartilhe com a comunidade.',
+            actions: [
+                { label: 'Novo Deck', onclick: 'openNewDeckModal()', icon: 'plus', primary: true },
+                { label: 'Importar Deck', onclick: 'openImportDeckModal()', icon: 'download' }
+            ]
+        });
         refreshIcons();
         return;
     }
@@ -9809,7 +9972,7 @@ function copyDeckList(deck) {
 
     const text = [
         `${deck.name}`,
-        `by ${deck.author || deck.player || 'Unknown'}`,
+        `por ${deck.author || deck.player || 'Desconhecido'}`,
         '',
         `== AVATAR (1) ==`,
         `1x ${avatar}`,

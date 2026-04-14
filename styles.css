@@ -3170,6 +3170,139 @@ h5 {
     gap: 0.5rem;
 }
 
+/* ========================================
+   ALPHABETICAL NAVIGATION
+======================================== */
+.alpha-nav-container {
+    display: flex;
+    gap: 1rem;
+    position: relative;
+}
+
+.alpha-nav {
+    position: sticky;
+    top: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.5rem 0.25rem;
+    background: var(--card-bg);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    height: fit-content;
+    z-index: 10;
+}
+
+.alpha-nav-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.alpha-nav-btn:hover {
+    background: var(--bg-surface-2);
+    color: var(--text-color);
+}
+
+.alpha-nav-btn.active {
+    background: var(--gold-accent);
+    color: var(--bg-primary);
+}
+
+.alpha-nav-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.alpha-nav-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.alpha-section-header {
+    position: sticky;
+    top: 70px;
+    background: var(--bg-primary);
+    padding: 0.5rem 0;
+    margin-top: 1rem;
+    z-index: 5;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.alpha-section-header:first-child {
+    margin-top: 0;
+}
+
+.alpha-section-letter {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gold-accent);
+}
+
+/* Back to top button */
+.back-to-top {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background: var(--gold-accent);
+    color: var(--bg-primary);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    z-index: 100;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+@media (max-width: 768px) {
+    .alpha-nav {
+        position: fixed;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 0.25rem;
+        gap: 1px;
+    }
+
+    .alpha-nav-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+
+    .alpha-nav-container {
+        flex-direction: column;
+    }
+}
+
 .artist-progress-card {
     background: var(--bg-card);
     border-radius: 12px;
@@ -18894,6 +19027,137 @@ button:disabled .spin,
     width: 40px;
     height: 40px;
     border-radius: 50%;
+}
+
+/* ========================================
+   SKELETON CARDS GRID
+======================================== */
+.skeleton-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.skeleton-card-item {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.skeleton-card-image {
+    aspect-ratio: 488/680;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.03) 0%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.03) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-card-info {
+    padding: 0.75rem;
+}
+
+.skeleton-card-title {
+    height: 14px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.05) 0%,
+        rgba(255,255,255,0.1) 50%,
+        rgba(255,255,255,0.05) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    width: 80%;
+}
+
+.skeleton-card-subtitle {
+    height: 10px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.03) 0%,
+        rgba(255,255,255,0.06) 50%,
+        rgba(255,255,255,0.03) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .skeleton-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+}
+
+/* ========================================
+   ENHANCED EMPTY STATES
+======================================== */
+.empty-state-enhanced {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1.5rem;
+    opacity: 0.6;
+    color: var(--gold-accent);
+}
+
+.empty-state-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke-width: 1;
+}
+
+.empty-state-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+
+.empty-state-description {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.empty-state-cta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.empty-state-enhanced.compact {
+    padding: 2rem 1rem;
+}
+
+.empty-state-enhanced.compact .empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+}
+
+.empty-state-enhanced.compact .empty-state-title {
+    font-size: 1.2rem;
+}
+
+.empty-state-enhanced.compact .empty-state-description {
+    font-size: 0.9rem;
 }
 
 /* Pulse animation */

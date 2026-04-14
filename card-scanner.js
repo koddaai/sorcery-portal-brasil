@@ -484,8 +484,13 @@ const scannerUI = {
 
     // Setup event listeners
     setupListeners() {
-        // Scanner button
+        // Scanner button (main nav - if exists)
         document.getElementById('scanner-btn')?.addEventListener('click', () => {
+            this.open();
+        });
+
+        // Scanner button in menu dropdown
+        document.getElementById('scanner-menu-btn')?.addEventListener('click', () => {
             this.open();
         });
 

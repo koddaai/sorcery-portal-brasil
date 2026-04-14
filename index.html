@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=89">
+    <link rel="stylesheet" href="styles.css?v=91">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -144,22 +144,22 @@
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
                         </button>
                         <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Ferramentas">
+                            <button class="nav-dropdown-item" data-view="stats" role="menuitem">
+                                <i data-lucide="bar-chart-3"></i> Estatísticas
+                            </button>
+                            <button class="nav-dropdown-item" data-view="artist-stats" role="menuitem">
+                                <i data-lucide="palette"></i> Por Artista
+                            </button>
                             <button class="nav-dropdown-item" data-view="wishlist" role="menuitem">
                                 <i data-lucide="heart"></i> Wishlist
                             </button>
                             <button class="nav-dropdown-item" data-view="trade" role="menuitem">
                                 <i data-lucide="repeat"></i> Trocas
                             </button>
-                            <button class="nav-dropdown-item" data-view="stats" role="menuitem">
-                                <i data-lucide="bar-chart-3"></i> Estatísticas
-                            </button>
-                            <button class="nav-dropdown-item" data-view="artist-stats" role="menuitem">
-                                <i data-lucide="palette"></i> Coleção por Artista
-                            </button>
                         </div>
                     </div>
 
-                    <!-- Comunidade Dropdown (max 5 items) -->
+                    <!-- Comunidade Dropdown - Inclui Explorar -->
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Comunidade">
                             <i data-lucide="users"></i>
@@ -167,44 +167,21 @@
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
                         </button>
                         <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Comunidade">
+                            <button class="nav-dropdown-item" data-view="news" role="menuitem">
+                                <i data-lucide="newspaper"></i> Notícias
+                            </button>
+                            <button class="nav-dropdown-item" data-view="meta" role="menuitem">
+                                <i data-lucide="trophy"></i> Meta & Tier List
+                            </button>
                             <button class="nav-dropdown-item" data-view="forum" role="menuitem">
                                 <i data-lucide="message-square"></i> Fórum
                             </button>
                             <button class="nav-dropdown-item" data-view="community" role="menuitem">
-                                <i data-lucide="users"></i> Discord & Links
-                            </button>
-                            <button class="nav-dropdown-item" data-view="locator" role="menuitem">
-                                <i data-lucide="map-pin"></i> Lojas Brasil
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Explorar Dropdown (conteúdo e descoberta) -->
-                    <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Explorar">
-                            <i data-lucide="compass"></i>
-                            <span>Explorar</span>
-                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
-                        </button>
-                        <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Explorar">
-                            <button class="nav-dropdown-item" data-view="meta" role="menuitem">
-                                <i data-lucide="trophy"></i> Meta & Tier List
-                            </button>
-                            <button class="nav-dropdown-item" data-view="top-cards" role="menuitem">
-                                <i data-lucide="trending-up"></i> Top Cards
-                            </button>
-                            <button class="nav-dropdown-item" data-view="news" role="menuitem">
-                                <i data-lucide="newspaper"></i> Notícias
+                                <i data-lucide="users"></i> Discord & Lojas
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <!-- Scanner Button -->
-                <button id="scanner-btn" class="nav-btn scanner-btn">
-                    <i data-lucide="scan"></i>
-                    <span>Scanner</span>
-                </button>
             </nav>
         </header>
 
@@ -242,15 +219,15 @@
                 <div class="hero-section">
                     <div class="hero-content">
                         <h1 class="hero-title">Sorcery: Contested Realm</h1>
-                        <p class="hero-subtitle" data-i18n="heroSubtitle">O jogo de cartas colecionáveis com arte pintada à mão por mestres da fantasia</p>
+                        <p class="hero-subtitle" data-i18n="heroSubtitle">TCG com arte tradicional pintada à mão</p>
                         <div class="hero-actions">
                             <button class="btn primary btn-lg" onclick="showView('cards')">
                                 <i data-lucide="layers"></i>
-                                <span data-i18n="exploreCards">Conheça as Cartas</span>
+                                <span data-i18n="exploreCards">Ver Cards</span>
                             </button>
                             <button class="btn btn-lg ghost" onclick="showView('rulebook')">
                                 <i data-lucide="book-open"></i>
-                                <span>Como Jogar</span>
+                                <span>Aprenda a Jogar</span>
                             </button>
                         </div>
                     </div>
@@ -379,7 +356,7 @@
                 <div class="filters">
                     <input type="text" id="search-input" placeholder="Buscar cards..." data-i18n-placeholder="searchCards" class="search-input" aria-label="Buscar cards">
                     <select id="set-filter" class="filter-select">
-                        <option value="">All Sets</option>
+                        <option value="">Todos os Sets</option>
                         <option value="Alpha">Alpha</option>
                         <option value="Beta">Beta</option>
                         <option value="Arthurian Legends">Arthurian Legends</option>
@@ -388,7 +365,7 @@
                         <option value="Promotional">Promotional</option>
                     </select>
                     <select id="type-filter" class="filter-select">
-                        <option value="">All Types</option>
+                        <option value="">Todos os Tipos</option>
                         <option value="Avatar">Avatar</option>
                         <option value="Minion">Minion</option>
                         <option value="Magic">Magic</option>
@@ -397,15 +374,15 @@
                         <option value="Site">Site</option>
                     </select>
                     <select id="element-filter" class="filter-select">
-                        <option value="">All Elements</option>
-                        <option value="Air">Air</option>
-                        <option value="Earth">Earth</option>
-                        <option value="Fire">Fire</option>
-                        <option value="Water">Water</option>
-                        <option value="None">Neutral</option>
+                        <option value="">Todos os Elementos</option>
+                        <option value="Air">Ar</option>
+                        <option value="Earth">Terra</option>
+                        <option value="Fire">Fogo</option>
+                        <option value="Water">Água</option>
+                        <option value="None">Neutro</option>
                     </select>
                     <select id="rarity-filter" class="filter-select">
-                        <option value="">All Rarities</option>
+                        <option value="">Todas as Raridades</option>
                         <option value="Ordinary">Ordinary</option>
                         <option value="Elite">Elite</option>
                         <option value="Exceptional">Exceptional</option>
@@ -526,10 +503,10 @@
                                 </select>
                                 <select id="collection-element-filter" class="filter-select">
                                     <option value="">Todos os Elementos</option>
-                                    <option value="Fire">Fire</option>
-                                    <option value="Water">Water</option>
-                                    <option value="Earth">Earth</option>
-                                    <option value="Air">Air</option>
+                                    <option value="Fire">Fogo</option>
+                                    <option value="Water">Água</option>
+                                    <option value="Earth">Terra</option>
+                                    <option value="Air">Ar</option>
                                 </select>
                                 <select id="collection-rarity-filter" class="filter-select">
                                     <option value="">Todas as Raridades</option>
@@ -619,17 +596,17 @@
                                 <button class="element-btn active" data-element="all" title="Todos">
                                     <i data-lucide="layers" class="all-elements-icon"></i>
                                 </button>
-                                <button class="element-btn" data-element="Fire" title="Fire">
-                                    <img src="assets/elements/fire.png" alt="Fire" class="element-icon-img">
+                                <button class="element-btn" data-element="Fire" title="Fogo">
+                                    <img src="assets/elements/fire.png" alt="Fogo" class="element-icon-img">
                                 </button>
-                                <button class="element-btn" data-element="Water" title="Water">
-                                    <img src="assets/elements/water.png" alt="Water" class="element-icon-img">
+                                <button class="element-btn" data-element="Water" title="Água">
+                                    <img src="assets/elements/water.png" alt="Água" class="element-icon-img">
                                 </button>
-                                <button class="element-btn" data-element="Earth" title="Earth">
-                                    <img src="assets/elements/earth.png" alt="Earth" class="element-icon-img">
+                                <button class="element-btn" data-element="Earth" title="Terra">
+                                    <img src="assets/elements/earth.png" alt="Terra" class="element-icon-img">
                                 </button>
-                                <button class="element-btn" data-element="Air" title="Air">
-                                    <img src="assets/elements/air.png" alt="Air" class="element-icon-img">
+                                <button class="element-btn" data-element="Air" title="Ar">
+                                    <img src="assets/elements/air.png" alt="Ar" class="element-icon-img">
                                 </button>
                             </div>
                         </div>
@@ -720,12 +697,12 @@
                 <div id="deck-builder-modal" class="modal hidden" role="dialog" aria-modal="true">
                     <div class="modal-content deck-builder">
                         <div class="modal-header">
-                            <input type="text" id="deck-name-input" placeholder="Deck Name" class="deck-name-input">
+                            <input type="text" id="deck-name-input" placeholder="Nome do Deck" class="deck-name-input">
                             <button class="close-modal" aria-label="Fechar modal">&times;</button>
                         </div>
                         <div class="deck-builder-container">
                             <div class="deck-cards-search">
-                                <input type="text" id="deck-card-search" placeholder="Search cards to add..." class="search-input" aria-label="Buscar cartas para adicionar ao deck">
+                                <input type="text" id="deck-card-search" placeholder="Buscar cards para adicionar..." class="search-input" aria-label="Buscar cartas para adicionar ao deck">
                                 <div id="deck-search-results" class="deck-search-results"></div>
                             </div>
                             <div class="deck-current">
@@ -1357,8 +1334,8 @@
                         </div>
                         <div class="discord-feature">
                             <i data-lucide="help-circle"></i>
-                            <h4>Tire Duvidas</h4>
-                            <p>Pergunte sobre regras e estrategias</p>
+                            <h4>Tire Dúvidas</h4>
+                            <p>Pergunte sobre regras e estratégias</p>
                         </div>
                     </div>
                 </div>
@@ -3633,79 +3610,6 @@
             </div>
         </div>
 
-        <!-- Card Scanner Modal -->
-        <div id="scanner-modal" class="modal hidden" role="dialog" aria-modal="true">
-            <div class="modal-content scanner-modal-content">
-                <button class="close-modal" aria-label="Fechar modal">&times;</button>
-                <h3>Card Scanner</h3>
-                <p class="subtitle">Point your camera at a card to scan it</p>
-
-                <div class="scanner-container">
-                    <!-- Camera View -->
-                    <div class="scanner-camera-section">
-                        <div id="scanner-video-container" class="scanner-video-container">
-                            <video id="scanner-video" autoplay playsinline></video>
-                            <canvas id="scanner-canvas" class="hidden"></canvas>
-                            <div id="scanner-overlay" class="scanner-overlay">
-                                <div class="scanner-frame"></div>
-                                <p>Position card name in the frame</p>
-                            </div>
-                        </div>
-
-                        <div class="scanner-controls">
-                            <button id="scanner-capture-btn" class="btn primary">
-                                <span>&#128247;</span> Capture
-                            </button>
-                            <button id="scanner-switch-camera-btn" class="btn" title="Switch camera">
-                                <span>&#128260;</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Results Section -->
-                    <div id="scanner-results" class="scanner-results hidden">
-                        <div class="scanner-captured-image">
-                            <img id="scanner-captured" alt="Captured image">
-                        </div>
-
-                        <div class="scanner-status">
-                            <div id="scanner-processing" class="scanner-processing hidden">
-                                <div class="scanner-spinner"></div>
-                                <span>Reading card name...</span>
-                            </div>
-                            <div id="scanner-detected-text" class="scanner-detected-text hidden">
-                                <label>Detected text:</label>
-                                <input type="text" id="scanner-text-input" placeholder="Card name">
-                                <button id="scanner-search-btn" class="btn primary">Search</button>
-                            </div>
-                        </div>
-
-                        <div id="scanner-matches" class="scanner-matches hidden">
-                            <h4>Matching Cards</h4>
-                            <div id="scanner-matches-list" class="scanner-matches-list">
-                                <!-- Card matches will appear here -->
-                            </div>
-                        </div>
-
-                        <div class="scanner-result-actions">
-                            <button id="scanner-retry-btn" class="btn">
-                                <span>&#128260;</span> Scan Again
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Manual Search Fallback -->
-                <div class="scanner-manual-section">
-                    <p class="scanner-manual-label">Or search manually:</p>
-                    <div class="scanner-manual-search">
-                        <input type="text" id="scanner-manual-input" placeholder="Type card name...">
-                        <button id="scanner-manual-search-btn" class="btn">Search</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Inbox Modal -->
         <div id="inbox-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content inbox-modal-content">
@@ -4029,7 +3933,6 @@
     <script src="smart-sync-service.js?v=1"></script>
     <script src="community-deck-service.js"></script>
     <script src="profile-service.js?v=3"></script>
-    <script src="card-scanner.js"></script>
     <script src="brazilian-stores.js"></script>
     <script src="i18n.js"></script>
     <script src="rulebook-pt.js"></script>
@@ -4053,7 +3956,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=111"></script>
+    <script src="app.js?v=113"></script>
     <script src="offline-manager.js?v=4"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
