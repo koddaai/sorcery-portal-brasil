@@ -3441,42 +3441,43 @@ h5 {
     opacity: 1;
 }
 
-/* Stat Card Icon Container */
+/* Stat Card Icon Container - positioned bottom-right to avoid title overlap */
 .stat-card-icon {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 44px;
-    height: 44px;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+    background: rgba(212, 175, 55, 0.08);
     color: var(--accent-gold);
+    opacity: 0.6;
     transition: all 0.3s ease;
 }
 
 .stat-card:hover .stat-card-icon {
-    background: rgba(212, 175, 55, 0.2);
-    transform: scale(1.05);
+    background: rgba(212, 175, 55, 0.15);
+    opacity: 1;
 }
 
 .stat-card-icon svg {
-    width: 22px;
-    height: 22px;
+    width: 16px;
+    height: 16px;
 }
 
 .stat-card.mini .stat-card-icon {
-    width: 36px;
-    height: 36px;
-    top: 0.75rem;
-    right: 0.75rem;
+    width: 28px;
+    height: 28px;
+    bottom: 0.5rem;
+    right: 0.5rem;
 }
 
 .stat-card.mini .stat-card-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
 }
 
 /* Stat value with glow */
