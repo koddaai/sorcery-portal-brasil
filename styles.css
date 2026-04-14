@@ -12538,6 +12538,7 @@ h5 {
     color: var(--accent-gold);
     flex-shrink: 0;
     border: 2px solid rgba(212,175,55,0.2);
+    overflow: hidden;
 }
 
 .artist-card-full .artist-details {
@@ -13034,6 +13035,16 @@ h5 {
     color: white;
     font-weight: 700;
     font-size: 1rem;
+    overflow: hidden;
+}
+
+/* Artist photos in avatar circles */
+.artist-avatar .artist-photo-img,
+.artist-photo .artist-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .artist-info h4 {

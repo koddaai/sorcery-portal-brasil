@@ -4018,10 +4018,14 @@ function renderArtGallery(artists, highlightCard = '') {
                 // Get sample cards (up to 3)
                 const sampleCards = artist.cards.slice(0, 3);
                 const initials = artist.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
+                const artistInfo = ARTIST_INFO[artist.name];
+                const photoHtml = artistInfo?.photo
+                    ? `<img src="${artistInfo.photo}" alt="${artist.name}" class="artist-photo-img">`
+                    : `<span>${initials}</span>`;
 
                 return `
                     <div class="artist-card-full" onclick="showArtistCards('${artist.name.replace(/'/g, "\\'")}')">
-                        <div class="artist-photo">${initials}</div>
+                        <div class="artist-photo">${photoHtml}</div>
                         <div class="artist-details">
                             <h4>${artist.name}</h4>
                             <span class="card-count">${artist.cardCount} ilustrações</span>
@@ -4032,7 +4036,6 @@ function renderArtGallery(artists, highlightCard = '') {
                                 ${artist.cards.length > 3 ? `<span class="sample-card-tag">+${artist.cards.length - 3}</span>` : ''}
                             </div>
                         </div>
-                        ${index < 3 ? `<span class="rank-badge rank-${index + 1}">#${index + 1}</span>` : ''}
                     </div>
                 `;
             }).join('')}
@@ -4448,16 +4451,21 @@ function renderArtistGrid(artists) {
 
     return `
         <div class="artists-grid">
-            ${artists.map((artist, index) => `
+            ${artists.map((artist) => {
+                const initials = artist.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+                const artistInfo = ARTIST_INFO[artist.name];
+                const avatarContent = artistInfo?.photo
+                    ? `<img src="${artistInfo.photo}" alt="${artist.name}" class="artist-photo-img">`
+                    : initials;
+                return `
                 <div class="artist-card" data-artist="${artist.name}">
-                    <div class="artist-avatar">${artist.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
+                    <div class="artist-avatar">${avatarContent}</div>
                     <div class="artist-info">
                         <h4>${artist.name}</h4>
                         <span class="card-count">${artist.cardCount} cards</span>
                     </div>
-                    ${index < 3 ? `<span class="rank-badge rank-${index + 1}">#${index + 1}</span>` : ''}
                 </div>
-            `).join('')}
+            `}).join('')}
         </div>
     `;
 }
