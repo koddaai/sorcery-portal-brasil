@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=83">
+    <link rel="stylesheet" href="styles.css?v=84">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -152,6 +152,9 @@
                             </button>
                             <button class="nav-dropdown-item" data-view="stats" role="menuitem">
                                 <i data-lucide="bar-chart-3"></i> Estatísticas
+                            </button>
+                            <button class="nav-dropdown-item" data-view="artist-stats" role="menuitem">
+                                <i data-lucide="palette"></i> Coleção por Artista
                             </button>
                         </div>
                     </div>
@@ -1087,6 +1090,72 @@
                         <!-- Achievements will be populated by JS -->
                     </div>
                 </div>
+                </div>
+            </section>
+
+            <!-- Artist Stats View -->
+            <section id="artist-stats-view" class="view">
+                <!-- Login prompt -->
+                <div id="artist-stats-login-prompt" class="login-prompt-section hidden">
+                    <div class="login-prompt-card">
+                        <div class="login-prompt-icon">
+                            <i data-lucide="palette"></i>
+                        </div>
+                        <h3>Coleção por Artista</h3>
+                        <p>Faça login para ver o progresso da sua coleção organizado por artista.</p>
+                        <div class="login-prompt-buttons">
+                            <button class="btn primary" onclick="openAuthModal('login')">
+                                <i data-lucide="log-in"></i> Entrar
+                            </button>
+                            <button class="btn secondary" onclick="openAuthModal('register')">
+                                <i data-lucide="user-plus"></i> Criar Conta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conteúdo principal -->
+                <div id="artist-stats-content" class="hidden">
+                    <h2>Coleção por Artista</h2>
+                    <p class="subtitle">Acompanhe seu progresso em completar a coleção de cada artista</p>
+
+                    <!-- Resumo geral -->
+                    <div class="stats-grid artist-stats-summary">
+                        <div class="stat-card">
+                            <h3>Artistas na Coleção</h3>
+                            <div class="stat-value" id="artist-stats-total">0</div>
+                            <div class="stat-label" id="artist-stats-total-label">de 0 artistas</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Artista Mais Completo</h3>
+                            <div class="stat-value" id="artist-stats-best">-</div>
+                            <div class="stat-label" id="artist-stats-best-pct">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Artistas Completos</h3>
+                            <div class="stat-value" id="artist-stats-complete">0</div>
+                            <div class="stat-label">100% completados</div>
+                        </div>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="artist-stats-filters">
+                        <select id="artist-stats-sort">
+                            <option value="completion-desc">Mais Completo</option>
+                            <option value="completion-asc">Menos Completo</option>
+                            <option value="owned-desc">Mais Cards</option>
+                            <option value="name-asc">Nome (A-Z)</option>
+                        </select>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="artist-stats-hide-zero">
+                            <span>Esconder artistas sem cards</span>
+                        </label>
+                    </div>
+
+                    <!-- Lista de artistas com progresso -->
+                    <div id="artist-stats-list" class="artist-stats-list">
+                        <!-- Gerado por JS -->
+                    </div>
                 </div>
             </section>
 
@@ -3943,7 +4012,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=106"></script>
+    <script src="app.js?v=107"></script>
     <script src="offline-manager.js?v=4"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

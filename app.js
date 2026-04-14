@@ -3304,6 +3304,7 @@ const VIEW_INFO = {
     'wishlist': { name: 'Wishlist', category: 'Ferramentas', categoryView: null },
     'trade': { name: 'Trocas', category: 'Ferramentas', categoryView: null },
     'stats': { name: 'Estatísticas', category: 'Ferramentas', categoryView: null },
+    'artist-stats': { name: 'Coleção por Artista', category: 'Ferramentas', categoryView: null },
     // Aprender
     'codex': { name: 'Codex', category: 'Aprender', categoryView: null },
     'rulebook': { name: 'Rulebook', category: 'Aprender', categoryView: null },
@@ -3403,6 +3404,7 @@ function switchView(viewName) {
     if (viewName === 'collection') renderCollection();
     if (viewName === 'wishlist') renderWishlist();
     if (viewName === 'stats') updateStatsWithPrices();
+    if (viewName === 'artist-stats') initArtistStatsView();
     if (viewName === 'decks') renderCommunityDecks();
     if (viewName === 'trade') renderTradeBinder();
     if (viewName === 'locator') initLocatorView();
@@ -4396,6 +4398,200 @@ function renderArtistGrid(artists) {
             `).join('')}
         </div>
     `;
+}
+
+// ============================================
+// Artist Stats View - Coleção por Artista
+// ============================================
+
+/**
+ * Inicializa a view de estatísticas por artista
+ */
+function initArtistStatsView() {
+    // Verifica login
+    const loginPrompt = document.getElementById('artist-stats-login-prompt');
+    const content = document.getElementById('artist-stats-content');
+
+    if (!checkUserLoggedIn()) {
+        loginPrompt?.classList.remove('hidden');
+        content?.classList.add('hidden');
+        return;
+    }
+
+    loginPrompt?.classList.add('hidden');
+    content?.classList.remove('hidden');
+
+    // Wait for cards to load
+    if (!allCards.length) {
+        const listEl = document.getElementById('artist-stats-list');
+        if (listEl) listEl.innerHTML = '<p class="empty-state">Carregando dados...</p>';
+        setTimeout(initArtistStatsView, 500);
+        return;
+    }
+
+    // Garante que dados de artistas estão carregados
+    if (artViewData.artists.length === 0) {
+        buildArtistData();
+    }
+
+    renderArtistStats();
+    setupArtistStatsFilters();
+}
+
+/**
+ * Calcula e renderiza estatísticas por artista
+ */
+function renderArtistStats() {
+    const listEl = document.getElementById('artist-stats-list');
+    if (!listEl) return;
+
+    // Calcular progresso por artista
+    const artistProgress = [];
+    let totalArtistsWithCards = 0;
+    let completeArtists = 0;
+
+    artViewData.artists.forEach(artist => {
+        const totalCards = artist.cardCount;
+        let ownedCards = 0;
+        const ownedList = [];
+        const missingList = [];
+
+        artist.cards.forEach(cardRef => {
+            const hasCard = collection.has(cardRef.name);
+            if (hasCard) {
+                ownedCards++;
+                ownedList.push(cardRef);
+            } else {
+                missingList.push(cardRef);
+            }
+        });
+
+        const completion = totalCards > 0 ? (ownedCards / totalCards) * 100 : 0;
+
+        if (ownedCards > 0) totalArtistsWithCards++;
+        if (completion === 100 && totalCards > 0) completeArtists++;
+
+        artistProgress.push({
+            name: artist.name,
+            totalCards,
+            ownedCards,
+            completion,
+            ownedList,
+            missingList
+        });
+    });
+
+    // Atualizar resumo
+    document.getElementById('artist-stats-total').textContent = totalArtistsWithCards;
+    document.getElementById('artist-stats-total-label').textContent =
+        `de ${artViewData.artists.length} artistas`;
+    document.getElementById('artist-stats-complete').textContent = completeArtists;
+
+    // Encontrar artista mais completo (mínimo 3 cards para ser relevante)
+    const best = artistProgress
+        .filter(a => a.totalCards >= 3 && a.ownedCards > 0)
+        .sort((a, b) => b.completion - a.completion || b.ownedCards - a.ownedCards)[0];
+
+    if (best) {
+        document.getElementById('artist-stats-best').textContent = best.name;
+        document.getElementById('artist-stats-best-pct').textContent =
+            `${best.completion.toFixed(0)}% (${best.ownedCards}/${best.totalCards})`;
+    } else {
+        document.getElementById('artist-stats-best').textContent = '-';
+        document.getElementById('artist-stats-best-pct').textContent = 'Sem dados';
+    }
+
+    // Aplicar ordenação e filtros
+    const sortBy = document.getElementById('artist-stats-sort')?.value || 'completion-desc';
+    const hideZero = document.getElementById('artist-stats-hide-zero')?.checked || false;
+
+    let filtered = hideZero
+        ? artistProgress.filter(a => a.ownedCards > 0)
+        : artistProgress;
+
+    switch (sortBy) {
+        case 'completion-desc':
+            filtered.sort((a, b) => b.completion - a.completion || b.ownedCards - a.ownedCards);
+            break;
+        case 'completion-asc':
+            filtered.sort((a, b) => a.completion - b.completion || a.ownedCards - b.ownedCards);
+            break;
+        case 'owned-desc':
+            filtered.sort((a, b) => b.ownedCards - a.ownedCards);
+            break;
+        case 'name-asc':
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+    }
+
+    // Renderizar lista
+    listEl.innerHTML = filtered.map(artist => `
+        <div class="artist-progress-card" data-artist="${escapeAttr(artist.name)}">
+            <div class="artist-progress-header" onclick="toggleArtistChecklist('${escapeAttr(artist.name)}')">
+                <div class="artist-progress-info">
+                    <span class="artist-name">${escapeHtml(artist.name)}</span>
+                    <span class="artist-count">${artist.ownedCards}/${artist.totalCards}</span>
+                </div>
+                <div class="artist-progress-bar-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill ${artist.completion === 100 ? 'complete' : ''}"
+                             style="width: ${artist.completion}%"></div>
+                    </div>
+                    <span class="progress-percent">${artist.completion.toFixed(0)}%</span>
+                </div>
+                <i data-lucide="chevron-down" class="expand-icon"></i>
+            </div>
+            <div class="artist-checklist hidden">
+                <div class="checklist-section owned">
+                    <h4><i data-lucide="check-circle"></i> Tenho (${artist.ownedCards})</h4>
+                    <div class="checklist-items">
+                        ${artist.ownedList.length > 0 ? artist.ownedList.map(c => `
+                            <span class="checklist-item owned" title="${escapeAttr(c.set)}" onclick="openCardModal('${escapeAttr(c.name)}'); event.stopPropagation();">
+                                <i data-lucide="check"></i> ${escapeHtml(c.name)}
+                            </span>
+                        `).join('') : '<span class="empty-checklist">Nenhum card</span>'}
+                    </div>
+                </div>
+                ${artist.missingList.length > 0 ? `
+                <div class="checklist-section missing">
+                    <h4><i data-lucide="x-circle"></i> Faltam (${artist.missingList.length})</h4>
+                    <div class="checklist-items">
+                        ${artist.missingList.map(c => `
+                            <span class="checklist-item missing" title="${escapeAttr(c.set)}" onclick="openCardModal('${escapeAttr(c.name)}'); event.stopPropagation();">
+                                <i data-lucide="x"></i> ${escapeHtml(c.name)}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : '<p class="complete-message"><i data-lucide="trophy"></i> Coleção completa deste artista!</p>'}
+            </div>
+        </div>
+    `).join('');
+
+    // Reinicializar ícones Lucide
+    refreshIcons();
+}
+
+/**
+ * Toggle do checklist expandido
+ */
+function toggleArtistChecklist(artistName) {
+    const card = document.querySelector(`.artist-progress-card[data-artist="${CSS.escape(artistName)}"]`);
+    if (!card) return;
+
+    const checklist = card.querySelector('.artist-checklist');
+    const icon = card.querySelector('.expand-icon');
+
+    checklist?.classList.toggle('hidden');
+    icon?.classList.toggle('rotated');
+}
+
+/**
+ * Setup dos filtros de estatísticas por artista
+ */
+function setupArtistStatsFilters() {
+    document.getElementById('artist-stats-sort')?.addEventListener('change', renderArtistStats);
+    document.getElementById('artist-stats-hide-zero')?.addEventListener('change', renderArtistStats);
 }
 
 // Initialize Timeline View

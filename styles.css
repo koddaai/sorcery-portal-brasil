@@ -3054,6 +3054,276 @@ h5 {
     color: var(--text-secondary);
 }
 
+/* ============================================
+   Artist Stats View - Coleção por Artista
+   ============================================ */
+
+.artist-stats-filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.artist-stats-filters select {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.artist-stats-filters .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.artist-stats-filters .checkbox-label input {
+    cursor: pointer;
+}
+
+.artist-stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.artist-progress-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+
+.artist-progress-card:hover {
+    border-color: var(--accent-gold-dim);
+}
+
+.artist-progress-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.artist-progress-header:hover {
+    background: var(--bg-surface-2);
+}
+
+.artist-progress-info {
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.artist-progress-info .artist-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.artist-progress-info .artist-count {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.artist-progress-bar-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.artist-progress-bar-container .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-surface-3);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.artist-progress-bar-container .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-gold), #d4a45a);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.artist-progress-bar-container .progress-fill.complete {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.progress-percent {
+    min-width: 45px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.expand-icon {
+    transition: transform 0.2s;
+    color: var(--text-secondary);
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.expand-icon.rotated {
+    transform: rotate(180deg);
+}
+
+/* Checklist */
+.artist-checklist {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-surface-2);
+}
+
+.checklist-section {
+    margin-bottom: 1rem;
+}
+
+.checklist-section:last-child {
+    margin-bottom: 0;
+}
+
+.checklist-section h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.checklist-section h4 svg {
+    width: 16px;
+    height: 16px;
+}
+
+.checklist-section.owned h4 {
+    color: #22c55e;
+}
+
+.checklist-section.missing h4 {
+    color: #ef4444;
+}
+
+.checklist-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.checklist-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.checklist-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.checklist-item.owned {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.checklist-item.missing {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.checklist-item svg {
+    width: 14px;
+    height: 14px;
+}
+
+.empty-checklist {
+    color: var(--text-tertiary);
+    font-style: italic;
+    font-size: 0.85rem;
+}
+
+.complete-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #22c55e;
+    font-style: italic;
+    padding: 0.75rem 0;
+}
+
+.complete-message svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Artist stats summary cards */
+.artist-stats-summary .stat-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.artist-stats-summary .stat-value {
+    font-size: 1.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .artist-progress-header {
+        flex-wrap: wrap;
+    }
+
+    .artist-progress-info {
+        min-width: 100%;
+        margin-bottom: 0.5rem;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .artist-progress-bar-container {
+        width: 100%;
+        flex: none;
+    }
+
+    .expand-icon {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+    }
+
+    .artist-stats-filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .artist-stats-filters select {
+        width: 100%;
+    }
+}
+
 /* Modal - Modern with sophisticated animations */
 .modal {
     position: fixed;
