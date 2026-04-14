@@ -3969,11 +3969,18 @@ function initAlternateArtTab() {
         buildArtistData();
     }
 
+    // Build a map of lowercase to original card names
+    const cardNameMap = new Map();
+    allCards.forEach(card => {
+        cardNameMap.set(card.name.toLowerCase(), card.name);
+    });
+
     // Find cards with multiple artists
     const multiArtistCards = [];
-    artViewData.cardToArtist.forEach((artists, cardName) => {
+    artViewData.cardToArtist.forEach((artists, cardNameLower) => {
         if (artists.length > 1) {
-            multiArtistCards.push({ name: cardName, artists: artists });
+            const originalName = cardNameMap.get(cardNameLower) || cardNameLower;
+            multiArtistCards.push({ name: originalName, artists: artists });
         }
     });
 
