@@ -3366,7 +3366,8 @@ const VIEW_INFO = {
     'wishlist': { name: 'Wishlist', category: 'Ferramentas', categoryView: null },
     'trade': { name: 'Trocas', category: 'Ferramentas', categoryView: null },
     'stats': { name: 'Estatísticas', category: 'Ferramentas', categoryView: null },
-    'artist-stats': { name: 'Coleção por Artista', category: 'Ferramentas', categoryView: null },
+    // 'artist-stats' foi movido para abas dentro de 'art' - redireciona automaticamente
+    'artist-stats': { name: 'Coleção por Artista', category: null, redirectTo: 'art', redirectTab: 'collection' },
     // Aprender
     'codex': { name: 'Codex', category: 'Aprender', categoryView: null },
     'rulebook': { name: 'Rulebook', category: 'Aprender', categoryView: null },
@@ -3858,26 +3859,236 @@ let artViewData = {
 
 // Initialize Unified Art View
 function initArtView() {
-    const container = document.getElementById('art-gallery-content');
+    const container = document.getElementById('art-view');
     if (!container) return;
 
     // Wait for cards to load
     if (!allCards.length) {
-        container.innerHTML = '<p class="empty-state">Carregando artistas...</p>';
+        const galleryContent = document.getElementById('art-gallery-content');
+        if (galleryContent) galleryContent.innerHTML = '<p class="empty-state">Carregando artistas...</p>';
         setTimeout(initArtView, 500);
         return;
     }
 
     // Build artist data with cards mapping
-    buildArtistData();
+    if (artViewData.artists.length === 0) {
+        buildArtistData();
+    }
 
-    // Render initial grid
-    renderArtGallery(artViewData.artists);
-
-    // Setup search filters
-    setupArtSearchFilters();
+    // Initialize the active tab (default: gallery)
+    const activeTab = document.querySelector('.art-tab.active');
+    const tabName = activeTab?.dataset.tab || 'gallery';
+    switchArtTab(tabName);
 
     refreshIcons();
+}
+
+// ============================================
+// ART VIEW TABS
+// ============================================
+
+/**
+ * Switch between art view tabs
+ */
+function switchArtTab(tabName) {
+    // Toggle tab buttons
+    document.querySelectorAll('.art-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.tab === tabName);
+    });
+
+    // Toggle tab content
+    document.querySelectorAll('.art-tab-content').forEach(content => {
+        const isActive = content.id === `art-tab-${tabName}`;
+        content.classList.toggle('active', isActive);
+        content.classList.toggle('hidden', !isActive);
+    });
+
+    // Initialize tab-specific content
+    switch (tabName) {
+        case 'gallery':
+            initArtGalleryTab();
+            break;
+        case 'collection':
+            initArtCollectionTab();
+            break;
+        case 'alternate':
+            initAlternateArtTab();
+            break;
+        case 'curios':
+            initCuriosTab();
+            break;
+    }
+
+    refreshIcons();
+}
+window.switchArtTab = switchArtTab;
+
+/**
+ * Initialize Gallery tab
+ */
+function initArtGalleryTab() {
+    if (artViewData.artists.length === 0) {
+        buildArtistData();
+    }
+    renderArtGallery(artViewData.artists);
+    setupArtSearchFilters();
+}
+
+/**
+ * Initialize Collection by Artist tab
+ */
+function initArtCollectionTab() {
+    const loginPrompt = document.getElementById('art-collection-login-prompt');
+    const content = document.getElementById('art-collection-content');
+
+    if (!checkUserLoggedIn()) {
+        loginPrompt?.classList.remove('hidden');
+        content?.classList.add('hidden');
+        refreshIcons();
+        return;
+    }
+
+    loginPrompt?.classList.add('hidden');
+    content?.classList.remove('hidden');
+
+    if (artViewData.artists.length === 0) {
+        buildArtistData();
+    }
+    renderArtistStats();
+    setupArtistStatsFilters();
+}
+
+/**
+ * Initialize Alternate Art tab
+ */
+function initAlternateArtTab() {
+    const container = document.getElementById('alternate-art-content');
+    if (!container) return;
+
+    if (artViewData.cardToArtist.size === 0) {
+        buildArtistData();
+    }
+
+    // Find cards with multiple artists
+    const multiArtistCards = [];
+    artViewData.cardToArtist.forEach((artists, cardName) => {
+        if (artists.length > 1) {
+            multiArtistCards.push({ name: cardName, artists: artists });
+        }
+    });
+
+    // Sort by number of artists (desc) then name (asc)
+    multiArtistCards.sort((a, b) =>
+        b.artists.length - a.artists.length || a.name.localeCompare(b.name)
+    );
+
+    container.innerHTML = `
+        <div class="alternate-art-intro">
+            <p>Estes cards possuem ilustrações de diferentes artistas, oferecendo variações visuais únicas para sua coleção.</p>
+            <div class="alternate-stats">
+                <span class="stat-highlight">${multiArtistCards.length}</span> cards com arte alternativa
+            </div>
+        </div>
+
+        <div class="alternate-art-grid">
+            ${multiArtistCards.map(card => `
+                <div class="alternate-art-card" onclick="openCardModal('${card.name.replace(/'/g, "\\'")}')">
+                    <h4>${capitalizeCardName(card.name)}</h4>
+                    <div class="alternate-art-artists">
+                        ${card.artists.map(artist => `
+                            <span class="artist-chip" onclick="event.stopPropagation(); showArtistCards('${artist.replace(/'/g, "\\'")}')">
+                                <i data-lucide="palette" style="width:14px;height:14px"></i>
+                                ${artist}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+
+    refreshIcons();
+}
+
+/**
+ * Initialize Curios tab
+ */
+function initCuriosTab() {
+    const container = document.getElementById('curios-content');
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="curios-intro">
+            <h3><i data-lucide="sparkles"></i> O Que São Curios?</h3>
+            <p>
+                Curios são cartas <strong>extremamente raras</strong> encontradas em boosters de Sorcery.
+                São "cartas mistério" que celebram a história da criação do jogo, incluindo artes alternativas,
+                sketches, erros intencionais de impressão e variantes únicas.
+            </p>
+            <p>
+                A Erik's Curiosa não publica lista oficial de Curios, preferindo que a comunidade
+                descubra e catalogue essas raridades, evocando a era dourada dos TCGs nos anos 90.
+            </p>
+            <div class="curios-stats">
+                <div class="curio-stat">
+                    <div class="curio-stat-value">~1:50</div>
+                    <div class="curio-stat-label">boxes (estimado)</div>
+                </div>
+                <div class="curio-stat">
+                    <div class="curio-stat-value">$2k-$5k</div>
+                    <div class="curio-stat-label">valor médio</div>
+                </div>
+                <div class="curio-stat">
+                    <div class="curio-stat-value">???</div>
+                    <div class="curio-stat-label">total descobertos</div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="curios-types-header">Tipos de Curios Conhecidos</h3>
+        <div class="curios-types">
+            <div class="curio-type-card">
+                <h4><i data-lucide="pencil"></i> Sketches</h4>
+                <p>Versões não coloridas de cards, mostrando o processo criativo. Ex: Avatar of Earth sketch do Alpha.</p>
+            </div>
+            <div class="curio-type-card">
+                <h4><i data-lucide="image"></i> Arte Alternativa</h4>
+                <p>Cards com ilustrações diferentes das versões padrão, às vezes de sets anteriores.</p>
+            </div>
+            <div class="curio-type-card">
+                <h4><i data-lucide="flip-horizontal"></i> Impressão Invertida</h4>
+                <p>Artes impressas em espelho, criando um efeito visual único e colecionável.</p>
+            </div>
+            <div class="curio-type-card">
+                <h4><i data-lucide="type"></i> Texto Alterado</h4>
+                <p>Cards com texto diferente do padrão. Ex: "Duplicious means" em vez de "Duplicious Skills".</p>
+            </div>
+            <div class="curio-type-card">
+                <h4><i data-lucide="sparkles"></i> Foil Especial</h4>
+                <p>Versões foil com características únicas, como arte Alpha com verso Spellbook Beta.</p>
+            </div>
+            <div class="curio-type-card">
+                <h4><i data-lucide="help-circle"></i> Mistério</h4>
+                <p>Curios ainda não catalogados pela comunidade. A descoberta faz parte da experiência!</p>
+            </div>
+        </div>
+
+        <a href="https://www.collectorarthouse.com/curio-cards" target="_blank" rel="noopener noreferrer" class="curios-external-link">
+            <i data-lucide="external-link"></i>
+            Ver Catálogo Completo no Collector Arthouse
+        </a>
+    `;
+
+    refreshIcons();
+}
+
+/**
+ * Capitalize card name (helper function)
+ */
+function capitalizeCardName(str) {
+    return str.split(' ').map(word =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
 }
 
 // Build artist data from cards
@@ -4476,36 +4687,12 @@ function renderArtistGrid(artists) {
 
 /**
  * Inicializa a view de estatísticas por artista
+ * DEPRECATED: Redireciona para aba "Coleção por Artista" na art-view
  */
 function initArtistStatsView() {
-    // Verifica login
-    const loginPrompt = document.getElementById('artist-stats-login-prompt');
-    const content = document.getElementById('artist-stats-content');
-
-    if (!checkUserLoggedIn()) {
-        loginPrompt?.classList.remove('hidden');
-        content?.classList.add('hidden');
-        return;
-    }
-
-    loginPrompt?.classList.add('hidden');
-    content?.classList.remove('hidden');
-
-    // Wait for cards to load
-    if (!allCards.length) {
-        const listEl = document.getElementById('artist-stats-list');
-        if (listEl) listEl.innerHTML = '<p class="empty-state">Carregando dados...</p>';
-        setTimeout(initArtistStatsView, 500);
-        return;
-    }
-
-    // Garante que dados de artistas estão carregados
-    if (artViewData.artists.length === 0) {
-        buildArtistData();
-    }
-
-    renderArtistStats();
-    setupArtistStatsFilters();
+    // Redireciona para art view com aba collection ativa
+    showView('art');
+    setTimeout(() => switchArtTab('collection'), 100);
 }
 
 /**

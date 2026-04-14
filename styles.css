@@ -12443,6 +12443,270 @@ h5 {
     margin: 0 auto;
 }
 
+/* ========================================
+   ART VIEW TABS
+======================================== */
+
+.art-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.375rem;
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+}
+
+.art-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--duration-fast);
+    white-space: nowrap;
+}
+
+.art-tab:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+}
+
+.art-tab.active {
+    background: var(--bg-surface-3);
+    color: var(--accent-gold);
+}
+
+.art-tab-content {
+    display: none;
+}
+
+.art-tab-content.active {
+    display: block;
+}
+
+/* Mobile: abas em scroll horizontal */
+@media (max-width: 768px) {
+    .art-tabs {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .art-tab {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* ========================================
+   ALTERNATE ART CARDS
+======================================== */
+
+.alternate-art-intro {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+.alternate-art-intro p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-3);
+}
+
+.alternate-stats {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+}
+
+.alternate-stats .stat-highlight {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-right: 0.5rem;
+}
+
+.alternate-art-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-4);
+}
+
+.alternate-art-card {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.alternate-art-card:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.alternate-art-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.125rem;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-2);
+}
+
+.alternate-art-artists {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.artist-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: var(--bg-surface-3);
+    border-radius: var(--radius-full);
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.artist-chip:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--accent-gold);
+}
+
+/* ========================================
+   CURIOS SECTION
+======================================== */
+
+.curios-intro {
+    background: linear-gradient(135deg, var(--bg-surface-2), rgba(212, 175, 55, 0.05));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+}
+
+.curios-intro h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-3);
+}
+
+.curios-intro p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+}
+
+.curios-intro p strong {
+    color: var(--accent-gold);
+}
+
+.curios-stats {
+    display: flex;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-color);
+}
+
+.curio-stat {
+    text-align: center;
+}
+
+.curio-stat-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+.curio-stat-label {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+}
+
+.curios-types-header {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-4);
+}
+
+.curios-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+.curio-type-card {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: var(--space-4);
+    transition: all var(--duration-fast);
+}
+
+.curio-type-card:hover {
+    border-color: rgba(212, 175, 55, 0.2);
+}
+
+.curio-type-card h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.curio-type-card h4 i {
+    color: var(--accent-gold);
+}
+
+.curio-type-card p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.curios-external-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--bg-surface-3);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all var(--duration-fast);
+}
+
+.curios-external-link:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
 /* Art Gallery Section (Unified) */
 .art-gallery-section {
     margin-top: var(--space-6);

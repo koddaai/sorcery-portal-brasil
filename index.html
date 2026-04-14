@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=92">
+    <link rel="stylesheet" href="styles.css?v=93">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -146,9 +146,6 @@
                         <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Ferramentas">
                             <button class="nav-dropdown-item" data-view="stats" role="menuitem">
                                 <i data-lucide="bar-chart-3"></i> Estatísticas
-                            </button>
-                            <button class="nav-dropdown-item" data-view="artist-stats" role="menuitem">
-                                <i data-lucide="palette"></i> Por Artista
                             </button>
                             <button class="nav-dropdown-item" data-view="wishlist" role="menuitem">
                                 <i data-lucide="heart"></i> Wishlist
@@ -1067,113 +1064,6 @@
                         <!-- Achievements will be populated by JS -->
                     </div>
                 </div>
-                </div>
-            </section>
-
-            <!-- Artist Stats View -->
-            <section id="artist-stats-view" class="view">
-                <!-- Login prompt -->
-                <div id="artist-stats-login-prompt" class="login-prompt-section hidden">
-                    <div class="login-prompt-card">
-                        <div class="login-prompt-icon">
-                            <i data-lucide="palette"></i>
-                        </div>
-                        <h3>Coleção por Artista</h3>
-                        <p>Faça login para ver o progresso da sua coleção organizado por artista.</p>
-                        <div class="login-prompt-buttons">
-                            <button class="btn primary" onclick="openAuthModal('login')">
-                                <i data-lucide="log-in"></i> Entrar
-                            </button>
-                            <button class="btn secondary" onclick="openAuthModal('register')">
-                                <i data-lucide="user-plus"></i> Criar Conta
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Conteúdo principal -->
-                <div id="artist-stats-content" class="hidden">
-                    <h2>Coleção por Artista</h2>
-                    <p class="subtitle">Progresso da sua coleção organizado por ilustrador</p>
-
-                    <!-- Resumo geral - Row 1 -->
-                    <div class="stats-grid artist-stats-summary">
-                        <div class="stat-card">
-                            <div class="stat-card-icon"><i data-lucide="palette"></i></div>
-                            <h3>Artistas</h3>
-                            <div class="stat-value" id="artist-stats-total">0</div>
-                            <div class="stat-label" id="artist-stats-total-label">de 0 no total</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-icon"><i data-lucide="trophy"></i></div>
-                            <h3>Destaque</h3>
-                            <div class="stat-value artist-name-value" id="artist-stats-best">-</div>
-                            <div class="stat-label" id="artist-stats-best-pct">0%</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-icon"><i data-lucide="check-circle"></i></div>
-                            <h3>Completos</h3>
-                            <div class="stat-value" id="artist-stats-complete">0</div>
-                            <div class="stat-label">coleções 100%</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-icon"><i data-lucide="target"></i></div>
-                            <h3>Quase Lá</h3>
-                            <div class="stat-value" id="artist-stats-almost">0</div>
-                            <div class="stat-label">acima de 80%</div>
-                        </div>
-                    </div>
-
-                    <!-- Resumo geral - Row 2 -->
-                    <div class="stats-grid artist-stats-summary secondary-stats">
-                        <div class="stat-card mini">
-                            <div class="stat-card-icon"><i data-lucide="image"></i></div>
-                            <h3>Ilustrações</h3>
-                            <div class="stat-value" id="artist-stats-cards-owned">0</div>
-                            <div class="stat-label" id="artist-stats-cards-total">de 0 no total</div>
-                        </div>
-                        <div class="stat-card mini">
-                            <div class="stat-card-icon"><i data-lucide="trending-up"></i></div>
-                            <h3>Média Geral</h3>
-                            <div class="stat-value" id="artist-stats-avg-completion">0%</div>
-                            <div class="stat-label">por artista</div>
-                        </div>
-                        <div class="stat-card mini">
-                            <div class="stat-card-icon"><i data-lucide="crown"></i></div>
-                            <h3>Maior Acervo</h3>
-                            <div class="stat-value artist-name-value" id="artist-stats-most-cards">-</div>
-                            <div class="stat-label" id="artist-stats-most-cards-count">0 cards</div>
-                        </div>
-                        <div class="stat-card mini">
-                            <div class="stat-card-icon"><i data-lucide="star"></i></div>
-                            <h3>Próximo 100%</h3>
-                            <div class="stat-value artist-name-value" id="artist-stats-next-complete">-</div>
-                            <div class="stat-label" id="artist-stats-next-complete-info">falta 0</div>
-                        </div>
-                    </div>
-
-                    <!-- Filtros -->
-                    <div class="artist-stats-filters">
-                        <div class="search-input-wrapper">
-                            <i data-lucide="search"></i>
-                            <input type="text" id="artist-stats-search" placeholder="Buscar artista..." autocomplete="off">
-                        </div>
-                        <select id="artist-stats-sort">
-                            <option value="completion-desc">Mais Completo</option>
-                            <option value="completion-asc">Menos Completo</option>
-                            <option value="owned-desc">Mais Cards</option>
-                            <option value="name-asc">Nome (A-Z)</option>
-                        </select>
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="artist-stats-hide-zero">
-                            <span>Esconder sem cards</span>
-                        </label>
-                    </div>
-
-                    <!-- Lista de artistas com progresso -->
-                    <div id="artist-stats-list" class="artist-stats-list">
-                        <!-- Gerado por JS -->
-                    </div>
                 </div>
             </section>
 
@@ -2595,33 +2485,170 @@
                     <p class="subtitle">Cada carta é uma obra-prima pintada à mão por mestres da fantasia</p>
                 </div>
 
-                <!-- Art Philosophy -->
-                <div class="art-philosophy">
-                    <div class="philosophy-content">
-                        <h3>Arte Tradicional, Visão Única</h3>
-                        <p>Sorcery: Contested Realm celebra a arte tradicional pintada à mão. Cada ilustração é criada usando técnicas clássicas — óleo, acrílico, aquarela, nanquim e lápis — por artistas que dominam seu ofício.</p>
-                        <p>O programa de arte do jogo reúne estilos diversos, do realismo meticuloso à abstração expressiva, unidos pelo compromisso de criar mundos que ressoam miticamente e emocionam profundamente.</p>
+                <!-- Art Tabs -->
+                <div class="art-tabs">
+                    <button class="art-tab active" data-tab="gallery" onclick="switchArtTab('gallery')">
+                        <i data-lucide="image"></i> Galeria de Artistas
+                    </button>
+                    <button class="art-tab" data-tab="collection" onclick="switchArtTab('collection')">
+                        <i data-lucide="bar-chart-3"></i> Coleção por Artista
+                    </button>
+                    <button class="art-tab" data-tab="alternate" onclick="switchArtTab('alternate')">
+                        <i data-lucide="copy"></i> Arte Alternativa
+                    </button>
+                    <button class="art-tab" data-tab="curios" onclick="switchArtTab('curios')">
+                        <i data-lucide="sparkles"></i> Curios
+                    </button>
+                </div>
+
+                <!-- Tab: Galeria de Artistas -->
+                <div id="art-tab-gallery" class="art-tab-content active">
+                    <!-- Art Philosophy -->
+                    <div class="art-philosophy">
+                        <div class="philosophy-content">
+                            <h3>Arte Tradicional, Visão Única</h3>
+                            <p>Sorcery: Contested Realm celebra a arte tradicional pintada à mão. Cada ilustração é criada usando técnicas clássicas — óleo, acrílico, aquarela, nanquim e lápis — por artistas que dominam seu ofício.</p>
+                            <p>O programa de arte do jogo reúne estilos diversos, do realismo meticuloso à abstração expressiva, unidos pelo compromisso de criar mundos que ressoam miticamente e emocionam profundamente.</p>
+                        </div>
+                    </div>
+
+                    <!-- Search Filters -->
+                    <div class="art-gallery-section">
+                        <h3>Galeria de Artistas</h3>
+                        <p class="section-desc">Explore os artistas que dão vida ao mundo de Sorcery. Busque por nome do artista ou nome da carta.</p>
+
+                        <div class="art-search-filters">
+                            <div class="search-box">
+                                <i data-lucide="user"></i>
+                                <input type="text" id="art-artist-search" placeholder="Buscar por artista..." aria-label="Buscar por artista">
+                            </div>
+                            <div class="search-box">
+                                <i data-lucide="image"></i>
+                                <input type="text" id="art-card-search" placeholder="Buscar por nome da carta..." aria-label="Buscar por nome da carta">
+                            </div>
+                        </div>
+
+                        <div id="art-gallery-content" class="artists-container">
+                            <!-- Will be populated by JS -->
+                        </div>
                     </div>
                 </div>
 
-                <!-- Search Filters -->
-                <div class="art-gallery-section">
-                    <h3>Galeria de Artistas</h3>
-                    <p class="section-desc">Explore os artistas que dão vida ao mundo de Sorcery. Busque por nome do artista ou nome da carta.</p>
-
-                    <div class="art-search-filters">
-                        <div class="search-box">
-                            <i data-lucide="user"></i>
-                            <input type="text" id="art-artist-search" placeholder="Buscar por artista..." aria-label="Buscar por artista">
-                        </div>
-                        <div class="search-box">
-                            <i data-lucide="image"></i>
-                            <input type="text" id="art-card-search" placeholder="Buscar por nome da carta..." aria-label="Buscar por nome da carta">
+                <!-- Tab: Coleção por Artista -->
+                <div id="art-tab-collection" class="art-tab-content hidden">
+                    <!-- Login prompt -->
+                    <div id="art-collection-login-prompt" class="login-prompt-section hidden">
+                        <div class="login-prompt-card">
+                            <div class="login-prompt-icon">
+                                <i data-lucide="palette"></i>
+                            </div>
+                            <h3>Coleção por Artista</h3>
+                            <p>Faça login para ver o progresso da sua coleção organizado por artista.</p>
+                            <div class="login-prompt-buttons">
+                                <button class="btn primary" onclick="openAuthModal('login')">
+                                    <i data-lucide="log-in"></i> Entrar
+                                </button>
+                                <button class="btn secondary" onclick="openAuthModal('register')">
+                                    <i data-lucide="user-plus"></i> Criar Conta
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="art-gallery-content" class="artists-container">
-                        <!-- Will be populated by JS -->
+                    <!-- Conteúdo principal -->
+                    <div id="art-collection-content" class="hidden">
+                        <!-- Resumo geral - Row 1 -->
+                        <div class="stats-grid artist-stats-summary">
+                            <div class="stat-card">
+                                <div class="stat-card-icon"><i data-lucide="palette"></i></div>
+                                <h3>Artistas</h3>
+                                <div class="stat-value" id="artist-stats-total">0</div>
+                                <div class="stat-label" id="artist-stats-total-label">de 0 no total</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-icon"><i data-lucide="trophy"></i></div>
+                                <h3>Destaque</h3>
+                                <div class="stat-value artist-name-value" id="artist-stats-best">-</div>
+                                <div class="stat-label" id="artist-stats-best-pct">0%</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-icon"><i data-lucide="check-circle"></i></div>
+                                <h3>Completos</h3>
+                                <div class="stat-value" id="artist-stats-complete">0</div>
+                                <div class="stat-label">coleções 100%</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-icon"><i data-lucide="target"></i></div>
+                                <h3>Quase Lá</h3>
+                                <div class="stat-value" id="artist-stats-almost">0</div>
+                                <div class="stat-label">acima de 80%</div>
+                            </div>
+                        </div>
+
+                        <!-- Resumo geral - Row 2 -->
+                        <div class="stats-grid artist-stats-summary secondary-stats">
+                            <div class="stat-card mini">
+                                <div class="stat-card-icon"><i data-lucide="image"></i></div>
+                                <h3>Ilustrações</h3>
+                                <div class="stat-value" id="artist-stats-cards-owned">0</div>
+                                <div class="stat-label" id="artist-stats-cards-total">de 0 no total</div>
+                            </div>
+                            <div class="stat-card mini">
+                                <div class="stat-card-icon"><i data-lucide="trending-up"></i></div>
+                                <h3>Média Geral</h3>
+                                <div class="stat-value" id="artist-stats-avg-completion">0%</div>
+                                <div class="stat-label">por artista</div>
+                            </div>
+                            <div class="stat-card mini">
+                                <div class="stat-card-icon"><i data-lucide="crown"></i></div>
+                                <h3>Maior Acervo</h3>
+                                <div class="stat-value artist-name-value" id="artist-stats-most-cards">-</div>
+                                <div class="stat-label" id="artist-stats-most-cards-count">0 cards</div>
+                            </div>
+                            <div class="stat-card mini">
+                                <div class="stat-card-icon"><i data-lucide="star"></i></div>
+                                <h3>Próximo 100%</h3>
+                                <div class="stat-value artist-name-value" id="artist-stats-next-complete">-</div>
+                                <div class="stat-label" id="artist-stats-next-complete-info">falta 0</div>
+                            </div>
+                        </div>
+
+                        <!-- Filtros -->
+                        <div class="artist-stats-filters">
+                            <div class="search-input-wrapper">
+                                <i data-lucide="search"></i>
+                                <input type="text" id="artist-stats-search" placeholder="Buscar artista..." autocomplete="off">
+                            </div>
+                            <select id="artist-stats-sort">
+                                <option value="completion-desc">Mais Completo</option>
+                                <option value="completion-asc">Menos Completo</option>
+                                <option value="owned-desc">Mais Cards</option>
+                                <option value="name-asc">Nome (A-Z)</option>
+                            </select>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="artist-stats-hide-zero">
+                                <span>Esconder sem cards</span>
+                            </label>
+                        </div>
+
+                        <!-- Lista de artistas com progresso -->
+                        <div id="artist-stats-list" class="artist-stats-list">
+                            <!-- Gerado por JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Arte Alternativa -->
+                <div id="art-tab-alternate" class="art-tab-content hidden">
+                    <div id="alternate-art-content">
+                        <!-- Gerado por JS -->
+                    </div>
+                </div>
+
+                <!-- Tab: Curios -->
+                <div id="art-tab-curios" class="art-tab-content hidden">
+                    <div id="curios-content">
+                        <!-- Gerado por JS -->
                     </div>
                 </div>
             </section>
@@ -3956,7 +3983,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=115"></script>
+    <script src="app.js?v=116"></script>
     <script src="offline-manager.js?v=4"></script>
     <script>
         // Initialize Lucide icons after DOM is ready
