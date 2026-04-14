@@ -4529,22 +4529,22 @@ function renderArtistStats() {
     // Atualizar resumo - Row 1
     document.getElementById('artist-stats-total').textContent = totalArtistsWithCards;
     document.getElementById('artist-stats-total-label').textContent =
-        `de ${artViewData.artists.length} artistas`;
+        `de ${artViewData.artists.length} no total`;
     document.getElementById('artist-stats-complete').textContent = completeArtists;
     document.getElementById('artist-stats-almost').textContent = almostComplete;
 
     if (best) {
         document.getElementById('artist-stats-best').textContent = best.name;
         document.getElementById('artist-stats-best-pct').textContent =
-            `${best.completion.toFixed(0)}% (${best.ownedCards}/${best.totalCards})`;
+            `${best.completion.toFixed(0)}% · ${best.ownedCards}/${best.totalCards}`;
     } else {
         document.getElementById('artist-stats-best').textContent = '-';
-        document.getElementById('artist-stats-best-pct').textContent = 'Sem dados';
+        document.getElementById('artist-stats-best-pct').textContent = '-';
     }
 
     // Atualizar resumo - Row 2
     document.getElementById('artist-stats-cards-owned').textContent = totalCardsOwned;
-    document.getElementById('artist-stats-cards-total').textContent = `de ${totalCardsAll} ilustrações`;
+    document.getElementById('artist-stats-cards-total').textContent = `de ${totalCardsAll} no total`;
     document.getElementById('artist-stats-avg-completion').textContent = `${avgCompletion.toFixed(0)}%`;
 
     if (mostCards) {
