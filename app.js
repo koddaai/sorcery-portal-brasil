@@ -4575,8 +4575,18 @@ function renderArtistStats() {
 
     // Calcular estatísticas adicionais
     const almostComplete = artistProgress.filter(a => a.completion >= 80 && a.completion < 100).length;
-    const totalCardsOwned = artistProgress.reduce((sum, a) => sum + a.ownedCards, 0);
-    const totalCardsAll = artistProgress.reduce((sum, a) => sum + a.totalCards, 0);
+
+    // Contar cards únicos (evita duplicação quando mesmo card tem múltiplos artistas)
+    const uniqueCardsOwned = new Set();
+    const uniqueCardsAll = new Set();
+
+    artistProgress.forEach(a => {
+        a.ownedList.forEach(card => uniqueCardsOwned.add(card.name));
+        a.ownedList.concat(a.missingList).forEach(card => uniqueCardsAll.add(card.name));
+    });
+
+    const totalCardsOwned = uniqueCardsOwned.size;
+    const totalCardsAll = uniqueCardsAll.size;
     const avgCompletion = totalArtistsWithCards > 0
         ? artistProgress.filter(a => a.ownedCards > 0).reduce((sum, a) => sum + a.completion, 0) / totalArtistsWithCards
         : 0;
