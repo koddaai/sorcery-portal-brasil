@@ -3183,6 +3183,7 @@ function setupEventListeners() {
     document.getElementById('type-filter').addEventListener('change', applyFilters);
     document.getElementById('element-filter').addEventListener('change', applyFilters);
     document.getElementById('rarity-filter').addEventListener('change', applyFilters);
+    document.getElementById('sort-filter')?.addEventListener('change', applyFilters);
 
     // Initialize keyword filter
     initKeywordFilter();
@@ -6128,6 +6129,12 @@ function applyFilters() {
         return true;
     });
 
+    // Apply sorting
+    const sortFilter = document.getElementById('sort-filter');
+    const sortValue = sortFilter ? sortFilter.value : 'name-asc';
+
+    filteredCards = sortCards(filteredCards, sortValue);
+
     // Update results count with fuzzy indicator
     const resultsCountEl = document.getElementById('results-count');
     if (resultsCountEl) {
@@ -6139,6 +6146,65 @@ function applyFilters() {
     }
 
     renderCards();
+}
+
+/**
+ * Sort cards based on the selected sort option
+ */
+function sortCards(cards, sortOption) {
+    const rarityOrder = { 'Unique': 4, 'Elite': 3, 'Exceptional': 2, 'Ordinary': 1 };
+    const setOrder = { 'Alpha': 1, 'Beta': 2, 'Arthurian Legends': 3, 'Gothic': 4, 'Dragonlord': 5, 'Promotional': 6 };
+
+    return [...cards].sort((a, b) => {
+        switch (sortOption) {
+            case 'name-asc':
+                return a.name.localeCompare(b.name);
+            case 'name-desc':
+                return b.name.localeCompare(a.name);
+            case 'price-desc': {
+                const priceA = getCardPrice(a) || 0;
+                const priceB = getCardPrice(b) || 0;
+                return priceB - priceA;
+            }
+            case 'price-asc': {
+                const priceA = getCardPrice(a) || 0;
+                const priceB = getCardPrice(b) || 0;
+                return priceA - priceB;
+            }
+            case 'rarity-desc': {
+                const rarA = rarityOrder[a.guardian?.rarity] || 0;
+                const rarB = rarityOrder[b.guardian?.rarity] || 0;
+                if (rarB !== rarA) return rarB - rarA;
+                return a.name.localeCompare(b.name);
+            }
+            case 'rarity-asc': {
+                const rarA = rarityOrder[a.guardian?.rarity] || 0;
+                const rarB = rarityOrder[b.guardian?.rarity] || 0;
+                if (rarA !== rarB) return rarA - rarB;
+                return a.name.localeCompare(b.name);
+            }
+            case 'set-release': {
+                const setA = a.sets?.[0]?.name || '';
+                const setB = b.sets?.[0]?.name || '';
+                const orderA = setOrder[setA] || 99;
+                const orderB = setOrder[setB] || 99;
+                if (orderA !== orderB) return orderA - orderB;
+                return a.name.localeCompare(b.name);
+            }
+            default:
+                return a.name.localeCompare(b.name);
+        }
+    });
+}
+
+/**
+ * Get card price for sorting
+ */
+function getCardPrice(card) {
+    if (typeof priceService !== 'undefined') {
+        return priceService.getPrice(card.name, 'standard') || 0;
+    }
+    return 0;
 }
 
 // Initialize Keyword Filter
@@ -6407,9 +6473,15 @@ function createCardHTML(card) {
 
     const elementClass = (card.elements || 'None').toLowerCase().split(',')[0].trim();
 
+    // Get price for badge
+    const price = getCardPrice(card);
+    const priceDisplay = price > 0 ? `$${price.toFixed(2)}` : '';
+    const priceBadgeClass = price > 0 ? 'card-price-badge' : 'card-price-badge no-price hidden';
+
     return `
         <div class="card-item ${inCollection ? 'in-collection' : ''} ${inWishlist ? 'in-wishlist' : ''}"
              data-card-name="${escapedName}">
+            ${priceDisplay ? `<span class="${priceBadgeClass}">${priceDisplay}</span>` : ''}
             <img class="card-image"
                  src="${imageUrl}"
                  alt="${escapedName}"
@@ -8692,13 +8764,14 @@ function renderWishlist() {
     document.getElementById('wishlist-count').textContent = `${wishlist.size} cartas`;
 
     if (wishlistCards.length === 0) {
-        wishlistGridEl.innerHTML = `
-            <div class="empty-state centered">
-                <i data-lucide="heart" class="empty-icon"></i>
-                <h3>Lista vazia</h3>
-                <p>Adicione cartas que você deseja da aba Cards.</p>
-            </div>
-        `;
+        wishlistGridEl.innerHTML = createEmptyState({
+            icon: 'heart',
+            title: 'Sua Wishlist está vazia',
+            description: 'Explore o catálogo e adicione as cartas que você mais deseja! Clique no ícone de coração em qualquer carta para adicioná-la aqui.',
+            actions: [
+                { label: 'Explorar Catálogo', onclick: "showView('cards')", primary: true, icon: 'search' }
+            ]
+        });
         refreshIcons();
         return;
     }
@@ -11469,13 +11542,14 @@ function renderTradeOffering() {
     });
 
     if (tradeCards.length === 0) {
-        tradeGridEl.innerHTML = `
-            <div class="empty-state centered">
-                <i data-lucide="package" class="empty-icon"></i>
-                <h3>Nenhuma carta para troca</h3>
-                <p>Adicione cartas para troca da aba Cards clicando em "Trade".</p>
-            </div>
-        `;
+        tradeGridEl.innerHTML = createEmptyState({
+            icon: 'repeat',
+            title: 'Nenhuma carta para troca',
+            description: 'Para adicionar cartas que você oferece para troca: abra qualquer carta no catálogo e clique no botão "Adicionar para Troca" no modal.',
+            actions: [
+                { label: 'Ir ao Catálogo', onclick: "showView('cards')", primary: true, icon: 'layers' }
+            ]
+        });
         return;
     }
 
@@ -11503,13 +11577,15 @@ function renderTradeLookingFor() {
     });
 
     if (wantCards.length === 0) {
-        wantGridEl.innerHTML = `
-            <div class="empty-state centered">
-                <i data-lucide="search" class="empty-icon"></i>
-                <h3>Lista vazia</h3>
-                <p>Importe da wishlist ou adicione cartas que você procura.</p>
-            </div>
-        `;
+        wantGridEl.innerHTML = createEmptyState({
+            icon: 'search',
+            title: 'O que você procura?',
+            description: 'Adicione cartas que você está procurando para facilitar trocas com outros jogadores. Você pode importar diretamente da sua wishlist!',
+            actions: [
+                { label: 'Importar da Wishlist', onclick: "importWishlistToWants()", primary: true, icon: 'heart' },
+                { label: 'Buscar Cartas', onclick: "showView('cards')", primary: false, icon: 'search' }
+            ]
+        });
         return;
     }
 

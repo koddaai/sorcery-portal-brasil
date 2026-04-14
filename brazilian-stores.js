@@ -290,10 +290,173 @@ function getGoogleMapsEmbed(store) {
     return `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
 }
 
+// Current stores view mode ('map' or 'grid')
+let currentStoresView = 'map';
+
 // Initialize community features
 function initCommunity() {
+    renderStoresByState();
     renderStores();
     setupStoreFilters();
+    toggleStoresView('map'); // Default to map view
+}
+
+// Toggle between map and grid view
+function toggleStoresView(view) {
+    currentStoresView = view;
+
+    const mapView = document.getElementById('stores-map-view');
+    const gridView = document.getElementById('stores-grid');
+    const mapBtn = document.querySelector('.stores-view-btn[data-view="map"]');
+    const gridBtn = document.querySelector('.stores-view-btn[data-view="grid"]');
+
+    if (view === 'map') {
+        mapView?.classList.remove('hidden');
+        gridView?.classList.add('hidden');
+        mapBtn?.classList.add('active');
+        gridBtn?.classList.remove('active');
+    } else {
+        mapView?.classList.add('hidden');
+        gridView?.classList.remove('hidden');
+        mapBtn?.classList.remove('active');
+        gridBtn?.classList.add('active');
+
+        // Ensure store cards are visible (bypass animation issues)
+        const cards = gridView?.querySelectorAll('.store-card');
+        cards?.forEach(card => {
+            card.style.setProperty('opacity', '1', 'important');
+            card.style.setProperty('transform', 'scale(1)', 'important');
+        });
+    }
+}
+window.toggleStoresView = toggleStoresView;
+
+// Load Google Maps with all store markers
+function loadStoresMap() {
+    const placeholder = document.getElementById('stores-map-placeholder');
+    const iframe = document.getElementById('stores-map-iframe');
+
+    if (!placeholder || !iframe) return;
+
+    // Create a multi-marker map URL
+    // Using the center of Brazil with all store coordinates
+    const storesWithCoords = PHYSICAL_STORES.filter(s => s.coords);
+
+    // Create markers string for Google Maps embed
+    const markerParams = storesWithCoords.map(s =>
+        `markers=${s.coords.lat},${s.coords.lng}`
+    ).join('&');
+
+    // Center on Brazil
+    const centerLat = -15.77972;
+    const centerLng = -47.92972;
+    const zoom = 4;
+
+    // Use OpenStreetMap embed as it doesn't require API key
+    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=-73.99,-33.75,-34.79,5.27&layer=mapnik&marker=${centerLat},${centerLng}`;
+
+    placeholder.style.display = 'none';
+    iframe.src = mapUrl;
+    iframe.style.display = 'block';
+}
+window.loadStoresMap = loadStoresMap;
+
+// Render stores grouped by state
+function renderStoresByState() {
+    const container = document.getElementById('stores-by-state');
+    if (!container) return;
+
+    // Group physical stores by state
+    const storesByState = {};
+    PHYSICAL_STORES.forEach(store => {
+        if (!storesByState[store.state]) {
+            storesByState[store.state] = [];
+        }
+        storesByState[store.state].push(store);
+    });
+
+    // State full names
+    const stateNames = {
+        'SP': 'São Paulo',
+        'RJ': 'Rio de Janeiro',
+        'MG': 'Minas Gerais',
+        'PR': 'Paraná',
+        'SC': 'Santa Catarina',
+        'RS': 'Rio Grande do Sul',
+        'BA': 'Bahia',
+        'CE': 'Ceará',
+        'GO': 'Goiás',
+        'PE': 'Pernambuco',
+        'DF': 'Distrito Federal'
+    };
+
+    // Sort states alphabetically
+    const sortedStates = Object.keys(storesByState).sort((a, b) =>
+        (stateNames[a] || a).localeCompare(stateNames[b] || b)
+    );
+
+    container.innerHTML = sortedStates.map(state => {
+        const stores = storesByState[state];
+        const stateName = stateNames[state] || state;
+
+        return `
+            <div class="state-group">
+                <div class="state-group-header">
+                    <i data-lucide="map-pin"></i>
+                    ${stateName} (${stores.length})
+                </div>
+                <div class="state-store-list">
+                    ${stores.map(store => `
+                        <div class="state-store-item" onclick="openInMaps(PHYSICAL_STORES.find(s => s.name === '${store.name.replace(/'/g, "\\'")}'))">
+                            <div>
+                                <div class="state-store-name">${store.name}</div>
+                                <div class="state-store-city">${store.city}</div>
+                            </div>
+                            <div class="state-store-actions">
+                                <a href="${store.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Visitar site">
+                                    <i data-lucide="external-link"></i>
+                                </a>
+                                ${store.phone ? `<a href="tel:${store.phone.replace(/[^\d+]/g, '')}" onclick="event.stopPropagation()" title="Ligar">
+                                    <i data-lucide="phone"></i>
+                                </a>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Add online stores section
+    if (ONLINE_ONLY_STORES.length > 0) {
+        container.innerHTML += `
+            <div class="state-group">
+                <div class="state-group-header">
+                    <i data-lucide="globe"></i>
+                    Lojas Online (${ONLINE_ONLY_STORES.length})
+                </div>
+                <div class="state-store-list">
+                    ${ONLINE_ONLY_STORES.map(store => `
+                        <div class="state-store-item" onclick="window.open('${store.url}', '_blank')">
+                            <div>
+                                <div class="state-store-name">${store.name}</div>
+                                <div class="state-store-city">${store.type}</div>
+                            </div>
+                            <div class="state-store-actions">
+                                <a href="${store.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Visitar site">
+                                    <i data-lucide="external-link"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
 }
 
 // Render stores grid (for community view)

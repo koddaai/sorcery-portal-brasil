@@ -343,6 +343,97 @@ h5 {
     height: 18px;
 }
 
+/* Navigation Tooltips (shown when labels are hidden on mobile) */
+.nav-btn {
+    position: relative;
+}
+
+.nav-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-surface-3);
+    color: var(--text-primary);
+    padding: 0.375rem 0.625rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--duration-fast);
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-bottom-color: var(--bg-surface-3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--duration-fast);
+    z-index: 1001;
+}
+
+/* Show tooltip on hover only when span is hidden (mobile) */
+@media (max-width: 768px) {
+    .nav-btn:hover::after,
+    .nav-btn:focus::after {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .nav-btn:hover::before,
+    .nav-btn:focus::before {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+/* Tooltip for dropdown triggers too */
+.nav-dropdown-trigger {
+    position: relative;
+}
+
+.nav-dropdown-trigger::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: -32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-surface-3);
+    color: var(--text-primary);
+    padding: 0.375rem 0.625rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--duration-fast);
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .nav-dropdown-trigger:hover::after,
+    .nav-dropdown-trigger:focus::after {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
 /* Dropdown Navigation */
 .nav-dropdown {
     position: relative;
@@ -753,6 +844,22 @@ h5 {
     box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
 }
 
+/* Sort Filter - distinct styling */
+.sort-filter {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23d4af37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5h10'/%3E%3Cpath d='M11 9h7'/%3E%3Cpath d='M11 13h4'/%3E%3Cpath d='m3 17 3 3 3-3'/%3E%3Cpath d='M6 18V4'/%3E%3C/svg%3E");
+    background-position: right 12px center;
+    border-color: rgba(212, 175, 55, 0.3);
+    min-width: 160px;
+}
+
+.sort-filter:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+}
+
+.sort-filter:focus {
+    border-color: var(--accent-gold);
+}
+
 /* Keyword Filter */
 .keyword-filter-container {
     position: relative;
@@ -993,6 +1100,34 @@ h5 {
     gap: var(--space-2);
     font-size: 0.75rem;
     color: var(--text-secondary);
+}
+
+/* Price Badge on Card Thumbnail */
+.card-price-badge {
+    position: absolute;
+    top: var(--space-2);
+    right: var(--space-2);
+    background: rgba(0, 0, 0, 0.85);
+    color: var(--accent-gold);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    z-index: 3;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    transition: all var(--duration-fast);
+}
+
+.card-item:hover .card-price-badge {
+    background: rgba(212, 175, 55, 0.9);
+    color: var(--bg-base);
+    border-color: var(--accent-gold);
+}
+
+.card-price-badge.no-price {
+    color: var(--text-tertiary);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Badges - Modern pill style */
@@ -8486,6 +8621,207 @@ h5 {
 .store-link i {
     width: 16px;
     height: 16px;
+}
+
+.store-location {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+    margin-top: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+/* Stores Map Section */
+.stores-map-container {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--space-5);
+    margin-bottom: var(--space-5);
+}
+
+@media (max-width: 900px) {
+    .stores-map-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.stores-map {
+    position: relative;
+    height: 400px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--bg-surface-2);
+    border: 1px solid var(--border-color);
+}
+
+.stores-map iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.stores-map-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-surface-2);
+    color: var(--text-secondary);
+    gap: var(--space-3);
+}
+
+.stores-map-overlay i {
+    width: 48px;
+    height: 48px;
+    color: var(--accent-gold);
+}
+
+.stores-map-overlay .btn {
+    margin-top: var(--space-2);
+}
+
+/* State Groups */
+.stores-by-state {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: var(--space-2);
+}
+
+.stores-by-state::-webkit-scrollbar {
+    width: 6px;
+}
+
+.stores-by-state::-webkit-scrollbar-track {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-full);
+}
+
+.stores-by-state::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-full);
+}
+
+.stores-by-state::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+.state-group {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+}
+
+.state-group-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    font-weight: 600;
+    color: var(--accent-gold);
+    font-size: 0.9375rem;
+}
+
+.state-group-header i {
+    width: 16px;
+    height: 16px;
+}
+
+.state-store-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.state-store-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-surface-3);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    transition: all var(--duration-fast);
+    cursor: pointer;
+}
+
+.state-store-item:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.state-store-name {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.state-store-city {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+}
+
+.state-store-actions {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.state-store-actions a {
+    color: var(--text-tertiary);
+    transition: color var(--duration-fast);
+}
+
+.state-store-actions a:hover {
+    color: var(--accent-gold);
+}
+
+.state-store-actions i {
+    width: 16px;
+    height: 16px;
+}
+
+/* View Toggle */
+.stores-view-toggle {
+    display: flex;
+    gap: 0.375rem;
+    padding: 0.25rem;
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-md);
+    margin-left: auto;
+}
+
+.stores-view-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.stores-view-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+}
+
+.stores-view-btn.active {
+    background: var(--bg-surface-3);
+    color: var(--accent-gold);
+}
+
+.stores-view-btn i {
+    width: 18px;
+    height: 18px;
 }
 
 /* Links Section */

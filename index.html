@@ -87,19 +87,19 @@
             <nav class="nav-bar">
                 <!-- Primary Navigation -->
                 <div class="nav-primary">
-                    <button class="nav-btn" data-view="cards">
+                    <button class="nav-btn" data-view="cards" data-tooltip="Catálogo de Cards">
                         <i data-lucide="layers"></i>
                         <span>Cards</span>
                     </button>
-                    <button class="nav-btn" data-view="art">
+                    <button class="nav-btn" data-view="art" data-tooltip="Artistas & Arte">
                         <i data-lucide="brush"></i>
                         <span>Artistas</span>
                     </button>
-                    <button class="nav-btn" data-view="decks">
+                    <button class="nav-btn" data-view="decks" data-tooltip="Explorar Decks">
                         <i data-lucide="layout-grid"></i>
                         <span>Decks</span>
                     </button>
-                    <button class="nav-btn" data-view="collection">
+                    <button class="nav-btn" data-view="collection" data-tooltip="Minha Coleção">
                         <i data-lucide="folder-heart"></i>
                         <span>Coleção</span>
                     </button>
@@ -109,7 +109,7 @@
                 <div class="nav-dropdowns">
                     <!-- Aprender Dropdown -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Aprender">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Aprender" data-tooltip="Aprender">
                             <i data-lucide="book-open"></i>
                             <span>Aprender</span>
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
@@ -138,7 +138,7 @@
 
                     <!-- Ferramentas Dropdown -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Ferramentas">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Ferramentas" data-tooltip="Ferramentas">
                             <i data-lucide="wrench"></i>
                             <span>Ferramentas</span>
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
@@ -158,7 +158,7 @@
 
                     <!-- Comunidade Dropdown - Inclui Explorar -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Comunidade">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Comunidade" data-tooltip="Comunidade">
                             <i data-lucide="users"></i>
                             <span>Comunidade</span>
                             <i data-lucide="chevron-down" class="dropdown-arrow"></i>
@@ -394,6 +394,15 @@
                             <!-- Active keyword tags will appear here -->
                         </div>
                     </div>
+                    <select id="sort-filter" class="filter-select sort-filter" aria-label="Ordenar por">
+                        <option value="name-asc">Nome (A-Z)</option>
+                        <option value="name-desc">Nome (Z-A)</option>
+                        <option value="price-desc">Maior Preço</option>
+                        <option value="price-asc">Menor Preço</option>
+                        <option value="rarity-desc">Raridade (Alta-Baixa)</option>
+                        <option value="rarity-asc">Raridade (Baixa-Alta)</option>
+                        <option value="set-release">Set (Lançamento)</option>
+                    </select>
                 </div>
                 <div class="results-info">
                     <span id="results-count">Carregando...</span>
@@ -1232,9 +1241,19 @@
 
                 <!-- Brazilian Stores -->
                 <div class="stores-section">
-                    <div class="section-header">
-                        <h3>Lojas Brasileiras</h3>
-                        <p class="subtitle">Encontre Sorcery TCG nas melhores lojas do Brasil</p>
+                    <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h3>Lojas Brasileiras</h3>
+                            <p class="subtitle">Encontre Sorcery TCG nas melhores lojas do Brasil</p>
+                        </div>
+                        <div class="stores-view-toggle">
+                            <button class="stores-view-btn active" data-view="map" onclick="toggleStoresView('map')" aria-label="Ver mapa">
+                                <i data-lucide="map"></i>
+                            </button>
+                            <button class="stores-view-btn" data-view="grid" onclick="toggleStoresView('grid')" aria-label="Ver grade">
+                                <i data-lucide="grid-3x3"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="filters stores-filters">
@@ -1247,7 +1266,25 @@
                         </select>
                     </div>
 
-                    <div id="stores-grid" class="stores-grid">
+                    <!-- Map View -->
+                    <div id="stores-map-view" class="stores-map-container">
+                        <div class="stores-map">
+                            <div class="stores-map-overlay" id="stores-map-placeholder">
+                                <i data-lucide="map-pin"></i>
+                                <p>Mapa interativo das lojas</p>
+                                <button class="btn primary" onclick="loadStoresMap()">
+                                    <i data-lucide="map"></i> Carregar Mapa
+                                </button>
+                            </div>
+                            <iframe id="stores-map-iframe" style="display: none;" loading="lazy"></iframe>
+                        </div>
+                        <div id="stores-by-state" class="stores-by-state">
+                            <!-- State groups will be rendered by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Grid View -->
+                    <div id="stores-grid" class="stores-grid hidden">
                         <!-- Stores will be rendered by JS -->
                     </div>
                 </div>
