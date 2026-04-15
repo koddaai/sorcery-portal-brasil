@@ -9508,37 +9508,21 @@ function renderUserDecks() {
     }
 
     decksListEl.innerHTML = decks.map((deck, index) => {
-        // Calculate deck value - use only real prices, not estimates
-        let deckValue = 0;
         let cardsOwned = 0;
         let totalCards = 0;
-        let pricedCards = 0;
+
+        const isShared = deck.sharedToCommunity || false;
+        const isPrecon = deck.isPrecon || false;
 
         const allDeckCards = [...(deck.spellbook || []), ...(deck.atlas || [])];
         allDeckCards.forEach(cardEntry => {
             const qty = cardEntry.qty || 1;
             totalCards += qty;
-            const card = allCards.find(c => c.name === cardEntry.name);
-            if (card && typeof priceService !== 'undefined') {
-                // Only use real market prices, not estimates (which are inflated)
-                const price = priceService.getPrice(card.name);
-                if (price && price > 0) {
-                    deckValue += price * qty;
-                    pricedCards += qty;
-                }
-            }
             if (hasCard(cardEntry.name)) {
                 cardsOwned += qty;
             }
         });
 
-        // Only show value if we have priced cards, otherwise show "N/A"
-        const valueDisplay = pricedCards > 0 && typeof priceService !== 'undefined'
-            ? priceService.formatPrice(deckValue)
-            : '—';
-
-        const isShared = deck.sharedToCommunity || false;
-        const isPrecon = deck.isPrecon || false;
         const spellCount = deck.spellbook?.reduce((sum, c) => sum + (c.qty || 1), 0) || 0;
         const siteCount = deck.atlas?.reduce((sum, c) => sum + (c.qty || 1), 0) || 0;
 
@@ -9552,10 +9536,6 @@ function renderUserDecks() {
                 <div class="deck-card-stats">
                     <span class="stat"><i data-lucide="wand-2"></i> ${spellCount} feitiços</span>
                     <span class="stat"><i data-lucide="map"></i> ${siteCount} locais</span>
-                </div>
-                <div class="deck-card-value">
-                    <span class="label">Valor estimado:</span>
-                    <span class="value ${pricedCards === 0 ? 'no-price' : ''}">${valueDisplay}</span>
                 </div>
                 <div class="deck-card-ownership">
                     <div class="ownership-text">
