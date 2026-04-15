@@ -2388,6 +2388,8 @@ async function loadCards() {
             filteredCards = [...allCards];
             buildSearchIndex();
             loadingEl.classList.add('hidden');
+            // Rebuild collection from VariantTracker now that allCards is loaded
+            rebuildCollectionFromVariantTracker();
             // Refresh cache in background
             refreshCardsInBackground();
             return;
@@ -2395,6 +2397,8 @@ async function loadCards() {
 
         // No cache - load from network
         await loadCardsFromNetwork();
+        // Rebuild collection from VariantTracker now that allCards is loaded
+        rebuildCollectionFromVariantTracker();
     } catch (error) {
         loadingEl.innerHTML = `
             <p>Erro ao carregar cards. Por favor, atualize a página.</p>
@@ -2675,79 +2679,86 @@ function loadFromStorage() {
         }
     }
 
-    // NOTE: Sync from VariantTracker disabled - was causing duplicate cards
-    // The two systems (collection Map and VariantTracker) will remain separate
-    // Both are persisted to localStorage independently
-    // TODO: Implement proper unification with correct name matching
-    // syncCollectionFromVariantTracker();
+    // Rebuild collection from VariantTracker if it has more data
+    // This runs AFTER allCards is loaded (called from loadCards)
 }
 
-// Sync main collection Map from VariantTracker data
-// Only syncs if collection is significantly smaller than VariantTracker
-// This prevents duplicates from name conversion issues
-function syncCollectionFromVariantTracker() {
+// Rebuild collection Map entirely from VariantTracker data
+// Called after allCards is loaded to ensure proper name matching
+function rebuildCollectionFromVariantTracker() {
     const tracker = window.variantTracker;
     if (!tracker || !tracker.collection) return;
 
     const variantCardCount = Object.keys(tracker.collection).length;
     if (variantCardCount === 0) return;
 
-    // Only sync if collection is significantly smaller (more than 20% difference)
-    // This indicates data loss or first-time sync needed
-    const sizeDiff = variantCardCount - collection.size;
-    if (sizeDiff <= Math.max(10, variantCardCount * 0.1)) {
-        console.log('[Sync] Collections are similar in size, skipping sync');
+    // Only rebuild if VariantTracker has significantly more data
+    if (collection.size >= variantCardCount) {
+        console.log('[Rebuild] Collection already has enough cards, skipping');
         return;
     }
 
-    console.log('[Sync] Collection missing', sizeDiff, 'cards from VariantTracker, syncing...');
-
-    // Build a map of normalized names to proper display names from allCards
-    const normalizedToDisplay = new Map();
-    if (typeof allCards !== 'undefined' && allCards.length > 0) {
-        for (const card of allCards) {
-            const normalized = card.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-            normalizedToDisplay.set(normalized, card.name);
-        }
+    // Need allCards for proper name lookup
+    if (typeof allCards === 'undefined' || allCards.length === 0) {
+        console.log('[Rebuild] allCards not loaded yet, skipping');
+        return;
     }
 
+    console.log('[Rebuild] Rebuilding collection from VariantTracker...', variantCardCount, 'cards');
+
+    // Build lookup: normalized name → proper card name from allCards
+    const normalizedToProper = new Map();
+    for (const card of allCards) {
+        // Use same normalization as VariantTracker
+        const normalized = card.name.toLowerCase().trim().replace(/\s+/g, '_');
+        normalizedToProper.set(normalized, card.name);
+    }
+
+    // Clear and rebuild collection
+    const oldSize = collection.size;
+    collection.clear();
+
     const now = new Date().toISOString();
-    let addedCount = 0;
 
-    for (const normalizedName of Object.keys(tracker.collection)) {
-        const cardData = tracker.collection[normalizedName];
-        if (!cardData) continue;
+    for (const [normalizedName, cardData] of Object.entries(tracker.collection)) {
+        if (!cardData || typeof cardData !== 'object') continue;
 
-        // Get proper display name from allCards, or convert manually
-        let displayName = normalizedToDisplay.get(normalizedName);
-        if (!displayName) {
-            // Fallback: convert normalized name to title case
-            displayName = normalizedName.split('_').map(word =>
-                word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' ');
+        // Get proper display name from allCards
+        const properName = normalizedToProper.get(normalizedName);
+        if (!properName) {
+            console.warn('[Rebuild] Card not found in allCards:', normalizedName);
+            continue;
         }
-
-        // Skip if already in collection
-        if (collection.has(displayName)) continue;
 
         // Sum quantities across all variants
         let totalQty = 0;
         let earliestDate = now;
 
         for (const variant of Object.values(cardData)) {
-            totalQty += variant.qty || 1;
-            if (variant.addedAt && variant.addedAt < earliestDate) {
-                earliestDate = variant.addedAt;
+            if (variant && typeof variant === 'object') {
+                totalQty += variant.qty || 1;
+                if (variant.addedAt && variant.addedAt < earliestDate) {
+                    earliestDate = variant.addedAt;
+                }
             }
         }
 
-        collection.set(displayName, { qty: totalQty, addedAt: earliestDate });
-        addedCount++;
+        if (totalQty > 0) {
+            collection.set(properName, { qty: totalQty, addedAt: earliestDate });
+        }
     }
 
-    if (addedCount > 0) {
-        console.log('[Sync] Added', addedCount, 'cards from VariantTracker. Total:', collection.size);
-        saveToStorage();
+    console.log('[Rebuild] Collection rebuilt:', oldSize, '->', collection.size, 'cards');
+
+    // Save the rebuilt collection
+    const userId = getCurrentUserId();
+    if (userId) {
+        const collectionObj = {};
+        collection.forEach((data, name) => {
+            collectionObj[name] = data;
+        });
+        localStorage.setItem(`sorcery-collection-${userId}`, JSON.stringify(collectionObj));
+        console.log('[Rebuild] Saved to localStorage');
     }
 }
 
