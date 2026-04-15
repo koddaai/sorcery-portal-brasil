@@ -9511,10 +9511,11 @@ function renderUserDecks() {
     }
 
     decksListEl.innerHTML = decks.map((deck, index) => {
-        // Calculate deck value
+        // Calculate deck value - use only real prices, not estimates
         let deckValue = 0;
         let cardsOwned = 0;
         let totalCards = 0;
+        let pricedCards = 0;
 
         const allDeckCards = [...(deck.spellbook || []), ...(deck.atlas || [])];
         allDeckCards.forEach(cardEntry => {
@@ -9522,50 +9523,69 @@ function renderUserDecks() {
             totalCards += qty;
             const card = allCards.find(c => c.name === cardEntry.name);
             if (card && typeof priceService !== 'undefined') {
-                const price = priceService.getPrice(card.name) || priceService.getEstimatedPrice(card);
-                deckValue += price * qty;
+                // Only use real market prices, not estimates (which are inflated)
+                const price = priceService.getPrice(card.name);
+                if (price && price > 0) {
+                    deckValue += price * qty;
+                    pricedCards += qty;
+                }
             }
             if (hasCard(cardEntry.name)) {
                 cardsOwned += qty;
             }
         });
 
-        const valueDisplay = typeof priceService !== 'undefined'
+        // Only show value if we have priced cards, otherwise show "N/A"
+        const valueDisplay = pricedCards > 0 && typeof priceService !== 'undefined'
             ? priceService.formatPrice(deckValue)
-            : '--';
+            : '—';
 
         const isShared = deck.sharedToCommunity || false;
+        const isPrecon = deck.isPrecon || false;
+        const spellCount = deck.spellbook?.reduce((sum, c) => sum + (c.qty || 1), 0) || 0;
+        const siteCount = deck.atlas?.reduce((sum, c) => sum + (c.qty || 1), 0) || 0;
+
         return `
-            <div class="deck-card" data-deck-index="${index}" data-deck-id="${deck.id || index}">
-                ${isShared ? '<span class="community-deck-badge"><i data-lucide="users"></i> Compartilhado</span>' : ''}
-                <h3>${deck.name}</h3>
-                <div class="deck-card-meta">
-                    ${deck.spellbook?.length || 0} feitiços / ${deck.atlas?.length || 0} locais
+            <div class="deck-card ${isPrecon ? 'precon-deck' : ''}" data-deck-index="${index}" data-deck-id="${deck.id || index}">
+                <div class="deck-card-badges">
+                    ${isShared ? '<span class="deck-badge shared"><i data-lucide="users"></i> Compartilhado</span>' : ''}
+                    ${isPrecon ? '<span class="deck-badge precon"><i data-lucide="package"></i> Precon</span>' : ''}
                 </div>
-                <div class="deck-value">
-                    <span class="deck-value-label">Valor:</span>
-                    <span class="deck-value-amount">${valueDisplay}</span>
+                <h3 class="deck-card-title">${deck.name}</h3>
+                <div class="deck-card-stats">
+                    <span class="stat"><i data-lucide="wand-2"></i> ${spellCount} feitiços</span>
+                    <span class="stat"><i data-lucide="map"></i> ${siteCount} locais</span>
                 </div>
-                <div class="deck-ownership">
-                    <span>Possui: ${cardsOwned}/${totalCards}</span>
-                    <div class="mini-progress">
-                        <div class="mini-progress-fill" style="width: ${totalCards > 0 ? (cardsOwned/totalCards)*100 : 0}%"></div>
+                <div class="deck-card-value">
+                    <span class="label">Valor estimado:</span>
+                    <span class="value ${pricedCards === 0 ? 'no-price' : ''}">${valueDisplay}</span>
+                </div>
+                <div class="deck-card-ownership">
+                    <div class="ownership-text">
+                        <span>Possui:</span>
+                        <span class="ownership-count">${cardsOwned}/${totalCards}</span>
+                    </div>
+                    <div class="ownership-bar">
+                        <div class="ownership-fill" style="width: ${totalCards > 0 ? (cardsOwned/totalCards)*100 : 0}%"></div>
                     </div>
                 </div>
                 <div class="deck-card-actions">
-                    <button class="btn secondary btn-view" data-index="${index}">
-                        <i data-lucide="eye"></i> Ver
+                    <button class="deck-action-btn view" data-index="${index}" title="Ver deck">
+                        <i data-lucide="eye"></i>
+                        <span>Ver</span>
                     </button>
                     ${!isShared ? `
-                    <button class="btn btn-share" data-index="${index}">
-                        <i data-lucide="share-2"></i> Compartilhar
+                    <button class="deck-action-btn share" data-index="${index}" title="Compartilhar com a comunidade">
+                        <i data-lucide="share-2"></i>
+                        <span>Compartilhar</span>
                     </button>
                     ` : `
-                    <button class="btn btn-unshare" data-index="${index}" title="Remover da comunidade">
-                        <i data-lucide="user-minus"></i> Remover
+                    <button class="deck-action-btn unshare" data-index="${index}" title="Remover da comunidade">
+                        <i data-lucide="user-minus"></i>
+                        <span>Remover</span>
                     </button>
                     `}
-                    <button class="btn secondary btn-delete" data-index="${index}">
+                    <button class="deck-action-btn delete" data-index="${index}" title="Excluir deck">
                         <i data-lucide="trash-2"></i>
                     </button>
                 </div>
@@ -9577,7 +9597,7 @@ function renderUserDecks() {
     refreshIcons();
 
     // Add click handlers for view buttons
-    decksListEl.querySelectorAll('.btn-view').forEach(btn => {
+    decksListEl.querySelectorAll('.deck-action-btn.view').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const index = parseInt(btn.dataset.index);
@@ -9586,7 +9606,7 @@ function renderUserDecks() {
     });
 
     // Add click handlers for share buttons
-    decksListEl.querySelectorAll('.btn-share').forEach(btn => {
+    decksListEl.querySelectorAll('.deck-action-btn.share').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const index = parseInt(btn.dataset.index);
@@ -9595,7 +9615,7 @@ function renderUserDecks() {
     });
 
     // Add click handlers for delete buttons
-    decksListEl.querySelectorAll('.btn-delete').forEach(btn => {
+    decksListEl.querySelectorAll('.deck-action-btn.delete').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const index = parseInt(btn.dataset.index);
@@ -9604,7 +9624,7 @@ function renderUserDecks() {
     });
 
     // Add click handlers for unshare buttons
-    decksListEl.querySelectorAll('.btn-unshare').forEach(btn => {
+    decksListEl.querySelectorAll('.deck-action-btn.unshare').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
             const index = parseInt(btn.dataset.index);
