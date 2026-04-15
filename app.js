@@ -4135,9 +4135,6 @@ function switchArtTab(tabName) {
         case 'collection':
             initArtCollectionTab();
             break;
-        case 'alternate':
-            initAlternateArtTab();
-            break;
         case 'curios':
             initCuriosTab();
             break;
