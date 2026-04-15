@@ -26,7 +26,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=93">
+    <link rel="stylesheet" href="styles.css?v=94">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -76,6 +76,9 @@
                             <i data-lucide="user" class="avatar-fallback"></i>
                         </div>
                         <span id="user-display-name" class="user-display-name"></span>
+                        <span id="sync-status-indicator" class="sync-indicator sync-synced" title="Sincronizado">
+                            <i data-lucide="cloud"></i>
+                        </span>
                         <button id="logout-btn" class="header-icon-btn" title="Sair" aria-label="Sair da conta">
                             <i data-lucide="log-out"></i>
                         </button>
@@ -4020,7 +4023,7 @@
     <script src="messaging-service.js"></script>
     <script src="forum-service.js"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=117"></script>
+    <script src="app.js?v=118"></script>
     <script src="offline-manager.js?v=4"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

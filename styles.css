@@ -275,6 +275,45 @@ h5 {
     height: 20px;
 }
 
+/* Sync Status Indicator */
+.sync-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-fast);
+}
+
+.sync-indicator i {
+    width: 16px;
+    height: 16px;
+}
+
+.sync-indicator.sync-synced {
+    color: var(--success);
+}
+
+.sync-indicator.sync-pending {
+    color: var(--warning);
+    animation: pulse-slow 2s ease-in-out infinite;
+}
+
+.sync-indicator.sync-syncing {
+    color: var(--accent-blue);
+    animation: spin 1s linear infinite;
+}
+
+.sync-indicator.sync-error {
+    color: var(--error);
+}
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
 .user-avatar {
     display: flex;
     align-items: center;

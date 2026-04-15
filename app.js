@@ -2358,6 +2358,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check price alerts after a delay (let prices load)
     setTimeout(checkPriceAlerts, 3000);
 
+    // Check for pending auto-sync from previous session
+    setTimeout(checkPendingSync, 2000);
+
     // Handle trade links
     const urlParams = new URLSearchParams(window.location.search);
     const tradeParam = urlParams.get('trade');
@@ -2690,9 +2693,143 @@ function saveToStorage() {
         localStorage.setItem(`sorcery-wishlist-${userId}`, JSON.stringify([...wishlist]));
         localStorage.setItem(`sorcery-trade-binder-${userId}`, JSON.stringify([...tradeBinder]));
         localStorage.setItem(`sorcery-precons-${userId}`, JSON.stringify([...ownedPrecons]));
+
+        // Trigger auto-sync to cloud (debounced)
+        scheduleAutoSync();
     }
     // Save user-specific decks
     saveUserDecks();
+}
+
+// ============================================
+// AUTO-SYNC TO CLOUD
+// ============================================
+
+let autoSyncTimeout = null;
+let autoSyncPending = false;
+const AUTO_SYNC_DELAY = 5000; // 5 seconds after last change
+
+// Schedule auto-sync with debounce
+function scheduleAutoSync() {
+    if (!checkUserLoggedIn()) return;
+
+    // Mark sync as pending
+    autoSyncPending = true;
+    updateSyncIndicator('pending');
+
+    // Clear existing timeout
+    if (autoSyncTimeout) {
+        clearTimeout(autoSyncTimeout);
+    }
+
+    // Schedule new sync
+    autoSyncTimeout = setTimeout(performAutoSync, AUTO_SYNC_DELAY);
+}
+
+// Perform the actual sync
+async function performAutoSync() {
+    if (!checkUserLoggedIn() || !autoSyncPending) return;
+
+    try {
+        updateSyncIndicator('syncing');
+
+        // Convert collection Map to object format
+        const collectionObj = {};
+        collection.forEach((data, cardName) => {
+            collectionObj[cardName] = {
+                qty: typeof data === 'object' ? data.qty : data,
+                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString()
+            };
+        });
+
+        // Sync to cloud
+        await nocoDBService.fullSyncToCloud(
+            collectionObj,
+            [...wishlist],
+            [...tradeBinder],
+            decks
+        );
+
+        // Update last sync time
+        const userId = getCurrentUserId();
+        if (userId) {
+            localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+        }
+
+        autoSyncPending = false;
+        updateSyncIndicator('synced');
+        console.log('[AutoSync] Collection synced to cloud successfully');
+
+    } catch (error) {
+        console.error('[AutoSync] Failed to sync:', error.message);
+        updateSyncIndicator('error');
+        // Retry after 30 seconds on error
+        autoSyncTimeout = setTimeout(performAutoSync, 30000);
+    }
+}
+
+// Update visual sync indicator
+function updateSyncIndicator(status) {
+    const indicator = document.getElementById('sync-status-indicator');
+    if (!indicator) return;
+
+    indicator.className = 'sync-indicator';
+    indicator.classList.add(`sync-${status}`);
+
+    const iconMap = {
+        'pending': 'cloud-off',
+        'syncing': 'cloud-upload',
+        'synced': 'cloud',
+        'error': 'cloud-alert'
+    };
+
+    const titleMap = {
+        'pending': 'Alterações pendentes...',
+        'syncing': 'Sincronizando...',
+        'synced': 'Sincronizado',
+        'error': 'Erro na sincronização'
+    };
+
+    indicator.innerHTML = `<i data-lucide="${iconMap[status]}"></i>`;
+    indicator.title = titleMap[status];
+    refreshIcons(indicator);
+}
+
+// Sync before page unload
+window.addEventListener('beforeunload', (event) => {
+    if (autoSyncPending && checkUserLoggedIn()) {
+        // Perform synchronous-ish sync using sendBeacon if available
+        const collectionObj = {};
+        collection.forEach((data, cardName) => {
+            collectionObj[cardName] = {
+                qty: typeof data === 'object' ? data.qty : data,
+                addedAt: typeof data === 'object' ? data.addedAt : new Date().toISOString()
+            };
+        });
+
+        // Try to use sendBeacon for reliable delivery
+        const syncData = JSON.stringify({
+            collection: collectionObj,
+            wishlist: [...wishlist],
+            tradeBinder: [...tradeBinder],
+            userId: getCurrentUserId()
+        });
+
+        // Store pending sync data for next session
+        localStorage.setItem('sorcery-pending-sync', syncData);
+
+        console.log('[AutoSync] Saved pending sync data for next session');
+    }
+});
+
+// Check for pending sync on page load
+function checkPendingSync() {
+    const pendingSync = localStorage.getItem('sorcery-pending-sync');
+    if (pendingSync && checkUserLoggedIn()) {
+        console.log('[AutoSync] Found pending sync from previous session, syncing now...');
+        localStorage.removeItem('sorcery-pending-sync');
+        performAutoSync();
+    }
 }
 
 // Load decks for current user
