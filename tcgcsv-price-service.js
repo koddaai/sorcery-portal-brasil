@@ -382,16 +382,19 @@ class TCGCSVPriceService {
         const prices = this.findCardPrices(cardName);
         if (!prices || prices.length === 0) return null;
 
+        // Filter by finish (required) and set (optional)
         let filtered = prices.filter(p => {
             const finishMatch = p.finish.toLowerCase() === finish.toLowerCase();
             const setMatch = !setName || p.setName === setName;
             return finishMatch && setMatch;
         });
 
-        if (filtered.length === 0) {
-            filtered = prices.filter(p => !setName || p.setName === setName);
+        // If no exact match with set filter, try any set with same finish
+        if (filtered.length === 0 && setName) {
+            filtered = prices.filter(p => p.finish.toLowerCase() === finish.toLowerCase());
         }
 
+        // Return null if no price found for requested finish (don't fall back to other finishes)
         if (filtered.length === 0) return null;
 
         return filtered[0].marketPrice;
