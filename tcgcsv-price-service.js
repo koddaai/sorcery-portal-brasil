@@ -394,8 +394,18 @@ class TCGCSVPriceService {
             filtered = prices.filter(p => p.finish.toLowerCase() === finish.toLowerCase());
         }
 
-        // Return null if no price found for requested finish (don't fall back to other finishes)
+        // Return null if no price found for requested finish
         if (filtered.length === 0) return null;
+
+        // If no specific set requested, return the LOWEST price (avoid promo prices)
+        // This gives realistic values for standard cards
+        if (!setName && filtered.length > 1) {
+            const withPrices = filtered.filter(p => p.marketPrice !== null && p.marketPrice > 0);
+            if (withPrices.length > 0) {
+                withPrices.sort((a, b) => a.marketPrice - b.marketPrice);
+                return withPrices[0].marketPrice;
+            }
+        }
 
         return filtered[0].marketPrice;
     }
