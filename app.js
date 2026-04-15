@@ -8643,6 +8643,7 @@ function addPreconToCollection(preconId) {
 
     // Save and update UI
     saveToStorage();
+    saveUserDecks(); // Save decks separately
     showSuccessToast(`${precon.name} adicionado!`, `${totalCards} cartas`);
     renderPreconGrid(); // Refresh grid to show updated state
     renderCollection();
@@ -8713,6 +8714,7 @@ function removePreconFromCollection(preconId) {
 
     // Save and update UI
     saveToStorage();
+    saveUserDecks(); // Save decks separately
     showSuccessToast(`${precon.name} removido!`, `${totalCards} cartas`);
     renderPreconGrid(); // Refresh grid to show updated state
     renderCollection();
