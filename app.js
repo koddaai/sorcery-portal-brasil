@@ -9560,7 +9560,11 @@ function renderUserDecks() {
                     <button class="btn btn-share" data-index="${index}">
                         <i data-lucide="share-2"></i> Compartilhar
                     </button>
-                    ` : ''}
+                    ` : `
+                    <button class="btn btn-unshare" data-index="${index}" title="Remover da comunidade">
+                        <i data-lucide="user-minus"></i> Remover
+                    </button>
+                    `}
                     <button class="btn secondary btn-delete" data-index="${index}">
                         <i data-lucide="trash-2"></i>
                     </button>
@@ -9598,6 +9602,15 @@ function renderUserDecks() {
             deleteDeck(index);
         });
     });
+
+    // Add click handlers for unshare buttons
+    decksListEl.querySelectorAll('.btn-unshare').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
+            unshareDeck(index);
+        });
+    });
 }
 
 // Delete User Deck
@@ -9619,6 +9632,40 @@ async function deleteDeck(index) {
         saveUserDecks();
         renderUserDecks();
         showSuccessToast(`Deck "${deck.name}" excluído com sucesso.`);
+    }
+}
+
+// Unshare deck from community
+async function unshareDeck(index) {
+    const deck = decks[index];
+    if (!deck || !deck.sharedToCommunity) return;
+
+    const confirmed = await showConfirmDialog({
+        title: 'Remover da comunidade',
+        message: `Tem certeza que deseja remover o deck "${deck.name}" da comunidade? Outros usuários não poderão mais vê-lo.`,
+        confirmText: 'Remover',
+        cancelText: 'Manter',
+        type: 'warning',
+        icon: 'user-minus'
+    });
+
+    if (confirmed) {
+        try {
+            // Remove from NocoDB community decks
+            if (deck.communityDeckId && typeof communityDeckService !== 'undefined') {
+                await communityDeckService.deleteDeck(deck.communityDeckId);
+            }
+
+            // Update local deck
+            deck.sharedToCommunity = false;
+            deck.communityDeckId = null;
+            saveUserDecks();
+            renderUserDecks();
+            showSuccessToast(`Deck "${deck.name}" removido da comunidade.`);
+        } catch (error) {
+            console.error('Error unsharing deck:', error);
+            showErrorToast('Erro ao remover deck da comunidade.');
+        }
     }
 }
 
@@ -9699,11 +9746,15 @@ async function submitSharedDeck(e) {
         return;
     }
 
+    // Get display name from user object
+    const authorName = user.displayName || user.display_name || user.name || user.email?.split('@')[0] || 'Anônimo';
+
     // Build community deck object
     const communityDeck = {
         name,
-        author: user.name || user.email?.split('@')[0] || 'Anônimo',
+        author: authorName,
         authorId: user.id || user.Id,
+        authorBadge: 'Sorcery Brasil',
         format,
         tier: tier || null,
         description,
@@ -9731,7 +9782,7 @@ async function submitSharedDeck(e) {
         views: 0,
         likes: 0,
         createdAt: new Date().toISOString(),
-        source: 'user-submitted'
+        source: 'sorcery-brasil-community'
     };
 
     try {
@@ -10478,20 +10529,22 @@ function sortDecks(decks) {
 function renderDeckCard(deck) {
     const tierClass = deck.type === 'tournament' ? 'tournament' : `tier-${deck.tier}`;
     const tierLabel = deck.type === 'tournament' ? deck.tournament : deck.tier;
-    const isUserSubmitted = deck.source === 'user-submitted' || deck.isCommunityDeck;
+    const isUserSubmitted = deck.source === 'user-submitted' || deck.source === 'sorcery-brasil-community' || deck.isCommunityDeck;
+    const isSorceryBrasil = deck.source === 'sorcery-brasil-community' || deck.authorBadge === 'Sorcery Brasil';
 
     return `
         <div class="deck-card-enhanced ${isUserSubmitted ? 'user-submitted' : ''}" data-deck-id="${deck.id}" onclick="openDeckDetail('${deck.id}')">
             <div class="deck-card-header">
                 ${tierLabel ? `<span class="deck-tier-badge ${tierClass}">${tierLabel}</span>` : ''}
-                ${isUserSubmitted ? '<span class="deck-source-badge user"><i data-lucide="users"></i> Comunidade</span>' : ''}
+                ${isSorceryBrasil ? '<span class="deck-source-badge sorcery-brasil"><i data-lucide="flag"></i> Sorcery Brasil</span>' :
+                  isUserSubmitted ? '<span class="deck-source-badge user"><i data-lucide="users"></i> Comunidade</span>' : ''}
                 ${deck.estimatedPrice ? `<span class="deck-price-badge">$${deck.estimatedPrice}</span>` : ''}
             </div>
 
             <h4>${deck.name}</h4>
 
             <div class="deck-card-meta-row">
-                <span><i data-lucide="user"></i> ${deck.author || ''}</span>
+                <span><i data-lucide="user"></i> ${deck.author || ''}${isSorceryBrasil ? ' <span class="author-badge-inline">🇧🇷</span>' : ''}</span>
                 ${deck.views ? `<span><i data-lucide="eye"></i> ${deck.views.toLocaleString()}</span>` : ''}
                 ${deck.likes ? `<span><i data-lucide="heart"></i> ${deck.likes}</span>` : ''}
             </div>

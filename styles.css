@@ -16560,6 +16560,16 @@ input:checked + .toggle-slider:before {
     color: white;
 }
 
+.deck-source-badge.sorcery-brasil {
+    background: linear-gradient(135deg, #009c3b, #002776);
+    color: white;
+}
+
+.author-badge-inline {
+    font-size: 0.875rem;
+    margin-left: 0.25rem;
+}
+
 .deck-card-enhanced.user-submitted {
     border: 1px solid rgba(59, 130, 246, 0.3);
 }
