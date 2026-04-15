@@ -3691,7 +3691,7 @@ function switchView(viewName) {
     if (viewName === 'collection') renderCollection();
     if (viewName === 'wishlist') renderWishlist();
     if (viewName === 'stats') updateStatsWithPrices();
-    if (viewName === 'artist-stats') initArtistStatsView();
+    if (viewName === 'artist-stats') { switchView('art'); setTimeout(() => switchArtTab('collection'), 100); return; }
     if (viewName === 'decks') renderCommunityDecks();
     if (viewName === 'trade') renderTradeBinder();
     if (viewName === 'locator') initLocatorView();
