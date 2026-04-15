@@ -244,6 +244,29 @@ class NocoDBService {
         this.saveSession();
     }
 
+    // Accept terms of service
+    async acceptTerms() {
+        if (!this.currentUser) {
+            throw new Error('Must be logged in to accept terms');
+        }
+
+        try {
+            await this.updateRecord(this.tables.users, this.currentUser.id, {
+                terms_accepted: true,
+                terms_accepted_at: new Date().toISOString()
+            });
+
+            // Update local session
+            this.currentUser.termsAccepted = true;
+            this.saveSession();
+
+            return { success: true };
+        } catch (error) {
+            console.error('Accept terms error:', error);
+            throw error;
+        }
+    }
+
     // Find user by email
     async findUserByEmail(email) {
         try {
