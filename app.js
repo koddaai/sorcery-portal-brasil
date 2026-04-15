@@ -9875,14 +9875,29 @@ function saveDeckFromBuilder() {
 // View Deck Details
 function viewDeck(index) {
     const deck = decks[index];
-    if (!deck) return;
+    if (!deck) {
+        console.error('[viewDeck] Deck not found at index:', index);
+        return;
+    }
+
+    console.log('[viewDeck] Opening deck:', deck.name, deck);
+
+    // Get modal elements
+    const modal = document.getElementById('deck-builder-modal');
+    const nameInput = document.getElementById('deck-name-input');
+
+    if (!modal) {
+        console.error('[viewDeck] Modal not found');
+        return;
+    }
 
     // Open deck builder with deck loaded
-    document.getElementById('deck-name-input').value = deck.name;
-    document.getElementById('deck-builder-modal').classList.remove('hidden');
+    if (nameInput) nameInput.value = deck.name;
+    modal.classList.remove('hidden');
 
     // Populate deck cards
     renderDeckCards(deck);
+    refreshIcons();
 }
 
 // Render Deck Cards in Builder

@@ -5183,6 +5183,7 @@ h5 {
 /* Deck Card Actions */
 .deck-card-actions {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 1rem;
     padding-top: 1rem;
@@ -5190,9 +5191,24 @@ h5 {
 }
 
 .deck-card-actions .btn {
-    flex: 1;
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+}
+
+.deck-card-actions .btn-view,
+.deck-card-actions .btn-delete {
+    flex: 0 0 auto;
+}
+
+.deck-card-actions .btn-share,
+.deck-card-actions .btn-unshare {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .deck-card-actions .btn-share {
@@ -5201,6 +5217,14 @@ h5 {
 
 .deck-card-actions .btn-share:hover {
     background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.deck-card-actions .btn-unshare {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.deck-card-actions .btn-unshare:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
 }
 
 /* Share Deck Modal */
