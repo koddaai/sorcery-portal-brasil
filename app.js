@@ -8611,11 +8611,42 @@ function addPreconToCollection(preconId) {
     // Calculate total cards added
     const totalCards = precon.cards.reduce((sum, c) => sum + (c.qty || 1), 0);
 
+    // Also add precon as a deck if not already exists
+    const deckName = precon.name;
+    const deckExists = decks.some(d => d.name === deckName);
+
+    if (!deckExists) {
+        // Convert precon cards to deck format
+        const deckCards = [];
+        precon.cards.forEach(card => {
+            // Look up card type from allCards
+            const cardData = allCards.find(c => c.name.toLowerCase() === card.name.toLowerCase());
+            const cardType = cardData?.guardian?.type?.toLowerCase() || 'unknown';
+
+            // Add each copy as separate entry (deck format)
+            for (let i = 0; i < (card.qty || 1); i++) {
+                deckCards.push({ name: card.name, type: cardType });
+            }
+        });
+
+        const newDeck = {
+            id: `precon-${preconId}-${Date.now()}`,
+            name: deckName,
+            avatar: precon.avatar,
+            cards: deckCards,
+            createdAt: new Date().toISOString(),
+            isPrecon: true
+        };
+
+        decks.push(newDeck);
+    }
+
     // Save and update UI
     saveToStorage();
     showSuccessToast(`${precon.name} adicionado!`, `${totalCards} cartas`);
     renderPreconGrid(); // Refresh grid to show updated state
     renderCollection();
+    renderUserDecks(); // Refresh decks tab
     updateStats();
 }
 
@@ -8670,6 +8701,13 @@ function removePreconFromCollection(preconId) {
     // Remove precon from owned set
     ownedPrecons.delete(preconId);
 
+    // Also remove the precon deck if it exists
+    const deckName = precon.name;
+    const deckIndex = decks.findIndex(d => d.name === deckName);
+    if (deckIndex >= 0) {
+        decks.splice(deckIndex, 1);
+    }
+
     // Calculate total cards removed
     const totalCards = precon.cards.reduce((sum, c) => sum + (c.qty || 1), 0);
 
@@ -8678,6 +8716,7 @@ function removePreconFromCollection(preconId) {
     showSuccessToast(`${precon.name} removido!`, `${totalCards} cartas`);
     renderPreconGrid(); // Refresh grid to show updated state
     renderCollection();
+    renderUserDecks(); // Refresh decks tab
     updateStats();
 }
 
