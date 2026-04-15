@@ -2675,40 +2675,60 @@ function loadFromStorage() {
         }
     }
 
-    // Sync collection from VariantTracker (single source of truth)
-    syncCollectionFromVariantTracker();
+    // NOTE: Sync from VariantTracker disabled - was causing duplicate cards
+    // The two systems (collection Map and VariantTracker) will remain separate
+    // Both are persisted to localStorage independently
+    // TODO: Implement proper unification with correct name matching
+    // syncCollectionFromVariantTracker();
 }
 
 // Sync main collection Map from VariantTracker data
-// VariantTracker has detailed per-variant data, so it's the source of truth
+// Only syncs if collection is significantly smaller than VariantTracker
+// This prevents duplicates from name conversion issues
 function syncCollectionFromVariantTracker() {
     const tracker = window.variantTracker;
     if (!tracker || !tracker.collection) return;
 
-    const variantCards = Object.keys(tracker.collection);
-    if (variantCards.length === 0) return;
+    const variantCardCount = Object.keys(tracker.collection).length;
+    if (variantCardCount === 0) return;
 
-    // Check if main collection is missing cards from VariantTracker
-    let needsSync = false;
-    for (const cardName of variantCards) {
-        if (!collection.has(cardName)) {
-            needsSync = true;
-            break;
+    // Only sync if collection is significantly smaller (more than 20% difference)
+    // This indicates data loss or first-time sync needed
+    const sizeDiff = variantCardCount - collection.size;
+    if (sizeDiff <= Math.max(10, variantCardCount * 0.1)) {
+        console.log('[Sync] Collections are similar in size, skipping sync');
+        return;
+    }
+
+    console.log('[Sync] Collection missing', sizeDiff, 'cards from VariantTracker, syncing...');
+
+    // Build a map of normalized names to proper display names from allCards
+    const normalizedToDisplay = new Map();
+    if (typeof allCards !== 'undefined' && allCards.length > 0) {
+        for (const card of allCards) {
+            const normalized = card.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+            normalizedToDisplay.set(normalized, card.name);
         }
     }
 
-    if (!needsSync && collection.size >= variantCards.length) {
-        return; // Collections are in sync
-    }
-
-    console.log('[Sync] Syncing collection from VariantTracker...', variantCards.length, 'cards');
-
-    // Build collection from VariantTracker (aggregate quantities by card name)
     const now = new Date().toISOString();
+    let addedCount = 0;
 
-    for (const normalizedName of variantCards) {
+    for (const normalizedName of Object.keys(tracker.collection)) {
         const cardData = tracker.collection[normalizedName];
         if (!cardData) continue;
+
+        // Get proper display name from allCards, or convert manually
+        let displayName = normalizedToDisplay.get(normalizedName);
+        if (!displayName) {
+            // Fallback: convert normalized name to title case
+            displayName = normalizedName.split('_').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+        }
+
+        // Skip if already in collection
+        if (collection.has(displayName)) continue;
 
         // Sum quantities across all variants
         let totalQty = 0;
@@ -2721,22 +2741,14 @@ function syncCollectionFromVariantTracker() {
             }
         }
 
-        // Convert normalized name back to display name
-        const displayName = normalizedName.split('_').map(word =>
-            word.charAt(0).toUpperCase() + word.slice(1)
-        ).join(' ');
-
-        // Update main collection
-        const existing = collection.get(displayName);
-        if (!existing || (existing.qty || 0) < totalQty) {
-            collection.set(displayName, { qty: totalQty, addedAt: earliestDate });
-        }
+        collection.set(displayName, { qty: totalQty, addedAt: earliestDate });
+        addedCount++;
     }
 
-    console.log('[Sync] Collection synced:', collection.size, 'cards');
-
-    // Save updated collection
-    saveToStorage();
+    if (addedCount > 0) {
+        console.log('[Sync] Added', addedCount, 'cards from VariantTracker. Total:', collection.size);
+        saveToStorage();
+    }
 }
 
 // Save data to localStorage (per-user if logged in)
