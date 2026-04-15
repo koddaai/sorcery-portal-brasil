@@ -8616,16 +8616,21 @@ function addPreconToCollection(preconId) {
     const deckExists = decks.some(d => d.name === deckName);
 
     if (!deckExists) {
-        // Convert precon cards to deck format
-        const deckCards = [];
+        // Convert precon cards to deck format (spellbook + atlas)
+        const spellbook = [];
+        const atlas = [];
+
         precon.cards.forEach(card => {
             // Look up card type from allCards
             const cardData = allCards.find(c => c.name.toLowerCase() === card.name.toLowerCase());
             const cardType = cardData?.guardian?.type?.toLowerCase() || 'unknown';
+            const qty = card.qty || 1;
 
-            // Add each copy as separate entry (deck format)
-            for (let i = 0; i < (card.qty || 1); i++) {
-                deckCards.push({ name: card.name, type: cardType });
+            // Sites go to atlas, everything else to spellbook
+            if (cardType === 'site') {
+                atlas.push({ name: card.name, qty });
+            } else {
+                spellbook.push({ name: card.name, qty });
             }
         });
 
@@ -8633,7 +8638,8 @@ function addPreconToCollection(preconId) {
             id: `precon-${preconId}-${Date.now()}`,
             name: deckName,
             avatar: precon.avatar,
-            cards: deckCards,
+            spellbook: spellbook,
+            atlas: atlas,
             createdAt: new Date().toISOString(),
             isPrecon: true
         };
@@ -14326,3 +14332,8 @@ window.renderProfileView = renderProfileView;
 window.acceptCookies = acceptCookies;
 window.manageCookies = manageCookies;
 window.showLegalPage = showLegalPage;
+
+// Export deck builder functions
+window.openDeckBuilder = openDeckBuilder;
+window.openNewDeckModal = openDeckBuilder; // Alias for backwards compatibility
+window.openImportDeckModal = openImportDeckModal;
