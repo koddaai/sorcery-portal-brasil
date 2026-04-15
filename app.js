@@ -2674,6 +2674,69 @@ function loadFromStorage() {
             });
         }
     }
+
+    // Sync collection from VariantTracker (single source of truth)
+    syncCollectionFromVariantTracker();
+}
+
+// Sync main collection Map from VariantTracker data
+// VariantTracker has detailed per-variant data, so it's the source of truth
+function syncCollectionFromVariantTracker() {
+    const tracker = window.variantTracker;
+    if (!tracker || !tracker.collection) return;
+
+    const variantCards = Object.keys(tracker.collection);
+    if (variantCards.length === 0) return;
+
+    // Check if main collection is missing cards from VariantTracker
+    let needsSync = false;
+    for (const cardName of variantCards) {
+        if (!collection.has(cardName)) {
+            needsSync = true;
+            break;
+        }
+    }
+
+    if (!needsSync && collection.size >= variantCards.length) {
+        return; // Collections are in sync
+    }
+
+    console.log('[Sync] Syncing collection from VariantTracker...', variantCards.length, 'cards');
+
+    // Build collection from VariantTracker (aggregate quantities by card name)
+    const now = new Date().toISOString();
+
+    for (const normalizedName of variantCards) {
+        const cardData = tracker.collection[normalizedName];
+        if (!cardData) continue;
+
+        // Sum quantities across all variants
+        let totalQty = 0;
+        let earliestDate = now;
+
+        for (const variant of Object.values(cardData)) {
+            totalQty += variant.qty || 1;
+            if (variant.addedAt && variant.addedAt < earliestDate) {
+                earliestDate = variant.addedAt;
+            }
+        }
+
+        // Convert normalized name back to display name
+        const displayName = normalizedName.split('_').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
+
+        // Update main collection
+        const existing = collection.get(displayName);
+        if (!existing || (existing.qty || 0) < totalQty) {
+            collection.set(displayName, { qty: totalQty, addedAt: earliestDate });
+        }
+    }
+
+    console.log('[Sync] Collection synced:', collection.size, 'cards');
+
+    // Save updated collection
+    saveToStorage();
 }
 
 // Save data to localStorage (per-user if logged in)
