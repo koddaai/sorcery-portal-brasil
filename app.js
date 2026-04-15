@@ -13531,7 +13531,9 @@ function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.classList.remove('hidden');
-        setupFocusTrap(modal);
+        // Focus first focusable element for accessibility
+        const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (focusable) focusable.focus();
         refreshIcons(modal);
     }
 }
