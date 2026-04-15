@@ -9628,6 +9628,17 @@ function renderUserDecks() {
             unshareDeck(index);
         });
     });
+
+    // Add click handler for deck card itself (opens deck composition)
+    decksListEl.querySelectorAll('.deck-card').forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+            // Don't trigger if clicking on a button
+            if (e.target.closest('.deck-action-btn')) return;
+            const index = parseInt(card.dataset.deckIndex);
+            viewDeck(index);
+        });
+    });
 }
 
 // Delete User Deck

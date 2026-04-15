@@ -5392,13 +5392,15 @@ h5 {
 
 .deck-action-btn.delete {
     flex: 0 0 auto;
-    padding: 0.5rem;
-    color: var(--text-tertiary);
+    padding: 0.5rem 0.75rem;
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: #f87171;
 }
 
 .deck-action-btn.delete:hover {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.4);
     color: #ef4444;
 }
 
