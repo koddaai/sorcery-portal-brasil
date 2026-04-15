@@ -9829,14 +9829,29 @@ function openDeckBuilder() {
 
 // Close Deck Builder
 function closeDeckBuilder() {
-    document.getElementById('deck-builder-modal').classList.add('hidden');
+    const modal = document.getElementById('deck-builder-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = ''; // Reset inline style
+    }
     // Clear the builder
-    document.getElementById('deck-name-input').value = '';
-    document.getElementById('deck-spellbook').innerHTML = '';
-    document.getElementById('deck-atlas').innerHTML = '';
-    document.getElementById('spellbook-count').textContent = '0';
-    document.getElementById('atlas-count').textContent = '0';
-    document.getElementById('deck-total-value').textContent = '$0.00';
+    const nameInput = document.getElementById('deck-name-input');
+    if (nameInput) nameInput.value = '';
+
+    const spellbook = document.getElementById('deck-spellbook');
+    if (spellbook) spellbook.innerHTML = '';
+
+    const atlas = document.getElementById('deck-atlas');
+    if (atlas) atlas.innerHTML = '';
+
+    const spellbookCount = document.getElementById('spellbook-count');
+    if (spellbookCount) spellbookCount.textContent = '0';
+
+    const atlasCount = document.getElementById('atlas-count');
+    if (atlasCount) atlasCount.textContent = '0';
+
+    const totalValue = document.getElementById('deck-total-value');
+    if (totalValue) totalValue.textContent = '$0.00';
 }
 
 // Save Deck from Builder
@@ -9877,10 +9892,11 @@ function viewDeck(index) {
     const deck = decks[index];
     if (!deck) {
         console.error('[viewDeck] Deck not found at index:', index);
+        showErrorToast('Deck não encontrado');
         return;
     }
 
-    console.log('[viewDeck] Opening deck:', deck.name, deck);
+    console.log('[viewDeck] Opening deck:', deck.name, 'spellbook:', deck.spellbook?.length, 'atlas:', deck.atlas?.length);
 
     // Get modal elements
     const modal = document.getElementById('deck-builder-modal');
@@ -9888,16 +9904,26 @@ function viewDeck(index) {
 
     if (!modal) {
         console.error('[viewDeck] Modal not found');
+        showErrorToast('Erro ao abrir visualizador de deck');
         return;
     }
 
-    // Open deck builder with deck loaded
-    if (nameInput) nameInput.value = deck.name;
+    // Set deck name
+    if (nameInput) {
+        nameInput.value = deck.name || '';
+    }
+
+    // Show modal - remove hidden and force display
     modal.classList.remove('hidden');
+    modal.style.display = 'flex';
 
     // Populate deck cards
     renderDeckCards(deck);
-    refreshIcons();
+
+    // Refresh icons after DOM update
+    requestAnimationFrame(() => {
+        refreshIcons(modal);
+    });
 }
 
 // Render Deck Cards in Builder
