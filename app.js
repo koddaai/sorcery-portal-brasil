@@ -6162,13 +6162,13 @@ function sortCards(cards, sortOption) {
             case 'name-desc':
                 return b.name.localeCompare(a.name);
             case 'price-desc': {
-                const priceA = getCardPrice(a) || 0;
-                const priceB = getCardPrice(b) || 0;
+                const priceA = getCardPriceForSort(a) || 0;
+                const priceB = getCardPriceForSort(b) || 0;
                 return priceB - priceA;
             }
             case 'price-asc': {
-                const priceA = getCardPrice(a) || 0;
-                const priceB = getCardPrice(b) || 0;
+                const priceA = getCardPriceForSort(a) || 0;
+                const priceB = getCardPriceForSort(b) || 0;
                 return priceA - priceB;
             }
             case 'rarity-desc': {
@@ -6198,9 +6198,10 @@ function sortCards(cards, sortOption) {
 }
 
 /**
- * Get card price for sorting
+ * Get card price for sorting (from card object)
  */
-function getCardPrice(card) {
+function getCardPriceForSort(card) {
+    if (!card || !card.name) return 0;
     if (typeof priceService !== 'undefined') {
         return priceService.getPrice(card.name, 'standard') || 0;
     }
@@ -6474,7 +6475,7 @@ function createCardHTML(card) {
     const elementClass = (card.elements || 'None').toLowerCase().split(',')[0].trim();
 
     // Get price for badge
-    const price = getCardPrice(card);
+    const price = getCardPriceForSort(card);
     const priceDisplay = price > 0 ? `$${price.toFixed(2)}` : '';
     const priceBadgeClass = price > 0 ? 'card-price-badge' : 'card-price-badge no-price hidden';
 
