@@ -9,6 +9,7 @@ class CommunityDeckService {
     constructor() {
         // Usar configuração centralizada - agora usa proxy Cloudflare Worker
         const config = typeof SecurityConfig !== 'undefined' ? SecurityConfig.api : null;
+        this.isProxyMode = config?.isUsingProxy || false;
         this.baseUrl = config?.baseUrl || 'https://sorcery-api-proxy.pedro-4e6.workers.dev';
         this.apiToken = config?.token; // Token agora fica apenas no Worker
         this.baseId = config?.baseId || 'pybbgkutded1ay0';
@@ -16,12 +17,16 @@ class CommunityDeckService {
         this.cachedDecks = [];
         this.lastFetch = null;
         this.cacheTime = 5 * 60 * 1000; // 5 minutes cache
+
+        console.log('[CommunityDeck] Mode:', this.isProxyMode ? 'PROXY' : 'DIRECT');
+        console.log('[CommunityDeck] Base URL:', this.baseUrl);
     }
 
     getHeaders() {
         // Quando usando proxy, não enviar token (Worker adiciona)
         const headers = { 'Content-Type': 'application/json' };
-        if (this.apiToken) {
+        // Apenas enviar token em modo direto (desenvolvimento)
+        if (!this.isProxyMode && this.apiToken) {
             headers['xc-token'] = this.apiToken;
         }
         return headers;
