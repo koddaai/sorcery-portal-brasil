@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sorcery-portal-brasil",
+  "compatibility_date": "2026-04-16",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    "exclude": [
+      "*.pdf",
+      ".git",
+      "node_modules",
+      ".wrangler",
+      "api-proxy",
+      "cloudflare-worker"
+    ]
+  }
+}
