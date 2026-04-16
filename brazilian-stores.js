@@ -299,6 +299,7 @@ function initCommunity() {
     renderStores();
     setupStoreFilters();
     toggleStoresView('map'); // Default to map view
+    loadStoresMap(); // Auto-load the map
 }
 
 // Toggle between map and grid view
