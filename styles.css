@@ -5781,16 +5781,17 @@ a.nav-dropdown-item {
         position: fixed;
         left: var(--space-3);
         right: var(--space-3);
-        top: auto;
-        transform: none;
+        top: 110px;
+        transform: none !important;
         min-width: auto;
-        max-height: 70vh;
+        max-height: calc(100vh - 130px);
         overflow-y: auto;
+        z-index: 1000;
     }
 
     .nav-dropdown:hover .nav-dropdown-menu,
     .nav-dropdown.open .nav-dropdown-menu {
-        transform: none;
+        transform: none !important;
     }
 
     .nav-dropdown-item {
