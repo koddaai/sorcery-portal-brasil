@@ -599,6 +599,23 @@ h5 {
     opacity: 1;
 }
 
+.nav-dropdown-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: var(--space-2) 0;
+}
+
+.nav-dropdown-item .external-icon {
+    width: 12px;
+    height: 12px;
+    margin-left: auto;
+    opacity: 0.4;
+}
+
+a.nav-dropdown-item {
+    text-decoration: none;
+}
+
 /* ============================================
    BREADCRUMB NAVIGATION
    ============================================ */

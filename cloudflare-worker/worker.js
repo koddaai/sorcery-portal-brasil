@@ -1,7 +1,7 @@
 // Sorcery Portal Brasil - NocoDB API Proxy
 // Este Worker atua como proxy seguro para a API do NocoDB
 
-const NOCODB_BASE_URL = 'https://dados.kodda.ai/api/v2';
+const NOCODB_BASE_URL = 'https://dados.kodda.ai';
 const ALLOWED_ORIGINS = [
   'https://sorcery.com.br',
   'https://www.sorcery.com.br',
