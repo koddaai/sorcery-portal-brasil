@@ -2348,6 +2348,14 @@ function debounce(func, wait, options = {}) {
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', async () => {
+    // Hide welcome splash after animation
+    const welcomeSplash = document.getElementById('welcome-splash');
+    if (welcomeSplash) {
+        setTimeout(() => {
+            welcomeSplash.classList.add('hidden');
+        }, 1700); // 1.2s delay + 0.5s fade
+    }
+
     // IMPORTANT: Initialize auth FIRST before anything else
     initAuthUI();
 
@@ -2407,17 +2415,12 @@ async function loadCards() {
             return;
         }
 
-        // No cache - show loading and load from network
-        loadingEl.classList.remove('hidden');
+        // No cache - load silently in background
         await loadCardsFromNetwork();
         // Rebuild collection from VariantTracker now that allCards is loaded
         rebuildCollectionFromVariantTracker();
     } catch (error) {
-        loadingEl.classList.remove('hidden');
-        loadingEl.innerHTML = `
-            <p>Erro ao carregar cards. Por favor, atualize a página.</p>
-            <p style="color: var(--text-secondary); margin-top: 1rem;">${error.message}</p>
-        `;
+        console.error('Error loading cards:', error);
     }
 }
 
@@ -2471,7 +2474,6 @@ async function loadCardsFromNetwork() {
     }
     filteredCards = [...allCards];
     buildSearchIndex();
-    loadingEl.classList.add('hidden');
     // Save to cache for next load
     saveCardsToCache(allCards);
 }
