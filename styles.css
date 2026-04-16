@@ -8992,33 +8992,26 @@ a.nav-dropdown-item {
     gap: 0.375rem;
 }
 
-/* Stores Map Section */
-.stores-map-container {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: var(--space-5);
+/* Stores Mini Map */
+.stores-mini-map {
     margin-bottom: var(--space-5);
-}
-
-@media (max-width: 900px) {
-    .stores-map-container {
-        grid-template-columns: 1fr;
-    }
-}
-
-.stores-map {
-    position: relative;
-    height: 400px;
     border-radius: var(--radius-lg);
     overflow: hidden;
-    background: var(--bg-surface-2);
     border: 1px solid var(--border-color);
 }
 
-.stores-map iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+/* Stores List Container */
+.stores-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+@media (max-width: 640px) {
+    .stores-list-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Leaflet Map Styles */
@@ -9085,52 +9078,27 @@ a.nav-dropdown-item {
 }
 
 /* State Groups */
-.stores-by-state {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: var(--space-2);
-}
-
-.stores-by-state::-webkit-scrollbar {
-    width: 6px;
-}
-
-.stores-by-state::-webkit-scrollbar-track {
-    background: var(--bg-surface-2);
-    border-radius: var(--radius-full);
-}
-
-.stores-by-state::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: var(--radius-full);
-}
-
-.stores-by-state::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-gold);
-}
-
 .state-group {
     background: var(--bg-surface-2);
-    border-radius: var(--radius-md);
-    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    border: 1px solid var(--border-color);
 }
 
 .state-group-header {
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-3);
     font-weight: 600;
     color: var(--accent-gold);
-    font-size: 0.9375rem;
+    font-size: 1rem;
+    font-family: 'Cinzel', serif;
 }
 
 .state-group-header i {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .state-store-list {
@@ -9143,26 +9111,61 @@ a.nav-dropdown-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-3);
     background: var(--bg-surface-3);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     font-size: 0.875rem;
     transition: all var(--duration-fast);
     cursor: pointer;
+    text-decoration: none;
+    border: 1px solid transparent;
 }
 
 .state-store-item:hover {
-    background: rgba(212, 175, 55, 0.1);
+    background: rgba(212, 175, 55, 0.15);
+    border-color: var(--accent-gold);
+    transform: translateX(4px);
+}
+
+.state-store-info {
+    flex: 1;
 }
 
 .state-store-name {
     color: var(--text-primary);
-    font-weight: 500;
+    font-weight: 600;
+    margin-bottom: 2px;
 }
 
 .state-store-city {
     color: var(--text-tertiary);
     font-size: 0.75rem;
+}
+
+.store-events-badge {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 2px 8px;
+    background: rgba(74, 157, 74, 0.2);
+    color: #4a9d4a;
+    border-radius: var(--radius-full);
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.state-store-actions {
+    color: var(--accent-gold);
+    opacity: 0.6;
+    transition: opacity var(--duration-fast);
+}
+
+.state-store-item:hover .state-store-actions {
+    opacity: 1;
+}
+
+.state-store-actions i {
+    width: 18px;
+    height: 18px;
 }
 
 .state-store-actions {

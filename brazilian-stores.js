@@ -296,41 +296,8 @@ let currentStoresView = 'map';
 // Initialize community features
 function initCommunity() {
     renderStoresByState();
-    renderStores();
-    setupStoreFilters();
-    toggleStoresView('map'); // Default to map view
-    loadStoresMap(); // Auto-load the map
+    loadStoresMap(); // Load the mini map
 }
-
-// Toggle between map and grid view
-function toggleStoresView(view) {
-    currentStoresView = view;
-
-    const mapView = document.getElementById('stores-map-view');
-    const gridView = document.getElementById('stores-grid');
-    const mapBtn = document.querySelector('.stores-view-btn[data-view="map"]');
-    const gridBtn = document.querySelector('.stores-view-btn[data-view="grid"]');
-
-    if (view === 'map') {
-        mapView?.classList.remove('hidden');
-        gridView?.classList.add('hidden');
-        mapBtn?.classList.add('active');
-        gridBtn?.classList.remove('active');
-    } else {
-        mapView?.classList.add('hidden');
-        gridView?.classList.remove('hidden');
-        mapBtn?.classList.remove('active');
-        gridBtn?.classList.add('active');
-
-        // Ensure store cards are visible (bypass animation issues)
-        const cards = gridView?.querySelectorAll('.store-card');
-        cards?.forEach(card => {
-            card.style.setProperty('opacity', '1', 'important');
-            card.style.setProperty('transform', 'scale(1)', 'important');
-        });
-    }
-}
-window.toggleStoresView = toggleStoresView;
 
 // Leaflet map instance
 let storesMap = null;
@@ -454,20 +421,16 @@ function renderStoresByState() {
                 </div>
                 <div class="state-store-list">
                     ${stores.map(store => `
-                        <div class="state-store-item" onclick="openInMaps(PHYSICAL_STORES.find(s => s.name === '${store.name.replace(/'/g, "\\'")}'))">
-                            <div>
+                        <a href="${store.url}" target="_blank" rel="noopener" class="state-store-item">
+                            <div class="state-store-info">
                                 <div class="state-store-name">${store.name}</div>
-                                <div class="state-store-city">${store.city}</div>
+                                <div class="state-store-city">${store.city} • ${store.type}</div>
+                                ${store.hasEvents ? '<span class="store-events-badge">Eventos</span>' : ''}
                             </div>
                             <div class="state-store-actions">
-                                <a href="${store.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Visitar site">
-                                    <i data-lucide="external-link"></i>
-                                </a>
-                                ${store.phone ? `<a href="tel:${store.phone.replace(/[^\d+]/g, '')}" onclick="event.stopPropagation()" title="Ligar">
-                                    <i data-lucide="phone"></i>
-                                </a>` : ''}
+                                <i data-lucide="external-link"></i>
                             </div>
-                        </div>
+                        </a>
                     `).join('')}
                 </div>
             </div>
@@ -484,17 +447,15 @@ function renderStoresByState() {
                 </div>
                 <div class="state-store-list">
                     ${ONLINE_ONLY_STORES.map(store => `
-                        <div class="state-store-item" onclick="window.open('${store.url}', '_blank')">
-                            <div>
+                        <a href="${store.url}" target="_blank" rel="noopener" class="state-store-item">
+                            <div class="state-store-info">
                                 <div class="state-store-name">${store.name}</div>
                                 <div class="state-store-city">${store.type}</div>
                             </div>
                             <div class="state-store-actions">
-                                <a href="${store.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Visitar site">
-                                    <i data-lucide="external-link"></i>
-                                </a>
+                                <i data-lucide="external-link"></i>
                             </div>
-                        </div>
+                        </a>
                     `).join('')}
                 </div>
             </div>

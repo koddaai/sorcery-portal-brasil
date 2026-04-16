@@ -1285,44 +1285,19 @@
             <section id="community-view" class="view">
                 <!-- Brazilian Stores -->
                 <div class="stores-section">
-                    <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-                        <div>
-                            <h2>Lojas de Sorcery no Brasil</h2>
-                            <p class="subtitle">Encontre Sorcery TCG nas melhores lojas do Brasil</p>
-                        </div>
-                        <div class="stores-view-toggle">
-                            <button class="stores-view-btn active" data-view="map" onclick="toggleStoresView('map')" aria-label="Ver mapa">
-                                <i data-lucide="map"></i>
-                            </button>
-                            <button class="stores-view-btn" data-view="grid" onclick="toggleStoresView('grid')" aria-label="Ver grade">
-                                <i data-lucide="grid-3x3"></i>
-                            </button>
-                        </div>
+                    <div class="section-header">
+                        <h2>Lojas de Sorcery no Brasil</h2>
+                        <p class="subtitle">Clique em uma loja para visitar o site. Mapa mostra localização das lojas físicas.</p>
                     </div>
 
-                    <div class="filters stores-filters">
-                        <select id="store-type-filter" class="filter-select">
-                            <option value="">Todos os Tipos</option>
-                            <option value="Sealed/Singles">Sealed + Singles</option>
-                            <option value="Sealed">Apenas Sealed</option>
-                            <option value="Singles">Apenas Singles</option>
-                            <option value="Acessórios">Acessórios</option>
-                        </select>
+                    <!-- Mini Map Reference -->
+                    <div class="stores-mini-map">
+                        <div id="stores-leaflet-map" style="height: 250px; width: 100%; border-radius: 12px;"></div>
                     </div>
 
-                    <!-- Map View -->
-                    <div id="stores-map-view" class="stores-map-container">
-                        <div class="stores-map">
-                            <div id="stores-leaflet-map" style="height: 450px; width: 100%; border-radius: 12px;"></div>
-                        </div>
-                        <div id="stores-by-state" class="stores-by-state">
-                            <!-- State groups will be rendered by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Grid View -->
-                    <div id="stores-grid" class="stores-grid hidden">
-                        <!-- Stores will be rendered by JS -->
+                    <!-- Stores List by State -->
+                    <div id="stores-by-state" class="stores-list-container">
+                        <!-- State groups will be rendered by JS -->
                     </div>
                 </div>
 
