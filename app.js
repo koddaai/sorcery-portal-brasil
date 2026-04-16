@@ -1407,12 +1407,28 @@ function populateMobilePricesTab(card) {
     const imageSlug = getCardImageSlug(card);
     const imageUrl = imageSlug ? `${IMAGE_CDN}${imageSlug}.png` : '';
 
-    // Get prices from TCG service
+    // Get prices from tcgcsvPriceService (dados reais do TCGPlayer)
     let prices = { standard: null, foil: null, rainbow: null };
-    if (typeof tcgPriceService !== 'undefined') {
-        const priceData = tcgPriceService.getPricesForCard(card.name);
-        if (priceData) {
-            prices = priceData;
+    if (typeof tcgcsvPriceService !== 'undefined' && tcgcsvPriceService.cardPrices.size > 0) {
+        const allPrices = tcgcsvPriceService.getAllPrices(card.name);
+        if (allPrices && allPrices.length > 0) {
+            // Organizar preços por finish
+            allPrices.forEach(p => {
+                const priceObj = { low: p.lowPrice, mid: p.midPrice, market: p.marketPrice };
+                if (p.finish === 'Normal') {
+                    if (!prices.standard || p.marketPrice < prices.standard.market) {
+                        prices.standard = priceObj;
+                    }
+                } else if (p.finish === 'Foil') {
+                    if (!prices.foil || p.marketPrice < prices.foil.market) {
+                        prices.foil = priceObj;
+                    }
+                } else if (p.finish === 'Foil Etched' || p.finish === 'Rainbow') {
+                    if (!prices.rainbow || p.marketPrice < prices.rainbow.market) {
+                        prices.rainbow = priceObj;
+                    }
+                }
+            });
         }
     }
 
@@ -2371,11 +2387,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load community decks from server (in background)
     loadCommunityDecks();
 
-    // Handle deep links
+    // Handle deep links (URL hash navigation)
     handleDeepLink();
-
-    // Listen for hash changes (browser back/forward)
-    window.addEventListener('hashchange', handleDeepLink);
 });
 
 // Load cards from API, cache, or local file
@@ -3150,13 +3163,24 @@ function getUniqueCardCount() {
 // Get card price (helper for sorting)
 // If variant info is available, uses the specific variant's set for pricing
 function getCardPrice(cardName, setName = null, finish = 'Standard') {
-    if (typeof priceService === 'undefined') return 0;
     const card = allCards.find(c => c.name === cardName);
     if (!card) return 0;
 
     // Ensure finish is a string
     const finishStr = typeof finish === 'string' ? finish : 'Standard';
-    // Try to get price for specific set/finish
+
+    // Mapear finish para o formato esperado pelo tcgcsv (Normal, Foil, etc)
+    const tcgcsvFinish = finishStr === 'Standard' ? 'Normal' : finishStr;
+
+    // 1. Prioridade: tcgcsvPriceService (dados reais do TCGPlayer)
+    // Usar getLowPrice para mostrar o preço MÍNIMO
+    if (typeof tcgcsvPriceService !== 'undefined' && tcgcsvPriceService.cardPrices.size > 0) {
+        const price = tcgcsvPriceService.getLowPrice(cardName, setName, tcgcsvFinish);
+        if (price && price > 0) return price;
+    }
+
+    // 2. Fallback: priceService antigo
+    if (typeof priceService === 'undefined') return 0;
     const variant = finishStr.toLowerCase() || 'standard';
     const price = priceService.getPrice(cardName, variant, setName);
     if (price) return price;
@@ -3573,6 +3597,32 @@ function setupEventListeners() {
     // Import text input
     document.getElementById('import-deck-text')?.addEventListener('input', debounce(handleImportTextInput, 300));
 
+    // Import CSV file
+    const csvUploadArea = document.getElementById('csv-upload-area');
+    const csvFileInput = document.getElementById('import-csv-file');
+
+    csvUploadArea?.addEventListener('click', () => csvFileInput?.click());
+    csvUploadArea?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        csvUploadArea.classList.add('drag-over');
+    });
+    csvUploadArea?.addEventListener('dragleave', () => {
+        csvUploadArea.classList.remove('drag-over');
+    });
+    csvUploadArea?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        csvUploadArea.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (file && file.name.endsWith('.csv')) {
+            handleCsvFileSelect(file);
+        }
+    });
+    csvFileInput?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) handleCsvFileSelect(file);
+    });
+    document.getElementById('csv-remove-btn')?.addEventListener('click', clearCsvFile);
+
     // Close import modal on backdrop click
     document.getElementById('import-deck-modal')?.addEventListener('click', (e) => {
         if (e.target.id === 'import-deck-modal') closeModal('import-deck-modal');
@@ -3581,38 +3631,380 @@ function setupEventListeners() {
 
 // View information for breadcrumbs
 const VIEW_INFO = {
-    'home': { name: 'Início', category: null },
-    'cards': { name: 'Cards', category: null },
-    'art': { name: 'Artistas', category: null },
-    'decks': { name: 'Decks', category: null },
-    'collection': { name: 'Coleção', category: null },
+    'home': {
+        name: 'Início',
+        category: null,
+        slug: '',
+        title: 'Sorcery Brasil - O Portal Brasileiro de Sorcery TCG',
+        description: 'O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.'
+    },
+    'cards': {
+        name: 'Cards',
+        category: null,
+        slug: 'cards',
+        title: 'Catálogo de Cards - Sorcery Brasil',
+        description: 'Explore todos os cards de Sorcery: Contested Realm. Filtros por elemento, tipo, raridade e mais. Preços atualizados.'
+    },
+    'art': {
+        name: 'Artistas',
+        category: null,
+        slug: 'artistas',
+        title: 'Galeria de Artistas - Sorcery Brasil',
+        description: 'Conheça os artistas que ilustram Sorcery: Contested Realm. Arte tradicional pintada à mão por mestres da fantasia.'
+    },
+    'decks': {
+        name: 'Decks',
+        category: null,
+        slug: 'decks',
+        title: 'Decks da Comunidade - Sorcery Brasil',
+        description: 'Descubra decks da comunidade, construa o seu próprio deck e compartilhe estratégias de Sorcery: Contested Realm.'
+    },
+    'collection': {
+        name: 'Coleção',
+        category: null,
+        slug: 'colecao',
+        title: 'Minha Coleção - Sorcery Brasil',
+        description: 'Gerencie sua coleção de Sorcery: Contested Realm. Acompanhe progresso, valor e estatísticas dos seus cards.'
+    },
     // Ferramentas
-    'wishlist': { name: 'Wishlist', category: 'Ferramentas', categoryView: null },
-    'trade': { name: 'Trocas', category: 'Ferramentas', categoryView: null },
-    'stats': { name: 'Estatísticas', category: 'Ferramentas', categoryView: null },
+    'wishlist': {
+        name: 'Wishlist',
+        category: 'Ferramentas',
+        categoryView: null,
+        slug: 'wishlist',
+        title: 'Wishlist - Sorcery Brasil',
+        description: 'Crie sua lista de desejos de cards de Sorcery: Contested Realm e acompanhe preços.'
+    },
+    'trade': {
+        name: 'Trocas',
+        category: 'Ferramentas',
+        categoryView: null,
+        slug: 'trocas',
+        title: 'Trade Binder - Sorcery Brasil',
+        description: 'Organize seus cards para troca. Trade Binder e lista de procurados para facilitar trocas com a comunidade.'
+    },
+    'stats': {
+        name: 'Estatísticas',
+        category: 'Ferramentas',
+        categoryView: null,
+        slug: 'estatisticas',
+        title: 'Estatísticas da Coleção - Sorcery Brasil',
+        description: 'Visualize estatísticas detalhadas da sua coleção de Sorcery: progresso por set, elemento, raridade e mais.'
+    },
     // 'artist-stats' foi movido para abas dentro de 'art' - redireciona automaticamente
-    'artist-stats': { name: 'Coleção por Artista', category: null, redirectTo: 'art', redirectTab: 'collection' },
+    'artist-stats': { name: 'Coleção por Artista', category: null, redirectTo: 'art', redirectTab: 'collection', slug: 'artistas/colecao' },
     // Aprender
-    'codex': { name: 'Codex', category: 'Aprender', categoryView: null },
-    'rulebook': { name: 'Rulebook', category: 'Aprender', categoryView: null },
-    'faq': { name: 'FAQ', category: 'Aprender', categoryView: null },
-    'lore': { name: 'Lore', category: 'Aprender', categoryView: null },
-    'quiz': { name: 'Quiz', category: 'Aprender', categoryView: null },
-    'boosters': { name: 'Boosters', category: 'Aprender', categoryView: null },
+    'codex': {
+        name: 'Codex',
+        category: 'Aprender',
+        categoryView: null,
+        slug: 'codex',
+        title: 'Codex - Guia de Cards - Sorcery Brasil',
+        description: 'O codex completo de Sorcery: Contested Realm. Busca inteligente, detalhes de cards, estratégias e sinergias.'
+    },
+    'rulebook': {
+        name: 'Rulebook',
+        category: 'Aprender',
+        categoryView: null,
+        slug: 'regras',
+        title: 'Regras de Sorcery - Rulebook Completo - Sorcery Brasil',
+        description: 'Aprenda a jogar Sorcery: Contested Realm. Rulebook oficial completo em português com exemplos.'
+    },
+    'faq': {
+        name: 'FAQ',
+        category: 'Aprender',
+        categoryView: null,
+        slug: 'faq',
+        title: 'FAQ - Perguntas Frequentes - Sorcery Brasil',
+        description: 'Respostas para as dúvidas mais comuns sobre Sorcery: Contested Realm. Regras, mecânicas e interações.'
+    },
+    'lore': {
+        name: 'Lore',
+        category: 'Aprender',
+        categoryView: null,
+        slug: 'lore',
+        title: 'Lore de Sorcery - História do Jogo - Sorcery Brasil',
+        description: 'Explore a rica história e lore de Sorcery: Contested Realm. Descubra os reinos e suas magias ancestrais.'
+    },
+    'quiz': {
+        name: 'Quiz',
+        category: 'Aprender',
+        categoryView: null,
+        slug: 'quiz',
+        title: 'Quiz de Sorcery - Teste seu Conhecimento - Sorcery Brasil',
+        description: 'Teste seus conhecimentos sobre Sorcery: Contested Realm com nosso quiz interativo.'
+    },
+    'boosters': {
+        name: 'Boosters',
+        category: 'Aprender',
+        categoryView: null,
+        slug: 'boosters',
+        title: 'Simulador de Boosters - Sorcery Brasil',
+        description: 'Simule abertura de boosters de Sorcery: Contested Realm. Experimente a emoção sem gastar!'
+    },
     // Comunidade
-    'forum': { name: 'Fórum', category: 'Comunidade', categoryView: 'community' },
-    'marketplace': { name: 'Marketplace', category: 'Comunidade', categoryView: 'community' },
-    'community': { name: 'Discord & Links', category: 'Comunidade', categoryView: null },
-    'locator': { name: 'Lojas Brasil', category: 'Comunidade', categoryView: 'community' },
+    'forum': {
+        name: 'Fórum',
+        category: 'Comunidade',
+        categoryView: 'community',
+        slug: 'forum',
+        title: 'Fórum da Comunidade - Sorcery Brasil',
+        description: 'Participe das discussões da comunidade brasileira de Sorcery. Dúvidas, estratégias, classificados e mais.'
+    },
+    'marketplace': {
+        name: 'Marketplace',
+        category: 'Comunidade',
+        categoryView: 'community',
+        slug: 'marketplace',
+        title: 'Marketplace de Trocas - Sorcery Brasil',
+        description: 'Encontre pessoas para trocar cards de Sorcery: Contested Realm. Publique ofertas e encontre matches.'
+    },
+    'community': {
+        name: 'Discord & Links',
+        category: 'Comunidade',
+        categoryView: null,
+        slug: 'comunidade',
+        title: 'Comunidade - Sorcery Brasil',
+        description: 'Conecte-se com a comunidade brasileira de Sorcery: Discord, grupos, canais e mais.'
+    },
+    'locator': {
+        name: 'Lojas Brasil',
+        category: 'Comunidade',
+        categoryView: 'community',
+        slug: 'lojas',
+        title: 'Lojas de Sorcery no Brasil - Sorcery Brasil',
+        description: 'Encontre lojas que vendem Sorcery: Contested Realm no Brasil. Mapa interativo com todas as lojas.'
+    },
     // Explorar
-    'meta': { name: 'Meta & Tier List', category: 'Explorar', categoryView: null },
-    'top-cards': { name: 'Top Cards', category: 'Explorar', categoryView: null },
-    'timeline': { name: 'Timeline', category: 'Explorar', categoryView: null },
-    'news': { name: 'Notícias', category: 'Explorar', categoryView: null },
+    'meta': {
+        name: 'Meta & Tier List',
+        category: 'Explorar',
+        categoryView: null,
+        slug: 'meta',
+        title: 'Meta e Tier List - Sorcery Brasil',
+        description: 'Análise do meta atual de Sorcery: Contested Realm. Tier list de decks, avatares e estratégias competitivas.'
+    },
+    'top-cards': {
+        name: 'Top Cards',
+        category: 'Explorar',
+        categoryView: null,
+        slug: 'top-cards',
+        title: 'Top Cards Mais Valiosos - Sorcery Brasil',
+        description: 'Ranking dos cards mais valiosos de Sorcery: Contested Realm. Preços atualizados e tendências.'
+    },
+    'timeline': {
+        name: 'Timeline',
+        category: 'Explorar',
+        categoryView: null,
+        slug: 'timeline',
+        title: 'Timeline de Sorcery - Sorcery Brasil',
+        description: 'História dos lançamentos de Sorcery: Contested Realm. Sets, expansões e marcos importantes.'
+    },
+    'news': {
+        name: 'Notícias',
+        category: 'Explorar',
+        categoryView: null,
+        slug: 'noticias',
+        title: 'Notícias de Sorcery - Sorcery Brasil',
+        description: 'Últimas notícias de Sorcery: Contested Realm em português. Spoilers, eventos e atualizações.'
+    },
     // Outros
-    'dust': { name: 'Dust Tracker', category: 'Ferramentas', categoryView: null },
-    'promos': { name: 'Promos', category: 'Explorar', categoryView: null }
+    'dust': {
+        name: 'Dust Tracker',
+        category: 'Ferramentas',
+        categoryView: null,
+        slug: 'dust',
+        title: 'Dust Tracker - Sorcery Brasil',
+        description: 'Acompanhe seus Dust points de Sorcery: Contested Realm. Calcule recompensas e progresso.'
+    },
+    'promos': {
+        name: 'Promos',
+        category: 'Explorar',
+        categoryView: null,
+        slug: 'promos',
+        title: 'Cards Promocionais - Sorcery Brasil',
+        description: 'Cards promocionais de Sorcery: Contested Realm. Promos exclusivas, eventos e edições especiais.'
+    },
+    'profile': {
+        name: 'Perfil',
+        category: null,
+        slug: 'perfil',
+        title: 'Perfil de Jogador - Sorcery Brasil',
+        description: 'Perfil público de jogador de Sorcery: Contested Realm.'
+    }
 };
+
+// ============================================
+// ROUTER - SISTEMA DE ROTAS E SEO
+// ============================================
+
+/**
+ * Mapa de slug para viewName para navegação reversa
+ */
+const SLUG_TO_VIEW = {};
+Object.entries(VIEW_INFO).forEach(([viewName, info]) => {
+    if (info.slug) {
+        SLUG_TO_VIEW[info.slug] = viewName;
+    }
+});
+
+/**
+ * Atualiza a URL do navegador com o hash da view atual
+ */
+function updateURLHash(viewName, params = {}) {
+    const viewInfo = VIEW_INFO[viewName];
+    if (!viewInfo || !viewInfo.slug) return;
+
+    let hash = viewInfo.slug;
+
+    // Adiciona parâmetros extras se houver (ex: tab, id)
+    const paramStr = Object.entries(params)
+        .filter(([k, v]) => v)
+        .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+        .join('&');
+
+    if (paramStr) {
+        hash += '?' + paramStr;
+    }
+
+    // Atualiza URL sem recarregar a página
+    const newUrl = hash ? `#${hash}` : window.location.pathname;
+    if (window.location.hash !== `#${hash}`) {
+        history.pushState({ view: viewName, params }, '', newUrl);
+    }
+}
+
+/**
+ * Atualiza as meta tags SEO dinamicamente
+ */
+function updateSEOMeta(viewName, customData = {}) {
+    const viewInfo = VIEW_INFO[viewName] || VIEW_INFO['home'];
+    const baseUrl = 'https://sorcerybrasil.com.br';
+
+    // Title
+    const title = customData.title || viewInfo.title || 'Sorcery Brasil';
+    document.title = title;
+
+    // Description
+    const description = customData.description || viewInfo.description || '';
+
+    // Canonical URL
+    const canonicalUrl = viewInfo.slug ? `${baseUrl}/#${viewInfo.slug}` : baseUrl;
+
+    // Update meta tags
+    updateMetaTag('description', description);
+    updateMetaTag('og:title', title, 'property');
+    updateMetaTag('og:description', description, 'property');
+    updateMetaTag('og:url', canonicalUrl, 'property');
+    updateMetaTag('twitter:title', title, 'name');
+    updateMetaTag('twitter:description', description, 'name');
+    updateMetaTag('twitter:url', canonicalUrl, 'name');
+
+    // Update canonical link
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+        canonical.href = canonicalUrl;
+    }
+}
+
+/**
+ * Helper para atualizar uma meta tag específica
+ */
+function updateMetaTag(name, content, attr = 'name') {
+    let meta = document.querySelector(`meta[${attr}="${name}"]`);
+    if (meta) {
+        meta.setAttribute('content', content);
+    }
+}
+
+/**
+ * Parseia o hash da URL e retorna view e parâmetros
+ */
+function parseURLHash() {
+    const hash = window.location.hash.slice(1); // Remove #
+    if (!hash) return { view: 'home', params: {} };
+
+    // Separa slug de parâmetros
+    const [slug, queryString] = hash.split('?');
+
+    // Parse parâmetros
+    const params = {};
+    if (queryString) {
+        queryString.split('&').forEach(pair => {
+            const [key, value] = pair.split('=');
+            params[key] = decodeURIComponent(value || '');
+        });
+    }
+
+    // Casos especiais
+    if (slug.startsWith('card/')) {
+        return { view: 'card', cardSlug: slug.replace('card/', ''), params };
+    }
+
+    // Busca view pelo slug
+    const viewName = SLUG_TO_VIEW[slug] || 'home';
+
+    return { view: viewName, params };
+}
+
+/**
+ * Handler para mudanças de hash (browser back/forward)
+ */
+function handleHashChange() {
+    const { view, params, cardSlug } = parseURLHash();
+
+    // Caso especial: deep link para card
+    if (cardSlug) {
+        const result = findCardBySlug(cardSlug);
+        if (result && result.card) {
+            openCardModal(result.card.name, false);
+        }
+        return;
+    }
+
+    // Navega para a view
+    if (view && view !== 'home') {
+        switchView(view);
+
+        // Aplica parâmetros extras (ex: tab)
+        if (params.tab) {
+            if (view === 'art' && typeof switchArtTab === 'function') {
+                setTimeout(() => switchArtTab(params.tab), 100);
+            } else if (view === 'trade' && typeof switchTradeTab === 'function') {
+                setTimeout(() => switchTradeTab(params.tab), 100);
+            }
+        }
+    } else {
+        switchView('home');
+    }
+}
+
+// Registra listener para navegação do browser (back/forward)
+window.addEventListener('hashchange', handleHashChange);
+
+/**
+ * Compartilhar link da página atual
+ */
+function shareCurrentPage() {
+    const url = window.location.href;
+    const viewInfo = VIEW_INFO[currentViewName] || VIEW_INFO['home'];
+    const title = viewInfo.title || 'Sorcery Brasil';
+
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            url: url
+        }).catch(() => {});
+    } else {
+        // Fallback: copiar para clipboard
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Link copiado!', 'success');
+        }).catch(() => {
+            showToast('Erro ao copiar link', 'error');
+        });
+    }
+}
+window.shareCurrentPage = shareCurrentPage;
 
 // Update breadcrumb navigation
 function updateBreadcrumb(viewName) {
@@ -3661,9 +4053,19 @@ function updateBreadcrumb(viewName) {
 }
 
 // Switch View
+// Track current view for sharing and SEO
+let currentViewName = 'home';
+
 function switchView(viewName) {
     // Scroll to top when switching views
     window.scrollTo(0, 0);
+
+    // Update current view tracker
+    currentViewName = viewName;
+
+    // Update URL and SEO meta tags
+    updateURLHash(viewName);
+    updateSEOMeta(viewName);
 
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -6422,9 +6824,19 @@ function sortCards(cards, sortOption) {
  */
 function getCardPriceForSort(card) {
     if (!card || !card.name) return 0;
+
+    // Prioridade: tcgcsvPriceService (dados reais do TCGPlayer)
+    // Usar getLowPrice para mostrar o preço MÍNIMO (menor preço disponível)
+    if (typeof tcgcsvPriceService !== 'undefined' && tcgcsvPriceService.cardPrices.size > 0) {
+        const price = tcgcsvPriceService.getLowPrice(card.name, null, 'Normal');
+        if (price && price > 0) return price;
+    }
+
+    // Fallback: priceService antigo
     if (typeof priceService !== 'undefined') {
         return priceService.getPrice(card.name, 'standard') || 0;
     }
+
     return 0;
 }
 
@@ -6808,6 +7220,12 @@ function handleDeepLink() {
             // Open modal without updating hash (already set)
             openCardModal(result.card.name, false);
         }
+        return;
+    }
+
+    // Handle view deep links using new router
+    if (hash && hash !== '#') {
+        handleHashChange();
     }
 }
 
@@ -10991,6 +11409,20 @@ function openImportDeckModal() {
     document.getElementById('import-deck-submit').disabled = true;
     importedDeckData = null;
 
+    // Reset CSV tab
+    const csvFileInput = document.getElementById('import-csv-file');
+    const csvFileInfo = document.getElementById('csv-file-info');
+    const csvUploadArea = document.getElementById('csv-upload-area');
+    if (csvFileInput) csvFileInput.value = '';
+    csvFileInfo?.classList.add('hidden');
+    csvUploadArea?.classList.remove('hidden');
+    const csvFoundEl = document.getElementById('import-csv-found');
+    const csvMissingEl = document.getElementById('import-csv-missing');
+    const csvTotalEl = document.getElementById('import-csv-total');
+    if (csvFoundEl) csvFoundEl.textContent = '0 cartas encontradas';
+    if (csvMissingEl) csvMissingEl.textContent = '0 não encontradas';
+    if (csvTotalEl) csvTotalEl.textContent = '0 cópias total';
+
     // Reset to URL tab
     switchImportTab('url');
 
@@ -11142,6 +11574,157 @@ function parseDecklist(text) {
     return { found, missing };
 }
 
+/**
+ * Handle CSV file selection for import
+ */
+function handleCsvFileSelect(file) {
+    const fileInfoEl = document.getElementById('csv-file-info');
+    const fileNameEl = document.getElementById('csv-file-name');
+    const uploadAreaEl = document.getElementById('csv-upload-area');
+
+    fileNameEl.textContent = file.name;
+    fileInfoEl.classList.remove('hidden');
+    uploadAreaEl.classList.add('hidden');
+
+    // Read and parse the CSV
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const csvText = e.target.result;
+        parseCsvCollection(csvText);
+    };
+    reader.readAsText(file);
+
+    refreshIcons();
+}
+
+/**
+ * Clear selected CSV file
+ */
+function clearCsvFile() {
+    const fileInfoEl = document.getElementById('csv-file-info');
+    const uploadAreaEl = document.getElementById('csv-upload-area');
+    const csvFileInput = document.getElementById('import-csv-file');
+    const foundEl = document.getElementById('import-csv-found');
+    const missingEl = document.getElementById('import-csv-missing');
+    const totalEl = document.getElementById('import-csv-total');
+    const submitBtn = document.getElementById('import-deck-submit');
+
+    fileInfoEl.classList.add('hidden');
+    uploadAreaEl.classList.remove('hidden');
+    csvFileInput.value = '';
+
+    foundEl.textContent = '0 cartas encontradas';
+    missingEl.textContent = '0 não encontradas';
+    totalEl.textContent = '0 cópias total';
+
+    submitBtn.disabled = true;
+    importedDeckData = null;
+
+    refreshIcons();
+}
+
+/**
+ * Parse CSV collection from Curiosa.io format
+ * Format: card name,set,finish,product,quantity,notes
+ */
+function parseCsvCollection(csvText) {
+    const foundEl = document.getElementById('import-csv-found');
+    const missingEl = document.getElementById('import-csv-missing');
+    const totalEl = document.getElementById('import-csv-total');
+    const submitBtn = document.getElementById('import-deck-submit');
+
+    const lines = csvText.split('\n').filter(l => l.trim());
+
+    // Skip header row
+    const hasHeader = lines[0]?.toLowerCase().includes('card name');
+    const dataLines = hasHeader ? lines.slice(1) : lines;
+
+    const found = [];
+    const missing = [];
+    let totalCopies = 0;
+
+    for (const line of dataLines) {
+        // Parse CSV line - handle quoted values
+        const parts = parseCsvLine(line);
+        if (parts.length < 5) continue;
+
+        const [cardName, set, finish, product, quantityStr] = parts;
+        const quantity = parseInt(quantityStr) || 1;
+
+        // Find card in database
+        const card = allCards.find(c =>
+            c.name.toLowerCase() === cardName.toLowerCase() ||
+            c.name.toLowerCase().replace(/[-'']/g, '') === cardName.toLowerCase().replace(/[-'']/g, '')
+        );
+
+        if (card) {
+            // Check if we already have this card in found list
+            const existing = found.find(f => f.name === card.name && f.finish === finish && f.set === set);
+            if (existing) {
+                existing.qty += quantity;
+            } else {
+                found.push({
+                    name: card.name,
+                    qty: quantity,
+                    card,
+                    finish: finish || 'Standard',
+                    set: set || ''
+                });
+            }
+            totalCopies += quantity;
+        } else {
+            const existingMissing = missing.find(m => m.name === cardName);
+            if (existingMissing) {
+                existingMissing.qty += quantity;
+            } else {
+                missing.push({ name: cardName, qty: quantity, finish, set });
+            }
+        }
+    }
+
+    foundEl.textContent = `${found.length} cartas encontradas`;
+    missingEl.textContent = `${missing.length} não encontradas`;
+    totalEl.textContent = `${totalCopies} cópias total`;
+
+    if (found.length > 0) {
+        importedDeckData = {
+            type: 'csv',
+            cards: found,
+            missing: missing,
+            totalCopies: totalCopies
+        };
+        submitBtn.disabled = false;
+    } else {
+        importedDeckData = null;
+        submitBtn.disabled = true;
+    }
+}
+
+/**
+ * Parse a single CSV line, handling quoted values
+ */
+function parseCsvLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(current.trim());
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    result.push(current.trim());
+
+    return result;
+}
+
 function submitImportDeck() {
     if (!importedDeckData) return;
 
@@ -11206,6 +11789,41 @@ function submitImportDeck() {
         let message = `Deck "${deckName}" importado com ${importedDeckData.cards.length} cartas!`;
         if (importedDeckData.missing.length > 0) {
             message += ` (${importedDeckData.missing.length} cartas não encontradas)`;
+        }
+        showNotification(message, 'success');
+    } else if (importedDeckData.type === 'csv') {
+        // Import from CSV - add to collection
+        let cardsAdded = 0;
+        let copiesAdded = 0;
+
+        importedDeckData.cards.forEach(c => {
+            // Map finish from Curiosa format to our format
+            let finish = 'standard';
+            if (c.finish?.toLowerCase() === 'foil') {
+                finish = 'foil';
+            } else if (c.finish?.toLowerCase() === 'rainbow' || c.finish?.toLowerCase() === 'foil etched') {
+                finish = 'rainbow';
+            }
+
+            // Add each copy to the collection
+            for (let i = 0; i < c.qty; i++) {
+                variantTracker.addVariant(c.name, finish);
+                copiesAdded++;
+            }
+            cardsAdded++;
+        });
+
+        // Save to storage
+        saveToStorage();
+
+        // Refresh collection view if visible
+        if (document.getElementById('my-collection-content')?.classList.contains('active')) {
+            renderMyCollection();
+        }
+
+        let message = `Coleção importada: ${copiesAdded} cópias de ${cardsAdded} cartas!`;
+        if (importedDeckData.missing.length > 0) {
+            message += ` (${importedDeckData.missing.length} não encontradas)`;
         }
         showNotification(message, 'success');
     }

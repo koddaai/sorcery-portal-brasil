@@ -339,8 +339,9 @@ class TCGCSVPriceService {
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '') // Remove accents
             .replace(/[''`]/g, '')           // Remove apostrophes
-            .replace(/[–—]/g, '-')           // Normalize dashes
-            .replace(/[!?]/g, '')            // Remove punctuation
+            .replace(/[-–—]/g, ' ')          // Convert all dashes/hyphens to spaces
+            .replace(/[!?,.:;]/g, '')        // Remove punctuation
+            .replace(/\s+/g, ' ')            // Normalize multiple spaces
             .toLowerCase()
             .trim();
     }
@@ -408,6 +409,37 @@ class TCGCSVPriceService {
         }
 
         return filtered[0].marketPrice;
+    }
+
+    /**
+     * Get LOW price for a card (minimum available price)
+     */
+    getLowPrice(cardName, setName = null, finish = 'Normal') {
+        const prices = this.findCardPrices(cardName);
+        if (!prices || prices.length === 0) return null;
+
+        // Filter by finish (required) and set (optional)
+        let filtered = prices.filter(p => {
+            const finishMatch = p.finish.toLowerCase() === finish.toLowerCase();
+            const setMatch = !setName || p.setName === setName;
+            return finishMatch && setMatch;
+        });
+
+        // If no exact match with set filter, try any set with same finish
+        if (filtered.length === 0 && setName) {
+            filtered = prices.filter(p => p.finish.toLowerCase() === finish.toLowerCase());
+        }
+
+        if (filtered.length === 0) return null;
+
+        // Return the LOWEST lowPrice across all matching variants
+        const withPrices = filtered.filter(p => p.lowPrice !== null && p.lowPrice > 0);
+        if (withPrices.length > 0) {
+            withPrices.sort((a, b) => a.lowPrice - b.lowPrice);
+            return withPrices[0].lowPrice;
+        }
+
+        return filtered[0].lowPrice;
     }
 
     /**

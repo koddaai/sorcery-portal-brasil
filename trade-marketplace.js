@@ -171,7 +171,7 @@ class TradeMarketplace {
         try {
             // Check if user has accepted terms
             const user = nocoDBService.getCurrentUser();
-            if (!user.acceptedTermsAt) {
+            if (!user.termsAccepted) {
                 showTermsModal(() => this.publishListing(cardName, type, condition, notes));
                 return false;
             }

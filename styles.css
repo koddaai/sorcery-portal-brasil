@@ -17754,6 +17754,158 @@ input:checked + .toggle-slider:before {
     color: var(--accent-gold);
 }
 
+/* CSV Import Tab Styles */
+.import-csv-instructions {
+    background: rgba(212, 175, 55, 0.08);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.import-csv-instructions h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-3);
+}
+
+.import-csv-instructions h4 svg {
+    width: 18px;
+    height: 18px;
+}
+
+.import-csv-instructions ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.8;
+}
+
+.import-csv-instructions li {
+    margin-bottom: var(--space-1);
+}
+
+.import-csv-instructions a {
+    color: var(--accent-gold);
+    text-decoration: none;
+}
+
+.import-csv-instructions a:hover {
+    text-decoration: underline;
+}
+
+.csv-upload-area {
+    border: 2px dashed rgba(255,255,255,0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.csv-upload-area:hover,
+.csv-upload-area.drag-over {
+    border-color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.csv-upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.csv-upload-content svg {
+    width: 48px;
+    height: 48px;
+    color: var(--text-tertiary);
+}
+
+.csv-upload-content p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.csv-browse-link {
+    color: var(--accent-gold);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.csv-file-types {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+}
+
+.csv-file-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    border-radius: var(--radius-md);
+    margin-top: var(--space-3);
+}
+
+.csv-file-info svg {
+    width: 20px;
+    height: 20px;
+    color: #22c55e;
+    flex-shrink: 0;
+}
+
+.csv-file-info span {
+    flex: 1;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    word-break: break-all;
+}
+
+.csv-remove-btn {
+    background: transparent;
+    border: none;
+    padding: var(--space-1);
+    cursor: pointer;
+    color: var(--text-tertiary);
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-fast);
+}
+
+.csv-remove-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.csv-remove-btn svg {
+    width: 16px;
+    height: 16px;
+    color: inherit;
+}
+
+#import-csv-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+}
+
+#import-csv-stats span {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+#import-csv-total {
+    color: var(--accent-gold) !important;
+    font-weight: 500;
+}
+
 .import-deck-modal .modal-footer {
     display: flex;
     justify-content: flex-end;
@@ -21136,4 +21288,265 @@ button:disabled .spin,
         right: var(--space-4);
         max-width: none;
     }
+}
+
+/* ========================================
+   ART VIEW TABS
+======================================== */
+
+.art-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding: 0.375rem;
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+}
+
+.art-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--duration-fast);
+    white-space: nowrap;
+}
+
+.art-tab:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+}
+
+.art-tab.active {
+    background: var(--bg-surface-3);
+    color: var(--accent-gold);
+}
+
+.art-tab-content {
+    display: none;
+}
+
+.art-tab-content.active {
+    display: block;
+}
+
+/* Mobile: abas em scroll horizontal */
+@media (max-width: 768px) {
+    .art-tabs {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .art-tab {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* ========================================
+   ALTERNATE ART CARDS
+======================================== */
+
+.alternate-art-intro {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-5);
+}
+
+.alternate-art-intro p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2);
+}
+
+.alternate-stats {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.alternate-stats .stat-highlight {
+    color: var(--accent-gold);
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.alternate-art-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-4);
+}
+
+.alternate-art-card {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.alternate-art-card:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: var(--shadow-md);
+}
+
+.alternate-art-card h4 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.125rem;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-2);
+}
+
+.alternate-art-artists {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.artist-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    background: var(--bg-surface-3);
+    border-radius: var(--radius-full);
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+}
+
+.artist-chip:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--accent-gold);
+}
+
+/* ========================================
+   CURIOS SECTION
+======================================== */
+
+.curios-intro {
+    background: linear-gradient(135deg, var(--bg-surface-2), rgba(212, 175, 55, 0.05));
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+}
+
+.curios-intro h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-3);
+}
+
+.curios-intro p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+}
+
+.curios-stats {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.curio-stat {
+    text-align: center;
+}
+
+.curio-stat-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+.curio-stat-label {
+    font-size: 0.8125rem;
+    color: var(--text-tertiary);
+}
+
+.curios-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+}
+
+.curio-type-card {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    padding: var(--space-4);
+}
+
+.curio-type-card h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--space-2);
+}
+
+.curio-type-card p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.curios-external-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: var(--space-4);
+    padding: 0.75rem 1.25rem;
+    background: var(--bg-surface-3);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all var(--duration-fast);
+}
+
+.curios-external-link:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+/* Art collection tab - login prompt */
+.art-collection-login-prompt {
+    text-align: center;
+    padding: var(--space-8) var(--space-4);
+}
+
+.art-collection-login-prompt h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: var(--space-3);
+}
+
+.art-collection-login-prompt p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-4);
 }

@@ -1,0 +1,21 @@
+# Robots.txt para Sorcery Brasil
+# https://sorcerybrasil.com.br
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sorcerybrasil.com.br/sitemap.xml
+
+# Bloquear recursos internos
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /icons/
+
+# Permitir CSS e JS para renderizacao
+Allow: /styles.css
+Allow: /app.js
+Allow: /*.js$
+
+# Crawl-delay para ser gentil com o servidor
+Crawl-delay: 1

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Home -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+
+    <!-- Cards -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#cards</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Artistas -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#artistas</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Decks -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#decks</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Codex -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#codex</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Regras -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#regras</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- FAQ -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#faq</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Lore -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#lore</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Quiz -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#quiz</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Boosters -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#boosters</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Forum -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#forum</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Marketplace -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#marketplace</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Comunidade -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#comunidade</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Lojas -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#lojas</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Meta -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#meta</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Top Cards -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#top-cards</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Timeline -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#timeline</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+
+    <!-- Noticias -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#noticias</loc>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Promos -->
+    <url>
+        <loc>https://sorcerybrasil.com.br/#promos</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+</urlset>

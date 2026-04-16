@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorcery Brasil - O Portal Brasileiro de Sorcery TCG</title>
     <meta name="description" content="O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.">
+    <meta name="keywords" content="Sorcery, Sorcery TCG, Sorcery Contested Realm, TCG Brasil, card game, coleção de cartas, deck builder, preços de cartas">
+    <meta name="author" content="Sorcery Brasil">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sorcerybrasil.com.br/">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sorcerybrasil.com.br/">
+    <meta property="og:title" content="Sorcery Brasil - O Portal Brasileiro de Sorcery TCG">
+    <meta property="og:description" content="O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.">
+    <meta property="og:image" content="https://sorcerybrasil.com.br/og-image.png">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Sorcery Brasil">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://sorcerybrasil.com.br/">
+    <meta name="twitter:title" content="Sorcery Brasil - O Portal Brasileiro de Sorcery TCG">
+    <meta name="twitter:description" content="O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.">
+    <meta name="twitter:image" content="https://sorcerybrasil.com.br/og-image.png">
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#d4af37">
@@ -26,11 +47,45 @@
     <link rel="manifest" href="/manifest.json">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles.css?v=99">
+    <link rel="stylesheet" href="styles.css?v=101">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Structured Data - JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Sorcery Brasil",
+        "alternateName": "Portal Brasileiro de Sorcery TCG",
+        "url": "https://sorcerybrasil.com.br",
+        "description": "O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "BRL"
+        },
+        "featureList": [
+            "Gerenciamento de coleção de cartas",
+            "Deck builder",
+            "Preços de cartas em tempo real",
+            "Wishlist e lista de trocas",
+            "Estatísticas da coleção",
+            "Fórum da comunidade",
+            "Marketplace de trocas"
+        ],
+        "inLanguage": "pt-BR",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Sorcery Brasil",
+            "logo": "https://sorcerybrasil.com.br/sorcery-logo.png"
+        }
+    }
+    </script>
 </head>
 <body>
     <div id="app">
@@ -780,6 +835,9 @@
                                 <button class="import-tab" data-tab="text">
                                     <i data-lucide="file-text"></i> Via Texto
                                 </button>
+                                <button class="import-tab" data-tab="csv">
+                                    <i data-lucide="file-spreadsheet"></i> Via CSV
+                                </button>
                             </div>
 
                             <!-- URL Import Tab -->
@@ -811,6 +869,42 @@
                                 <div class="import-stats" id="import-text-stats">
                                     <span id="import-cards-found">0 cartas encontradas</span>
                                     <span id="import-cards-missing">0 não encontradas</span>
+                                </div>
+                            </div>
+
+                            <!-- CSV Import Tab -->
+                            <div class="import-tab-content" id="import-csv-tab">
+                                <div class="import-csv-instructions">
+                                    <h4><i data-lucide="info"></i> Como exportar do Curiosa.io</h4>
+                                    <ol>
+                                        <li>Acesse <a href="https://curiosa.io" target="_blank">curiosa.io</a> e faça login</li>
+                                        <li>Vá em <strong>Collection</strong> no menu</li>
+                                        <li>Clique em <strong>Download</strong> para baixar o CSV</li>
+                                        <li>Selecione o arquivo baixado abaixo</li>
+                                    </ol>
+                                </div>
+                                <div class="import-section">
+                                    <label>Selecione o arquivo CSV exportado do Curiosa.io</label>
+                                    <div class="csv-upload-area" id="csv-upload-area">
+                                        <input type="file" id="import-csv-file" accept=".csv" class="hidden">
+                                        <div class="csv-upload-content">
+                                            <i data-lucide="upload-cloud"></i>
+                                            <p>Arraste o arquivo CSV aqui ou <span class="csv-browse-link">clique para selecionar</span></p>
+                                            <span class="csv-file-types">Aceita arquivos .csv</span>
+                                        </div>
+                                    </div>
+                                    <div id="csv-file-info" class="csv-file-info hidden">
+                                        <i data-lucide="file-check"></i>
+                                        <span id="csv-file-name"></span>
+                                        <button type="button" class="csv-remove-btn" id="csv-remove-btn">
+                                            <i data-lucide="x"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="import-stats" id="import-csv-stats">
+                                    <span id="import-csv-found">0 cartas encontradas</span>
+                                    <span id="import-csv-missing">0 não encontradas</span>
+                                    <span id="import-csv-total">0 cópias total</span>
                                 </div>
                             </div>
                         </div>
@@ -3986,7 +4080,7 @@
     <script src="gamification.js?v=3"></script>
     <!-- Security Configuration (deve ser carregado antes dos serviços) -->
     <script src="security-config.js"></script>
-    <script src="nocodb-service.js?v=4"></script>
+    <script src="nocodb-service.js?v=5"></script>
     <script src="smart-sync-service.js?v=1"></script>
     <script src="community-deck-service.js"></script>
     <script src="profile-service.js?v=3"></script>
@@ -4002,18 +4096,18 @@
     <script src="artist-gallery.js"></script>
     <script src="release-timeline.js"></script>
     <script src="chase-cards-prices.js"></script>
-    <script src="tcgcsv-price-service.js?v=3"></script>
+    <script src="tcgcsv-price-service.js?v=5"></script>
     <script src="tcg-prices.js?v=5"></script>
     <script src="flavor-text.js"></script>
     <script src="rules-quiz.js"></script>
     <script src="news-service.js"></script>
     <!-- Community Features -->
     <script src="avatar-system.js"></script>
-    <script src="trade-marketplace.js"></script>
+    <script src="trade-marketplace.js?v=2"></script>
     <script src="messaging-service.js"></script>
-    <script src="forum-service.js"></script>
+    <script src="forum-service.js?v=2"></script>
     <script src="reputation-service.js"></script>
-    <script src="app.js?v=132"></script>
+    <script src="app.js?v=137"></script>
     <script src="offline-manager.js?v=4"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

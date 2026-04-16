@@ -347,7 +347,7 @@ class ForumService {
 
         // Check terms acceptance
         const user = nocoDBService.getCurrentUser();
-        if (!user.acceptedTermsAt) {
+        if (!user.termsAccepted) {
             showTermsModal(() => this.openCreatePostModal());
             return;
         }

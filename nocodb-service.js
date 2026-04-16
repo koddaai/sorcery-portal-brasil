@@ -179,7 +179,8 @@ class NocoDBService {
             this.currentUser = {
                 id: user.Id,
                 email: user.email,
-                displayName: user.display_name
+                displayName: user.display_name,
+                termsAccepted: false
             };
             this.saveSession();
             return this.currentUser;
@@ -228,7 +229,8 @@ class NocoDBService {
                 id: user.Id,
                 email: user.email,
                 displayName: user.display_name,
-                avatarId: user.avatar_id || 1
+                avatarId: user.avatar_id || 1,
+                termsAccepted: user.terms_accepted || false
             };
             this.saveSession();
             return this.currentUser;
