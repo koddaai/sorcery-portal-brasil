@@ -5778,18 +5778,36 @@ a.nav-dropdown-item {
     }
 
     .nav-dropdown-menu {
-        left: 0;
-        transform: translateX(0);
-        min-width: 160px;
+        position: fixed;
+        left: var(--space-3);
+        right: var(--space-3);
+        top: auto;
+        transform: none;
+        min-width: auto;
+        max-height: 70vh;
+        overflow-y: auto;
     }
 
     .nav-dropdown:hover .nav-dropdown-menu,
     .nav-dropdown.open .nav-dropdown-menu {
-        transform: translateX(0) translateY(0);
+        transform: none;
+    }
+
+    .nav-dropdown-item {
+        padding: var(--space-3) var(--space-4);
+        font-size: 0.9375rem;
     }
 
     .main {
         padding: 1rem;
+        padding-top: 0.5rem;
+    }
+
+    /* Fix view title bar overflow */
+    .section-header h2,
+    .view > h2 {
+        font-size: 1.5rem;
+        word-break: break-word;
     }
 
     .card-detail {
