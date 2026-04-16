@@ -146,16 +146,9 @@ class NocoDBService {
                 throw new Error('Email already registered');
             }
 
-            // Gerar salt único e hash seguro
-            let passwordHash, salt;
-            if (typeof hashPasswordSecure === 'function' && typeof generateSalt === 'function') {
-                salt = generateSalt();
-                passwordHash = await hashPasswordSecure(password, salt);
-            } else {
-                // Fallback para hash simples (não recomendado)
-                passwordHash = await this.hashPassword(password);
-                salt = 'legacy';
-            }
+            // Gerar salt único e hash seguro usando PBKDF2
+            const salt = generateSalt();
+            const passwordHash = await hashPasswordSecure(password, salt);
 
             // Create user
             const response = await fetch(this.getTableUrl(this.tables.users), {
@@ -206,18 +199,43 @@ class NocoDBService {
                 throw new Error('User not found');
             }
 
-            // Verificar senha usando método seguro se disponível
+            // Verificar senha
             let passwordValid = false;
-            if (typeof verifyPassword === 'function' && user.password_salt && user.password_salt !== 'legacy') {
+            let needsHashUpgrade = false;
+
+            if (user.password_salt && user.password_salt !== 'legacy') {
+                // Usuário com hash seguro (PBKDF2)
                 passwordValid = await verifyPassword(password, user.password_salt, user.password_hash);
             } else {
-                // Fallback para hash simples (usuários antigos)
-                const passwordHash = await this.hashPassword(password);
-                passwordValid = user.password_hash === passwordHash;
+                // Usuário legado - verificar com hash simples SHA-256
+                const legacyHash = await this.hashPasswordLegacy(password);
+                passwordValid = user.password_hash === legacyHash;
+                if (passwordValid) {
+                    needsHashUpgrade = true;
+                }
             }
 
             if (!passwordValid) {
                 throw new Error('Invalid password');
+            }
+
+            // Migrar hash legado para PBKDF2 automaticamente
+            if (needsHashUpgrade) {
+                try {
+                    const newSalt = generateSalt();
+                    const newHash = await hashPasswordSecure(password, newSalt);
+                    await fetch(`${this.getTableUrl(this.tables.users)}/${user.Id}`, {
+                        method: 'PATCH',
+                        headers: this.getHeaders(),
+                        body: JSON.stringify({
+                            password_hash: newHash,
+                            password_salt: newSalt
+                        })
+                    });
+                    console.log('Password hash upgraded to PBKDF2');
+                } catch (e) {
+                    console.warn('Failed to upgrade password hash:', e);
+                }
             }
 
             // Resetar tentativas de login após sucesso
@@ -244,6 +262,8 @@ class NocoDBService {
     logout() {
         this.currentUser = null;
         this.saveSession();
+        // Clear any cached data
+        this.cachedCollection = null;
     }
 
     // Accept terms of service
@@ -296,8 +316,9 @@ class NocoDBService {
         return user !== null;
     }
 
-    // Simple password hash (for demo purposes)
-    async hashPassword(password) {
+    // Hash legado SHA-256 - APENAS para verificação de usuários antigos
+    // Novos usuários usam PBKDF2 via hashPasswordSecure()
+    async hashPasswordLegacy(password) {
         const encoder = new TextEncoder();
         const data = encoder.encode(password + 'sorcery-salt-2024');
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);

@@ -4,6 +4,21 @@
 //
 // ⚠️  AVISO DE SEGURANÇA ⚠️
 //
+// Debug mode - set to false in production
+// Can also be controlled via URL param ?debug=true
+const DEBUG_MODE = (() => {
+    const urlParams = new URLSearchParams(window.location?.search || '');
+    return urlParams.get('debug') === 'true' || localStorage.getItem('sorcery-debug') === 'true';
+})();
+
+// Logger wrapper for conditional logging
+const Logger = {
+    debug: (...args) => DEBUG_MODE && console.log('[DEBUG]', ...args),
+    info: (...args) => DEBUG_MODE && console.info('[INFO]', ...args),
+    warn: (...args) => console.warn(...args), // Always show warnings
+    error: (...args) => console.error(...args), // Always show errors
+};
+
 // Este arquivo contém configurações sensíveis.
 // Em produção, você DEVE:
 //
@@ -45,7 +60,7 @@ const SecurityConfig = {
     api: {
         // URLs baseadas no modo
         // IMPORTANTE: Após fazer deploy do proxy, atualize proxyUrl
-        proxyUrl: 'https://sorcery-api-proxy.kodda.workers.dev',  // URL do Cloudflare Worker
+        proxyUrl: 'https://sorcery-api-proxy.pedro-4e6.workers.dev',  // URL do Cloudflare Worker
         directUrl: 'https://dados.kodda.ai',
 
         // Getter para URL ativa
@@ -55,9 +70,10 @@ const SecurityConfig = {
                 : SecurityConfig.api.directUrl;
         },
 
-        // Token - só necessário em modo direto
-        // Em modo proxy, o token fica no servidor
-        token: isProduction ? null : 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-',
+        // Token - REMOVIDO por segurança
+        // O token agora fica APENAS no Cloudflare Worker
+        // Nunca commitar tokens no código!
+        token: null,
 
         baseId: 'pybbgkutded1ay0',
 
@@ -588,6 +604,10 @@ function clearSecureSession() {
 
 const rateLimiter = new RateLimiter();
 
+// Make Logger globally available
+window.Logger = Logger;
+window.DEBUG_MODE = DEBUG_MODE;
+
 // ============================================
 // EXPORTS
 // ============================================
@@ -595,6 +615,8 @@ const rateLimiter = new RateLimiter();
 // Export for module environments
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
+        DEBUG_MODE,
+        Logger,
         SecurityConfig,
         CSRFConfig,
         generateSalt,

@@ -405,6 +405,8 @@ function openComposeMessage(recipientId = null, subject = '', replyToId = null) 
                     recipientDisplay.classList.remove('hidden');
                     recipientInput.classList.add('hidden');
                 }
+            }).catch(err => {
+                console.warn('Error loading user info:', err);
             });
         }
     } else {

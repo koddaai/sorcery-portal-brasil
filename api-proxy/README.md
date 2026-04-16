@@ -32,9 +32,9 @@ wrangler login
 ### 3. Configurar Secrets (NÃO use o wrangler.toml para secrets!)
 
 ```bash
-# Token do NocoDB
+# Token do NocoDB (obtenha em dados.kodda.ai > Settings > API Tokens)
 wrangler secret put NOCODB_TOKEN
-# Digite: GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-
+# Digite seu token quando solicitado (NUNCA commite o token!)
 
 # URL base do NocoDB
 wrangler secret put NOCODB_BASE_URL

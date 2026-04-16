@@ -2533,6 +2533,14 @@ function cleanupUserDataOnLogout(userId, clearMemory = true) {
         decks = [];
     }
 
+    // Clear security tokens from sessionStorage
+    sessionStorage.removeItem('sorcery-csrf-token');
+    sessionStorage.removeItem('sorcery-filter-state');
+
+    // Clear pending sync data and password reset tokens
+    localStorage.removeItem('sorcery-pending-sync');
+    localStorage.removeItem('password-reset-token');
+
     // Reload services that cache user-specific data
     // This reloads them with empty user context
     if (typeof valueTracker !== 'undefined' && valueTracker.reload) {
@@ -2553,14 +2561,12 @@ function cleanupUserDataOnLogout(userId, clearMemory = true) {
     if (typeof priceService !== 'undefined') {
         priceService.nocodbPrices = {};
         priceService.nocodbLastSync = null;
-        console.log('[Logout] PriceService NocoDB cache cleared');
     }
 
     if (typeof tcgcsvPriceService !== 'undefined') {
         // TCGCSV prices são globais (não user-specific), não precisa limpar
         // Mas forçar refresh na próxima sessão
         tcgcsvPriceService.lastUpdate = null;
-        console.log('[Logout] TCGCSV cache invalidated for next session');
     }
 
     // Clear gamification for logged out state
@@ -2569,8 +2575,71 @@ function cleanupUserDataOnLogout(userId, clearMemory = true) {
         gamification.loadProgress();
     }
 
+    // Clear dust tracker if exists
+    if (typeof dustTracker !== 'undefined' && dustTracker.storageKey) {
+        dustTracker.entries = [];
+    }
+
+    // Clear any open modals
+    document.querySelectorAll('.modal.active').forEach(modal => {
+        modal.classList.remove('active');
+    });
+    document.body.classList.remove('modal-open');
+
     console.log('[Logout] User data cleanup complete');
 }
+
+/**
+ * Periodically check session validity and auto-logout if expired
+ * Runs every 60 seconds to catch session expiration while user is active
+ */
+let sessionCheckInterval = null;
+
+function startSessionValidation() {
+    // Clear any existing interval
+    if (sessionCheckInterval) {
+        clearInterval(sessionCheckInterval);
+    }
+
+    // Check session every 60 seconds
+    sessionCheckInterval = setInterval(() => {
+        if (!nocoDBService.isLoggedIn()) return;
+
+        // Try to load session using secure function (which checks expiration)
+        if (typeof loadSecureSession === 'function') {
+            const session = loadSecureSession();
+            if (!session) {
+                // Session expired - auto logout
+                console.log('[Session] Session expired, logging out');
+                const userId = getCurrentUserId();
+                nocoDBService.logout();
+                updateAuthUI();
+                cleanupUserDataOnLogout(userId, true);
+                document.dispatchEvent(new CustomEvent('userLoggedOut'));
+                refreshCurrentView();
+                showNotification('Sessão expirada. Faça login novamente.', 'warning');
+            }
+        }
+    }, 60000); // Every 60 seconds
+}
+
+// Start session validation when user logs in
+document.addEventListener('userLoggedIn', startSessionValidation);
+
+// Stop validation on logout
+document.addEventListener('userLoggedOut', () => {
+    if (sessionCheckInterval) {
+        clearInterval(sessionCheckInterval);
+        sessionCheckInterval = null;
+    }
+});
+
+// Start validation on page load if user is logged in
+document.addEventListener('DOMContentLoaded', () => {
+    if (nocoDBService.isLoggedIn()) {
+        startSessionValidation();
+    }
+});
 
 // Migrate data from old storage keys if needed
 // This handles cases where userId was stored as uppercase 'Id' vs lowercase 'id'
@@ -6139,6 +6208,12 @@ function initNewsView() {
     if (typeof newsService !== 'undefined') {
         newsService.loadNews().then(() => {
             newsService.renderNewsView();
+        }).catch(err => {
+            console.error('Error loading news:', err);
+            const container = document.getElementById('news-content');
+            if (container) {
+                container.innerHTML = '<p class="empty-state">Erro ao carregar notícias. Tente novamente.</p>';
+            }
         });
     } else {
         const container = document.getElementById('news-content');
@@ -7997,6 +8072,8 @@ function openCardModal(cardName, updateHash = true) {
         tcgPriceService.generatePriceChartHTML(card.name).then(chartHTML => {
             chartContainer.innerHTML = chartHTML;
             refreshIcons();
+        }).catch(() => {
+            chartContainer.innerHTML = '<p class="text-muted">Histórico de preços indisponível</p>';
         });
 
         // Setup currency toggle
@@ -11324,6 +11401,8 @@ function copyDeckList(deck) {
         const text = `${deck.name}\nby ${deck.author}\n\nKey Cards:\n${keyCardsList}\n\nVer lista completa: ${deck.url}`;
         navigator.clipboard.writeText(text).then(() => {
             showNotification('Lista copiada!', 'success');
+        }).catch(() => {
+            showNotification('Erro ao copiar lista', 'error');
         });
         return;
     }
@@ -11359,6 +11438,8 @@ function copyDeckList(deck) {
 
     navigator.clipboard.writeText(text).then(() => {
         showNotification('Lista copiada para clipboard!', 'success');
+    }).catch(() => {
+        showNotification('Erro ao copiar lista', 'error');
     });
 }
 

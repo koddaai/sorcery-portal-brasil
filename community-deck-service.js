@@ -7,10 +7,10 @@
 
 class CommunityDeckService {
     constructor() {
-        // Usar configuração centralizada se disponível
+        // Usar configuração centralizada - agora usa proxy Cloudflare Worker
         const config = typeof SecurityConfig !== 'undefined' ? SecurityConfig.api : null;
-        this.baseUrl = config?.baseUrl || 'https://dados.kodda.ai';
-        this.apiToken = config?.token || 'GcWFEnNtNLcuubiYMDGlACXr_Sls7c15SEYKe72-';
+        this.baseUrl = config?.baseUrl || 'https://sorcery-api-proxy.pedro-4e6.workers.dev';
+        this.apiToken = config?.token; // Token agora fica apenas no Worker
         this.baseId = config?.baseId || 'pybbgkutded1ay0';
         this.tableName = 'community_decks';
         this.cachedDecks = [];
@@ -19,10 +19,12 @@ class CommunityDeckService {
     }
 
     getHeaders() {
-        return {
-            'xc-token': this.apiToken,
-            'Content-Type': 'application/json'
-        };
+        // Quando usando proxy, não enviar token (Worker adiciona)
+        const headers = { 'Content-Type': 'application/json' };
+        if (this.apiToken) {
+            headers['xc-token'] = this.apiToken;
+        }
+        return headers;
     }
 
     getTableUrl() {

@@ -1,0 +1,11 @@
+name = "sorcery-api-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Account settings
+account_id = "4e6531b157027ae1920614705f87288b"
+
+# Routes (optional - will be used when we connect domain)
+# routes = [
+#   { pattern = "api.sorcery.com.br/*", zone_name = "sorcery.com.br" }
+# ]
