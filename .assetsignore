@@ -1,0 +1,11 @@
+# Ignore large files (>25MB Cloudflare limit)
+*.pdf
+
+# Development directories
+.git
+node_modules
+.wrangler
+
+# API proxy (deployed separately)
+api-proxy
+cloudflare-worker
