@@ -1,0 +1,14 @@
+# Exclude large files from Cloudflare Pages deployment
+# Cloudflare has a 25MB limit per file
+
+# Large PDFs
+*.pdf
+
+# Development files
+.git/
+node_modules/
+.wrangler/
+
+# API proxy (deployed separately as Worker)
+api-proxy/
+cloudflare-worker/
