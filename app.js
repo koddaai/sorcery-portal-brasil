@@ -4213,6 +4213,10 @@ function initCommunityView() {
     if (typeof renderStores === 'function') {
         renderStores();
     }
+    // Auto-load the stores map
+    if (typeof loadStoresMap === 'function') {
+        loadStoresMap();
+    }
 }
 
 // Initialize Meta View
