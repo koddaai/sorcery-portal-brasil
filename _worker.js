@@ -13,57 +13,57 @@ const VIEW_META = {
     image: DEFAULT_IMAGE
   },
   cards: {
-    title: 'Catálogo de Cards | Sorcery Brasil',
+    title: 'Catálogo de Cards | Sorcery: Contested Realm Brasil',
     description: 'Explore todos os 1100+ cards de Sorcery: Contested Realm. Filtre por set, elemento, raridade e muito mais.',
     image: DEFAULT_IMAGE
   },
   art: {
-    title: 'Galeria de Artistas | Sorcery Brasil',
+    title: 'Galeria de Artistas | Sorcery: Contested Realm Brasil',
     description: 'Descubra os mestres por trás das obras de Sorcery. Cada carta é uma pintura original feita à mão com técnicas tradicionais.',
     image: DEFAULT_IMAGE
   },
   decks: {
-    title: 'Explorar Decks | Sorcery Brasil',
+    title: 'Explorar Decks | Sorcery: Contested Realm Brasil',
     description: 'Encontre decks competitivos, tier lists e estratégias para dominar Sorcery: Contested Realm.',
     image: DEFAULT_IMAGE
   },
   collection: {
-    title: 'Minha Coleção | Sorcery Brasil',
+    title: 'Minha Coleção | Sorcery: Contested Realm Brasil',
     description: 'Gerencie sua coleção de Sorcery TCG. Rastreie cards, valores e progresso de completude.',
     image: DEFAULT_IMAGE
   },
   community: {
-    title: 'Lojas de Sorcery no Brasil | Sorcery Brasil',
+    title: 'Lojas de Sorcery no Brasil | Sorcery: Contested Realm Brasil',
     description: 'Encontre lojas brasileiras que vendem Sorcery: Contested Realm. Mapa interativo com preços e contatos.',
     image: DEFAULT_IMAGE
   },
   meta: {
-    title: 'Meta & Tier List | Sorcery Brasil',
+    title: 'Meta & Tier List | Sorcery: Contested Realm Brasil',
     description: 'Acompanhe o metagame atual de Sorcery TCG. Tier lists, decks populares e análises da comunidade.',
     image: DEFAULT_IMAGE
   },
   codex: {
-    title: 'Codex de Regras | Sorcery Brasil',
+    title: 'Codex de Regras | Sorcery: Contested Realm Brasil',
     description: 'Todas as regras e mecânicas de Sorcery: Contested Realm explicadas em português.',
     image: DEFAULT_IMAGE
   },
   trade: {
-    title: 'Sistema de Trocas | Sorcery Brasil',
+    title: 'Sistema de Trocas | Sorcery: Contested Realm Brasil',
     description: 'Organize suas trocas de cards de Sorcery. Marque cards que você tem e quer trocar.',
     image: DEFAULT_IMAGE
   },
   wishlist: {
-    title: 'Wishlist | Sorcery Brasil',
+    title: 'Wishlist | Sorcery: Contested Realm Brasil',
     description: 'Sua lista de desejos de Sorcery TCG. Acompanhe os cards que você mais quer.',
     image: DEFAULT_IMAGE
   },
   stats: {
-    title: 'Estatísticas da Coleção | Sorcery Brasil',
+    title: 'Estatísticas da Coleção | Sorcery: Contested Realm Brasil',
     description: 'Visualize estatísticas detalhadas da sua coleção de Sorcery TCG.',
     image: DEFAULT_IMAGE
   },
   news: {
-    title: 'Notícias | Sorcery Brasil',
+    title: 'Notícias | Sorcery: Contested Realm Brasil',
     description: 'Últimas notícias e atualizações do mundo de Sorcery: Contested Realm.',
     image: DEFAULT_IMAGE
   }
@@ -139,19 +139,19 @@ function getMetaFromParams(url) {
 
   // Card específico
   if (card) {
-    meta.title = `${card} | Sorcery Brasil`;
+    meta.title = `${card} | Sorcery: Contested Realm Brasil`;
     meta.description = `Detalhes do card ${card} de Sorcery: Contested Realm. Veja arte, preço e informações.`;
   }
 
   // Deck específico
   if (deck) {
-    meta.title = `Deck: ${deck} | Sorcery Brasil`;
+    meta.title = `Deck: ${deck} | Sorcery: Contested Realm Brasil`;
     meta.description = `Confira o deck ${deck} para Sorcery: Contested Realm. Estratégia, lista e dicas.`;
   }
 
   // Filtro por set
   if (set && view === 'cards') {
-    meta.title = `Cards de ${set} | Sorcery Brasil`;
+    meta.title = `Cards de ${set} | Sorcery: Contested Realm Brasil`;
     meta.description = `Explore todos os cards do set ${set} de Sorcery: Contested Realm.`;
   }
 
@@ -159,7 +159,7 @@ function getMetaFromParams(url) {
   if (element && view === 'cards') {
     const elementNames = { fire: 'Fogo', water: 'Água', earth: 'Terra', air: 'Ar' };
     const elementName = elementNames[element.toLowerCase()] || element;
-    meta.title = `Cards de ${elementName} | Sorcery Brasil`;
+    meta.title = `Cards de ${elementName} | Sorcery: Contested Realm Brasil`;
     meta.description = `Explore todos os cards do elemento ${elementName} em Sorcery: Contested Realm.`;
   }
 

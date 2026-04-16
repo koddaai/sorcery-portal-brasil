@@ -3745,35 +3745,35 @@ const VIEW_INFO = {
         name: 'Início',
         category: null,
         slug: '',
-        title: 'Sorcery Brasil - O Portal Brasileiro de Sorcery TCG',
+        title: 'Sorcery: Contested Realm Brasil',
         description: 'O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.'
     },
     'cards': {
         name: 'Cards',
         category: null,
         slug: 'cards',
-        title: 'Catálogo de Cards - Sorcery Brasil',
+        title: 'Catálogo de Cards | Sorcery: Contested Realm Brasil',
         description: 'Explore todos os cards de Sorcery: Contested Realm. Filtros por elemento, tipo, raridade e mais. Preços atualizados.'
     },
     'art': {
         name: 'Artistas',
         category: null,
         slug: 'artistas',
-        title: 'Galeria de Artistas - Sorcery Brasil',
+        title: 'Galeria de Artistas | Sorcery: Contested Realm Brasil',
         description: 'Conheça os artistas que ilustram Sorcery: Contested Realm. Arte tradicional pintada à mão por mestres da fantasia.'
     },
     'decks': {
         name: 'Decks',
         category: null,
         slug: 'decks',
-        title: 'Decks da Comunidade - Sorcery Brasil',
+        title: 'Decks da Comunidade | Sorcery: Contested Realm Brasil',
         description: 'Descubra decks da comunidade, construa o seu próprio deck e compartilhe estratégias de Sorcery: Contested Realm.'
     },
     'collection': {
         name: 'Coleção',
         category: null,
         slug: 'colecao',
-        title: 'Minha Coleção - Sorcery Brasil',
+        title: 'Minha Coleção | Sorcery: Contested Realm Brasil',
         description: 'Gerencie sua coleção de Sorcery: Contested Realm. Acompanhe progresso, valor e estatísticas dos seus cards.'
     },
     // Ferramentas
@@ -3782,7 +3782,7 @@ const VIEW_INFO = {
         category: 'Ferramentas',
         categoryView: null,
         slug: 'wishlist',
-        title: 'Wishlist - Sorcery Brasil',
+        title: 'Wishlist | Sorcery: Contested Realm Brasil',
         description: 'Crie sua lista de desejos de cards de Sorcery: Contested Realm e acompanhe preços.'
     },
     'trade': {
@@ -3790,7 +3790,7 @@ const VIEW_INFO = {
         category: 'Ferramentas',
         categoryView: null,
         slug: 'trocas',
-        title: 'Trade Binder - Sorcery Brasil',
+        title: 'Trade Binder | Sorcery: Contested Realm Brasil',
         description: 'Organize seus cards para troca. Trade Binder e lista de procurados para facilitar trocas com a comunidade.'
     },
     'stats': {
@@ -3798,7 +3798,7 @@ const VIEW_INFO = {
         category: 'Ferramentas',
         categoryView: null,
         slug: 'estatisticas',
-        title: 'Estatísticas da Coleção - Sorcery Brasil',
+        title: 'Estatísticas da Coleção | Sorcery: Contested Realm Brasil',
         description: 'Visualize estatísticas detalhadas da sua coleção de Sorcery: progresso por set, elemento, raridade e mais.'
     },
     // 'artist-stats' foi movido para abas dentro de 'art' - redireciona automaticamente
@@ -3809,7 +3809,7 @@ const VIEW_INFO = {
         category: 'Aprender',
         categoryView: null,
         slug: 'codex',
-        title: 'Codex - Guia de Cards - Sorcery Brasil',
+        title: 'Codex - Guia de Cards | Sorcery: Contested Realm Brasil',
         description: 'O codex completo de Sorcery: Contested Realm. Busca inteligente, detalhes de cards, estratégias e sinergias.'
     },
     'rulebook': {
@@ -3817,7 +3817,7 @@ const VIEW_INFO = {
         category: 'Aprender',
         categoryView: null,
         slug: 'regras',
-        title: 'Regras de Sorcery - Rulebook Completo - Sorcery Brasil',
+        title: 'Regras de Sorcery - Rulebook Completo | Sorcery: Contested Realm Brasil',
         description: 'Aprenda a jogar Sorcery: Contested Realm. Rulebook oficial completo em português com exemplos.'
     },
     'faq': {
@@ -3825,7 +3825,7 @@ const VIEW_INFO = {
         category: 'Aprender',
         categoryView: null,
         slug: 'faq',
-        title: 'FAQ - Perguntas Frequentes - Sorcery Brasil',
+        title: 'FAQ - Perguntas Frequentes | Sorcery: Contested Realm Brasil',
         description: 'Respostas para as dúvidas mais comuns sobre Sorcery: Contested Realm. Regras, mecânicas e interações.'
     },
     'lore': {
@@ -3833,7 +3833,7 @@ const VIEW_INFO = {
         category: 'Aprender',
         categoryView: null,
         slug: 'lore',
-        title: 'Lore de Sorcery - História do Jogo - Sorcery Brasil',
+        title: 'Lore de Sorcery - História do Jogo | Sorcery: Contested Realm Brasil',
         description: 'Explore a rica história e lore de Sorcery: Contested Realm. Descubra os reinos e suas magias ancestrais.'
     },
     'quiz': {
@@ -3841,7 +3841,7 @@ const VIEW_INFO = {
         category: 'Aprender',
         categoryView: null,
         slug: 'quiz',
-        title: 'Quiz de Sorcery - Teste seu Conhecimento - Sorcery Brasil',
+        title: 'Quiz de Sorcery - Teste seu Conhecimento | Sorcery: Contested Realm Brasil',
         description: 'Teste seus conhecimentos sobre Sorcery: Contested Realm com nosso quiz interativo.'
     },
     'boosters': {
@@ -3849,7 +3849,7 @@ const VIEW_INFO = {
         category: 'Aprender',
         categoryView: null,
         slug: 'boosters',
-        title: 'Simulador de Boosters - Sorcery Brasil',
+        title: 'Simulador de Boosters | Sorcery: Contested Realm Brasil',
         description: 'Simule abertura de boosters de Sorcery: Contested Realm. Experimente a emoção sem gastar!'
     },
     // Comunidade
@@ -3858,7 +3858,7 @@ const VIEW_INFO = {
         category: 'Comunidade',
         categoryView: 'community',
         slug: 'forum',
-        title: 'Fórum da Comunidade - Sorcery Brasil',
+        title: 'Fórum da Comunidade | Sorcery: Contested Realm Brasil',
         description: 'Participe das discussões da comunidade brasileira de Sorcery. Dúvidas, estratégias, classificados e mais.'
     },
     'marketplace': {
@@ -3866,7 +3866,7 @@ const VIEW_INFO = {
         category: 'Comunidade',
         categoryView: 'community',
         slug: 'marketplace',
-        title: 'Marketplace de Trocas - Sorcery Brasil',
+        title: 'Marketplace de Trocas | Sorcery: Contested Realm Brasil',
         description: 'Encontre pessoas para trocar cards de Sorcery: Contested Realm. Publique ofertas e encontre matches.'
     },
     'community': {
@@ -3874,7 +3874,7 @@ const VIEW_INFO = {
         category: 'Comunidade',
         categoryView: null,
         slug: 'comunidade',
-        title: 'Comunidade - Sorcery Brasil',
+        title: 'Comunidade | Sorcery: Contested Realm Brasil',
         description: 'Conecte-se com a comunidade brasileira de Sorcery: Discord, grupos, canais e mais.'
     },
     'locator': {
@@ -3882,7 +3882,7 @@ const VIEW_INFO = {
         category: 'Comunidade',
         categoryView: 'community',
         slug: 'lojas',
-        title: 'Lojas de Sorcery no Brasil - Sorcery Brasil',
+        title: 'Lojas de Sorcery no Brasil | Sorcery: Contested Realm Brasil',
         description: 'Encontre lojas que vendem Sorcery: Contested Realm no Brasil. Mapa interativo com todas as lojas.'
     },
     // Explorar
@@ -3891,7 +3891,7 @@ const VIEW_INFO = {
         category: 'Explorar',
         categoryView: null,
         slug: 'meta',
-        title: 'Meta e Tier List - Sorcery Brasil',
+        title: 'Meta e Tier List | Sorcery: Contested Realm Brasil',
         description: 'Análise do meta atual de Sorcery: Contested Realm. Tier list de decks, avatares e estratégias competitivas.'
     },
     'top-cards': {
@@ -3899,7 +3899,7 @@ const VIEW_INFO = {
         category: 'Explorar',
         categoryView: null,
         slug: 'top-cards',
-        title: 'Top Cards Mais Valiosos - Sorcery Brasil',
+        title: 'Top Cards Mais Valiosos | Sorcery: Contested Realm Brasil',
         description: 'Ranking dos cards mais valiosos de Sorcery: Contested Realm. Preços atualizados e tendências.'
     },
     'timeline': {
@@ -3907,7 +3907,7 @@ const VIEW_INFO = {
         category: 'Explorar',
         categoryView: null,
         slug: 'timeline',
-        title: 'Timeline de Sorcery - Sorcery Brasil',
+        title: 'Timeline de Sorcery | Sorcery: Contested Realm Brasil',
         description: 'História dos lançamentos de Sorcery: Contested Realm. Sets, expansões e marcos importantes.'
     },
     'news': {
@@ -3915,7 +3915,7 @@ const VIEW_INFO = {
         category: 'Explorar',
         categoryView: null,
         slug: 'noticias',
-        title: 'Notícias de Sorcery - Sorcery Brasil',
+        title: 'Notícias de Sorcery | Sorcery: Contested Realm Brasil',
         description: 'Últimas notícias de Sorcery: Contested Realm em português. Spoilers, eventos e atualizações.'
     },
     // Outros
@@ -3924,7 +3924,7 @@ const VIEW_INFO = {
         category: 'Ferramentas',
         categoryView: null,
         slug: 'dust',
-        title: 'Dust Tracker - Sorcery Brasil',
+        title: 'Dust Tracker | Sorcery: Contested Realm Brasil',
         description: 'Acompanhe seus Dust points de Sorcery: Contested Realm. Calcule recompensas e progresso.'
     },
     'promos': {
@@ -3932,14 +3932,14 @@ const VIEW_INFO = {
         category: 'Explorar',
         categoryView: null,
         slug: 'promos',
-        title: 'Cards Promocionais - Sorcery Brasil',
+        title: 'Cards Promocionais | Sorcery: Contested Realm Brasil',
         description: 'Cards promocionais de Sorcery: Contested Realm. Promos exclusivas, eventos e edições especiais.'
     },
     'profile': {
         name: 'Perfil',
         category: null,
         slug: 'perfil',
-        title: 'Perfil de Jogador - Sorcery Brasil',
+        title: 'Perfil de Jogador | Sorcery: Contested Realm Brasil',
         description: 'Perfil público de jogador de Sorcery: Contested Realm.'
     }
 };
@@ -3992,7 +3992,7 @@ function updateSEOMeta(viewName, customData = {}) {
     const baseUrl = 'https://sorcerybrasil.com.br';
 
     // Title
-    const title = customData.title || viewInfo.title || 'Sorcery Brasil';
+    const title = customData.title || viewInfo.title || 'Sorcery: Contested Realm Brasil';
     document.title = title;
 
     // Description
@@ -4097,7 +4097,7 @@ window.addEventListener('hashchange', handleHashChange);
  */
 function shareCurrentPage() {
     const viewInfo = VIEW_INFO[currentViewName] || VIEW_INFO['home'];
-    const title = viewInfo.name || 'Sorcery Brasil';
+    const title = viewInfo.name || 'Sorcery: Contested Realm Brasil';
     const description = getViewDescription(currentViewName);
 
     // Coleta contexto adicional da página atual
@@ -4162,7 +4162,7 @@ window.shareArtist = shareArtist;
  */
 function shareDeck(deckName) {
     smartShare(
-        `Deck: ${deckName} | Sorcery Brasil`,
+        `Deck: ${deckName} | Sorcery: Contested Realm Brasil`,
         `Confira o deck ${deckName} para Sorcery: Contested Realm`,
         { view: 'decks', deck: deckName }
     );
