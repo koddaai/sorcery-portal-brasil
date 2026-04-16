@@ -1680,6 +1680,53 @@ function toggleTradeFromMobile(cardName) {
     }
 }
 
+// ============================================
+// SMART SHARE FUNCTIONS
+// Gera URLs com query params para Open Graph
+// ============================================
+
+/**
+ * Gera URL de compartilhamento com query params para redes sociais
+ */
+function generateShareUrl(params = {}) {
+    const url = new URL(window.location.origin + window.location.pathname);
+
+    // Adiciona parâmetros
+    Object.entries(params).forEach(([key, value]) => {
+        if (value) {
+            url.searchParams.set(key, value);
+        }
+    });
+
+    // Adiciona hash para navegação no app
+    if (params.view) {
+        url.hash = params.view;
+    }
+
+    return url.toString();
+}
+
+/**
+ * Compartilha URL com suporte a Web Share API
+ */
+function smartShare(title, description, params = {}) {
+    const url = generateShareUrl(params);
+
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            text: description,
+            url: url
+        }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            showToast('Link copiado!', 'success');
+        }).catch(() => {
+            showToast('Erro ao copiar link', 'error');
+        });
+    }
+}
+
 // Share current card
 function shareCurrentCard() {
     const cardName = document.getElementById('modal-card-name')?.textContent;
@@ -1689,24 +1736,12 @@ function shareCurrentCard() {
     if (!card) return;
 
     const slug = getCardSlug(card);
-    const url = `${window.location.origin}${window.location.pathname}#card/${slug}`;
 
-    if (navigator.share) {
-        navigator.share({
-            title: cardName,
-            text: `Veja ${cardName} no Sorcery Portal Brasil`,
-            url: url
-        }).catch(() => {
-            // User cancelled or error
-        });
-    } else {
-        // Fallback: copy to clipboard
-        navigator.clipboard.writeText(url).then(() => {
-            showToast('Link copiado!', 'success');
-        }).catch(() => {
-            showToast('Erro ao copiar link', 'error');
-        });
-    }
+    smartShare(
+        cardName,
+        `Veja ${cardName} no Sorcery Portal Brasil`,
+        { view: `card/${slug}`, card: cardName }
+    );
 }
 
 // Precon card lists (from Curiosa.io official lists)
@@ -2391,6 +2426,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (tradeParam) {
         setTimeout(() => handleTradeLink(tradeParam), 500);
     }
+
+    // Handle share link parameters (for social media sharing)
+    handleShareParams(urlParams);
 
     // Load community decks from server (in background)
     loadCommunityDecks();
@@ -4055,28 +4093,81 @@ function handleHashChange() {
 window.addEventListener('hashchange', handleHashChange);
 
 /**
- * Compartilhar link da página atual
+ * Compartilhar link da página atual com meta tags dinâmicos
  */
 function shareCurrentPage() {
-    const url = window.location.href;
     const viewInfo = VIEW_INFO[currentViewName] || VIEW_INFO['home'];
-    const title = viewInfo.title || 'Sorcery Brasil';
+    const title = viewInfo.name || 'Sorcery Brasil';
+    const description = getViewDescription(currentViewName);
 
-    if (navigator.share) {
-        navigator.share({
-            title: title,
-            url: url
-        }).catch(() => {});
-    } else {
-        // Fallback: copiar para clipboard
-        navigator.clipboard.writeText(url).then(() => {
-            showToast('Link copiado!', 'success');
-        }).catch(() => {
-            showToast('Erro ao copiar link', 'error');
-        });
+    // Coleta contexto adicional da página atual
+    const params = { view: currentViewName };
+
+    // Adiciona contexto específico
+    if (currentViewName === 'art') {
+        const searchInput = document.getElementById('artist-search');
+        if (searchInput?.value) {
+            params.artist = searchInput.value;
+        }
+    } else if (currentViewName === 'cards') {
+        const setFilter = document.getElementById('set-filter');
+        const elementFilter = document.getElementById('element-filter');
+        if (setFilter?.value && setFilter.value !== 'all') {
+            params.set = setFilter.value;
+        }
+        if (elementFilter?.value && elementFilter.value !== 'all') {
+            params.element = elementFilter.value;
+        }
     }
+
+    smartShare(title, description, params);
 }
 window.shareCurrentPage = shareCurrentPage;
+
+/**
+ * Retorna descrição da view para compartilhamento
+ */
+function getViewDescription(viewName) {
+    const descriptions = {
+        home: 'Seu hub completo de Sorcery TCG no Brasil',
+        cards: 'Explore todos os cards de Sorcery: Contested Realm',
+        art: 'Descubra os mestres por trás das obras de Sorcery',
+        decks: 'Encontre decks competitivos e estratégias',
+        collection: 'Gerencie sua coleção de Sorcery TCG',
+        community: 'Encontre lojas de Sorcery no Brasil',
+        meta: 'Acompanhe o metagame atual de Sorcery',
+        codex: 'Regras e mecânicas de Sorcery explicadas',
+        trade: 'Organize suas trocas de cards',
+        wishlist: 'Sua lista de desejos de Sorcery',
+        stats: 'Estatísticas da sua coleção',
+        news: 'Últimas notícias de Sorcery'
+    };
+    return descriptions[viewName] || descriptions.home;
+}
+
+/**
+ * Compartilha artista específico
+ */
+function shareArtist(artistName) {
+    smartShare(
+        `${artistName} | Artistas de Sorcery`,
+        `Explore as obras de ${artistName} em Sorcery: Contested Realm`,
+        { view: 'art', artist: artistName }
+    );
+}
+window.shareArtist = shareArtist;
+
+/**
+ * Compartilha deck específico
+ */
+function shareDeck(deckName) {
+    smartShare(
+        `Deck: ${deckName} | Sorcery Brasil`,
+        `Confira o deck ${deckName} para Sorcery: Contested Realm`,
+        { view: 'decks', deck: deckName }
+    );
+}
+window.shareDeck = shareDeck;
 
 // Update breadcrumb navigation
 function updateBreadcrumb(viewName) {
@@ -7279,6 +7370,101 @@ function findCardBySlug(slug) {
     }
 
     return null;
+}
+
+/**
+ * Handle share parameters from URL (for social media links)
+ * Query params: view, v, artist, card, deck, set, element
+ */
+function handleShareParams(urlParams) {
+    if (!urlParams) {
+        urlParams = new URLSearchParams(window.location.search);
+    }
+
+    const view = urlParams.get('view') || urlParams.get('v');
+    const artist = urlParams.get('artist');
+    const card = urlParams.get('card');
+    const deck = urlParams.get('deck');
+    const set = urlParams.get('set');
+    const element = urlParams.get('element');
+
+    // Se tem parâmetros, navega para a view apropriada
+    if (view || artist || card || deck) {
+        setTimeout(() => {
+            // Card específico
+            if (card) {
+                const foundCard = allCards.find(c =>
+                    c.name.toLowerCase() === card.toLowerCase()
+                );
+                if (foundCard) {
+                    showView('cards');
+                    openCardModal(foundCard.name);
+                }
+                return;
+            }
+
+            // Artista específico
+            if (artist) {
+                showView('art');
+                setTimeout(() => {
+                    const searchInput = document.getElementById('artist-search');
+                    if (searchInput) {
+                        searchInput.value = artist;
+                        searchInput.dispatchEvent(new Event('input'));
+                    }
+                    // Tenta abrir o artista diretamente
+                    if (typeof showArtistCards === 'function') {
+                        showArtistCards(artist);
+                    }
+                }, 300);
+                return;
+            }
+
+            // Deck específico
+            if (deck) {
+                showView('decks');
+                setTimeout(() => {
+                    // Procura o deck e abre
+                    const deckData = [...recommendedDecks, ...(userDecks || [])].find(d =>
+                        d.name.toLowerCase() === deck.toLowerCase()
+                    );
+                    if (deckData && typeof openDeckDetail === 'function') {
+                        openDeckDetail(deckData);
+                    }
+                }, 300);
+                return;
+            }
+
+            // View com filtros
+            if (view) {
+                showView(view);
+
+                // Aplica filtros se especificados
+                if (view === 'cards') {
+                    setTimeout(() => {
+                        if (set) {
+                            const setFilter = document.getElementById('set-filter');
+                            if (setFilter) {
+                                setFilter.value = set;
+                                setFilter.dispatchEvent(new Event('change'));
+                            }
+                        }
+                        if (element) {
+                            const elementFilter = document.getElementById('element-filter');
+                            if (elementFilter) {
+                                elementFilter.value = element;
+                                elementFilter.dispatchEvent(new Event('change'));
+                            }
+                        }
+                    }, 300);
+                }
+            }
+        }, 500); // Aguarda cards carregarem
+
+        // Limpa os parâmetros da URL para não reprocessar
+        const cleanUrl = window.location.origin + window.location.pathname + window.location.hash;
+        window.history.replaceState({}, document.title, cleanUrl);
+    }
 }
 
 // Handle deep link from URL hash
