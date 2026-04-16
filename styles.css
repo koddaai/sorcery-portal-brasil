@@ -9021,6 +9021,44 @@ a.nav-dropdown-item {
     border: none;
 }
 
+/* Leaflet Map Styles */
+#stores-leaflet-map {
+    z-index: 1;
+    background: var(--bg-surface-2);
+}
+
+#stores-leaflet-map .leaflet-popup-content-wrapper {
+    background: var(--bg-surface-2);
+    color: var(--text-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+}
+
+#stores-leaflet-map .leaflet-popup-tip {
+    background: var(--bg-surface-2);
+}
+
+#stores-leaflet-map .leaflet-popup-content {
+    margin: 12px;
+}
+
+#stores-leaflet-map .leaflet-popup-content h4 {
+    color: var(--accent-gold) !important;
+}
+
+#stores-leaflet-map .leaflet-popup-content p {
+    color: var(--text-secondary) !important;
+}
+
+#stores-leaflet-map .leaflet-popup-content a {
+    color: var(--accent-gold) !important;
+}
+
+.store-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
 .stores-map-overlay {
     position: absolute;
     top: 0;

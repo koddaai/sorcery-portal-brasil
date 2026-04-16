@@ -4307,9 +4307,11 @@ function initCommunityView() {
     if (typeof renderStores === 'function') {
         renderStores();
     }
-    // Auto-load the stores map
+    // Auto-load the stores map with a small delay to ensure container is visible
     if (typeof loadStoresMap === 'function') {
-        loadStoresMap();
+        setTimeout(() => {
+            loadStoresMap();
+        }, 100);
     }
 }
 

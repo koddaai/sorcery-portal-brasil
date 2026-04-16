@@ -332,33 +332,79 @@ function toggleStoresView(view) {
 }
 window.toggleStoresView = toggleStoresView;
 
-// Load Google Maps with all store markers
+// Leaflet map instance
+let storesMap = null;
+
+// Load interactive map with all store markers using Leaflet
 function loadStoresMap() {
-    const placeholder = document.getElementById('stores-map-placeholder');
-    const iframe = document.getElementById('stores-map-iframe');
+    const mapContainer = document.getElementById('stores-leaflet-map');
+    if (!mapContainer) return;
 
-    if (!placeholder || !iframe) return;
-
-    // Create a multi-marker map URL
-    // Using the center of Brazil with all store coordinates
-    const storesWithCoords = PHYSICAL_STORES.filter(s => s.coords);
-
-    // Create markers string for Google Maps embed
-    const markerParams = storesWithCoords.map(s =>
-        `markers=${s.coords.lat},${s.coords.lng}`
-    ).join('&');
+    // Don't reinitialize if already loaded
+    if (storesMap) {
+        storesMap.invalidateSize();
+        return;
+    }
 
     // Center on Brazil
     const centerLat = -15.77972;
     const centerLng = -47.92972;
     const zoom = 4;
 
-    // Use OpenStreetMap embed as it doesn't require API key
-    const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=-73.99,-33.75,-34.79,5.27&layer=mapnik&marker=${centerLat},${centerLng}`;
+    // Initialize Leaflet map
+    storesMap = L.map('stores-leaflet-map').setView([centerLat, centerLng], zoom);
 
-    placeholder.style.display = 'none';
-    iframe.src = mapUrl;
-    iframe.style.display = 'block';
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 18
+    }).addTo(storesMap);
+
+    // Custom icon for stores
+    const storeIcon = L.divIcon({
+        className: 'store-marker',
+        html: '<div style="background: #d4af37; width: 24px; height: 24px; border-radius: 50%; border: 3px solid #1a1a2e; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.4);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a1a2e" stroke-width="2"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg></div>',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+        popupAnchor: [0, -12]
+    });
+
+    // Add markers for all stores
+    const storesWithCoords = PHYSICAL_STORES.filter(s => s.coords);
+    const markers = [];
+
+    storesWithCoords.forEach(store => {
+        const marker = L.marker([store.coords.lat, store.coords.lng], { icon: storeIcon })
+            .addTo(storesMap);
+
+        // Create popup content
+        const popupContent = `
+            <div style="min-width: 200px; font-family: system-ui, sans-serif;">
+                <h4 style="margin: 0 0 8px 0; color: #d4af37; font-size: 14px;">${store.name}</h4>
+                <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">
+                    <strong>${store.city}, ${store.state}</strong>
+                </p>
+                <p style="margin: 0 0 8px 0; font-size: 11px; color: #888;">${store.address}</p>
+                <p style="margin: 0 0 8px 0; font-size: 11px;">
+                    <span style="background: #2a2a4a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px;">${store.type}</span>
+                    ${store.hasEvents ? '<span style="background: #4a9d4a; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 4px;">Eventos</span>' : ''}
+                </p>
+                ${store.phone ? `<p style="margin: 0 0 4px 0; font-size: 11px;">📞 ${store.phone}</p>` : ''}
+                ${store.url ? `<a href="${store.url}" target="_blank" style="color: #d4af37; font-size: 11px; text-decoration: none;">🌐 Visitar site</a>` : ''}
+            </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        markers.push(marker);
+    });
+
+    // Fit map to show all markers
+    if (markers.length > 0) {
+        const group = L.featureGroup(markers);
+        storesMap.fitBounds(group.getBounds().pad(0.1));
+    }
+
+    console.log(`[Stores] Map loaded with ${storesWithCoords.length} store markers`);
 }
 window.loadStoresMap = loadStoresMap;
 
