@@ -2400,7 +2400,6 @@ async function loadCards() {
             allCards = cachedCards;
             filteredCards = [...allCards];
             buildSearchIndex();
-            loadingEl.classList.add('hidden');
             // Rebuild collection from VariantTracker now that allCards is loaded
             rebuildCollectionFromVariantTracker();
             // Refresh cache in background
@@ -2408,11 +2407,13 @@ async function loadCards() {
             return;
         }
 
-        // No cache - load from network
+        // No cache - show loading and load from network
+        loadingEl.classList.remove('hidden');
         await loadCardsFromNetwork();
         // Rebuild collection from VariantTracker now that allCards is loaded
         rebuildCollectionFromVariantTracker();
     } catch (error) {
+        loadingEl.classList.remove('hidden');
         loadingEl.innerHTML = `
             <p>Erro ao carregar cards. Por favor, atualize a página.</p>
             <p style="color: var(--text-secondary); margin-top: 1rem;">${error.message}</p>
