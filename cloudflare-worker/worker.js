@@ -16,7 +16,7 @@ function getCorsHeaders(origin) {
   return {
     'Access-Control-Allow-Origin': isAllowed ? origin : ALLOWED_ORIGINS[0],
     'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization, xc-token',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, xc-token, x-csrf-token, X-Requested-With',
     'Access-Control-Max-Age': '86400',
   };
 }
