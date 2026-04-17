@@ -15353,3 +15353,107 @@ window.showLegalPage = showLegalPage;
 window.openDeckBuilder = openDeckBuilder;
 window.openNewDeckModal = openDeckBuilder; // Alias for backwards compatibility
 window.openImportDeckModal = openImportDeckModal;
+
+// ============================================
+// ANIMATED COUNTING STATS
+// ============================================
+
+/**
+ * Anima a contagem de números quando elementos entram na viewport
+ * Usa Intersection Observer para melhor performance
+ */
+function initAnimatedCounting() {
+    const counters = document.querySelectorAll('.animate-count');
+    if (!counters.length) return;
+
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const countObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                animateCounter(entry.target);
+                entry.target.classList.add('counted');
+            }
+        });
+    }, observerOptions);
+
+    counters.forEach(counter => countObserver.observe(counter));
+}
+
+/**
+ * Executa a animação de contagem em um elemento
+ */
+function animateCounter(element) {
+    const target = parseInt(element.dataset.target) || 0;
+    const suffix = element.dataset.suffix || '';
+    const duration = 2000; // 2 segundos
+    const frameDuration = 1000 / 60; // 60fps
+    const totalFrames = Math.round(duration / frameDuration);
+
+    // Easing function para desacelerar no final
+    const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+
+    let frame = 0;
+    const countUp = () => {
+        frame++;
+        const progress = easeOutQuart(frame / totalFrames);
+        const currentCount = Math.round(target * progress);
+
+        element.textContent = currentCount.toLocaleString('pt-BR') + suffix;
+
+        if (frame < totalFrames) {
+            requestAnimationFrame(countUp);
+        } else {
+            element.textContent = target.toLocaleString('pt-BR') + suffix;
+        }
+    };
+
+    // Pequeno delay para sincronizar com outras animações
+    setTimeout(countUp, 100);
+}
+
+// Inicializar quando DOM carregar
+document.addEventListener('DOMContentLoaded', initAnimatedCounting);
+
+// ============================================
+// BUTTON RIPPLE EFFECT
+// ============================================
+
+/**
+ * Adiciona efeito ripple sofisticado aos botões
+ */
+function initButtonRipple() {
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn');
+        if (!btn || btn.disabled) return;
+
+        // Calcular posição relativa do clique
+        const rect = btn.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        // Definir variáveis CSS para posição do ripple
+        btn.style.setProperty('--ripple-x', `${x}%`);
+        btn.style.setProperty('--ripple-y', `${y}%`);
+
+        // Remover classe anterior se existir
+        btn.classList.remove('ripple');
+
+        // Forçar reflow para reiniciar animação
+        void btn.offsetWidth;
+
+        // Adicionar classe de ripple
+        btn.classList.add('ripple');
+
+        // Remover após animação
+        setTimeout(() => {
+            btn.classList.remove('ripple');
+        }, 600);
+    });
+}
+
+// Inicializar ripple quando DOM carregar
+document.addEventListener('DOMContentLoaded', initButtonRipple);
