@@ -4063,6 +4063,9 @@ a.nav-dropdown-item {
     padding: var(--space-6);
     opacity: 1;
     visibility: visible;
+    pointer-events: auto; /* Garantir captura de cliques */
+    touch-action: manipulation; /* Melhorar handling de touch no mobile */
+    -webkit-tap-highlight-color: transparent; /* Remover highlight de tap no iOS */
     transition:
         opacity var(--duration-normal) var(--ease-out-expo),
         visibility 0s 0s,

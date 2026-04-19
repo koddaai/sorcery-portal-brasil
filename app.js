@@ -13800,12 +13800,50 @@ function setupAuthEventListeners() {
         }
     });
 
+    // Helper: adiciona handlers de click e touch para modais (mobile-safe)
+    function addModalBackdropHandler(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+
+        // Handler para click e touch
+        const handler = (e) => {
+            e.stopPropagation();
+            if (e.target.id === modalId) {
+                closeModal(modalId);
+            }
+        };
+
+        modal.addEventListener('click', handler);
+        modal.addEventListener('touchend', handler, { passive: false });
+    }
+
+    // Aplicar handlers aos modais de autenticação e perfil
+    addModalBackdropHandler('auth-modal');
+    addModalBackdropHandler('forgot-password-modal');
+    addModalBackdropHandler('sync-modal');
+    addModalBackdropHandler('profile-modal');
+
+    // Card modal - handler especial (usa closeCardModal)
+    const cardModal = document.getElementById('card-modal');
+    if (cardModal) {
+        const cardHandler = (e) => {
+            e.stopPropagation();
+            if (e.target.id === 'card-modal') {
+                closeCardModal();
+            }
+        };
+        cardModal.addEventListener('click', cardHandler);
+        cardModal.addEventListener('touchend', cardHandler, { passive: false });
+    }
+
     // Close modals on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal('deck-detail-modal');
-            closeModal('card-modal');
+            closeCardModal();
             closeModal('auth-modal');
+            closeModal('forgot-password-modal');
+            closeModal('sync-modal');
             closeModal('profile-modal');
         }
     });
