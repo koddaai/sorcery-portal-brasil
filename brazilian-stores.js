@@ -81,6 +81,18 @@ const PHYSICAL_STORES = [
         coords: { lat: -23.1989, lng: -47.2923 }
     },
     {
+        name: "Gold House MTG",
+        type: "Sealed/Singles",
+        address: "Av. Sabato Ronsini, 401 - Vila Garrido (Sala 01)",
+        city: "Santa Bárbara D'Oeste",
+        state: "SP",
+        phone: "(11) 93446-2696",
+        url: "https://www.goldhousemtg.com.br",
+        hasEvents: true,
+        description: "TCGs variados, boosters, precons e acessórios. Eventos Ter-Sex 17h-2h",
+        coords: { lat: -22.7558, lng: -47.4148 }
+    },
+    {
         name: "Jogando TCG",
         type: "Acessórios",
         address: "Rua São Cristóvão, 115 - Jardim Patrícia",
