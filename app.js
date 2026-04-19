@@ -13820,6 +13820,7 @@ function setupAuthEventListeners() {
     // Aplicar handlers aos modais de autenticação e perfil
     addModalBackdropHandler('auth-modal');
     addModalBackdropHandler('forgot-password-modal');
+    addModalBackdropHandler('reset-password-modal');
     addModalBackdropHandler('sync-modal');
     addModalBackdropHandler('profile-modal');
 
@@ -13843,6 +13844,7 @@ function setupAuthEventListeners() {
             closeCardModal();
             closeModal('auth-modal');
             closeModal('forgot-password-modal');
+            closeModal('reset-password-modal');
             closeModal('sync-modal');
             closeModal('profile-modal');
         }
@@ -14052,49 +14054,245 @@ function closeForgotPasswordModal() {
     openAuthModal('login');
 }
 
-// Handle Forgot Password
+// Handle Forgot Password - Envia email real via Cloudflare Worker
 async function handleForgotPassword(e) {
     e.preventDefault();
 
-    const email = document.getElementById('forgot-email').value;
+    const email = document.getElementById('forgot-email').value.trim();
     const errorEl = document.getElementById('forgot-error');
     const successEl = document.getElementById('forgot-success');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
 
     // Hide previous messages
     errorEl.classList.add('hidden');
     successEl.classList.add('hidden');
 
-    try {
-        // Check if user exists
-        const userExists = await nocoDBService.checkUserExists(email);
+    if (!email) {
+        errorEl.textContent = 'Digite seu email.';
+        errorEl.classList.remove('hidden');
+        return;
+    }
 
-        if (!userExists) {
-            errorEl.textContent = 'Email não encontrado em nosso sistema.';
-            errorEl.classList.remove('hidden');
-            return;
+    setButtonLoading(submitBtn, true);
+
+    try {
+        // Chamar endpoint do Worker para enviar email
+        const proxyUrl = typeof SecurityConfig !== 'undefined'
+            ? SecurityConfig.api.proxyUrl
+            : 'https://sorcery-api-proxy.pedro-4e6.workers.dev';
+
+        const response = await fetch(`${proxyUrl}/auth/send-reset-email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || 'Erro ao enviar email');
         }
 
-        // Generate reset token and store it
-        const resetToken = Math.random().toString(36).substring(2, 10);
-        localStorage.setItem('password-reset-token', JSON.stringify({
-            email,
-            token: resetToken,
-            expires: Date.now() + (60 * 60 * 1000) // 1 hour
-        }));
-
-        // Show success message (in real app, would send email)
+        // Sempre mostrar sucesso (segurança - não revelar se email existe)
         successEl.innerHTML = `
             <strong>Email enviado!</strong><br>
-            Por enquanto, use o código: <strong>${resetToken}</strong><br>
-            <small>(Em produção, isso seria enviado por email)</small>
+            Se o email estiver cadastrado, você receberá as instruções para redefinir sua senha.<br>
+            <small>Verifique também sua pasta de spam.</small>
         `;
         successEl.classList.remove('hidden');
 
     } catch (error) {
-        errorEl.textContent = 'Erro ao processar solicitação. Tente novamente.';
+        console.error('Forgot password error:', error);
+        errorEl.textContent = error.message || 'Erro ao processar solicitação. Tente novamente.';
         errorEl.classList.remove('hidden');
+    } finally {
+        setButtonLoading(submitBtn, false);
     }
 }
+
+// ============================================
+// RESET PASSWORD (via link do email)
+// ============================================
+
+// Abrir modal de reset de senha
+function openResetPasswordModal(email, token) {
+    const modal = document.getElementById('reset-password-modal');
+    if (!modal) return;
+
+    // Preencher campos hidden
+    document.getElementById('reset-email').value = email || '';
+    document.getElementById('reset-token').value = token || '';
+
+    // Limpar campos e mensagens
+    document.getElementById('reset-new-password').value = '';
+    document.getElementById('reset-confirm-password').value = '';
+    document.getElementById('reset-password-error').classList.add('hidden');
+    document.getElementById('reset-password-success').classList.add('hidden');
+
+    modal.classList.remove('hidden');
+    refreshIcons();
+}
+window.openResetPasswordModal = openResetPasswordModal;
+
+// Fechar modal de reset de senha
+function closeResetPasswordModal() {
+    closeModal('reset-password-modal');
+    // Limpar hash da URL
+    if (window.location.hash.startsWith('#reset-password')) {
+        history.pushState(null, '', window.location.pathname);
+    }
+}
+window.closeResetPasswordModal = closeResetPasswordModal;
+
+// Handler para reset de senha
+async function handleResetPassword(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('reset-email').value;
+    const token = document.getElementById('reset-token').value;
+    const newPassword = document.getElementById('reset-new-password').value;
+    const confirmPassword = document.getElementById('reset-confirm-password').value;
+    const errorEl = document.getElementById('reset-password-error');
+    const successEl = document.getElementById('reset-password-success');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+
+    errorEl.classList.add('hidden');
+    successEl.classList.add('hidden');
+
+    // Validar senhas
+    if (newPassword !== confirmPassword) {
+        errorEl.textContent = 'As senhas não coincidem.';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    // Validar requisitos da senha
+    if (typeof validatePassword === 'function') {
+        const validation = validatePassword(newPassword);
+        if (!validation.valid) {
+            errorEl.textContent = validation.errors.join(', ');
+            errorEl.classList.remove('hidden');
+            return;
+        }
+    }
+
+    setButtonLoading(submitBtn, true);
+
+    try {
+        // Gerar hash da nova senha
+        const salt = generateSalt();
+        const passwordHash = await hashPasswordSecure(newPassword, salt);
+
+        // Chamar endpoint do Worker
+        const proxyUrl = typeof SecurityConfig !== 'undefined'
+            ? SecurityConfig.api.proxyUrl
+            : 'https://sorcery-api-proxy.pedro-4e6.workers.dev';
+
+        const response = await fetch(`${proxyUrl}/auth/reset-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                token,
+                passwordHash,
+                passwordSalt: salt
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.error || 'Erro ao redefinir senha');
+        }
+
+        // Sucesso!
+        successEl.innerHTML = `
+            <strong>Senha redefinida com sucesso!</strong><br>
+            Você já pode fazer login com sua nova senha.
+        `;
+        successEl.classList.remove('hidden');
+
+        // Após 2 segundos, fechar modal e abrir login
+        setTimeout(() => {
+            closeResetPasswordModal();
+            openAuthModal('login');
+            showSuccessToast('Senha redefinida! Faça login.', 'Sucesso');
+        }, 2000);
+
+    } catch (error) {
+        console.error('Reset password error:', error);
+        errorEl.textContent = error.message || 'Erro ao redefinir senha. O link pode ter expirado.';
+        errorEl.classList.remove('hidden');
+    } finally {
+        setButtonLoading(submitBtn, false);
+    }
+}
+
+// Verificar se URL tem parâmetros de reset de senha
+function checkResetPasswordURL() {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#reset-password')) return;
+
+    // Extrair parâmetros
+    const params = new URLSearchParams(hash.split('?')[1] || '');
+    const token = params.get('token');
+    const email = params.get('email');
+
+    if (token && email) {
+        // Verificar se token é válido antes de abrir modal
+        verifyResetToken(email, token);
+    }
+}
+
+// Verificar token de reset
+async function verifyResetToken(email, token) {
+    try {
+        const proxyUrl = typeof SecurityConfig !== 'undefined'
+            ? SecurityConfig.api.proxyUrl
+            : 'https://sorcery-api-proxy.pedro-4e6.workers.dev';
+
+        const response = await fetch(`${proxyUrl}/auth/verify-reset-token`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, token })
+        });
+
+        const data = await response.json();
+
+        if (data.valid) {
+            openResetPasswordModal(email, token);
+        } else {
+            showErrorToast(data.error || 'Link inválido ou expirado', 'Erro');
+            // Limpar URL
+            history.pushState(null, '', window.location.pathname);
+        }
+    } catch (error) {
+        console.error('Verify token error:', error);
+        showErrorToast('Erro ao verificar link', 'Erro');
+    }
+}
+
+// Setup reset password form
+document.addEventListener('DOMContentLoaded', () => {
+    const resetForm = document.getElementById('reset-password-form');
+    if (resetForm) {
+        resetForm.addEventListener('submit', handleResetPassword);
+    }
+
+    // Verificar URL ao carregar
+    checkResetPasswordURL();
+});
+
+// Também verificar quando hash muda
+window.addEventListener('hashchange', () => {
+    checkResetPasswordURL();
+});
 
 // Setup forgot password form
 document.addEventListener('DOMContentLoaded', () => {

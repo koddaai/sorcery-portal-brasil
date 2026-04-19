@@ -3305,6 +3305,50 @@
             </div>
         </div>
 
+        <!-- Reset Password Modal (abre via link do email) -->
+        <div id="reset-password-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content auth-modal-content">
+                <button class="close-modal" onclick="closeResetPasswordModal()" aria-label="Fechar modal">&times;</button>
+                <form id="reset-password-form" class="auth-form">
+                    <h3><i data-lucide="key-round"></i> Nova Senha</h3>
+                    <p class="form-description">Digite sua nova senha abaixo.</p>
+
+                    <input type="hidden" id="reset-email" />
+                    <input type="hidden" id="reset-token" />
+
+                    <div class="form-group">
+                        <label for="reset-new-password">Nova Senha</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="reset-new-password" required minlength="8"
+                                   placeholder="Mínimo 8 caracteres">
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('reset-new-password', this)">
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                        <small class="password-requirements">Deve conter: maiúscula, minúscula e número</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reset-confirm-password">Confirmar Senha</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="reset-confirm-password" required minlength="8"
+                                   placeholder="Digite novamente">
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('reset-confirm-password', this)">
+                                <i data-lucide="eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="reset-password-error" class="auth-error hidden"></div>
+                    <div id="reset-password-success" class="auth-success hidden"></div>
+
+                    <button type="submit" class="btn primary btn-full">
+                        <i data-lucide="check"></i> Redefinir Senha
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <!-- Sync Options Modal -->
         <div id="sync-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content sync-modal-content">
