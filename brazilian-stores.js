@@ -325,18 +325,28 @@ function loadStoresMap() {
         return;
     }
 
-    // Center on Brazil
-    const centerLat = -15.77972;
-    const centerLng = -47.92972;
-    const zoom = 4;
+    // Center on Brazil (centro geográfico)
+    const centerLat = -14.235;
+    const centerLng = -51.925;
+    const zoom = 5;
 
-    // Initialize Leaflet map
-    storesMap = L.map('stores-leaflet-map').setView([centerLat, centerLng], zoom);
+    // Limites do Brasil (bounding box)
+    const brazilBounds = L.latLngBounds(
+        L.latLng(-33.75, -73.98),  // Sudoeste
+        L.latLng(5.27, -32.39)     // Nordeste
+    );
+
+    // Initialize Leaflet map com restrições para Brasil
+    storesMap = L.map('stores-leaflet-map', {
+        minZoom: 4,
+        maxZoom: 18,
+        maxBounds: brazilBounds,
+        maxBoundsViscosity: 0.8
+    }).setView([centerLat, centerLng], zoom);
 
     // Add OpenStreetMap tiles
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 18
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(storesMap);
 
     // Custom icon for stores
