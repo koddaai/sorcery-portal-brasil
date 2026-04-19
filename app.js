@@ -6995,15 +6995,16 @@ function sortCards(cards, sortOption) {
 }
 
 /**
- * Get card price for sorting (from card object)
+ * Get card price for sorting and display (from card object)
+ * Uses market price for consistency with detail modal
  */
 function getCardPriceForSort(card) {
     if (!card || !card.name) return 0;
 
     // Prioridade: tcgcsvPriceService (dados reais do TCGPlayer)
-    // Usar getLowPrice para mostrar o preço MÍNIMO (menor preço disponível)
+    // Usar getPrice para mostrar o preço MARKET (igual ao modal de detalhes)
     if (typeof tcgcsvPriceService !== 'undefined' && tcgcsvPriceService.cardPrices.size > 0) {
-        const price = tcgcsvPriceService.getLowPrice(card.name, null, 'Normal');
+        const price = tcgcsvPriceService.getPrice(card.name, null, 'Normal');
         if (price && price > 0) return price;
     }
 
