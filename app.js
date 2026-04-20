@@ -4061,6 +4061,13 @@ function parseURLHash() {
  * Handler para mudanças de hash (browser back/forward)
  */
 function handleHashChange() {
+    // Ignorar hashes especiais que são tratados por outros handlers
+    const hash = window.location.hash;
+    if (hash.startsWith('#reset-password')) {
+        // Deixar checkResetPasswordURL() tratar este hash
+        return;
+    }
+
     const { view, params, cardSlug } = parseURLHash();
 
     // Caso especial: deep link para card
@@ -7479,6 +7486,12 @@ function handleDeepLink() {
     const profileToken = urlParams.get('profile') || urlParams.get('u');
     if (profileToken) {
         loadPublicProfile(profileToken);
+        return;
+    }
+
+    // Ignorar hashes especiais tratados por outros handlers
+    if (hash.startsWith('#reset-password')) {
+        // checkResetPasswordURL() vai tratar este hash no DOMContentLoaded
         return;
     }
 
