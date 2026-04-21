@@ -1,7 +1,11 @@
 /**
  * Sorcery TCG News Fetcher & Translator
  *
- * Fetches real news from sorcerytcg.com sitemap and translates to Portuguese
+ * Fetches real news from sorcerytcg.com using hybrid approach:
+ * 1. Scrapes /news page directly for latest articles (catches new posts immediately)
+ * 2. Falls back to sitemap.xml for older articles
+ *
+ * Then translates to Portuguese using OpenAI
  */
 
 import * as cheerio from 'cheerio';
@@ -18,9 +22,17 @@ const BASE_URL = 'https://sorcerytcg.com';
 const OUTPUT_FILE = path.join(__dirname, '..', 'news-database.json');
 const MAX_NEWS = 15;
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-});
+// OpenAI client (lazy initialization to allow running without API key for testing)
+let openai = null;
+function getOpenAI() {
+    if (!openai) {
+        if (!process.env.OPENAI_API_KEY) {
+            throw new Error('OPENAI_API_KEY environment variable is required for translation');
+        }
+        openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    }
+    return openai;
+}
 
 /**
  * Fetch page content
@@ -94,6 +106,77 @@ async function getNewsUrlsFromSitemap() {
 
     // Return URLs only, take more to ensure we get recent ones
     return newsUrls.slice(0, MAX_NEWS * 3).map(n => n.url);
+}
+
+/**
+ * Get news URLs from the tRPC API (catches new articles immediately)
+ * This is more reliable than scraping the HTML since the site uses client-side rendering
+ */
+async function getNewsUrlsFromAPI() {
+    console.log('[Fetch] Getting news URLs from tRPC API...');
+
+    const apiUrl = `${BASE_URL}/api/trpc/cms.searchPosts?batch=1&input=${encodeURIComponent(JSON.stringify({
+        "0": { "json": { "query": "", "tag": "*", "direction": "forward" } }
+    }))}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+                'Origin': BASE_URL,
+                'Referer': `${BASE_URL}/news`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`API returned ${response.status}`);
+        }
+
+        const data = await response.json();
+        const posts = data[0]?.result?.data?.json?.posts || [];
+
+        const newsUrls = posts.map(post => {
+            const slug = typeof post.slug === 'string' ? post.slug : post.slug?.current;
+            return `${BASE_URL}/news/${slug}`;
+        }).filter(url => url && !url.endsWith('/undefined'));
+
+        console.log(`[Fetch] Found ${newsUrls.length} news URLs from API`);
+        if (newsUrls.length > 0) {
+            console.log(`[Fetch] Latest articles from API:`);
+            newsUrls.slice(0, 5).forEach(url => console.log(`  - ${url.split('/news/')[1]}`));
+        }
+
+        return newsUrls;
+    } catch (error) {
+        console.error('[Fetch] Error fetching from API:', error.message);
+        return [];
+    }
+}
+
+/**
+ * Get combined news URLs from both API and sitemap (hybrid approach)
+ */
+async function getNewsUrls() {
+    // First, get URLs from API (most recent, includes articles not yet in sitemap)
+    const apiUrls = await getNewsUrlsFromAPI();
+
+    // Then, get URLs from sitemap (may have older articles not returned by API)
+    const sitemapUrls = await getNewsUrlsFromSitemap();
+
+    // Combine and deduplicate, prioritizing API order (newest first)
+    const allUrls = [...apiUrls];
+    const urlSet = new Set(apiUrls);
+
+    for (const url of sitemapUrls) {
+        if (!urlSet.has(url)) {
+            allUrls.push(url);
+            urlSet.add(url);
+        }
+    }
+
+    console.log(`[Fetch] Combined: ${allUrls.length} unique URLs (${apiUrls.length} from API, ${sitemapUrls.length} from sitemap)`);
+
+    return allUrls;
 }
 
 /**
@@ -233,7 +316,7 @@ Exemplo correto: "Dust em Sorcery: Contested Realm" (NÃO "Poeira em Feitiçaria
 Se o conteúdo estiver vazio, crie um resumo baseado no título.`;
 
     try {
-        const response = await openai.chat.completions.create({
+        const response = await getOpenAI().chat.completions.create({
             model: 'gpt-4o-mini',
             messages: [{ role: 'user', content: prompt }],
             response_format: { type: 'json_object' },
@@ -290,15 +373,15 @@ function loadExistingNews() {
  * Main function
  */
 async function main() {
-    console.log('=== Sorcery News Fetcher v2 ===');
+    console.log('=== Sorcery News Fetcher v3 (Hybrid) ===');
     console.log(`Output: ${OUTPUT_FILE}`);
 
     try {
-        // Get news URLs from sitemap
-        const newsUrls = await getNewsUrlsFromSitemap();
+        // Get news URLs from both /news page and sitemap (hybrid approach)
+        const newsUrls = await getNewsUrls();
 
         if (newsUrls.length === 0) {
-            console.log('[Fetch] No news URLs found in sitemap');
+            console.log('[Fetch] No news URLs found');
             return;
         }
 
@@ -355,7 +438,7 @@ async function main() {
         const output = {
             news: finalNews,
             lastUpdated: new Date().toISOString(),
-            source: SITEMAP_URL
+            source: `${BASE_URL}/news + ${SITEMAP_URL}`
         };
 
         fs.writeFileSync(OUTPUT_FILE, JSON.stringify(output, null, 2));
