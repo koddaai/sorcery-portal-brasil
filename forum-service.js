@@ -1,26 +1,27 @@
 // ============================================
 // SORCERY FORUM SERVICE
-// Community forum with categories
+// Community forum with categories - Restructured
 // ============================================
 
 const FORUM_CATEGORIES = {
-    duvidas: { name: 'Dúvidas sobre Cartas', icon: 'help-circle', description: 'Perguntas sobre mecânicas, regras e interações de cartas' },
-    classificados: { name: 'Classificados', icon: 'tag', description: 'Anúncios de compra, venda e troca P2P' },
-    promocoes: { name: 'Promoções', icon: 'percent', description: 'Ofertas, cupons e promoções de lojas' },
-    dicas: { name: 'Dicas & Estratégias', icon: 'lightbulb', description: 'Estratégias, combos e dicas de jogo' },
-    eventos: { name: 'Eventos', icon: 'calendar', description: 'Torneios, encontros e eventos' },
-    geral: { name: 'Geral', icon: 'message-circle', description: 'Discussões gerais sobre Sorcery' }
+    duvidas: { name: 'Dúvidas sobre Cartas', icon: 'help-circle', description: 'Perguntas sobre mecânicas, regras e interações de cartas', color: '#3b82f6' },
+    classificados: { name: 'Classificados', icon: 'tag', description: 'Anúncios de compra, venda e troca P2P', color: '#22c55e' },
+    promocoes: { name: 'Promoções', icon: 'percent', description: 'Ofertas, cupons e promoções de lojas', color: '#ef4444' },
+    dicas: { name: 'Dicas & Estratégias', icon: 'lightbulb', description: 'Estratégias, combos e dicas de jogo', color: '#f59e0b' },
+    eventos: { name: 'Eventos', icon: 'calendar', description: 'Torneios, encontros e eventos', color: '#a855f7' },
+    geral: { name: 'Geral', icon: 'message-circle', description: 'Discussões gerais sobre Sorcery', color: '#9ca3af' }
 };
 
 class ForumService {
     constructor() {
         this.posts = [];
         this.currentPost = null;
+        this.currentCategory = null;
         this.comments = [];
         this.userCache = new Map();
+        this.categoryStats = {};
         this.filters = {
-            category: '',
-            sort: 'recent' // 'recent', 'popular', 'comments'
+            sort: 'recent'
         };
         this.pagination = {
             offset: 0,
@@ -30,47 +31,184 @@ class ForumService {
     }
 
     // ==========================================
-    // LOAD POSTS
+    // INITIALIZATION
     // ==========================================
 
-    async loadPosts(append = false) {
+    async init() {
+        await this.loadCategoryStats();
+        this.showCategoriesHome();
+    }
+
+    // ==========================================
+    // VIEW NAVIGATION
+    // ==========================================
+
+    showCategoriesHome() {
+        this.currentCategory = null;
+
+        document.getElementById('forum-categories-view')?.classList.remove('hidden');
+        document.getElementById('forum-category-view')?.classList.add('hidden');
+        document.getElementById('forum-topic-view')?.classList.add('hidden');
+
+        this.renderCategoriesGrid();
+        this.loadRecentPosts();
+    }
+
+    async showCategory(categoryKey) {
+        this.currentCategory = categoryKey;
+        this.pagination.offset = 0;
+
+        document.getElementById('forum-categories-view')?.classList.add('hidden');
+        document.getElementById('forum-category-view')?.classList.remove('hidden');
+        document.getElementById('forum-topic-view')?.classList.add('hidden');
+
+        const cat = FORUM_CATEGORIES[categoryKey];
+        if (cat) {
+            const iconEl = document.getElementById('forum-category-icon');
+            const nameEl = document.getElementById('forum-category-name');
+            const descEl = document.getElementById('forum-category-description');
+
+            if (iconEl) iconEl.setAttribute('data-lucide', cat.icon);
+            if (nameEl) nameEl.textContent = cat.name;
+            if (descEl) descEl.textContent = cat.description;
+
+            // Update new topic button visibility
+            const newTopicBtn = document.getElementById('forum-new-topic-btn');
+            if (newTopicBtn) {
+                newTopicBtn.style.display = nocoDBService.isLoggedIn() ? 'flex' : 'none';
+            }
+        }
+
+        refreshIcons();
+        await this.loadCategoryTopics();
+    }
+
+    async showTopic(postId) {
+        document.getElementById('forum-categories-view')?.classList.add('hidden');
+        document.getElementById('forum-category-view')?.classList.add('hidden');
+        document.getElementById('forum-topic-view')?.classList.remove('hidden');
+
+        await this.loadTopicDetail(postId);
+    }
+
+    // ==========================================
+    // LOAD DATA
+    // ==========================================
+
+    async loadCategoryStats() {
         try {
-            if (!append) {
-                this.pagination.offset = 0;
-                showContainerLoading('forum-posts-list');
+            for (const key of Object.keys(FORUM_CATEGORIES)) {
+                const posts = await nocoDBService.getForumPosts({ category: key, limit: 100 });
+                this.categoryStats[key] = {
+                    topicCount: posts.length,
+                    lastPost: posts[0] || null
+                };
+            }
+        } catch (error) {
+            console.error('Error loading category stats:', error);
+        }
+    }
+
+    async loadRecentPosts() {
+        try {
+            const container = document.getElementById('forum-recent-posts');
+            if (!container) return;
+
+            const posts = await nocoDBService.getForumPosts({ sort: 'recent', limit: 5 });
+
+            if (posts.length === 0) {
+                container.innerHTML = '<p class="text-muted">Nenhuma atividade recente</p>';
+                return;
             }
 
+            const userIds = [...new Set(posts.map(p => p.user_id))];
+            await this.loadUserInfo(userIds);
+
+            container.innerHTML = posts.map(post => {
+                const user = this.userCache.get(post.user_id) || { displayName: 'Usuário' };
+                return `
+                    <div class="forum-recent-item" onclick="forumService.showTopic(${post.Id})">
+                        <div class="forum-recent-item-category cat-${post.category}"></div>
+                        <div class="forum-recent-item-content">
+                            <div class="forum-recent-item-title">${escapeHtml(post.Title || post.title)}</div>
+                            <div class="forum-recent-item-meta">
+                                ${escapeHtml(user.displayName)} · ${formatRelativeDate(post.CreatedAt)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+        } catch (error) {
+            console.error('Error loading recent posts:', error);
+        }
+    }
+
+    async loadCategoryTopics() {
+        try {
+            const container = document.getElementById('forum-topics-list');
+            if (!container) return;
+
+            showContainerLoading('forum-topics-list');
+
             const posts = await nocoDBService.getForumPosts({
-                category: this.filters.category,
+                category: this.currentCategory,
                 sort: this.filters.sort,
                 offset: this.pagination.offset,
                 limit: this.pagination.limit
             });
 
-            // Get comment counts for each post
+            // Get comment counts
             for (const post of posts) {
                 const comments = await nocoDBService.getForumComments(post.Id);
                 post.commentCount = comments.length;
             }
 
-            if (append) {
-                this.posts = [...this.posts, ...posts];
-            } else {
-                this.posts = posts;
-            }
-
+            this.posts = posts;
             this.pagination.hasMore = posts.length === this.pagination.limit;
 
-            // Load user info
-            const userIds = [...new Set(this.posts.map(p => p.user_id))];
+            const userIds = [...new Set(posts.map(p => p.user_id))];
             await this.loadUserInfo(userIds);
 
-            this.renderPosts();
-            hideContainerLoading('forum-posts-list');
+            this.renderTopicsList();
+            hideContainerLoading('forum-topics-list');
+
         } catch (error) {
-            console.error('Error loading forum posts:', error);
-            showToast('Erro ao carregar posts', 'error');
-            hideContainerLoading('forum-posts-list');
+            console.error('Error loading category topics:', error);
+            showToast('Erro ao carregar tópicos', 'error');
+            hideContainerLoading('forum-topics-list');
+        }
+    }
+
+    async loadTopicDetail(postId) {
+        try {
+            const container = document.getElementById('forum-topic-view');
+            if (!container) return;
+
+            showContainerLoading('forum-topic-view');
+
+            this.currentPost = await nocoDBService.getForumPost(postId);
+            if (!this.currentPost) {
+                showToast('Tópico não encontrado', 'error');
+                this.showCategoriesHome();
+                return;
+            }
+
+            this.comments = await nocoDBService.getForumComments(postId);
+
+            const userIds = [this.currentPost.user_id, ...this.comments.map(c => c.user_id)];
+            await this.loadUserInfo([...new Set(userIds)]);
+
+            // Increment views
+            nocoDBService.incrementPostViews(postId, this.currentPost.view_count);
+
+            this.renderTopicDetail();
+            hideContainerLoading('forum-topic-view');
+
+        } catch (error) {
+            console.error('Error loading topic:', error);
+            showToast('Erro ao carregar tópico', 'error');
+            hideContainerLoading('forum-topic-view');
         }
     }
 
@@ -88,47 +226,70 @@ class ForumService {
     }
 
     // ==========================================
-    // RENDER POSTS LIST
+    // RENDER METHODS
     // ==========================================
 
-    renderPosts() {
-        const container = document.getElementById('forum-posts-list');
+    renderCategoriesGrid() {
+        const container = document.getElementById('forum-categories-grid');
+        if (!container) return;
+
+        container.innerHTML = Object.entries(FORUM_CATEGORIES).map(([key, cat]) => {
+            const stats = this.categoryStats[key] || { topicCount: 0 };
+            return `
+                <div class="forum-category-card" onclick="forumService.showCategory('${key}')">
+                    <div class="forum-category-card-header">
+                        <div class="forum-category-card-icon cat-${key}">
+                            <i data-lucide="${cat.icon}"></i>
+                        </div>
+                        <div class="forum-category-card-title">${cat.name}</div>
+                    </div>
+                    <div class="forum-category-card-description">${cat.description}</div>
+                    <div class="forum-category-card-stats">
+                        <span><i data-lucide="message-square"></i> ${stats.topicCount} tópicos</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        refreshIcons();
+    }
+
+    renderTopicsList() {
+        const container = document.getElementById('forum-topics-list');
         if (!container) return;
 
         if (this.posts.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
-                    <i data-lucide="message-square"></i>
-                    <h3>Nenhum post encontrado</h3>
+                    <i data-lucide="message-square-plus"></i>
+                    <h3>Nenhum tópico nesta categoria</h3>
                     <p>Seja o primeiro a criar um tópico!</p>
                     ${nocoDBService.isLoggedIn() ? `
                         <button class="btn btn-primary" onclick="forumService.openCreatePostModal()">
                             <i data-lucide="plus"></i>
-                            Criar Post
+                            Criar Tópico
                         </button>
                     ` : ''}
                 </div>
             `;
-            refreshIcons(container);
+            refreshIcons();
             return;
         }
 
+        // Separate pinned posts
         const pinnedPosts = this.posts.filter(p => p.is_pinned);
-        const regularPosts = this.posts.filter(p => !p.is_pinned);
+        const normalPosts = this.posts.filter(p => !p.is_pinned);
 
         let html = '';
 
-        // Pinned posts
         if (pinnedPosts.length > 0) {
             html += '<div class="pinned-posts-section"><h4><i data-lucide="pin"></i> Fixados</h4>';
-            html += pinnedPosts.map(post => this.renderPostCard(post, true)).join('');
+            html += pinnedPosts.map(post => this.renderTopicCard(post, true)).join('');
             html += '</div>';
         }
 
-        // Regular posts
-        html += regularPosts.map(post => this.renderPostCard(post, false)).join('');
+        html += normalPosts.map(post => this.renderTopicCard(post, false)).join('');
 
-        // Load more button
         if (this.pagination.hasMore) {
             html += `
                 <button class="btn btn-secondary load-more-btn" onclick="forumService.loadMore()">
@@ -139,28 +300,24 @@ class ForumService {
         }
 
         container.innerHTML = html;
-        refreshIcons(container);
+        refreshIcons();
     }
 
-    renderPostCard(post, isPinned) {
+    renderTopicCard(post, isPinned) {
         const user = this.userCache.get(post.user_id) || { displayName: 'Usuário', avatarId: 1 };
-        const category = FORUM_CATEGORIES[post.category] || FORUM_CATEGORIES.geral;
         const badge = getReputationBadge(user.reputation?.score || 0);
+        const title = post.Title || post.title || 'Sem título';
 
         return `
-            <div class="forum-post-card ${isPinned ? 'pinned' : ''} ${post.is_locked ? 'locked' : ''}" onclick="forumService.openPost(${post.Id})">
+            <div class="forum-post-card ${isPinned ? 'pinned' : ''} ${post.is_locked ? 'locked' : ''}" onclick="forumService.showTopic(${post.Id})">
                 <div class="post-card-left">
                     ${renderAvatar(user.avatarId, 'medium')}
                 </div>
                 <div class="post-card-content">
                     <div class="post-card-header">
-                        <span class="post-category post-category-${post.category}">
-                            <i data-lucide="${category.icon}"></i>
-                            ${category.name}
-                        </span>
                         ${post.is_locked ? '<span class="post-locked"><i data-lucide="lock"></i></span>' : ''}
                     </div>
-                    <h4 class="post-title">${escapeHtml(post.title)}</h4>
+                    <h4 class="post-title">${escapeHtml(title)}</h4>
                     <p class="post-preview">${escapeHtml(post.content.substring(0, 150))}${post.content.length > 150 ? '...' : ''}</p>
                     <div class="post-card-footer">
                         <span class="post-author">
@@ -182,66 +339,30 @@ class ForumService {
         `;
     }
 
-    // ==========================================
-    // OPEN POST
-    // ==========================================
-
-    async openPost(postId) {
-        try {
-            showContainerLoading('forum-post-view');
-
-            // Load post
-            this.currentPost = await nocoDBService.getForumPost(postId);
-            if (!this.currentPost) {
-                showToast('Post não encontrado', 'error');
-                return;
-            }
-
-            // Load comments
-            this.comments = await nocoDBService.getForumComments(postId);
-
-            // Load user info for post author and commenters
-            const userIds = [this.currentPost.user_id, ...this.comments.map(c => c.user_id)];
-            await this.loadUserInfo([...new Set(userIds)]);
-
-            // Increment view count
-            nocoDBService.incrementPostViews(postId, this.currentPost.view_count);
-
-            // Switch to post view
-            this.renderPostView();
-            switchForumView('post');
-
-            hideContainerLoading('forum-post-view');
-        } catch (error) {
-            console.error('Error opening post:', error);
-            showToast('Erro ao abrir post', 'error');
-            hideContainerLoading('forum-post-view');
-        }
-    }
-
-    renderPostView() {
-        const container = document.getElementById('forum-post-view');
+    renderTopicDetail() {
+        const container = document.getElementById('forum-topic-view');
         if (!container || !this.currentPost) return;
 
         const post = this.currentPost;
         const user = this.userCache.get(post.user_id) || { displayName: 'Usuário', avatarId: 1 };
-        const category = FORUM_CATEGORIES[post.category] || FORUM_CATEGORIES.geral;
+        const cat = FORUM_CATEGORIES[post.category] || FORUM_CATEGORIES.geral;
         const badge = getReputationBadge(user.reputation?.score || 0);
+        const title = post.Title || post.title || 'Sem título';
 
         container.innerHTML = `
             <div class="forum-post-full">
                 <div class="post-header">
-                    <button class="btn btn-ghost" onclick="switchForumView('list')">
+                    <button class="btn btn-ghost" onclick="forumService.backFromTopic()">
                         <i data-lucide="arrow-left"></i>
-                        Voltar
+                        Voltar para ${cat.name}
                     </button>
                     <span class="post-category post-category-${post.category}">
-                        <i data-lucide="${category.icon}"></i>
-                        ${category.name}
+                        <i data-lucide="${cat.icon}"></i>
+                        ${cat.name}
                     </span>
                 </div>
 
-                <h2 class="post-full-title">${escapeHtml(post.title)}</h2>
+                <h2 class="post-full-title">${escapeHtml(title)}</h2>
 
                 <div class="post-author-info">
                     ${renderAvatar(user.avatarId, 'medium')}
@@ -272,7 +393,7 @@ class ForumService {
 
                 ${!post.is_locked && nocoDBService.isLoggedIn() ? `
                     <div class="comment-form">
-                        <textarea id="comment-content" placeholder="Escreva um comentário..." maxlength="2000"></textarea>
+                        <textarea id="comment-content" placeholder="Escreva um comentário..." class="textarea" maxlength="2000"></textarea>
                         <button class="btn btn-primary" onclick="forumService.addComment()">
                             <i data-lucide="send"></i>
                             Enviar
@@ -295,19 +416,9 @@ class ForumService {
                     ` : this.comments.map(comment => this.renderComment(comment)).join('')}
                 </div>
             </div>
-
-            <div class="legal-disclaimer">
-                <i data-lucide="alert-triangle"></i>
-                <p>
-                    <strong>Aviso:</strong> Este portal apenas conecta jogadores.
-                    Transações ocorrem fora da plataforma sob responsabilidade
-                    exclusiva das partes envolvidas.
-                    <a href="#" onclick="showTermsModal(); return false;">Ver termos completos</a>
-                </p>
-            </div>
         `;
 
-        refreshIcons(container);
+        refreshIcons();
     }
 
     renderComment(comment) {
@@ -336,18 +447,25 @@ class ForumService {
     }
 
     // ==========================================
-    // CREATE POST
+    // ACTIONS
     // ==========================================
+
+    backFromTopic() {
+        if (this.currentCategory) {
+            this.showCategory(this.currentCategory);
+        } else {
+            this.showCategoriesHome();
+        }
+    }
 
     openCreatePostModal() {
         if (!nocoDBService.isLoggedIn()) {
-            showToast('Faça login para criar posts', 'error');
+            showToast('Faça login para criar tópicos', 'error');
             return;
         }
 
-        // Check terms acceptance
-        const user = nocoDBService.getCurrentUser();
-        if (!user.termsAccepted) {
+        const currentUser = nocoDBService.getCurrentUser();
+        if (!currentUser.termsAccepted) {
             showTermsModal(() => this.openCreatePostModal());
             return;
         }
@@ -355,7 +473,12 @@ class ForumService {
         // Reset form
         document.getElementById('post-title').value = '';
         document.getElementById('post-content').value = '';
-        document.getElementById('post-category').value = 'geral';
+
+        // Set category to current if in a category view
+        const categorySelect = document.getElementById('post-category');
+        if (categorySelect) {
+            categorySelect.value = this.currentCategory || 'geral';
+        }
 
         openModal('create-post-modal');
     }
@@ -375,7 +498,6 @@ class ForumService {
             return;
         }
 
-        // Get button element - either from event or by selector
         const submitBtn = event?.target || document.querySelector('#create-post-modal .btn-primary');
 
         try {
@@ -387,21 +509,20 @@ class ForumService {
                 category
             });
 
-            showToast('Post criado!', 'success');
+            showToast('Tópico criado!', 'success');
             closeModal('create-post-modal');
-            await this.loadPosts();
+
+            // Refresh stats and show category
+            await this.loadCategoryStats();
+            this.showCategory(category);
 
             if (submitBtn) setButtonLoading(submitBtn, false);
         } catch (error) {
             console.error('Error creating post:', error);
-            showToast('Erro ao criar post', 'error');
+            showToast('Erro ao criar tópico', 'error');
             if (submitBtn) setButtonLoading(submitBtn, false);
         }
     }
-
-    // ==========================================
-    // ADD COMMENT
-    // ==========================================
 
     async addComment() {
         if (!this.currentPost) return;
@@ -415,14 +536,11 @@ class ForumService {
         try {
             await nocoDBService.createForumComment(this.currentPost.Id, content);
 
-            // Reload comments
             this.comments = await nocoDBService.getForumComments(this.currentPost.Id);
             await this.loadUserInfo(this.comments.map(c => c.user_id));
 
-            // Re-render
-            this.renderPostView();
+            this.renderTopicDetail();
             document.getElementById('comment-content').value = '';
-
             showToast('Comentário enviado!', 'success');
         } catch (error) {
             console.error('Error adding comment:', error);
@@ -430,95 +548,50 @@ class ForumService {
         }
     }
 
-    // ==========================================
-    // FILTERS
-    // ==========================================
-
     setFilter(key, value) {
         this.filters[key] = value;
-        this.loadPosts();
+        if (this.currentCategory) {
+            this.loadCategoryTopics();
+        }
     }
 
     loadMore() {
         this.pagination.offset += this.pagination.limit;
-        this.loadPosts(true);
+        this.loadCategoryTopics();
     }
-
-    // ==========================================
-    // SEARCH
-    // ==========================================
 
     async search(query) {
         if (!query || query.length < 2) {
-            this.loadPosts();
+            if (this.currentCategory) {
+                this.loadCategoryTopics();
+            }
             return;
         }
 
-        // Simple client-side search (for now)
-        // In production, implement server-side search
-        await this.loadPosts();
-        this.posts = this.posts.filter(p =>
-            p.title.toLowerCase().includes(query.toLowerCase()) ||
-            p.content.toLowerCase().includes(query.toLowerCase())
-        );
-        this.renderPosts();
+        // Filter current posts by search query
+        await this.loadCategoryTopics();
+        this.posts = this.posts.filter(post => {
+            const title = (post.Title || post.title || '').toLowerCase();
+            const content = (post.content || '').toLowerCase();
+            return title.includes(query.toLowerCase()) || content.includes(query.toLowerCase());
+        });
+        this.renderTopicsList();
     }
 }
 
 // ==========================================
-// VIEW SWITCHING
-// ==========================================
-
-function switchForumView(view) {
-    const listView = document.getElementById('forum-list-view');
-    const postView = document.getElementById('forum-post-view');
-
-    if (view === 'list') {
-        listView?.classList.remove('hidden');
-        postView?.classList.add('hidden');
-    } else {
-        listView?.classList.add('hidden');
-        postView?.classList.remove('hidden');
-    }
-}
-
-// ==========================================
-// RENDER CATEGORIES SIDEBAR
-// ==========================================
-
-function renderForumCategories() {
-    const container = document.getElementById('forum-categories');
-    if (!container) return;
-
-    let html = `
-        <button class="category-btn ${!forumService.filters.category ? 'active' : ''}" onclick="forumService.setFilter('category', '')">
-            <i data-lucide="layout-grid"></i>
-            Todos
-        </button>
-    `;
-
-    for (const [key, cat] of Object.entries(FORUM_CATEGORIES)) {
-        html += `
-            <button class="category-btn ${forumService.filters.category === key ? 'active' : ''}" onclick="forumService.setFilter('category', '${key}')">
-                <i data-lucide="${cat.icon}"></i>
-                ${cat.name}
-            </button>
-        `;
-    }
-
-    container.innerHTML = html;
-    refreshIcons(container);
-}
-
-// ==========================================
-// INITIALIZE
+// GLOBAL INSTANCE & INITIALIZATION
 // ==========================================
 
 const forumService = new ForumService();
 
-// Setup event listeners when DOM is ready
+// Initialize when forum view is shown
+function initForumView() {
+    forumService.init();
+}
+
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    // Search
     const searchInput = document.getElementById('forum-search');
     if (searchInput) {
         searchInput.addEventListener('input', debounce((e) => {
@@ -526,7 +599,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300));
     }
 
-    // Sort
     const sortSelect = document.getElementById('forum-sort');
     if (sortSelect) {
         sortSelect.addEventListener('change', (e) => {
@@ -535,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Export
+// Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { ForumService, forumService, FORUM_CATEGORIES, switchForumView };
+    module.exports = { ForumService, forumService, FORUM_CATEGORIES, initForumView };
 }

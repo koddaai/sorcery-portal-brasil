@@ -2942,50 +2942,64 @@
 
             <!-- Forum View -->
             <section id="forum-view" class="view">
-                <div class="view-header">
-                    <h2><i data-lucide="message-square"></i> Fórum</h2>
-                    <p class="subtitle">Discussões da comunidade Sorcery Brasil</p>
-                </div>
+                <!-- VIEW 1: Categories Home -->
+                <div id="forum-categories-view">
+                    <div class="view-header">
+                        <h2><i data-lucide="message-square"></i> Fórum</h2>
+                        <p class="subtitle">Discussões da comunidade Sorcery Brasil</p>
+                    </div>
 
-                <div class="forum-layout">
-                    <!-- Categories Sidebar -->
-                    <aside class="forum-sidebar">
-                        <h3>Categorias</h3>
-                        <div id="forum-categories" class="forum-categories">
+                    <div class="forum-categories-grid" id="forum-categories-grid">
+                        <!-- Populated by forum-service.js -->
+                    </div>
+
+                    <div class="forum-recent-section">
+                        <h3><i data-lucide="clock"></i> Atividade Recente</h3>
+                        <div id="forum-recent-posts" class="forum-recent-posts">
                             <!-- Populated by forum-service.js -->
-                        </div>
-
-                        <div class="forum-create-section" id="forum-create-section">
-                            <button class="btn btn-primary btn-full" onclick="forumService.openCreatePostModal()">
-                                <i data-lucide="plus"></i>
-                                Criar Post
-                            </button>
-                        </div>
-                    </aside>
-
-                    <!-- Main Content -->
-                    <div class="forum-main">
-                        <div class="forum-toolbar">
-                            <input type="text" id="forum-search" placeholder="Buscar posts..." class="search-input" aria-label="Buscar posts no fórum">
-                            <select id="forum-sort" class="filter-select">
-                                <option value="recent">Mais Recentes</option>
-                                <option value="popular">Mais Vistos</option>
-                            </select>
-                        </div>
-
-                        <div id="forum-list-view">
-                            <div id="forum-posts-list" class="forum-posts-list">
-                                <!-- Populated by forum-service.js -->
-                            </div>
-                        </div>
-
-                        <div id="forum-post-view" class="hidden">
-                            <!-- Single post view - populated by forum-service.js -->
                         </div>
                     </div>
                 </div>
 
-                <div class="legal-disclaimer">
+                <!-- VIEW 2: Category Topics List -->
+                <div id="forum-category-view" class="hidden">
+                    <div class="forum-category-header">
+                        <button class="btn btn-ghost" onclick="forumService.showCategoriesHome()">
+                            <i data-lucide="arrow-left"></i>
+                            Voltar
+                        </button>
+                        <div class="forum-category-info">
+                            <h2 id="forum-category-title">
+                                <i data-lucide="help-circle" id="forum-category-icon"></i>
+                                <span id="forum-category-name">Categoria</span>
+                            </h2>
+                            <p id="forum-category-description" class="subtitle"></p>
+                        </div>
+                        <button class="btn btn-primary" onclick="forumService.openCreatePostModal()" id="forum-new-topic-btn">
+                            <i data-lucide="plus"></i>
+                            Novo Tópico
+                        </button>
+                    </div>
+
+                    <div class="forum-toolbar">
+                        <input type="text" id="forum-search" placeholder="Buscar nesta categoria..." class="search-input">
+                        <select id="forum-sort" class="filter-select">
+                            <option value="recent">Mais Recentes</option>
+                            <option value="popular">Mais Vistos</option>
+                        </select>
+                    </div>
+
+                    <div id="forum-topics-list" class="forum-topics-list">
+                        <!-- Populated by forum-service.js -->
+                    </div>
+                </div>
+
+                <!-- VIEW 3: Topic Detail -->
+                <div id="forum-topic-view" class="hidden">
+                    <!-- Populated by forum-service.js -->
+                </div>
+
+                <div class="legal-disclaimer forum-disclaimer">
                     <i data-lucide="alert-triangle"></i>
                     <p>
                         <strong>Aviso:</strong> Este portal apenas conecta jogadores.

@@ -14883,7 +14883,7 @@ function initMarketplaceView() {
 // Initialize Forum View
 function initForumView() {
     if (typeof forumService !== 'undefined') {
-        forumService.loadPosts();
+        forumService.init();
     }
 }
 
