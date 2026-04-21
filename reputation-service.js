@@ -12,7 +12,7 @@ const REPUTATION_BADGES = {
     newbie: { minScore: -Infinity, name: 'Novato', icon: 'user', color: '#6b7280', glow: false }
 };
 
-const VOTE_COOLDOWN_DAYS = 15;
+const VOTE_COOLDOWN_DAYS = 30;
 
 class ReputationService {
     constructor() {

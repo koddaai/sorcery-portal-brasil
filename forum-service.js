@@ -320,7 +320,7 @@ class ForumService {
                     <h4 class="post-title">${escapeHtml(title)}</h4>
                     <p class="post-preview">${escapeHtml(post.content.substring(0, 150))}${post.content.length > 150 ? '...' : ''}</p>
                     <div class="post-card-footer">
-                        <span class="post-author">
+                        <span class="post-author post-author-clickable" onclick="event.stopPropagation(); openUserProfileModal('${post.user_id}')">
                             ${escapeHtml(user.displayName)}
                             <span class="reputation-badge reputation-${badge.class}" title="${badge.name}">
                                 <i data-lucide="${badge.icon}"></i>
@@ -378,7 +378,7 @@ class ForumService {
                 <div class="post-author-info">
                     ${renderAvatar(user.avatarId, 'medium')}
                     <div class="author-details">
-                        <span class="author-name">
+                        <span class="author-name post-author-clickable" onclick="openUserProfileModal('${post.user_id}')">
                             ${escapeHtml(user.displayName)}
                             <span class="reputation-badge reputation-${badge.class}">
                                 <i data-lucide="${badge.icon}"></i>
@@ -443,7 +443,7 @@ class ForumService {
                 </div>
                 <div class="comment-content">
                     <div class="comment-header">
-                        <span class="comment-author">
+                        <span class="comment-author comment-author-clickable" onclick="openUserProfileModal('${comment.user_id}')">
                             ${escapeHtml(user.displayName)}
                             <span class="reputation-badge reputation-${badge.class}">
                                 <i data-lucide="${badge.icon}"></i>

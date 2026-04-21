@@ -1024,7 +1024,7 @@ class NocoDBService {
         }
     }
 
-    // Check if user can vote for another user (15 day rule)
+    // Check if user can vote for another user (30 day rule - 1x per month)
     async canVoteFor(recipientId) {
         if (!this.currentUser) return { canVote: false, reason: 'not_logged_in' };
         if (this.currentUser.id === recipientId) return { canVote: false, reason: 'self_vote' };
@@ -1043,8 +1043,8 @@ class NocoDBService {
             const now = new Date();
             const daysSinceVote = (now - lastVoteDate) / (1000 * 60 * 60 * 24);
 
-            if (daysSinceVote < 15) {
-                const daysLeft = Math.ceil(15 - daysSinceVote);
+            if (daysSinceVote < 30) {
+                const daysLeft = Math.ceil(30 - daysSinceVote);
                 return { canVote: false, reason: 'cooldown', daysLeft };
             }
 

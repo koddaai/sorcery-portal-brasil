@@ -4009,6 +4009,16 @@
             </div>
         </div>
 
+        <!-- User Profile Modal (view other users) -->
+        <div id="user-profile-modal" class="modal hidden" role="dialog" aria-modal="true">
+            <div class="modal-content user-profile-modal-content">
+                <button class="close-modal" onclick="closeModal('user-profile-modal')" aria-label="Fechar modal">&times;</button>
+                <div id="user-profile-content">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
         <!-- Vote Modal -->
         <div id="vote-modal" class="modal hidden" role="dialog" aria-modal="true">
             <div class="modal-content vote-modal-content">
@@ -4040,7 +4050,7 @@
 
                 <div class="vote-rules">
                     <i data-lucide="info"></i>
-                    <span>Você pode votar nesta pessoa novamente após 15 dias.</span>
+                    <span>Você pode votar nesta pessoa novamente após 30 dias.</span>
                 </div>
 
                 <div class="form-actions">

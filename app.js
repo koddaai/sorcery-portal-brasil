@@ -15034,6 +15034,89 @@ function openVoteModal(userId, userName) {
     }
 }
 
+// Open User Profile Modal
+async function openUserProfileModal(userId) {
+    const modal = document.getElementById('user-profile-modal');
+    const content = document.getElementById('user-profile-content');
+    if (!modal || !content) return;
+
+    content.innerHTML = '<div class="loading-spinner"></div>';
+    modal.classList.remove('hidden');
+
+    try {
+        // Get user data
+        const user = await nocoDBService.getUserById(userId);
+        if (!user) {
+            content.innerHTML = '<p>Usuário não encontrado</p>';
+            return;
+        }
+
+        // Get reputation
+        const reputation = await nocoDBService.getUserReputation(userId);
+        const badge = getReputationBadge(reputation?.score || 0);
+
+        // Check if current user can vote
+        const currentUser = nocoDBService.getCurrentUser();
+        const isOwnProfile = currentUser && String(currentUser.id) === String(userId);
+        let canVoteInfo = '';
+        let voteButton = '';
+
+        if (!isOwnProfile && currentUser) {
+            const canVoteResult = await nocoDBService.canVoteFor(userId);
+            if (canVoteResult.canVote) {
+                voteButton = `
+                    <button class="btn btn-primary btn-full" onclick="closeModal('user-profile-modal'); openVoteModal('${userId}', '${escapeHtml(user.displayName)}')">
+                        <i data-lucide="thumbs-up"></i>
+                        Avaliar Usuário
+                    </button>
+                `;
+            } else if (canVoteResult.reason === 'cooldown') {
+                canVoteInfo = `<p class="user-profile-vote-info">Você já votou neste usuário. Aguarde ${canVoteResult.daysLeft} dias.</p>`;
+            }
+        } else if (!currentUser) {
+            canVoteInfo = `<p class="user-profile-vote-info">Faça login para avaliar usuários.</p>`;
+        }
+
+        content.innerHTML = `
+            <div class="user-profile-card">
+                <div class="user-profile-header">
+                    ${renderAvatar(user.avatarId || 1, 'large')}
+                    <div class="user-profile-name">${escapeHtml(user.displayName)}</div>
+                    <div class="user-profile-badge reputation-${badge.class}">
+                        <i data-lucide="${badge.icon}"></i>
+                        ${badge.name}
+                    </div>
+                </div>
+
+                <div class="user-profile-stats">
+                    <div class="user-profile-stat">
+                        <div class="user-profile-stat-value score">${reputation?.score || 0}</div>
+                        <div class="user-profile-stat-label">Score</div>
+                    </div>
+                    <div class="user-profile-stat">
+                        <div class="user-profile-stat-value positive">${reputation?.positives || 0}</div>
+                        <div class="user-profile-stat-label">Positivos</div>
+                    </div>
+                    <div class="user-profile-stat">
+                        <div class="user-profile-stat-value negative">${reputation?.negatives || 0}</div>
+                        <div class="user-profile-stat-label">Negativos</div>
+                    </div>
+                </div>
+
+                <div class="user-profile-actions">
+                    ${voteButton}
+                    ${canVoteInfo}
+                </div>
+            </div>
+        `;
+
+        refreshIcons(content);
+    } catch (error) {
+        console.error('Error loading user profile:', error);
+        content.innerHTML = '<p>Erro ao carregar perfil</p>';
+    }
+}
+
 // Submit Vote
 async function submitVote() {
     if (typeof reputationService !== 'undefined') {
@@ -15628,6 +15711,7 @@ window.replyToMessage = replyToMessage;
 window.sendMessage = sendMessage;
 window.deleteMessage = deleteMessage;
 window.openVoteModal = openVoteModal;
+window.openUserProfileModal = openUserProfileModal;
 window.submitVote = submitVote;
 window.createForumPost = createForumPost;
 window.viewForumPost = viewForumPost;
