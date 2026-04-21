@@ -7,7 +7,7 @@
 // Settings > Variables > Environment Variables (encrypted)
 // - NOCODB_TOKEN: seu token da API NocoDB
 // - NOCODB_BASE_URL: https://dados.kodda.ai
-// - ALLOWED_ORIGINS: https://koddaai.github.io,http://localhost:8080
+// - ALLOWED_ORIGINS: https://koddaai.github.io,https://sorcery.com.br,https://www.sorcery.com.br,http://localhost:8080
 
 const RATE_LIMIT_WINDOW = 60000; // 1 minuto
 const RATE_LIMIT_MAX_REQUESTS = 100; // máximo de requests por minuto

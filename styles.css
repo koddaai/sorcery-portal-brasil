@@ -20685,6 +20685,7 @@ button:disabled .spin,
 .input:focus, .select:focus, .textarea:focus {
     outline: none;
     border-color: var(--accent-gold);
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15);
 }
 
 .textarea {

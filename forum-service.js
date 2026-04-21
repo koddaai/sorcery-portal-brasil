@@ -360,7 +360,7 @@ class ForumService {
         openModal('create-post-modal');
     }
 
-    async createPost() {
+    async createPost(event) {
         const title = document.getElementById('post-title').value.trim();
         const content = document.getElementById('post-content').value.trim();
         const category = document.getElementById('post-category').value;
@@ -375,8 +375,11 @@ class ForumService {
             return;
         }
 
+        // Get button element - either from event or by selector
+        const submitBtn = event?.target || document.querySelector('#create-post-modal .btn-primary');
+
         try {
-            setButtonLoading(event.target, true);
+            if (submitBtn) setButtonLoading(submitBtn, true);
 
             await nocoDBService.createForumPost({
                 title,
@@ -388,11 +391,11 @@ class ForumService {
             closeModal('create-post-modal');
             await this.loadPosts();
 
-            setButtonLoading(event.target, false);
+            if (submitBtn) setButtonLoading(submitBtn, false);
         } catch (error) {
             console.error('Error creating post:', error);
             showToast('Erro ao criar post', 'error');
-            setButtonLoading(event.target, false);
+            if (submitBtn) setButtonLoading(submitBtn, false);
         }
     }
 
