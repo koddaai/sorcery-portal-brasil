@@ -753,7 +753,7 @@ class NocoDBService {
                 whereClause += `~and(card_name,like,${encodeURIComponent(filters.cardName)})`;
             }
 
-            const url = `${this.getTableUrl(this.tables.tradeListings)}?where=${whereClause}&sort=-created_at&limit=100`;
+            const url = `${this.getTableUrl(this.tables.tradeListings)}?where=${whereClause}&sort=-CreatedAt&limit=100`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
             return data.list || [];
@@ -792,7 +792,7 @@ class NocoDBService {
     // Get user's own listings
     async getUserTradeListings(userId) {
         try {
-            const url = `${this.getTableUrl(this.tables.tradeListings)}?where=(user_id,eq,${userId})&sort=-created_at&limit=100`;
+            const url = `${this.getTableUrl(this.tables.tradeListings)}?where=(user_id,eq,${userId})&sort=-CreatedAt&limit=100`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
             return data.list || [];
@@ -814,7 +814,7 @@ class NocoDBService {
                 whereClause = `where=(category,eq,${filters.category})&`;
             }
 
-            const sortField = filters.sort === 'popular' ? '-view_count' : '-created_at';
+            const sortField = filters.sort === 'popular' ? '-view_count' : '-CreatedAt';
             const url = `${this.getTableUrl(this.tables.forumPosts)}?${whereClause}sort=${sortField}&limit=${filters.limit || 20}&offset=${filters.offset || 0}`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
@@ -841,7 +841,7 @@ class NocoDBService {
     // Get comments for a post
     async getForumComments(postId) {
         try {
-            const url = `${this.getTableUrl(this.tables.forumComments)}?where=(post_id,eq,${postId})~and(is_deleted,eq,false)&sort=created_at&limit=100`;
+            const url = `${this.getTableUrl(this.tables.forumComments)}?where=(post_id,eq,${postId})~and(is_deleted,eq,false)&sort=CreatedAt&limit=100`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
             return data.list || [];
@@ -901,7 +901,7 @@ class NocoDBService {
         if (!this.currentUser) return [];
 
         try {
-            const url = `${this.getTableUrl(this.tables.messages)}?where=(recipient_id,eq,${this.currentUser.id})~and(is_deleted_recipient,eq,false)&sort=-created_at&limit=50`;
+            const url = `${this.getTableUrl(this.tables.messages)}?where=(recipient_id,eq,${this.currentUser.id})~and(is_deleted_recipient,eq,false)&sort=-CreatedAt&limit=50`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
             return data.list || [];
@@ -916,7 +916,7 @@ class NocoDBService {
         if (!this.currentUser) return [];
 
         try {
-            const url = `${this.getTableUrl(this.tables.messages)}?where=(sender_id,eq,${this.currentUser.id})~and(is_deleted_sender,eq,false)&sort=-created_at&limit=50`;
+            const url = `${this.getTableUrl(this.tables.messages)}?where=(sender_id,eq,${this.currentUser.id})~and(is_deleted_sender,eq,false)&sort=-CreatedAt&limit=50`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
             return data.list || [];
@@ -1003,7 +1003,7 @@ class NocoDBService {
         if (this.currentUser.id === recipientId) return { canVote: false, reason: 'self_vote' };
 
         try {
-            const url = `${this.getTableUrl(this.tables.reputation)}?where=(voter_id,eq,${this.currentUser.id})~and(recipient_id,eq,${recipientId})&sort=-created_at&limit=1`;
+            const url = `${this.getTableUrl(this.tables.reputation)}?where=(voter_id,eq,${this.currentUser.id})~and(recipient_id,eq,${recipientId})&sort=-CreatedAt&limit=1`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
 
@@ -1052,7 +1052,7 @@ class NocoDBService {
     // Get votes received by user (for their own viewing)
     async getReceivedVotes(userId) {
         try {
-            const url = `${this.getTableUrl(this.tables.reputation)}?where=(recipient_id,eq,${userId})&sort=-created_at&limit=50`;
+            const url = `${this.getTableUrl(this.tables.reputation)}?where=(recipient_id,eq,${userId})&sort=-CreatedAt&limit=50`;
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
             return data.list || [];
