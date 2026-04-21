@@ -5479,6 +5479,7 @@ a.nav-dropdown-item {
     max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
+    padding: var(--space-6);
 }
 
 .share-deck-modal-content h2 {
@@ -8332,6 +8333,7 @@ a.nav-dropdown-item {
 /* Photo Modal */
 .photo-modal-content {
     max-width: 500px;
+    padding: var(--space-5);
 }
 
 .photo-card-name {
@@ -19620,6 +19622,7 @@ button:disabled .spin,
 /* Vote Modal */
 .vote-modal-content {
     max-width: 450px;
+    padding: var(--space-6);
 }
 
 .vote-target {
@@ -20469,6 +20472,7 @@ button:disabled .spin,
 /* Message View Modal */
 .message-view-modal-content {
     max-width: 550px;
+    padding: var(--space-5);
 }
 
 .message-view-header {
