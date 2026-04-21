@@ -170,7 +170,7 @@ class ForumService {
                             </span>
                         </span>
                         <span class="post-meta">
-                            <span class="post-date">${formatRelativeDate(post.created_at)}</span>
+                            <span class="post-date">${formatRelativeDate(post.CreatedAt)}</span>
                             <span class="post-stats">
                                 <i data-lucide="eye"></i> ${post.view_count || 0}
                                 <i data-lucide="message-circle"></i> ${post.commentCount || 0}
@@ -253,7 +253,7 @@ class ForumService {
                                 ${badge.name}
                             </span>
                         </span>
-                        <span class="post-date">${new Date(post.created_at).toLocaleString('pt-BR')}</span>
+                        <span class="post-date">${new Date(post.CreatedAt).toLocaleString('pt-BR')}</span>
                     </div>
                 </div>
 
@@ -327,7 +327,7 @@ class ForumService {
                                 <i data-lucide="${badge.icon}"></i>
                             </span>
                         </span>
-                        <span class="comment-date">${formatRelativeDate(comment.created_at)}</span>
+                        <span class="comment-date">${formatRelativeDate(comment.CreatedAt)}</span>
                     </div>
                     <div class="comment-text">${escapeHtml(comment.content).replace(/\n/g, '<br>')}</div>
                 </div>
