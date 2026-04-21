@@ -352,6 +352,7 @@ class ForumService {
         // Check if current user is the author (compare as strings to avoid type mismatch)
         const currentUser = nocoDBService.getCurrentUser();
         const isAuthor = currentUser && String(currentUser.id) === String(post.user_id);
+        console.log('Delete button debug:', { currentUserId: currentUser?.id, postUserId: post.user_id, isAuthor });
 
         container.innerHTML = `
             <div class="forum-post-full">
@@ -366,8 +367,9 @@ class ForumService {
                             ${cat.name}
                         </span>
                         ${isAuthor ? `
-                            <button class="btn btn-ghost btn-danger-text" onclick="forumService.confirmDeletePost(${post.Id})" title="Excluir tópico">
+                            <button class="btn btn-ghost btn-danger-text" onclick="event.stopPropagation(); forumService.confirmDeletePost(${post.Id})" title="Excluir tópico">
                                 <i data-lucide="trash-2"></i>
+                                <span>Excluir</span>
                             </button>
                         ` : ''}
                     </div>
