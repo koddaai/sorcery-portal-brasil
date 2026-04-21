@@ -349,9 +349,9 @@ class ForumService {
         const badge = getReputationBadge(user.reputation?.score || 0);
         const title = post.Title || post.title || 'Sem título';
 
-        // Check if current user is the author
+        // Check if current user is the author (compare as strings to avoid type mismatch)
         const currentUser = nocoDBService.getCurrentUser();
-        const isAuthor = currentUser && currentUser.id === post.user_id;
+        const isAuthor = currentUser && String(currentUser.id) === String(post.user_id);
 
         container.innerHTML = `
             <div class="forum-post-full">

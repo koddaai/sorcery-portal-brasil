@@ -899,7 +899,7 @@ class NocoDBService {
         // Verify ownership
         const post = await this.getForumPost(postId);
         if (!post) throw new Error('Post not found');
-        if (post.user_id !== this.currentUser.id) throw new Error('Not authorized');
+        if (String(post.user_id) !== String(this.currentUser.id)) throw new Error('Not authorized');
 
         // Delete all comments first
         const comments = await this.getForumComments(postId);
@@ -914,7 +914,7 @@ class NocoDBService {
     // Delete a comment (only by author)
     async deleteForumComment(commentId, comment) {
         if (!this.currentUser) throw new Error('Must be logged in');
-        if (comment.user_id !== this.currentUser.id) throw new Error('Not authorized');
+        if (String(comment.user_id) !== String(this.currentUser.id)) throw new Error('Not authorized');
 
         return this.deleteRecord(this.tables.forumComments, commentId);
     }
