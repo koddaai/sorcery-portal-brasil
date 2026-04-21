@@ -20648,12 +20648,29 @@ button:disabled .spin,
 
 .create-post-modal-content {
     max-width: 600px;
+    padding: var(--space-6);
+}
+
+.create-post-modal-content h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+    margin-bottom: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding-right: var(--space-6); /* Space for close button */
 }
 
 .create-post-form {
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
+}
+
+.create-post-form .form-actions {
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-subtle);
+    margin-top: var(--space-2);
 }
 
 /* ============================================
