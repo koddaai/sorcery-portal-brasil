@@ -61,7 +61,7 @@
 
     <!-- Preload Critical Resources -->
     <link rel="preload" href="styles.min.css?v=107" as="style">
-    <link rel="preload" href="sorcery-logo.png" as="image">
+    <link rel="preload" href="sorcery-logo.webp" as="image" type="image/webp">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" as="style" crossorigin>
 
     <!-- SPA SEO: Help crawlers understand hash-based navigation -->
@@ -251,7 +251,10 @@
             <!-- Top Bar -->
             <div class="header-top">
                 <a href="javascript:showView('home')" class="logo">
-                    <img src="sorcery-logo.png" alt="Sorcery" class="logo-img" width="40" height="40" fetchpriority="high">
+                    <picture>
+                        <source srcset="sorcery-logo.webp" type="image/webp">
+                        <img src="sorcery-logo.png" alt="Sorcery" class="logo-img" width="40" height="40" fetchpriority="high">
+                    </picture>
                     <div class="logo-text">
                         <span class="logo-divider">|</span>
                         <span class="logo-brasil">BRASIL</span>
@@ -4109,7 +4112,10 @@
 
         <!-- Welcome Splash -->
         <div id="welcome-splash" class="welcome-splash">
-            <img src="sorcery-logo.png" alt="Sorcery" class="welcome-logo" loading="lazy" width="120" height="120">
+            <picture>
+                <source srcset="sorcery-logo.webp" type="image/webp">
+                <img src="sorcery-logo.png" alt="Sorcery" class="welcome-logo" loading="lazy" width="120" height="120">
+            </picture>
             <h1>Bem-vindo ao Portal</h1>
             <p>Sorcery: Contested Realm Brasil</p>
         </div>
