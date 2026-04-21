@@ -3989,7 +3989,7 @@ function updateURLHash(viewName, params = {}) {
  */
 function updateSEOMeta(viewName, customData = {}) {
     const viewInfo = VIEW_INFO[viewName] || VIEW_INFO['home'];
-    const baseUrl = 'https://sorcerybrasil.com.br';
+    const baseUrl = 'https://sorcery.com.br';
 
     // Title
     const title = customData.title || viewInfo.title || 'Sorcery: Contested Realm Brasil';
@@ -4015,6 +4015,54 @@ function updateSEOMeta(viewName, customData = {}) {
     if (canonical) {
         canonical.href = canonicalUrl;
     }
+
+    // Update breadcrumb schema dynamically
+    updateBreadcrumbSchema(viewName, viewInfo, baseUrl);
+}
+
+/**
+ * Atualiza o schema de breadcrumb dinamicamente para SEO
+ */
+function updateBreadcrumbSchema(viewName, viewInfo, baseUrl) {
+    const breadcrumbSchema = document.getElementById('breadcrumb-schema');
+    if (!breadcrumbSchema) return;
+
+    const items = [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": baseUrl + "/"
+        }
+    ];
+
+    // Se tem categoria, adiciona como segundo nível
+    if (viewInfo.category) {
+        items.push({
+            "@type": "ListItem",
+            "position": 2,
+            "name": viewInfo.category,
+            "item": baseUrl + "/#" + (viewInfo.categoryView || viewInfo.slug)
+        });
+    }
+
+    // Adiciona a view atual se não for home
+    if (viewName !== 'home') {
+        items.push({
+            "@type": "ListItem",
+            "position": items.length + 1,
+            "name": viewInfo.name,
+            "item": baseUrl + (viewInfo.slug ? "/#" + viewInfo.slug : "/")
+        });
+    }
+
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": items
+    };
+
+    breadcrumbSchema.textContent = JSON.stringify(schema);
 }
 
 /**

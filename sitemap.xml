@@ -1,135 +1,174 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- Home -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+    <!--
+    Nota: Este é um Single Page Application (SPA).
+    URLs com hash (#) são usadas para navegação interna.
+    Para SEO avançado, considerar implementar:
+    - Server-Side Rendering (SSR)
+    - Prerendering com serviço como Prerender.io
+    - History API com rotas reais
+    -->
+
+    <!-- Home - Página Principal -->
     <url>
-        <loc>https://sorcerybrasil.com.br/</loc>
+        <loc>https://sorcery.com.br/</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
 
-    <!-- Cards -->
+    <!-- Catálogo de Cards -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#cards</loc>
+        <loc>https://sorcery.com.br/#cards</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
 
-    <!-- Artistas -->
+    <!-- Galeria de Artistas -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#artistas</loc>
+        <loc>https://sorcery.com.br/#art</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
-    <!-- Decks -->
+    <!-- Decks da Comunidade -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#decks</loc>
+        <loc>https://sorcery.com.br/#decks</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
 
-    <!-- Codex -->
+    <!-- Codex / Guias -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#codex</loc>
+        <loc>https://sorcery.com.br/#codex</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
-    <!-- Regras -->
+    <!-- Regras do Jogo -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#regras</loc>
+        <loc>https://sorcery.com.br/#regras</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 
-    <!-- FAQ -->
+    <!-- FAQ - Perguntas Frequentes -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#faq</loc>
+        <loc>https://sorcery.com.br/#faq</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
-    <!-- Lore -->
+    <!-- Lore / História -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#lore</loc>
+        <loc>https://sorcery.com.br/#lore</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
-    <!-- Quiz -->
+    <!-- Quiz Interativo -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#quiz</loc>
+        <loc>https://sorcery.com.br/#quiz</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
-    <!-- Boosters -->
+    <!-- Simulador de Boosters -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#boosters</loc>
+        <loc>https://sorcery.com.br/#boosters</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
-    <!-- Forum -->
+    <!-- Fórum da Comunidade -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#forum</loc>
+        <loc>https://sorcery.com.br/#forum</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
     </url>
 
-    <!-- Marketplace -->
+    <!-- Marketplace de Trocas -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#marketplace</loc>
+        <loc>https://sorcery.com.br/#marketplace</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
     </url>
 
-    <!-- Comunidade -->
+    <!-- Comunidade / Sobre -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#comunidade</loc>
+        <loc>https://sorcery.com.br/#comunidade</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
-    <!-- Lojas -->
+    <!-- Lojas Parceiras -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#lojas</loc>
+        <loc>https://sorcery.com.br/#lojas</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
-    <!-- Meta -->
+    <!-- Meta / Estatísticas -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#meta</loc>
+        <loc>https://sorcery.com.br/#meta</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.7</priority>
     </url>
 
     <!-- Top Cards -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#top-cards</loc>
+        <loc>https://sorcery.com.br/#top-cards</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.7</priority>
     </url>
 
-    <!-- Timeline -->
+    <!-- Timeline / História do Jogo -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#timeline</loc>
+        <loc>https://sorcery.com.br/#timeline</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
 
-    <!-- Noticias -->
+    <!-- Notícias -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#noticias</loc>
+        <loc>https://sorcery.com.br/#noticias</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.8</priority>
     </url>
 
-    <!-- Promos -->
+    <!-- Promos / Cartas Promocionais -->
     <url>
-        <loc>https://sorcerybrasil.com.br/#promos</loc>
+        <loc>https://sorcery.com.br/#promos</loc>
+        <lastmod>2026-04-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
+
+    <!-- Comparador de Preços -->
+    <url>
+        <loc>https://sorcery.com.br/#prices</loc>
+        <lastmod>2026-04-20</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>

@@ -52,6 +52,21 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
 
+    <!-- Resource Hints for Performance & SEO -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="preconnect" href="https://dados.kodda.ai" crossorigin>
+    <link rel="dns-prefetch" href="https://api.sorcery.com.br">
+
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="styles.css?v=103" as="style">
+    <link rel="preload" href="app.js?v=103" as="script">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" as="style" crossorigin>
+
+    <!-- SPA SEO: Help crawlers understand hash-based navigation -->
+    <meta name="fragment" content="!">
+
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css?v=103">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -59,17 +74,18 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
-    <!-- Structured Data - JSON-LD -->
+    <!-- Structured Data - JSON-LD: WebApplication -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Sorcery Brasil",
         "alternateName": "Portal Brasileiro de Sorcery TCG",
-        "url": "https://sorcerybrasil.com.br",
+        "url": "https://sorcery.com.br",
         "description": "O maior portal de Sorcery: Contested Realm do Brasil. Gerencie sua coleção, descubra decks, encontre lojas e conecte-se com a comunidade.",
         "applicationCategory": "GameApplication",
         "operatingSystem": "Web Browser",
+        "browserRequirements": "Requires JavaScript",
         "offers": {
             "@type": "Offer",
             "price": "0",
@@ -77,19 +93,130 @@
         },
         "featureList": [
             "Gerenciamento de coleção de cartas",
-            "Deck builder",
+            "Deck builder com importação/exportação",
             "Preços de cartas em tempo real",
             "Wishlist e lista de trocas",
-            "Estatísticas da coleção",
+            "Estatísticas detalhadas da coleção",
             "Fórum da comunidade",
-            "Marketplace de trocas"
+            "Marketplace de trocas entre jogadores",
+            "Galeria de artistas",
+            "Simulador de boosters"
         ],
+        "screenshot": "https://sorcery.com.br/assets/hero-bg.jpg",
         "inLanguage": "pt-BR",
         "publisher": {
             "@type": "Organization",
             "name": "Sorcery Brasil",
-            "logo": "https://sorcerybrasil.com.br/sorcery-logo.png"
+            "url": "https://sorcery.com.br",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://sorcery.com.br/sorcery-logo.png"
+            }
         }
+    }
+    </script>
+
+    <!-- Structured Data - JSON-LD: WebSite com SearchAction -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Sorcery Brasil",
+        "url": "https://sorcery.com.br",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://sorcery.com.br/#cards?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <!-- Structured Data - JSON-LD: Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Sorcery Brasil",
+        "url": "https://sorcery.com.br",
+        "logo": "https://sorcery.com.br/sorcery-logo.png",
+        "description": "Comunidade brasileira de Sorcery: Contested Realm",
+        "sameAs": [
+            "https://discord.gg/sorcerybrasil"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "availableLanguage": "Portuguese"
+        }
+    }
+    </script>
+
+    <!-- Structured Data - JSON-LD: FAQPage -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "O que é Sorcery: Contested Realm?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sorcery: Contested Realm é um TCG (Trading Card Game) criado por Erik Olofsson, conhecido por suas artes pintadas à mão por artistas renomados da fantasia. O jogo combina estratégia profunda com uma estética visual única."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Como funciona o gerenciador de coleção?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "O gerenciador permite que você cadastre todas as suas cartas, acompanhe o valor da coleção em tempo real, crie wishlists, organize trocas e visualize estatísticas detalhadas do seu acervo."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Preciso pagar para usar o portal?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Não! O Sorcery Brasil é 100% gratuito. Todas as funcionalidades, incluindo gerenciamento de coleção, deck builder, comparador de preços e marketplace estão disponíveis sem custo."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Onde posso comprar cartas de Sorcery no Brasil?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Na seção 'Lojas' do portal você encontra uma lista de lojas parceiras que vendem Sorcery no Brasil, com links diretos e informações de contato."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Como funciona o comparador de preços?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "O comparador busca preços em diversas lojas brasileiras e internacionais, mostrando o menor preço disponível para cada carta. Os preços são atualizados regularmente."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <!-- Structured Data - JSON-LD: BreadcrumbList -->
+    <script type="application/ld+json" id="breadcrumb-schema">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://sorcery.com.br/"
+            }
+        ]
     }
     </script>
     <!-- Leaflet.js for interactive maps -->
