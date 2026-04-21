@@ -892,6 +892,33 @@ class NocoDBService {
         }
     }
 
+    // Delete a forum post (only by author)
+    async deleteForumPost(postId) {
+        if (!this.currentUser) throw new Error('Must be logged in');
+
+        // Verify ownership
+        const post = await this.getForumPost(postId);
+        if (!post) throw new Error('Post not found');
+        if (post.user_id !== this.currentUser.id) throw new Error('Not authorized');
+
+        // Delete all comments first
+        const comments = await this.getForumComments(postId);
+        for (const comment of comments) {
+            await this.deleteRecord(this.tables.forumComments, comment.Id);
+        }
+
+        // Delete the post
+        return this.deleteRecord(this.tables.forumPosts, postId);
+    }
+
+    // Delete a comment (only by author)
+    async deleteForumComment(commentId, comment) {
+        if (!this.currentUser) throw new Error('Must be logged in');
+        if (comment.user_id !== this.currentUser.id) throw new Error('Not authorized');
+
+        return this.deleteRecord(this.tables.forumComments, commentId);
+    }
+
     // ==========================================
     // COMMUNITY: MESSAGING
     // ==========================================

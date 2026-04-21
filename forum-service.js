@@ -349,6 +349,10 @@ class ForumService {
         const badge = getReputationBadge(user.reputation?.score || 0);
         const title = post.Title || post.title || 'Sem título';
 
+        // Check if current user is the author
+        const currentUser = nocoDBService.getCurrentUser();
+        const isAuthor = currentUser && currentUser.id === post.user_id;
+
         container.innerHTML = `
             <div class="forum-post-full">
                 <div class="post-header">
@@ -356,10 +360,17 @@ class ForumService {
                         <i data-lucide="arrow-left"></i>
                         Voltar para ${cat.name}
                     </button>
-                    <span class="post-category post-category-${post.category}">
-                        <i data-lucide="${cat.icon}"></i>
-                        ${cat.name}
-                    </span>
+                    <div class="post-header-right">
+                        <span class="post-category post-category-${post.category}">
+                            <i data-lucide="${cat.icon}"></i>
+                            ${cat.name}
+                        </span>
+                        ${isAuthor ? `
+                            <button class="btn btn-ghost btn-danger-text" onclick="forumService.confirmDeletePost(${post.Id})" title="Excluir tópico">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                        ` : ''}
+                    </div>
                 </div>
 
                 <h2 class="post-full-title">${escapeHtml(title)}</h2>
@@ -545,6 +556,30 @@ class ForumService {
         } catch (error) {
             console.error('Error adding comment:', error);
             showToast('Erro ao enviar comentário', 'error');
+        }
+    }
+
+    confirmDeletePost(postId) {
+        if (confirm('Tem certeza que deseja excluir este tópico?\n\nTodos os comentários também serão removidos. Esta ação não pode ser desfeita.')) {
+            this.deletePost(postId);
+        }
+    }
+
+    async deletePost(postId) {
+        try {
+            await nocoDBService.deleteForumPost(postId);
+            showToast('Tópico excluído!', 'success');
+
+            // Refresh stats and go back to category or home
+            await this.loadCategoryStats();
+            if (this.currentCategory) {
+                this.showCategory(this.currentCategory);
+            } else {
+                this.showCategoriesHome();
+            }
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            showToast('Erro ao excluir tópico', 'error');
         }
     }
 

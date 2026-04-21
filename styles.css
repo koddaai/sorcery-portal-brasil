@@ -20317,8 +20317,24 @@ button:disabled .spin,
 .forum-post-full .post-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--space-3);
     margin-bottom: var(--space-4);
+}
+
+.post-header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.btn-danger-text {
+    color: var(--text-tertiary);
+}
+
+.btn-danger-text:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
 }
 
 .post-full-title {
