@@ -17,7 +17,7 @@ class NewsService {
         if (this.loaded) return this.news;
 
         try {
-            const response = await fetch('/news-database.json');
+            const response = await fetch('./news-database.json');
             if (!response.ok) throw new Error('Failed to load news');
 
             const data = await response.json();
