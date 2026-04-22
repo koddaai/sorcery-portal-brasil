@@ -175,8 +175,9 @@ function isAllowedOrigin(origin, env) {
 function isAllowedPath(path) {
     // Paths permitidos para a API NocoDB
     const allowedPatterns = [
-        /^\/api\/v1\/db\/data\//, // Operações de dados
-        /^\/api\/v1\/db\/meta\//, // Metadados (leitura)
+        /^\/api\/v1\/db\/data\//, // Operações de dados v1
+        /^\/api\/v1\/db\/meta\//, // Metadados (leitura) v1
+        /^\/api\/v2\/tables\//, // Operações de dados v2 (novo)
     ];
 
     // Paths bloqueados (operações perigosas)
