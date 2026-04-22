@@ -11,9 +11,8 @@
 // - budget: Decks econômicos (<$50)
 // - comunidade: Decks populares da comunidade
 //
-// Preços calibrados com price-service.js:
-// - Ordinary: $0.15 | Elite: $1.00
-// - Exceptional: $5.00 | Unique: $25.00
+// Preços: TCGPlayer market prices via TCGCSV
+// Última atualização de preços: 2026-04-20T21:36:56.592Z
 // ============================================
 
 const RECOMMENDED_DECKS = [
@@ -31,7 +30,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 131.35,
+    "estimatedPrice": 182.32,
     "keyCards": [
       "Draconian Bonekite",
       "Bitter Departed",
@@ -304,7 +303,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 115.1,
+    "estimatedPrice": 94.19,
     "keyCards": [
       "Golden Dawn",
       "Flame of the First Ones",
@@ -571,7 +570,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 92.8,
+    "estimatedPrice": 119.49,
     "keyCards": [
       "Yog-Sothoth",
       "Frozen Horror",
@@ -838,7 +837,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 136.2,
+    "estimatedPrice": 185.46,
     "keyCards": [
       "Blaze of Glory",
       "Fallen Angel",
@@ -1123,7 +1122,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 107.95,
+    "estimatedPrice": 10.32,
     "keyCards": [
       "Clamor of Harpies",
       "Colicky Dragonettes",
@@ -1354,7 +1353,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 119.35,
+    "estimatedPrice": 17.24,
     "keyCards": [
       "King of the Realm",
       "Autumn Unicorn",
@@ -1586,7 +1585,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 113.65,
+    "estimatedPrice": 17.97,
     "keyCards": [
       "Gyre Hippogriffs",
       "Headless Haunt",
@@ -1818,7 +1817,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 113.65,
+    "estimatedPrice": 39.05,
     "keyCards": [
       "Anui Undine",
       "Brobdingnag Bullfrog",
@@ -2050,7 +2049,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 185.05,
+    "estimatedPrice": 27.32,
     "keyCards": [
       "King of the Realm",
       "Midland Army",
@@ -2270,7 +2269,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 169.05,
+    "estimatedPrice": 50.45,
     "keyCards": [
       "Mother Nature",
       "Anui Undine",
@@ -2514,7 +2513,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 165.05,
+    "estimatedPrice": 25.4,
     "keyCards": [
       "Doomsday Prophet",
       "Clamor of Harpies",
@@ -2758,7 +2757,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 140.2,
+    "estimatedPrice": 21.41,
     "keyCards": [
       "Doomsday Device",
       "Gyre Hippogriffs",
@@ -2996,7 +2995,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 218.75,
+    "estimatedPrice": 86.62,
     "keyCards": [
       "Death Dealer",
       "Pact with the Devil",
@@ -3246,7 +3245,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 742.75,
+    "estimatedPrice": 838.47,
     "keyCards": [
       "Lord of Unland",
       "Ruler of Thul",
@@ -3616,7 +3615,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 594.55,
+    "estimatedPrice": 583.23,
     "keyCards": [
       "Courtesan Thaïs",
       "Ruler of Thul",
@@ -3914,7 +3913,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 443.65,
+    "estimatedPrice": 293.26,
     "keyCards": [
       "Boudicca",
       "Lady Iseult",
@@ -4188,7 +4187,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 337.05,
+    "estimatedPrice": 279.15,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -4420,7 +4419,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 633.55,
+    "estimatedPrice": 642.06,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -4754,7 +4753,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 473.45,
+    "estimatedPrice": 433.32,
     "keyCards": [
       "Boudicca",
       "Morgana le Fay",
@@ -5046,7 +5045,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 737.55,
+    "estimatedPrice": 649.85,
     "keyCards": [
       "Courtesan Thaïs",
       "Ruler of Thul",
@@ -5368,7 +5367,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 528.7,
+    "estimatedPrice": 460.44,
     "keyCards": [
       "Highland Princess",
       "Sir Galahad",
@@ -5660,7 +5659,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 480.7,
+    "estimatedPrice": 458.03,
     "keyCards": [
       "Highland Princess",
       "Merlin",
@@ -5951,7 +5950,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 439.6,
+    "estimatedPrice": 429.4,
     "keyCards": [
       "Browse",
       "Gigantism",
@@ -6255,7 +6254,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 413.55,
+    "estimatedPrice": 361.36,
     "keyCards": [
       "Highland Princess",
       "Browse",
@@ -6499,7 +6498,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 643,
+    "estimatedPrice": 658.23,
     "keyCards": [
       "Courtesan Thaïs",
       "Death Dealer",
@@ -6827,7 +6826,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 506,
+    "estimatedPrice": 510.86,
     "keyCards": [
       "Highland Princess",
       "Courtesan Thaïs",
@@ -7137,7 +7136,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 329.55,
+    "estimatedPrice": 161,
     "keyCards": [
       "Crown Prince",
       "King of the Realm",
@@ -7369,7 +7368,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 391.85,
+    "estimatedPrice": 302.89,
     "keyCards": [
       "Highland Princess",
       "Courtesan Thaïs",
@@ -7607,7 +7606,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 205.3,
+    "estimatedPrice": 62.94,
     "keyCards": [
       "Witherwing Hero",
       "Gyre Hippogriffs",
@@ -7814,7 +7813,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 423.6,
+    "estimatedPrice": 388.28,
     "keyCards": [
       "Death Dealer",
       "Browse",
@@ -8094,7 +8093,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 561.3,
+    "estimatedPrice": 520.58,
     "keyCards": [
       "Great Old One",
       "Lord of Unland",
@@ -8374,7 +8373,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 303,
+    "estimatedPrice": 209.59,
     "keyCards": [
       "Queen of Midland",
       "Amethyst Core",
@@ -8642,7 +8641,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 586.15,
+    "estimatedPrice": 608.24,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -8958,7 +8957,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 225.55,
+    "estimatedPrice": 49.36,
     "keyCards": [
       "Browse",
       "Gyre Hippogriffs",
@@ -9142,7 +9141,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 743.55,
+    "estimatedPrice": 692.91,
     "keyCards": [
       "Cerberus in Chains",
       "Courtesan Thaïs",
@@ -9560,7 +9559,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 445.3,
+    "estimatedPrice": 436.66,
     "keyCards": [
       "Courtesan Thaïs",
       "Boudicca",
@@ -9845,7 +9844,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 329.55,
+    "estimatedPrice": 161.06,
     "keyCards": [
       "Crown Prince",
       "King of the Realm",
@@ -10077,7 +10076,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 467,
+    "estimatedPrice": 428.66,
     "keyCards": [
       "Highland Princess",
       "Sir Galahad",
@@ -10345,7 +10344,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 1172.35,
+    "estimatedPrice": 830.86,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -10757,7 +10756,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 387.6,
+    "estimatedPrice": 361.58,
     "keyCards": [
       "Highland Princess",
       "Lord of the Void",
@@ -11049,7 +11048,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 800.4,
+    "estimatedPrice": 886.72,
     "keyCards": [
       "Captain Baldassare",
       "Lord of Unland",
@@ -11503,7 +11502,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 661.85,
+    "estimatedPrice": 742.82,
     "keyCards": [
       "Courtesan Thaïs",
       "Boudicca",
@@ -11825,7 +11824,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 667.2,
+    "estimatedPrice": 566.94,
     "keyCards": [
       "Death Dealer",
       "Morgana le Fay",
@@ -12177,7 +12176,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 434.5,
+    "estimatedPrice": 437.4,
     "keyCards": [
       "Highland Princess",
       "Morgana le Fay",
@@ -12481,7 +12480,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 726.05,
+    "estimatedPrice": 738.86,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -12839,7 +12838,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 408.5,
+    "estimatedPrice": 427.11,
     "keyCards": [
       "Courtesan Thaïs",
       "Morgana le Fay",
@@ -13131,7 +13130,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 463.9,
+    "estimatedPrice": 539.63,
     "keyCards": [
       "Highland Princess",
       "Sir Galahad",
@@ -13435,7 +13434,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 219.6,
+    "estimatedPrice": 92.61,
     "keyCards": [
       "Grim Reaper",
       "Philosopher's Stone",
@@ -13708,7 +13707,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 767.3,
+    "estimatedPrice": 824.12,
     "keyCards": [
       "Captain Baldassare",
       "Lord of Unland",
@@ -14084,7 +14083,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 274.5,
+    "estimatedPrice": 157.83,
     "keyCards": [
       "Highland Princess",
       "Browse",
@@ -14297,7 +14296,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 853.05,
+    "estimatedPrice": 877.46,
     "keyCards": [
       "Lord of Unland",
       "Ruler of Thul",
@@ -14691,7 +14690,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 358.5,
+    "estimatedPrice": 135.04,
     "keyCards": [
       "Grim Reaper",
       "Highland Princess",
@@ -14958,7 +14957,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 695.3,
+    "estimatedPrice": 779.54,
     "keyCards": [
       "Captain Baldassare",
       "Lord of Unland",
@@ -15328,7 +15327,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 717.15,
+    "estimatedPrice": 735.37,
     "keyCards": [
       "Boudicca",
       "Morgana le Fay",
@@ -15655,7 +15654,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 627.3,
+    "estimatedPrice": 783.78,
     "keyCards": [
       "Highland Princess",
       "Merlin",
@@ -16007,7 +16006,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 714.45,
+    "estimatedPrice": 587.8,
     "keyCards": [
       "Ruler of Thul",
       "Boudicca",
@@ -16346,7 +16345,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 522.75,
+    "estimatedPrice": 473.22,
     "keyCards": [
       "Great Old One",
       "Ruler of Thul",
@@ -16656,7 +16655,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 597.85,
+    "estimatedPrice": 683.51,
     "keyCards": [
       "Great Old One",
       "Nelly Longarms",
@@ -16984,7 +16983,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 796.9,
+    "estimatedPrice": 719.97,
     "keyCards": [
       "Grim Reaper",
       "Highland Princess",
@@ -17330,7 +17329,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 1155.45,
+    "estimatedPrice": 914.75,
     "keyCards": [
       "Highland Princess",
       "Crown Prince",
@@ -17771,7 +17770,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 276.45,
+    "estimatedPrice": 127.09,
     "keyCards": [
       "Gigantism",
       "Philosopher's Stone",
@@ -18039,7 +18038,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 660.05,
+    "estimatedPrice": 718.87,
     "keyCards": [
       "Ruler of Thul",
       "The Green Knight",
@@ -18385,7 +18384,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 768.4,
+    "estimatedPrice": 647.12,
     "keyCards": [
       "Great Old One",
       "Lord of Unland",
@@ -18761,7 +18760,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 613.75,
+    "estimatedPrice": 496.49,
     "keyCards": [
       "Courtesan Thaïs",
       "Morgana le Fay",
@@ -19095,7 +19094,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 533.05,
+    "estimatedPrice": 539.46,
     "keyCards": [
       "Highland Princess",
       "Witherwing Hero",
@@ -19393,7 +19392,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 743.55,
+    "estimatedPrice": 637.87,
     "keyCards": [
       "Courtesan Thaïs",
       "Boudicca",
@@ -19811,7 +19810,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 352.45,
+    "estimatedPrice": 318.8,
     "keyCards": [
       "Great Old One",
       "Lord of Unland",
@@ -20060,7 +20059,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 658.2,
+    "estimatedPrice": 435.76,
     "keyCards": [
       "Sir Bors the Younger",
       "Sir Galahad",
@@ -20394,7 +20393,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 695.9,
+    "estimatedPrice": 703.91,
     "keyCards": [
       "Highland Princess",
       "Sir Bors the Younger",
@@ -20739,7 +20738,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 828.15,
+    "estimatedPrice": 668.02,
     "keyCards": [
       "Cerberus in Chains",
       "Courtesan Thaïs",
@@ -21271,7 +21270,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 553.85,
+    "estimatedPrice": 623.56,
     "keyCards": [
       "Highland Princess",
       "Cerberus in Chains",
@@ -21581,7 +21580,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 287.6,
+    "estimatedPrice": 236.88,
     "keyCards": [
       "Cerberus in Chains",
       "Amethyst Core",
@@ -21812,7 +21811,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 328.2,
+    "estimatedPrice": 282.97,
     "keyCards": [
       "Highland Princess",
       "Pact with the Devil",
@@ -22068,7 +22067,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 463.6,
+    "estimatedPrice": 510.82,
     "keyCards": [
       "Death Dealer",
       "Morgana le Fay",
@@ -22378,7 +22377,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 255.7,
+    "estimatedPrice": 109.58,
     "keyCards": [
       "Courtesan Thaïs",
       "Jihad",
@@ -22610,7 +22609,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 826.95,
+    "estimatedPrice": 883.31,
     "keyCards": [
       "Highland Princess",
       "Cerberus in Chains",
@@ -23015,7 +23014,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 769.6,
+    "estimatedPrice": 827.82,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -23379,7 +23378,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 525.6,
+    "estimatedPrice": 361.42,
     "keyCards": [
       "Draco Corvus",
       "Browse",
@@ -23749,7 +23748,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 773.5,
+    "estimatedPrice": 682.94,
     "keyCards": [
       "Highland Princess",
       "Ultimate Horror",
@@ -24107,7 +24106,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 375.6,
+    "estimatedPrice": 370.54,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -24351,7 +24350,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 569.25,
+    "estimatedPrice": 336.92,
     "keyCards": [
       "Ultimate Horror",
       "Sir Bors the Younger",
@@ -24666,7 +24665,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 506.45,
+    "estimatedPrice": 499.46,
     "keyCards": [
       "Morgana le Fay",
       "Sir Lamorak",
@@ -24964,7 +24963,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 538.45,
+    "estimatedPrice": 438.11,
     "keyCards": [
       "Highland Princess",
       "Merlin",
@@ -25298,7 +25297,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 389.7,
+    "estimatedPrice": 323.36,
     "keyCards": [
       "Boudicca",
       "Morgana le Fay",
@@ -25566,7 +25565,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 447.95,
+    "estimatedPrice": 281.5,
     "keyCards": [
       "Sir Bors the Younger",
       "Sir Perceval",
@@ -25852,7 +25851,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 960.05,
+    "estimatedPrice": 326.95,
     "keyCards": [
       "Crown Prince",
       "Queen of Midland",
@@ -26227,7 +26226,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 231.35,
+    "estimatedPrice": 108.97,
     "keyCards": [
       "Gigantism",
       "Philosopher's Stone",
@@ -26453,7 +26452,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 254.75,
+    "estimatedPrice": 110.19,
     "keyCards": [
       "Gigantism",
       "Autumn Unicorn",
@@ -26709,7 +26708,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 549.95,
+    "estimatedPrice": 487.11,
     "keyCards": [
       "Lord of Unland",
       "Ruler of Thul",
@@ -27061,7 +27060,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 742.2,
+    "estimatedPrice": 610.99,
     "keyCards": [
       "Cerberus in Chains",
       "Death Dealer",
@@ -27413,7 +27412,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 646.2,
+    "estimatedPrice": 720.39,
     "keyCards": [
       "Grim Reaper",
       "Highland Princess",
@@ -27758,7 +27757,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 805,
+    "estimatedPrice": 755.52,
     "keyCards": [
       "Highland Princess",
       "King of the Realm",
@@ -28145,7 +28144,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 843.2,
+    "estimatedPrice": 575.18,
     "keyCards": [
       "Lord of the Void",
       "Ultimate Horror",
@@ -28485,7 +28484,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 684.15,
+    "estimatedPrice": 668.4,
     "keyCards": [
       "Highland Princess",
       "Ultimate Horror",
@@ -28831,7 +28830,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 320.45,
+    "estimatedPrice": 220.43,
     "keyCards": [
       "Gigantism",
       "Onyx Core",
@@ -29068,7 +29067,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 494.8,
+    "estimatedPrice": 562.14,
     "keyCards": [
       "King of the Realm",
       "Archangel Michael",
@@ -29383,7 +29382,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 289.3,
+    "estimatedPrice": 214.06,
     "keyCards": [
       "Highland Princess",
       "Amethyst Core",
@@ -29591,7 +29590,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 117.9,
+    "estimatedPrice": 122.42,
     "keyCards": [
       "Queen of Midland",
       "Crusade"
@@ -29760,7 +29759,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 253.55,
+    "estimatedPrice": 133.87,
     "keyCards": [
       "Crown Prince",
       "King of the Realm",
@@ -30016,7 +30015,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 4095.9,
+    "estimatedPrice": 2858.18,
     "keyCards": [
       "Highland Princess",
       "Witherwing Hero",
@@ -32594,7 +32593,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 485.3,
+    "estimatedPrice": 479.89,
     "keyCards": [
       "Highland Princess",
       "Merlin",
@@ -32897,7 +32896,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 760.4,
+    "estimatedPrice": 738.63,
     "keyCards": [
       "Ruler of Thul",
       "Lady Iseult",
@@ -33243,7 +33242,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 596.4,
+    "estimatedPrice": 548.41,
     "keyCards": [
       "Highland Princess",
       "Captain Baldassare",
@@ -33577,7 +33576,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 705.8,
+    "estimatedPrice": 601.39,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -33911,7 +33910,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 553.6,
+    "estimatedPrice": 517.35,
     "keyCards": [
       "Lady Iseult",
       "Sir Galahad",
@@ -34275,7 +34274,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 632.75,
+    "estimatedPrice": 389.32,
     "keyCards": [
       "Crown Prince",
       "King of the Realm",
@@ -34591,7 +34590,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 479.6,
+    "estimatedPrice": 493.35,
     "keyCards": [
       "Highland Princess",
       "Merlin",
@@ -34900,7 +34899,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 748.65,
+    "estimatedPrice": 730.19,
     "keyCards": [
       "Boudicca",
       "Lady Iseult",
@@ -35258,7 +35257,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 398.9,
+    "estimatedPrice": 229.24,
     "keyCards": [
       "Vivien the Enchantress",
       "Army of the Dead",
@@ -35538,7 +35537,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 667.3,
+    "estimatedPrice": 758.43,
     "keyCards": [
       "Highland Princess",
       "Courtesan Thaïs",
@@ -35896,7 +35895,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 658.2,
+    "estimatedPrice": 548.74,
     "keyCards": [
       "Highland Princess",
       "Witherwing Hero",
@@ -36236,7 +36235,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 665.55,
+    "estimatedPrice": 484.77,
     "keyCards": [
       "Highland Princess",
       "Great Old One",
@@ -36576,7 +36575,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 569.85,
+    "estimatedPrice": 484.09,
     "keyCards": [
       "Boudicca",
       "Morgana le Fay",
@@ -36868,7 +36867,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 263.6,
+    "estimatedPrice": 118.59,
     "keyCards": [
       "Ruler of Thul",
       "Browse",
@@ -37070,7 +37069,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 421.35,
+    "estimatedPrice": 154.75,
     "keyCards": [
       "Gigantism",
       "Blasted Oak",
@@ -37360,7 +37359,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 529.25,
+    "estimatedPrice": 491.29,
     "keyCards": [
       "Morgana le Fay",
       "Sir Lamorak",
@@ -37658,7 +37657,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 561.85,
+    "estimatedPrice": 495.58,
     "keyCards": [
       "Cerberus in Chains",
       "Boudicca",
@@ -37962,7 +37961,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 678.4,
+    "estimatedPrice": 484.29,
     "keyCards": [
       "Dame Britomart",
       "Sir Agravaine",
@@ -38302,7 +38301,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 678.1,
+    "estimatedPrice": 640.29,
     "keyCards": [
       "Ruler of Thul",
       "Morgana le Fay",
@@ -38618,7 +38617,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 723.55,
+    "estimatedPrice": 587.28,
     "keyCards": [
       "Boudicca",
       "Morgana le Fay",
@@ -39018,7 +39017,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 565.35,
+    "estimatedPrice": 501,
     "keyCards": [
       "Lord of Unland",
       "Ruler of Thul",
@@ -39394,7 +39393,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 691.4,
+    "estimatedPrice": 493.47,
     "keyCards": [
       "Grim Reaper",
       "Highland Princess",
@@ -39685,7 +39684,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 416.6,
+    "estimatedPrice": 404.6,
     "keyCards": [
       "Highland Princess",
       "Lady Iseult",
@@ -39922,7 +39921,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 704.4,
+    "estimatedPrice": 731.1,
     "keyCards": [
       "Ruler of Thul",
       "Boudicca",
@@ -40232,7 +40231,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 372.15,
+    "estimatedPrice": 209.21,
     "keyCards": [
       "Morgana le Fay",
       "Warp Spasm",
@@ -40488,7 +40487,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 249.55,
+    "estimatedPrice": 62.21,
     "keyCards": [
       "Grim Reaper",
       "Witherwing Hero",
@@ -40689,7 +40688,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 473.15,
+    "estimatedPrice": 340.5,
     "keyCards": [
       "Witherwing Hero",
       "Bane of Aventis",
@@ -40993,7 +40992,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 731.3,
+    "estimatedPrice": 802.1,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -41357,7 +41356,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 574.2,
+    "estimatedPrice": 625.35,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -41679,7 +41678,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 433.45,
+    "estimatedPrice": 553.44,
     "keyCards": [
       "Crown Prince",
       "Queen of Midland",
@@ -41983,7 +41982,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 575.6,
+    "estimatedPrice": 519.58,
     "keyCards": [
       "Highland Princess",
       "Witherwing Hero",
@@ -42287,7 +42286,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 345.05,
+    "estimatedPrice": 142.57,
     "keyCards": [
       "Sir Bors the Younger",
       "Sir Galahad",
@@ -42566,7 +42565,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 906,
+    "estimatedPrice": 861.4,
     "keyCards": [
       "Ruler of Thul",
       "Boudicca",
@@ -42930,7 +42929,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 754.1,
+    "estimatedPrice": 737.62,
     "keyCards": [
       "Captain Baldassare",
       "Ruler of Thul",
@@ -43264,7 +43263,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 407.1,
+    "estimatedPrice": 381.5,
     "keyCards": [
       "Ruler of Thul",
       "Lady Iseult",
@@ -43544,7 +43543,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 608.75,
+    "estimatedPrice": 549.79,
     "keyCards": [
       "Death Dealer",
       "Morgana le Fay",
@@ -43848,7 +43847,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 406.15,
+    "estimatedPrice": 263.41,
     "keyCards": [
       "Captain Baldassare",
       "Great Old One",
@@ -44068,7 +44067,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 590,
+    "estimatedPrice": 558.72,
     "keyCards": [
       "Blunderbore",
       "Morgana le Fay",
@@ -44372,7 +44371,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 615.65,
+    "estimatedPrice": 687.62,
     "keyCards": [
       "Merlin",
       "Morgana le Fay",
@@ -44688,7 +44687,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 624.7,
+    "estimatedPrice": 574.8,
     "keyCards": [
       "King of the Realm",
       "Death Dealer",
@@ -45004,7 +45003,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 654.95,
+    "estimatedPrice": 601.69,
     "keyCards": [
       "Grim Reaper",
       "Highland Princess",
@@ -45373,7 +45372,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 486.55,
+    "estimatedPrice": 582,
     "keyCards": [
       "Highland Princess",
       "Merlin",
@@ -45683,7 +45682,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 589.5,
+    "estimatedPrice": 384.36,
     "keyCards": [
       "Lord of Unland",
       "Ruler of Thul",
@@ -46005,7 +46004,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 842.95,
+    "estimatedPrice": 747.7,
     "keyCards": [
       "Captain Baldassare",
       "Ruler of Thul",
@@ -46363,7 +46362,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 765.5,
+    "estimatedPrice": 515.61,
     "keyCards": [
       "Highland Princess",
       "Lord of the Void",
@@ -46733,7 +46732,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 627.8,
+    "estimatedPrice": 427.43,
     "keyCards": [
       "Queen of Midland",
       "Mother Nature",
@@ -47091,7 +47090,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 611.6,
+    "estimatedPrice": 746.1,
     "keyCards": [
       "Highland Princess",
       "Courtesan Thaïs",
@@ -47431,7 +47430,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 516.25,
+    "estimatedPrice": 574.66,
     "keyCards": [
       "King of the Realm",
       "Rhitta Gawr of Snowdonia",
@@ -47741,7 +47740,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 584.4,
+    "estimatedPrice": 621.66,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -48087,7 +48086,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 352.35,
+    "estimatedPrice": 176.63,
     "keyCards": [
       "Grim Reaper",
       "Cerberus in Chains",
@@ -48319,7 +48318,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 486.45,
+    "estimatedPrice": 277.2,
     "keyCards": [
       "Ruler of Thul",
       "Questing Beast",
@@ -48628,7 +48627,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 641.7,
+    "estimatedPrice": 581,
     "keyCards": [
       "Courtesan Thaïs",
       "Death Dealer",
@@ -48932,7 +48931,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 368.8,
+    "estimatedPrice": 375.77,
     "keyCards": [
       "White Hart",
       "Amethyst Core",
@@ -49224,7 +49223,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 553.2,
+    "estimatedPrice": 661.08,
     "keyCards": [
       "Courtesan Thaïs",
       "Boudicca",
@@ -49522,7 +49521,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 760.9,
+    "estimatedPrice": 798.01,
     "keyCards": [
       "Highland Princess",
       "Lady Iseult",
@@ -49885,7 +49884,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 359.6,
+    "estimatedPrice": 219.65,
     "keyCards": [
       "Death Dealer",
       "Ruler of Thul",
@@ -50153,7 +50152,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 273.2,
+    "estimatedPrice": 141.45,
     "keyCards": [
       "Lady Iseult",
       "White Hart",
@@ -50385,7 +50384,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 620.45,
+    "estimatedPrice": 423.09,
     "keyCards": [
       "Highland Princess",
       "Caelestis",
@@ -50712,7 +50711,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 829,
+    "estimatedPrice": 692.42,
     "keyCards": [
       "Highland Princess",
       "Rhitta Gawr of Snowdonia",
@@ -51087,7 +51086,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 1234.15,
+    "estimatedPrice": 1277.53,
     "keyCards": [
       "Highland Princess",
       "Courtesan Thaïs",
@@ -51529,7 +51528,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 525.25,
+    "estimatedPrice": 458.38,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -51886,7 +51885,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 544.45,
+    "estimatedPrice": 483.41,
     "keyCards": [
       "Great Old One",
       "Ruler of Thul",
@@ -52214,7 +52213,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 525.25,
+    "estimatedPrice": 500.56,
     "keyCards": [
       "Ruler of Thul",
       "Nelly Longarms",
@@ -52500,7 +52499,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 585.95,
+    "estimatedPrice": 520.71,
     "keyCards": [
       "Grim Reaper",
       "Highland Princess",
@@ -52858,7 +52857,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 466.2,
+    "estimatedPrice": 512.83,
     "keyCards": [
       "Highland Princess",
       "Boudicca",
@@ -53150,7 +53149,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 623.2,
+    "estimatedPrice": 560.31,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -53508,7 +53507,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 626.05,
+    "estimatedPrice": 574.25,
     "keyCards": [
       "Highland Princess",
       "Witherwing Hero",
@@ -53830,7 +53829,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 447.75,
+    "estimatedPrice": 536.99,
     "keyCards": [
       "Courtesan Thaïs",
       "Morgana le Fay",
@@ -54116,7 +54115,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 692.15,
+    "estimatedPrice": 720.15,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -54522,7 +54521,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 545.6,
+    "estimatedPrice": 566.65,
     "keyCards": [
       "Morgana le Fay",
       "Archangel Samael",
@@ -54820,7 +54819,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 448.75,
+    "estimatedPrice": 435.33,
     "keyCards": [
       "Highland Princess",
       "Cerberus in Chains",
@@ -55135,7 +55134,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 487.65,
+    "estimatedPrice": 347.86,
     "keyCards": [
       "Grim Reaper",
       "Bane of Aventis",
@@ -55451,7 +55450,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 581.9,
+    "estimatedPrice": 426.74,
     "keyCards": [
       "Captain Baldassare",
       "Ruler of Thul",
@@ -55743,7 +55742,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 495.9,
+    "estimatedPrice": 269.72,
     "keyCards": [
       "Queen of Midland",
       "Lady Iseult",
@@ -56070,7 +56069,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 275.4,
+    "estimatedPrice": 60.95,
     "keyCards": [
       "Gigantism",
       "Autumn Unicorn",
@@ -56373,7 +56372,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 413.4,
+    "estimatedPrice": 227.5,
     "keyCards": [
       "Crown Prince",
       "King of the Realm",
@@ -56641,7 +56640,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 366.6,
+    "estimatedPrice": 240.19,
     "keyCards": [
       "Death Dealer",
       "Morgana le Fay",
@@ -57011,7 +57010,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 526.2,
+    "estimatedPrice": 510.76,
     "keyCards": [
       "Death Dealer",
       "Morgana le Fay",
@@ -57314,7 +57313,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 492.45,
+    "estimatedPrice": 406.27,
     "keyCards": [
       "Ruler of Thul",
       "Nelly Longarms",
@@ -57570,7 +57569,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 523.8,
+    "estimatedPrice": 414.61,
     "keyCards": [
       "Courtesan Thaïs",
       "Morgana le Fay",
@@ -57868,7 +57867,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 1083.5,
+    "estimatedPrice": 593.74,
     "keyCards": [
       "Highland Princess",
       "King of the Realm",
@@ -58249,7 +58248,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 498.75,
+    "estimatedPrice": 482.22,
     "keyCards": [
       "Courtesan Thaïs",
       "Boudicca",
@@ -58547,7 +58546,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 569.95,
+    "estimatedPrice": 591.59,
     "keyCards": [
       "Highland Princess",
       "Lord of the Void",
@@ -58905,7 +58904,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 701.75,
+    "estimatedPrice": 519.4,
     "keyCards": [
       "Captain Baldassare",
       "Ruler of Thul",
@@ -59239,7 +59238,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 1262.6,
+    "estimatedPrice": 624.15,
     "keyCards": [
       "King Arthur",
       "Queen Guinevere",
@@ -59645,7 +59644,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 994.05,
+    "estimatedPrice": 364.65,
     "keyCards": [
       "Dame Britomart",
       "King Arthur",
@@ -60027,7 +60026,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 606.05,
+    "estimatedPrice": 625.42,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -60349,7 +60348,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 318.85,
+    "estimatedPrice": 139.1,
     "keyCards": [
       "Gigantism",
       "Philosopher's Stone",
@@ -60557,7 +60556,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 818.6,
+    "estimatedPrice": 648.25,
     "keyCards": [
       "Captain Baldassare",
       "Great Old One",
@@ -60909,7 +60908,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 629.85,
+    "estimatedPrice": 788.95,
     "keyCards": [
       "Highland Princess",
       "Ruler of Thul",
@@ -61255,7 +61254,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 510.2,
+    "estimatedPrice": 551.38,
     "keyCards": [
       "Sir Perceval",
       "Vivien the Enchantress",
@@ -61582,7 +61581,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 462.05,
+    "estimatedPrice": 308.57,
     "keyCards": [
       "Cerberus in Chains",
       "Courtesan Thaïs",
@@ -61874,7 +61873,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 513.3,
+    "estimatedPrice": 371.86,
     "keyCards": [
       "Highland Princess",
       "Witherwing Hero",
@@ -62166,7 +62165,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 528.7,
+    "estimatedPrice": 429.83,
     "keyCards": [
       "Nelly Longarms",
       "Questing Beast",
@@ -62452,7 +62451,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 508.45,
+    "estimatedPrice": 398.32,
     "keyCards": [
       "Sir Bors the Younger",
       "Sir Galahad",
@@ -62858,7 +62857,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 865.15,
+    "estimatedPrice": 872.27,
     "keyCards": [
       "Great Old One",
       "Lord of Unland",
@@ -63252,7 +63251,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 403.05,
+    "estimatedPrice": 383.37,
     "keyCards": [
       "Morgana le Fay",
       "Archangel Michael",
@@ -63549,7 +63548,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 144.2,
+    "estimatedPrice": 73.35,
     "keyCards": [
       "Daperyll Vampire",
       "Autumn Unicorn",
@@ -63738,7 +63737,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 535.75,
+    "estimatedPrice": 341.19,
     "keyCards": [
       "Cerberus in Chains",
       "Boudicca",
@@ -64017,7 +64016,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 283.6,
+    "estimatedPrice": 153.04,
     "keyCards": [
       "Great Old One",
       "Mother Nature",
@@ -64213,7 +64212,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 781,
+    "estimatedPrice": 837.23,
     "keyCards": [
       "Highland Princess",
       "Death Dealer",
@@ -64565,7 +64564,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 772.15,
+    "estimatedPrice": 801.32,
     "keyCards": [
       "Ruler of Thul",
       "Boudicca",
@@ -64941,7 +64940,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 1019.2,
+    "estimatedPrice": 928.66,
     "keyCards": [
       "Highland Princess",
       "Lord of the Void",
@@ -65329,7 +65328,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 500.7,
+    "estimatedPrice": 259.05,
     "keyCards": [
       "Ruler of Thul",
       "Sir Ironside",
@@ -65621,7 +65620,7 @@ const RECOMMENDED_DECKS = [
       "Air"
     ],
     "tier": "D",
-    "estimatedPrice": 602.35,
+    "estimatedPrice": 575.5,
     "keyCards": [
       "Grim Reaper",
       "Highland Princess",
@@ -66051,7 +66050,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 818.95,
+    "estimatedPrice": 831.16,
     "keyCards": [
       "Courtesan Thaïs",
       "Ruler of Thul",
@@ -66403,7 +66402,7 @@ const RECOMMENDED_DECKS = [
       "Earth"
     ],
     "tier": "D",
-    "estimatedPrice": 387.45,
+    "estimatedPrice": 400.75,
     "keyCards": [
       "Death Dealer",
       "Morgana le Fay",
@@ -66773,7 +66772,7 @@ const RECOMMENDED_DECKS = [
       "None"
     ],
     "tier": "D",
-    "estimatedPrice": 400.7,
+    "estimatedPrice": 253.78,
     "keyCards": [
       "Captain Baldassare",
       "Great Old One",
@@ -67011,7 +67010,7 @@ const RECOMMENDED_DECKS = [
       "Water"
     ],
     "tier": "D",
-    "estimatedPrice": 323.05,
+    "estimatedPrice": 161.58,
     "keyCards": [
       "Orb of Ba'al Berith",
       "Philosopher's Stone",
@@ -67296,7 +67295,7 @@ const RECOMMENDED_DECKS = [
       "Fire"
     ],
     "tier": "D",
-    "estimatedPrice": 477.95,
+    "estimatedPrice": 506.72,
     "keyCards": [
       "King of the Realm",
       "Rhitta Gawr of Snowdonia",
