@@ -1,0 +1,50 @@
+name: Translate Deck Guides
+
+on:
+  workflow_dispatch: # Manual trigger only
+
+permissions:
+  contents: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./scripts
+
+      - name: Translate deck guides
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node translate-guides.js
+        working-directory: ./scripts
+        timeout-minutes: 30
+
+      - name: Minify recommended-decks.js
+        run: npx terser recommended-decks.js -o recommended-decks.min.js -c -m
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --quiet recommended-decks.js || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add recommended-decks.js recommended-decks.min.js
+          git commit -m "chore: translate deck guides to Portuguese [skip ci]"
+          git push

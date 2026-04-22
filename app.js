@@ -4761,6 +4761,9 @@ function switchArtTab(tabName) {
         case 'collection':
             initArtCollectionTab();
             break;
+        case 'alternate':
+            initAlternateArtTab();
+            break;
         case 'curios':
             initCuriosTab();
             break;
@@ -11452,10 +11455,6 @@ function openDeckDetail(deckId) {
             ${getElementIcon(e)} ${e}
         </span>
     `).join('');
-
-    // Strategy
-    document.getElementById('deck-detail-strategy').textContent =
-        deck.strategy || deck.description || 'Estratégia não disponível.';
 
     // Decklist
     const validElements = ['fire', 'water', 'earth', 'air'];

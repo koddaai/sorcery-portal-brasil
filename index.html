@@ -2685,6 +2685,9 @@
                     <button class="art-tab" data-tab="collection" onclick="switchArtTab('collection')">
                         <i data-lucide="bar-chart-3"></i> Coleção por Artista
                     </button>
+                    <button class="art-tab" data-tab="alternate" onclick="switchArtTab('alternate')">
+                        <i data-lucide="copy"></i> Arte Alternativa
+                    </button>
                     <button class="art-tab" data-tab="curios" onclick="switchArtTab('curios')">
                         <i data-lucide="sparkles"></i> Curios
                     </button>
@@ -2824,6 +2827,13 @@
                         <div id="artist-stats-list" class="artist-stats-list">
                             <!-- Gerado por JS -->
                         </div>
+                    </div>
+                </div>
+
+                <!-- Tab: Arte Alternativa -->
+                <div id="art-tab-alternate" class="art-tab-content hidden">
+                    <div id="alternate-art-content">
+                        <!-- Gerado por JS -->
                     </div>
                 </div>
 
@@ -3220,11 +3230,6 @@
                 </div>
 
                 <div class="deck-detail-elements" id="deck-detail-elements"></div>
-
-                <div class="deck-detail-section">
-                    <h3><i data-lucide="target"></i> Estratégia</h3>
-                    <p id="deck-detail-strategy"></p>
-                </div>
 
                 <!-- Avatar Section -->
                 <div class="deck-detail-section deck-section-avatar">
