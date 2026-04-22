@@ -3978,8 +3978,12 @@ function updateURLHash(viewName, params = {}) {
     }
 
     // Atualiza URL sem recarregar a página
-    const newUrl = hash ? `#${hash}` : window.location.pathname;
-    if (window.location.hash !== `#${hash}`) {
+    // Se hash está vazio (home), remove o hash da URL completamente
+    const newUrl = hash ? `#${hash}` : window.location.pathname + window.location.search;
+    const currentHash = window.location.hash;
+
+    // Atualiza se o hash mudou (ou se estamos limpando o hash para ir para home)
+    if ((hash && currentHash !== `#${hash}`) || (!hash && currentHash)) {
         history.pushState({ view: viewName, params }, '', newUrl);
     }
 }
