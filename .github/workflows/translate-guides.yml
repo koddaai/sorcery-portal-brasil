@@ -30,7 +30,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: node translate-guides.js
         working-directory: ./scripts
-        timeout-minutes: 30
+        timeout-minutes: 60
 
       - name: Minify recommended-decks.js
         run: npx terser recommended-decks.js -o recommended-decks.min.js -c -m

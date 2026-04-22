@@ -219,11 +219,18 @@ async function main() {
                 skippedCount++;
             }
 
+            // Save progress every 25 guides
+            const processed = translatedCount + skippedCount;
+            if (processed % 25 === 0) {
+                console.log(`\n--- Saving checkpoint (${processed}/${totalGuides}) ---\n`);
+                fs.writeFileSync(DECK_FILE, lines.join('\n'));
+            }
+
             await delay(DELAY_BETWEEN_REQUESTS);
         }
     }
 
-    // Save file
+    // Save file (final)
     console.log('\nSaving translated guides...');
     fs.writeFileSync(DECK_FILE, lines.join('\n'));
 
