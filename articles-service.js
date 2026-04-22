@@ -269,9 +269,68 @@ class ArticlesService {
     /**
      * Show article in a modal
      */
+    /**
+     * Convert markdown to HTML (simple parser)
+     */
+    parseMarkdown(md) {
+        if (!md) return '';
+
+        let html = md
+            // Escape HTML first
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            // Headers
+            .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+            .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+            .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+            // Bold
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            // Italic
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            // Lists
+            .replace(/^- (.+)$/gm, '<li>$1</li>')
+            // Tables (simple)
+            .replace(/\|(.+)\|/g, (match, content) => {
+                const cells = content.split('|').map(c => c.trim());
+                if (cells.every(c => c.match(/^-+$/))) {
+                    return ''; // Skip separator rows
+                }
+                return '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+            })
+            // Blockquotes
+            .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>')
+            // Line breaks
+            .replace(/\n\n/g, '</p><p>')
+            .replace(/\n/g, '<br>');
+
+        // Wrap lists
+        html = html.replace(/(<li>.+<\/li>)+/g, '<ul>$&</ul>');
+        // Wrap tables
+        html = html.replace(/(<tr>.+<\/tr>)+/g, '<table>$&</table>');
+        // Wrap in paragraphs
+        html = '<p>' + html + '</p>';
+        // Clean up empty paragraphs
+        html = html.replace(/<p><\/p>/g, '');
+        html = html.replace(/<p>(<h[234]>)/g, '$1');
+        html = html.replace(/(<\/h[234]>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<ul>)/g, '$1');
+        html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<table>)/g, '$1');
+        html = html.replace(/(<\/table>)<\/p>/g, '$1');
+        html = html.replace(/<p>(<blockquote>)/g, '$1');
+        html = html.replace(/(<\/blockquote>)<\/p>/g, '$1');
+
+        return html;
+    }
+
+    /**
+     * Show article in a modal
+     */
     showArticleModal(article) {
         const icon = this.getCategoryIcon(article.category);
         const badgeClass = this.getCategoryClass(article.category);
+        const contentHTML = article.content ? this.parseMarkdown(article.content) : '';
 
         const modalHTML = `
             <div class="article-modal-overlay" onclick="articlesService.closeArticleModal(event)">
@@ -293,14 +352,20 @@ class ArticlesService {
                             </span>
                         </div>
                         <h2>${article.title}</h2>
-                        <p class="article-modal-summary">${article.summary}</p>
                         <div class="article-modal-tags">
                             ${article.tags.map(tag => `<span class="article-tag">#${tag}</span>`).join(' ')}
                         </div>
-                        <div class="article-modal-notice">
-                            <i data-lucide="info"></i>
-                            <span>Conteúdo completo em breve. Por enquanto, confira nossos guias e recursos no site.</span>
-                        </div>
+                        ${contentHTML ? `
+                            <div class="article-modal-body">
+                                ${contentHTML}
+                            </div>
+                        ` : `
+                            <p class="article-modal-summary">${article.summary}</p>
+                            <div class="article-modal-notice">
+                                <i data-lucide="info"></i>
+                                <span>Conteúdo completo em breve. Por enquanto, confira nossos guias e recursos no site.</span>
+                            </div>
+                        `}
                     </div>
                 </div>
             </div>

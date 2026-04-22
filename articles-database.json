@@ -9,7 +9,8 @@
       "tags": ["iniciante", "magic", "comparacao"],
       "image": "assets/articles/WizardsDen.webp",
       "date": "2026-04-22",
-      "slug": "vim-do-magic-guia-completo"
+      "slug": "vim-do-magic-guia-completo",
+      "content": "Se você vem de MTG, Sorcery vai parecer familiar em muita coisa e completamente diferente em outras. Vamos ao que importa:\n\n## O que é IGUAL\n\n- Cartas têm custo de mana, criaturas têm power/toughness (na real é só um número que serve pros dois)\n- Você compra mão inicial e 1 carta por turno\n- Cartas têm types, raridades\n- Existe draft/cube/sealed (muito bem feito, aliás)\n\n## O que é DIFERENTE — os 5 grandes\n\n### 1) 4 elementos, não 5 cores\n\n- **Earth** ≈ Green + White (ramp, criaturas grandes, life gain, tokens, recursão, land-matters)\n- **Fire** ≈ Red (dano, power boost, haste, \"forçados a atacar\")\n- **Water** ≈ Blue + um pouco Green (bounce, scrying, polymorph, forced movement, criaturas MAIORES do jogo, site-matters)\n- **Air** ≈ Blue + Red + pouco Black (unidades fracas mas evasivas, flying, random damage, card selection)\n\n\"Black\" clássico foi distribuído entre os 4. Kill spells são condicionais e cada elemento tem o seu jeito. Deathtouch existe em todas.\n\n### 2) Grid 4x5 muda tudo\n\nMagic é \"Poker + Xadrez\"; Sorcery pende muito mais pro **Xadrez**. Posicionamento, LOS (line of sight), áreas de efeito e movimento são decisões centrais. Suas criaturas ocupam casas específicas e precisam se mover pra interagir.\n\n### 3) Sem instant speed (quase)\n\nQuase tudo é sorcery speed. Exceções contadas nos dedos: **Dodge Roll** e **Valor**. Isso muda totalmente a postura do jogo — não existe \"segurar Counterspell\". A interação acontece no seu turno ou no próximo, via posicionamento.\n\n### 4) Sem mana screw/flood\n\nO deck é dividido em **Spellbook (50 cartas)** + **Atlas (30 cartas de sites)**. No início do turno, você escolhe comprar de um ou do outro. Acabou o \"flood de terreno\". Acabou o \"não veio land\". É a mudança mais celebrada por ex-jogadores de Magic.\n\n### 5) Avatar = você no tabuleiro\n\nSeu Avatar é tipo um Commander, mas é **você como uma criatura no grid**. Sem restrição de cor. Seu Avatar se move, ataca, recebe dano — e quando chega em Death's Door, o próximo dano direto encerra a partida.\n\n## Cópias por raridade (não é 4-of universal)\n\n- Comuns: 4\n- Incomuns: 3\n- Raras: 2\n- Míticas: 1\n\n## Além do gameplay\n\n- Arte **100% pintada à mão** — banida arte gerada ou digital \"lisa\"\n- Sem IPs externos (nada de Universes Beyond estilo Marvel/LOTR/FF)\n- 1 set principal por ano — o meta respira\n- Qualidade de impressão notoriamente superior (foil não enrola feito Pringles)\n\n## O que você NÃO vai sentir falta\n\n- Decisões obrigatórias no upkeep do oponente\n- Dezenas de sets por ano\n- Reserved list e suas distorções de mercado\n\n## O que você PODE sentir falta\n\n- Counterspell como conceito\n- Formatos múltiplos (Sorcery tem 1 só)\n- Torneios grandes semanais em qualquer LGS"
     },
     {
       "id": "acabei-descobrir",
@@ -19,7 +20,8 @@
       "tags": ["iniciante", "compras", "precon"],
       "image": "assets/articles/RusticVillage.webp",
       "date": "2026-04-22",
-      "slug": "acabei-de-descobrir-o-que-compro"
+      "slug": "acabei-de-descobrir-o-que-compro",
+      "content": "A pergunta mais frequente do subreddit. Resposta baseada no consenso da comunidade:\n\n## Cenário A — \"Só quero experimentar se o jogo é pra mim\"\n\n**Um Gothic Precon** (deck preconstruído)\n- Custo baixo, cartas suficientes pra sentir o jogo\n- Os precons do Gothic são mais refinados que os do Beta\n- Atenção: precons **NÃO são legais em constructed** (tamanho menor que 50/30)\n- Use por 5-10 partidas antes de qualquer decisão\n\n## Cenário B — \"Curti a demo, quero jogar sério\"\n\n**Box de Beta + box de Gothic**\n- Beta tem o core do jogo e é relativamente barato hoje (houve reimpressão)\n- Gothic é o set mais recente e dá mais valor em \"drops\" (foils, especiais)\n- Um box de Beta normalmente dá **playset completo** de comuns/incomuns\n- **Pule Arthurian Legends no começo** se estiver apertado — é um set menor, focado em Uniques\n- **PULE Dragonlord** — é praticamente um set promocional de 13 cartas, caríssimo e quase nenhum deck roda, exceto por 2-3 cartas ocasionalmente no competitivo\n\n## Cenário C — \"Vou jogar competitivo, quero a coleção toda\"\n\n**Box de Beta + Arthurian Legends + Gothic + singles direcionados**\n- Monte 1-2 decks específicos via curiosa.io primeiro\n- Compre só as Uniques/Rares que faltam — caçar playset completo via abertura é ineficiente\n- Team Covenant costuma ter bons kits agregados (ex.: \"Alchemy Kit\")\n\n## Não funciona como em Magic\n\n- Abrir muitos boxes **não** garante Uniques (cada Unique é copia única por deck, aparece em taxa baixa)\n- Mesmo 6 boxes (1 case) não garante 3 cópias de toda Exceptional\n\n## Antes de comprar qualquer coisa\n\n1. Acesse **curiosa.io** e monte um deck teórico com o Avatar que te interessa\n2. Veja quais cartas saem de quais sets\n3. Compre direcionado em vez de abrir no escuro\n\n**Guarde os códigos do fundo das caixas** — eles dão Dust no programa oficial de recompensas."
     },
     {
       "id": "8-duvidas",
@@ -29,7 +31,8 @@
       "tags": ["iniciante", "regras", "faq"],
       "image": "assets/articles/DonnybrookInn.webp",
       "date": "2026-04-22",
-      "slug": "8-duvidas-jogador-novo"
+      "slug": "8-duvidas-jogador-novo",
+      "content": "Selecionei as perguntas mais recorrentes de quem abriu os precons pela primeira vez:\n\n## 1. Minions podem atacar Avatares antes de Death's Door?\n\nSim. Mas lembre: o Avatar contra-ataca com o próprio power. Então mandar um minion fraco bater no Avatar adversário geralmente significa perder o minion.\n\n## 2. Avatar pode carregar artifacts?\n\nSim, normalmente. Avatar funciona como qualquer unidade nesse aspecto.\n\n## 3. Quantos artifacts um minion pega por turno?\n\nA *ação* de pegar é 1x por turno, mas nessa ação o minion pode pegar **vários** artifacts do mesmo site. Não há limite de quantos ele pode carregar.\n\n## 4. Os dois jogadores geram mana por turno?\n\nNão. Mana só no seu turno. Sorcery praticamente não tem instant speed — só exceções como **Dodge Roll** e **Valor**.\n\n## 5. \"A mana tem cor?\"\n\n**Não.** Isso confunde muita gente vinda de Magic. A mana é incolor. O que existe é **threshold**: um requisito da carta verificado contra seus sites. Threshold não é \"gasto\" — é uma característica dos sites que precisa estar presente.\n\n## 6. Posso colocar aura sobre aura?\n\nSim. Convivem.\n\n## 7. Dano acumula entre combates no mesmo turno?\n\nSim. Um minion 4 que já bateu num 2 segue ferido; se lutar depois com um 3, bate com seu power original (4), mas recebeu dano do primeiro combate.\n\n## 8. E os Monuments?\n\nSão fixos ao site, não movem nem podem ser pegos. Se o site for destruído, o Monument some junto."
     },
     {
       "id": "avatares-amigaveis",
@@ -39,7 +42,8 @@
       "tags": ["avatar", "iniciante", "deck"],
       "image": "assets/articles/Geomancer-Press Kit.webp",
       "date": "2026-04-22",
-      "slug": "avatares-amigaveis-iniciante"
+      "slug": "avatares-amigaveis-iniciante",
+      "content": "Sorcery tem mais de 20 Avatares diferentes, e a escolha do Avatar define muito do seu deck (é equivalente ao \"Commander\" de Magic). Para quem tá começando, a comunidade recomenda os seguintes como porta de entrada:\n\n## Sorcerer [Beta]\n\nCompra de carta consistente é um dos recursos mais fortes do jogo. O Sorcerer é \"generalista\" — se encaixa em praticamente qualquer arquétipo e perdoa erros de construção. Boa escolha se você ainda não sabe que deck vai gostar de jogar.\n\n## Necromancer [Gothic]\n\nControle de board sólido e sinergia com tokens/sacrifícios. Ótima base para decks swarm (ver: frog tokens, skeletons). Tem boa curva de aprendizado porque o plano do deck é claro: manter o board cheio.\n\n## Geomancer [Beta]\n\nPermite focar em comprar spells e tem shenanigans com destruição de sites. Bom para quem quer aprender deckbuilding \"motor\" sem depender tanto de combate.\n\n## Seer [Beta]\n\nScrying é poderoso em Sorcery por causa do deck dividido (spellbook + atlas). A habilidade de manipular o topo do deck reduz a variância e ensina jogo de informação.\n\n## Savior [Beta]\n\nHabilidade simples, bom plano midrange. Uma das escolhas mais \"plug-and-play\" para não-veteranos de TCG.\n\n## Avatares a evitar nos primeiros meses\n\n- **Magician** — estrutura de spellbook única (atlas na spellbook), porta de entrada para combos complexos\n- **Battlemage (Voltron)** e **Deathspeaker (ETB combo)** — muito divertidos, mas exigem entender bem o posicionamento e o timing\n- Qualquer Avatar da Dragonlord — os staples desse set são caros e circulam pouco\n\nDica prática: se você comprou precons, use-os por 5-10 partidas antes de construir. Muita coisa de Sorcery só faz sentido depois de sentir o grid funcionando."
     },
     {
       "id": "movimentacao-grid",
@@ -49,7 +53,8 @@
       "tags": ["regras", "grid", "movimento"],
       "image": "assets/articles/Battlefield.webp",
       "date": "2026-04-22",
-      "slug": "movimentacao-grid-guia"
+      "slug": "movimentacao-grid-guia",
+      "content": "O grid 4x5 (20 casas) é a maior diferença estrutural de Sorcery. Quem vem de Magic leva 2-3 partidas pra absorver essas regras:\n\n## Movimento básico\n\n- Unidades movem **1 casa por turno** (ortogonal)\n- Movimento é uma ação que você escolhe ativar — não é automático\n- Seu **Avatar também se move e ataca** como qualquer minion (isso pega muita gente de surpresa)\n- Minions precisam estar em cima de um **site seu** para serem invocados; depois podem se mover para qualquer casa (inclusive vazia ou do oponente)\n\n## As 5 regiões onde uma unidade pode existir\n\n1. **Surface** — a casa em si, onde a maioria das unidades vive\n2. **Underground** — exige **Burrowing**; quem não tem e acaba aqui, morre\n3. **Underwater** — exige **Submerge**; mesma regra\n4. **Airborne / Flying** — exige **Airborne**; não sofre intercept normal\n5. **Void** — casas sem site; exige **Voidwalk**\n\nUnidade que termina em região onde não consegue sobreviver **morre instantaneamente**. Por isso efeitos como **Bury** (força burrow) funcionam como kill spells contra alvos sem a keyword.\n\n## Movimento e estratégia\n\n- Posicionamento é central — uma unidade \"fora de LOS\" (line of sight) é efetivamente irrelevante até se mover\n- Algumas cartas têm áreas de efeito definidas (Nearby = casas adjacentes, por exemplo)\n- Não existe \"block\" como em Magic — quem tá na casa aceita o combate; quem tá ao lado pode interceptar"
     },
     {
       "id": "threshold-mana",
@@ -59,7 +64,8 @@
       "tags": ["regras", "mana", "threshold"],
       "image": "assets/articles/MaelstromFullArt (1).webp",
       "date": "2026-04-22",
-      "slug": "threshold-vs-mana"
+      "slug": "threshold-vs-mana",
+      "content": "Se você veio de Magic, ignore seu instinto. Em Sorcery:\n\n## A diferença fundamental\n\n- **Mana** é o número (o custo). É incolor. É gerada pelos seus sites em jogo.\n- **Threshold** é o símbolo de elemento. **É um requisito, não um recurso.** Nunca é \"gasto\", é só verificado.\n\n## Exemplo clássico\n\n**Stygian Archers** (custo 3, threshold 2 Air). Se você tiver 2 sites de Air em jogo, seu threshold de Air permanece em 2 o jogo inteiro — você pode castar 1, 2, 3 Stygian Archers no mesmo turno, desde que tenha mana total suficiente (3, 6, 9 mana respectivamente). Threshold não \"se esgota\".\n\n## Spells multi-elemento\n\nPara spells multi-elemento: basta ter o threshold mínimo de cada elemento simultaneamente. Com 1 Fire + 1 Earth + 1 Water em jogo, você paga Onslaught (3, Fire+Earth) normalmente — os 3 de mana vêm de qualquer combinação, só os thresholds precisam bater.\n\n## Resumo\n\n| Conceito | O que é | É gasto? |\n|----------|---------|----------|\n| Mana | Custo numérico | Sim, a cada spell |\n| Threshold | Requisito elemental | Não, apenas verificado |"
     },
     {
       "id": "avatar-dano-direto",
@@ -69,7 +75,8 @@
       "tags": ["regras", "avatar", "deaths-door"],
       "image": "assets/articles/ScreamingSkull.webp",
       "date": "2026-04-22",
-      "slug": "avatar-dano-direto-deaths-door"
+      "slug": "avatar-dano-direto-deaths-door",
+      "content": "Esta é a regra mais mal compreendida do jogo, e o rulebook não enfatiza bem:\n\n## A regra crítica\n\nQuando um Avatar está em **Death's Door**, ele **não pode ser morto por \"loss of life\"**. Ou seja:\n\n- Atacar sites causa \"loss of life\" → **NÃO finaliza**\n- Efeitos de \"perda de vida\" por combo → **NÃO finalizam**\n- O golpe final PRECISA ser **dano direto** ao Avatar\n\n## Implicação prática\n\nTodo deck casual precisa ter pelo menos uma carta de dano direto (tipo **Zap**) ou forced movement para conseguir fechar partidas contra avatares posicionados defensivamente.\n\nNão é raro ver partidas onde os dois Avatares ficam em Death's Door se perseguindo pelo grid porque nenhum dos dois tem como dar o golpe direto.\n\n## Dica de deckbuilding\n\nSempre inclua pelo menos 2-3 cartas que causem **dano direto** ao Avatar. Cartas populares:\n\n- **Zap** (1 mana, 1 dano direto)\n- **Lightning Bolt** (dano aleatório)\n- **Minions com Ranged** que podem atacar o Avatar"
     },
     {
       "id": "glossario-keywords",
@@ -79,7 +86,8 @@
       "tags": ["glossario", "keywords", "regras"],
       "image": "assets/articles/Camelot.webp",
       "date": "2026-04-22",
-      "slug": "glossario-keywords-sorcery"
+      "slug": "glossario-keywords-sorcery",
+      "content": "Referência rápida das habilidades-palavra do jogo. Útil pra printar ou deixar ao lado do mat:\n\n## Movimento e posicionamento\n\n- **Airborne** — unidade está voando; ocupa zona aérea; não interage com non-flying normalmente\n- **Burrowing** — pode existir no subsolo; unidade sem burrowing que é forçada pra baixo morre\n- **Submerge** — análogo underwater; mesma regra de morte se forçada\n- **Voidwalk** — pode existir no void (casas sem site); sem ela, morre no void\n- **Moves Freely [zona]** — ganha movimento ilimitado dentro de uma zona específica (linha, coluna), mas **ainda precisa tapar** para ativar a ação de mover/atacar\n\n## Combate\n\n- **Stealth** — não pode ser alvo, atacado, interceptado nem defendido; projéteis não acertam. **Perde stealth ao**: ativar ability, dar dano, ou atacar\n- **Lethal / Deathtouch** — qualquer dano causado mata a unidade atingida\n- **Ranged / Projectile** — ataca à distância sem receber contra-ataque (com nuances por carta)\n- **Intercept** — resolve no fim do movimento do oponente (mudou em julho/2025)\n- **Charge / Haste** — pode atacar no turno em que entra\n\n## Casting/utilidade\n\n- **Only It Can Cast** — apenas essa unidade pode castar aquele spell; usa a SUA pool de mana\n- **Genesis** — efeito que dispara ao entrar em jogo (equivalente a ETB do Magic)\n- **Scry** — olha as cartas do topo e reordena/descarta\n\n## Estado\n\n- **Silenced** — ignora texto da carta; **mata** cartas que dependem da keyword pra sobreviver onde estão\n- **Disabled** — não pode usar abilities\n\n## Instant-speed (raras)\n\n- **Dodge Roll** — requer 2 sites de Earth; pode ser jogada na vez do oponente\n- **Valor** — outra das poucas exceções"
     },
     {
       "id": "anatomia-carta",
@@ -89,7 +97,8 @@
       "tags": ["carta", "iniciante", "anatomia"],
       "image": "assets/articles/SirPelleas.webp",
       "date": "2026-04-22",
-      "slug": "anatomia-carta-sorcery"
+      "slug": "anatomia-carta-sorcery",
+      "content": "Guia visual dos elementos em uma carta típica do jogo:\n\n## Frente da carta (de cima pra baixo)\n\n1. **Nome** — canto superior esquerdo\n2. **Custo de mana** — número em círculo; incolor; o que você gasta\n3. **Threshold** — símbolos de elemento (Earth/Water/Air/Fire) — requisitos, não custo\n4. **Arte central** — hand-painted, específica do artista (creditado no rodapé)\n5. **Tipo de carta** — Minion / Magic / Aura / Artifact / Site\n6. **Subtipos** — Beast / Demon / Undead / Human / Elemental etc.\n7. **Keyword abilities** — Airborne, Burrowing, Stealth, etc.\n8. **Text box** — efeitos e abilities específicas\n9. **Power** (unidades) — único número que serve como ataque E vida\n10. **Raridade** — Ordinary / Exceptional / Elite / Unique\n11. **Coletor info** — número da carta, set, artista, copyright\n12. **Símbolo do set** — Alpha, Beta, AL, Gothic, etc.\n\n## Foils de Sorcery\n\n- **Letras prateadas em relevo** — diferente de qualquer outro TCG\n- **Texturas específicas** em partes da arte\n- **Não curl** (ao contrário de foils de Magic recentes)\n\n## Verso da carta\n\n- Carta normal: logo do Sorcery\n- **Carta foil**: **arte estendida da frente**, ocupando o verso inteiro — uma peça visual quase independente\n- Essa é a característica mais única visualmente do jogo\n\n## Sites (diferentes)\n\n- Layout adaptado: **threshold** e **produção de mana** destacados\n- Categoria: water site vs. land site (diferença mecânica importante)\n- Abilities passivas específicas\n\n## Avatar cards\n\n- Frame diferente das unidades regulares\n- Power de Avatar (geralmente 1-3)\n- Ability de Avatar (passiva ou ativada)\n- **Não tem custo de mana** (você começa com ele em play)"
     },
     {
       "id": "primeira-regra",
@@ -99,7 +108,8 @@
       "tags": ["comunidade", "cultura", "regras"],
       "image": "assets/articles/DonnybrookInn.webp",
       "date": "2026-04-22",
-      "slug": "primeira-regra-seja-legal"
+      "slug": "primeira-regra-seja-legal",
+      "content": "Sorcery é declaradamente menos competitivo que MTG. A comunidade tem duas regras de ouro:\n\n## As duas regras\n\n1. **Seja cool.**\n2. Se você e seu oponente não chegarem a uma resposta sobre como algo funciona, **combinem o que faz mais sentido** — e sigam o jogo.\n\n## A Silver Rule\n\nIsso significa que FAQs e clarificações oficiais chegam mais devagar que em MTG. O recurso vital da comunidade é o **Codex do curiosa.io**, que tem entradas de regras e FAQs por carta bem atualizadas.\n\n## Cultura do jogo\n\nMuitos jogadores casuais também jogam com proporções não-oficiais (ex.: 36/16 em vez de 50/30) e criam formatos próprios. É cultura do jogo.\n\nEm casa/entre amigos, é comum ver:\n- Proporções de deck fora do padrão porque \"funciona e é divertido\"\n- Formatos caseiros (multiplayer 3 jogadores, teams 2v2, etc.)\n- Decks \"kitchen table\" que quebram regras de construção mas divertem\n\nPara eventos oficiais, claro, tudo RAW (rules as written). Mas a cultura geral é bem mais leve que a de MTG competitivo."
     },
     {
       "id": "quatro-elementos",
@@ -109,7 +119,8 @@
       "tags": ["elementos", "lore", "iniciante"],
       "image": "assets/articles/Invasion.webp",
       "date": "2026-04-22",
-      "slug": "quatro-elementos-introducao"
+      "slug": "quatro-elementos-introducao",
+      "content": "Sorcery não tem um universo único com personagens recorrentes como Magic tem; em vez disso, cada set mergulha em uma **tradição mítica/cultural diferente**, sempre ancorada em 4 elementos clássicos.\n\n## Earth\n\nTerra, ossos, florestas ancestrais. Associada à vida incondicional, à permanência, ao retorno. Nas mecânicas: ramp, recursão, lands. No flavor: druidas, gigantes, civilizações antigas.\n\n## Fire\n\nCombustão, conflito, transformação abrupta. Dano direto, pressão, aceleração. Criaturas com haste, fogo de munição. No flavor: dragões, guerreiros bárbaros, magia destrutiva.\n\n## Water\n\nFluxo, mudança, profundidade. Manipulação — bounce, polymorph, forced movement. Tem as **maiores criaturas** do jogo. No flavor: leviatãs, sereias, oceanos, mundos subaquáticos.\n\n## Air\n\nEvasão, velocidade, movimento livre. Unidades fracas mas quase inalcançáveis. Flying, random damage, card selection. No flavor: espíritos, pássaros, tempestades, magia sutil.\n\n## Os sets até hoje\n\n- **Alpha / Beta** — fantasy clássica de base (D&D-esque, com toques de dark fantasy)\n- **Arthurian Legends** — ciclo arturiano (Merlin, Morgana, Lady Iseult, Joyous Garde)\n- **Dragonlord** — mini-set temático, com dragões\n- **Gothic** — horror gótico e elementos lovecraftianos (Yog-Sothoth, succubi, Wuthering Heights)\n\nO design do jogo tem arte **exclusivamente pintada à mão** — nada digital \"liso\" ou gerado por IA. É uma decisão identitária, não apenas estética."
     },
     {
       "id": "crescimento-2025",
@@ -119,7 +130,8 @@
       "tags": ["comunidade", "crescimento", "eventos"],
       "image": "assets/articles/SirPerceval.webp",
       "date": "2026-04-22",
-      "slug": "crescimento-explosivo-2025"
+      "slug": "crescimento-explosivo-2025",
+      "content": "Um dado que contextualiza bem o momento:\n\n## Números concretos\n\n- O subreddit r/SorceryTCG **dobrou de 7k para 14k membros em apenas 2 semanas** em 2025\n- Esse salto coincidiu com o lançamento de Gothic e o burnout crescente de MTG\n- SorceryCon Las Vegas atraiu **~400 participantes, 14 artistas, 2 dias de eventos**\n\n## Drivers do crescimento\n\n1. **Refugiados do Magic** — burnout com Universes Beyond, pacote de lançamentos, Secret Lairs\n2. **Arte pintada à mão** — diferencial estético imediato\n3. **1 set por ano** — respiro que Magic perdeu\n4. **Cena TikTok/YouTube pegando** — vídeos de pulls e explicações virais\n5. **Boca a boca** — caso típico: \"comprei 1 box, mostrei pros amigos do meu pod, 6 deles compraram\"\n\n## O que ainda falta\n\n- **Grandes redes ainda não carregam** o jogo (tipo Face2Face, MTG Central)\n- Cena local ainda é grass roots em muitos lugares\n- Alguns LGS demonstram interesse, mas não criam scene\n\n## Outros TCGs no cenário\n\nA comunidade tem observado competidores fracassando (Altered \"morreu\", SWU patina, Lorcana segue mas com público diferente). Sorcery vem ocupando o **vácuo do \"spiritual successor\" de Magic clássico** — um nicho que não é pokémon, não é pop IP, e não é competitivo burn-and-churn.\n\n## Para contexto regional\n\nSe você está montando comunidade local (em qualquer país), saiba que **a demanda latente existe mas precisa de alguém pra puxar**."
     },
     {
       "id": "deckbuilding-fundamentos",
@@ -129,7 +141,8 @@
       "tags": ["deck", "construcao", "iniciante"],
       "image": "assets/articles/Witch.webp",
       "date": "2026-04-22",
-      "slug": "deckbuilding-fundamentos"
+      "slug": "deckbuilding-fundamentos",
+      "content": "Muita gente chega achando que é igual Magic. Não é. Os pontos essenciais:\n\n## Formato oficial (constructed)\n\n- **Spellbook**: 50 cartas (mínimo)\n- **Atlas**: 30 sites (mínimo)\n- **Collection**: 10 cartas adicionais (zona de tutor)\n\n**Importante**: os precons do Gothic já vêm com **60 cartas de spellbook**. A Curiosa está testando novos tamanhos e o formato oficial pode evoluir.\n\n## Ratio site/spell — regra geral\n\n- Mais sites de threshold múltiplo (2-elementos) = mais estabilidade\n- Mais sites single-element = mais \"potência\" de threshold quando você acerta\n- Para decks de spells caros: mais sites. Para decks agressivos: menos.\n\n## Threshold é bottleneck silencioso\n\nEm muitos decks, o verdadeiro gargalo não é mana — é threshold. Se seu deck é Air/Fire e você tem só 1 site de Fire em jogo, spells exigindo 2 Fire ficam presos na mão. Double-threshold sites do Gothic são staples exatamente por resolverem esse problema.\n\n## Curva de mana\n\n- Breaking point do meta atual: **4 mana / 4 power**\n- Cartas acima de 4 mana precisam **justificar muito** o slot\n- Jogos limited raramente passam de turno 6-7; constructed vai a 8-9\n\n## Cópias por raridade\n\n4 Ordinary / 3 Exceptional / 2 Elite / 1 Unique. Diferente de Magic — não tem 4-of universal.\n\n## O maior erro de iniciante\n\nColocar muitas cartas caras esperando \"chegar lá\". Não chega. Jogo é rápido, grid expõe timing."
     },
     {
       "id": "druid-dominante",
@@ -139,7 +152,8 @@
       "tags": ["meta", "druid", "competitivo"],
       "image": "assets/articles/CoyNixie.webp",
       "date": "2026-04-22",
-      "slug": "druid-avatar-dominante-meta"
+      "slug": "druid-avatar-dominante-meta",
+      "content": "Se existe um Avatar \"tier 1\" consolidado em Sorcery, é o **Druid**. Aparece em quase todo Top 8 de Crossroads.\n\n## Por que é tão forte\n\n- **Beasts como subtipo** tem pouquíssimo counter (especialmente cemetery hate)\n- **River of Blood** é quase um win-more em decks com lifegain\n- Trabalha bem em 4 elementos (Steam, Smoke and Ash, Mono-Fire, Earth/Water)\n\n## Sabores de Druid competitivos\n\n### Steam Druid (Fire/Water)\nO mais clássico — pressão + controle via bounce e dano. O deck que venceu múltiplos Crossroads.\n\n### Smoke and Ash (Air/Fire)\nMidrange com mobilidade + dano. Venceu 2 Crossroads com DuoMaxwell22333.\n\n### Mono-Fire Druid\nAgressivo, rápido, complicado de responder. Ganha de quase qualquer Avatar que não tem lifegain.\n\n### Water Control Druid\nSplash Air pra evasão. Joga o jogo longo com bounce e scry.\n\n## Stats do SCG Vegas (referência de meta)\n\n- Top 8: **2 Druids** presentes\n- Em 7-2 run de um piloto: **4 de 7 matchups foram contra Druid**\n\n## Counters que funcionam\n\n- **Ironclad** (desliga combos + beasts dependendo)\n- **Board wipes** (aggro-control)\n- **Makeshift Barricade + Sturmgeist** em certas configurações\n\n## Por que é recomendado pra competitivo\n\n- Curva de aprendizado moderada\n- Cartas centrais estão disponíveis em singles\n- **Erik indicou em entrevista** que se Druid ficar opressor demais, counter-cards via Dust"
     },
     {
       "id": "nomes-pares",
@@ -149,7 +163,8 @@
       "tags": ["elementos", "nomenclatura", "comunidade"],
       "image": "assets/articles/RiverOfFlame.webp",
       "date": "2026-04-22",
-      "slug": "nomes-pares-elementos"
+      "slug": "nomes-pares-elementos",
+      "content": "A comunidade internacional consolidou esses nomes para combinações de 2 elementos. Valem como padrão informal:\n\n## Os nomes oficiais da comunidade\n\n| Combinação | Nome | Notas |\n|------------|------|-------|\n| Fire + Water | **Steam** | O mais consolidado — \"Steam Druid\" é referência do meta |\n| Earth + Water | **Mud** | |\n| Air + Water | **Mist** | |\n| Air + Earth | **Dust** | |\n| Air + Fire | **Smoke** | |\n| Earth + Fire | **Ash / Lava / Ember** | Três variantes circulam |\n\n## Uso prático\n\n\"Steam\" é o único que pegou de verdade entre competitivos. Os outros aparecem em nomes de decks no curiosa.io mas ainda não são universais.\n\n## Exemplos de decks\n\n- **Steam Druid** — Fire/Water Druid, arquétipo dominante\n- **Smoke and Ash** — Air/Fire Druid de DuoMaxwell22333\n- **Mud Necromancer** — Earth/Water Necro com controle"
     },
     {
       "id": "precons-beta",
@@ -159,7 +174,8 @@
       "tags": ["precon", "iniciante", "deck"],
       "image": "assets/articles/Flamecaller-Press Kit.webp",
       "date": "2026-04-22",
-      "slug": "precons-beta-analise"
+      "slug": "precons-beta-analise",
+      "content": "Os 4 precons clássicos do Beta (Air, Water, Earth, Fire) são a forma canônica de começar no jogo. Cada um é construído pra ensinar **uma mecânica central** do elemento.\n\n## Air Precon (Sparkmage ou similar)\n\n- **Aprende**: evasão, flying, movimento rápido\n- Core: unidades aéreas, dano random (Lightning Bolt), card selection\n- Dificuldade: média — precisa pilotar posicionamento e timing\n- **Ideal se**: você gosta de jogos táticos, evasivos\n\n## Water Precon\n\n- **Aprende**: bounce, submerge, polymorph, controle\n- Core: criaturas grandes em water sites, manipulação de board\n- Dificuldade: alta — muitas decisões de timing\n- **Ideal se**: você gosta de controle / reativo\n\n## Earth Precon (Earthman ou similar)\n\n- **Aprende**: ramp, tokens, lifegain, recursão\n- Core: tokens, criaturas grandes tardias, land-matters\n- Dificuldade: baixa-média — plano claro, decks \"go-wide\"\n- **Ideal se**: você quer entender fundamentos sem complicação\n\n## Fire Precon\n\n- **Aprende**: dano direto, haste, pressão agressiva\n- Core: curva baixa, spells de dano, forced attack\n- Dificuldade: baixa — plano óbvio (matar rápido)\n- **Ideal se**: você vem de aggro de Magic, quer resultado rápido\n\n## Como aprendem melhor\n\n- Rode **10-15 partidas** com cada precon antes de construir\n- **Air vs Water** é um matchup educativo (tática pura)\n- **Earth vs Fire** ensina race\n- **Air vs Fire** ensina dano aéreo vs dano direto\n- **Earth vs Water** é midrange vs controle\n\n## Diferenças importantes\n\n- **Precons Beta** têm 40 cartas (fora do formato constructed)\n- **Precons Gothic** têm 60 cartas (novo formato em teste)\n- **Não são legais em torneio constructed** — são pra aprender + casual\n\n## Conselho da comunidade\n\n> \"Se você tá começando junto com amigos, cada um pega um precon diferente. Troquem depois. A curva de entendimento acelera absurdo quando você pilota os 4 elementos.\""
     },
     {
       "id": "ferramentas",
@@ -169,7 +185,8 @@
       "tags": ["ferramentas", "recursos", "comunidade"],
       "image": "assets/articles/LoneTower.webp",
       "date": "2026-04-22",
-      "slug": "ferramentas-jogador-sorcery"
+      "slug": "ferramentas-jogador-sorcery",
+      "content": "Lista de recursos essenciais da comunidade global:\n\n## Database e deckbuilding\n\n- **curiosa.io** — database oficial de cartas, construtor de decks, FAQ por carta e Codex de regras atualizado. É a referência principal para regras não-triviais.\n\n## Jogar online\n\n- **realms.cards** — simulador online (fan-made) em open beta\n- **Tabletop Simulator (TTS)** — usado pela Sorcery League\n- **spells.bar** — alternativa online\n\n## Outros\n\n- **CardNexus** — scanner multi-TCG que reconhece Sorcery (e também MTG, Pokémon, Lorcana, FaB, Riftbound, One Piece)\n- **Dust Rewards** — programa oficial de recompensas; os códigos estão no fundo das caixas\n- **Cardboard Guide** — canal no YouTube e Discord (Sophie e Jens), bom pra acompanhamento de curios\n\n## Discord oficial\n\nCanais de rules, LFG, League, brewing."
     },
     {
       "id": "jogar-sozinho",
@@ -179,7 +196,8 @@
       "tags": ["online", "tts", "comunidade"],
       "image": "assets/articles/RemoteDesert.webp",
       "date": "2026-04-22",
-      "slug": "jogar-sorcery-online"
+      "slug": "jogar-sorcery-online",
+      "content": "Provavelmente o obstáculo #1 para entrar no jogo é **encontrar gente pra jogar**. Opções conhecidas:\n\n## Online (gratuito, ao vivo)\n\n- **realms.cards** (fan-made, open beta) — interface dedicada, ok pra casual e competitivo\n- **Tabletop Simulator (TTS)** — padrão da Sorcery League; requer TTS pago na Steam mas é robusto\n- **spells.bar** — alternativa online\n\n## Encontrar oponentes\n\n- **Discord oficial** tem canal **#practice-lfg** onde gente procura jogo 24/7\n- **Sorcery League Discord** organiza ligas regulares\n- **Cardboard Guide Discord** (de Sophie e Jens) com comunidade ativa\n\n## Aprender jogando sozinho\n\n- Construa 2 decks e jogue contra si mesmo (padrão da comunidade pra aprender movimentação)\n- **Cardboard Guide** no YouTube tem tutoriais comentados\n- Canal da **TCGplayer** tem conteúdo oficial (inclusive trailer do Gothic)\n\n## Introduzir amigos\n\n- Precons do Gothic funcionam bem como experiência \"board game\" — relato recorrente de pessoas que jogaram **25% errado** nas primeiras partidas e ainda assim se divertiram (o jogo é resiliente a erro de regra)\n- Evite explicar tudo de uma vez — mostre o grid, mostre 2-3 mecânicas, jogue\n\n## Não espere o LGS\n\nA cena brasileira/local cresce por **contágio individual** — quem joga ensina alguém, que ensina outro. A curva de aprendizado é de 3-5 partidas até o jogo \"clicar\"."
     },
     {
       "id": "dust-rewards",
@@ -189,7 +207,8 @@
       "tags": ["dust", "recompensas", "programa"],
       "image": "assets/articles/MaskOfMayhemFullArt.webp",
       "date": "2026-04-22",
-      "slug": "dust-rewards-explicado"
+      "slug": "dust-rewards-explicado",
+      "content": "O **Dust Rewards** é o programa oficial de fidelidade da Curiosa. Essencial pra quem abre boxes mas muita gente joga os códigos fora sem saber o que são.\n\n## O básico\n\n- **100 Dust por booster box** — QR code impresso no fundo da caixa\n- Sistema foi **live em 10 de maio de 2025**\n- Gerido oficialmente pela Curiosa\n\n## Onde está o código\n\n- **QR code no fundo de cada booster box**\n- Muita gente na comunidade admitiu ter **jogado as primeiras 6 caixas fora** achando que era lacre anti-fraude\n- **Não perca.** Tire foto do QR assim que abrir.\n\n## O que dá pra resgatar\n\n- **Avatares foil com arte alternativa** (especialmente Gothic Avatares, disponíveis desde Outubro/2025)\n- **Cartas promocionais exclusivas**\n- **Early access a cartas Gothic** antes do release oficial foi oferecido via Dust\n- Potencialmente: **cartas de counter-meta** (Erik sinalizou isso como possibilidade futura)\n\n## Limites importantes\n\n- **Quantidade limitada por jogador** — isso foi uma decisão deliberada da Curiosa **pra evitar que box-breakers scoop o estoque inteiro**\n\n## Problema: disponibilidade geográfica\n\n- **Shipping caro fora dos EUA** — ~$50 USD pra Europa (por carta/pacote)\n- **Reclamação recorrente** em threads internacionais\n- Curiosa tem trabalhado no problema mas ainda é ponto de atrito\n\n## Para quem está começando\n\n1. **Guarde TODOS os QR codes** das primeiras compras — mesmo que não sejam suas\n2. Cadastre-se no programa oficial via sorcerytcg.com\n3. **Não se apresse** pra resgatar — os itens que valem a pena aparecem em janelas específicas"
     },
     {
       "id": "smoke-ash-druid",
@@ -199,7 +218,8 @@
       "tags": ["deck", "competitivo", "druid"],
       "image": "assets/articles/Sparkmage-Press Kit.webp",
       "date": "2026-04-22",
-      "slug": "smoke-ash-druid-deck-tech"
+      "slug": "smoke-ash-druid-deck-tech",
+      "content": "Uma lista de referência para quem quer entrar em decks competitivos de midrange. Criado por DuoMaxwell22333, venceu um Crossroads de Houston.\n\n## Arquétipo\n\n**Air/Fire Druid Midrange** (pode flertar com Water)\n\n## Estratégia\n\nPressão constante via criaturas mobile + dano direto, usando Tawnshammar para remover beasts do adversário. A comunidade comenta que esse arquétipo é **particularmente brutal contra outros Druids e decks de beasts**, que têm pouca remoção de cemitério.\n\n## Lista pública\n\ncuriosa.io/decks/cmf3g7kl200lslc04nrcs7xqh\n\n## Pontos fortes\n\n- Velocidade + resiliência\n- Pressão constante via criaturas evasivas\n- Dano direto para fechar jogos\n- Matchup favorável contra outros Druids\n\n## Fraquezas\n\n- O provável próximo set pode trazer um Hunter que counter-meta beasts, virando o jogo\n- Lifegain extremo pode estabilizar contra a pressão\n\n## Por que ganhou\n\nA combinação de mobilidade do Air com o dano direto do Fire cria um deck que consegue pressionar em múltiplas frentes. O Druid adiciona consistência com beasts e sinergia de criaturas."
     }
   ]
 }

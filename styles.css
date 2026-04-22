@@ -4366,6 +4366,81 @@ a.nav-dropdown-item {
     font-size: 0.8rem;
 }
 
+/* Article content body */
+.article-modal-body {
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+.article-modal-body h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+    font-size: 1.25rem;
+    margin: var(--space-5) 0 var(--space-3) 0;
+}
+
+.article-modal-body h3 {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    margin: var(--space-4) 0 var(--space-2) 0;
+    font-weight: var(--font-semibold);
+}
+
+.article-modal-body h4 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin: var(--space-3) 0 var(--space-2) 0;
+    font-weight: var(--font-medium);
+}
+
+.article-modal-body p {
+    margin-bottom: var(--space-3);
+}
+
+.article-modal-body strong {
+    color: var(--text-primary);
+    font-weight: var(--font-semibold);
+}
+
+.article-modal-body ul {
+    margin: var(--space-2) 0 var(--space-3) 0;
+    padding-left: var(--space-5);
+}
+
+.article-modal-body li {
+    margin-bottom: var(--space-1);
+}
+
+.article-modal-body table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-3) 0;
+    font-size: 0.9rem;
+}
+
+.article-modal-body table td {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border-color);
+}
+
+.article-modal-body table tr:first-child td {
+    background: var(--bg-surface-3);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+}
+
+.article-modal-body blockquote {
+    border-left: 3px solid var(--accent-gold);
+    padding-left: var(--space-4);
+    margin: var(--space-3) 0;
+    font-style: italic;
+    color: var(--text-tertiary);
+}
+
 .article-modal-notice {
     display: flex;
     align-items: flex-start;
