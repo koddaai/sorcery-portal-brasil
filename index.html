@@ -496,7 +496,7 @@
                 <div class="news-section">
                     <div class="section-header">
                         <h2>Artigos</h2>
-                        <button onclick="switchView('articles')" class="link-more">Ver Todos <i data-lucide="arrow-right"></i></button>
+                        <button onclick="showAllArticles()" class="link-more">Ver Todos <i data-lucide="arrow-right"></i></button>
                     </div>
                     <div class="news-grid" id="landing-articles-grid">
                         <!-- Dynamic articles loaded by articles-service.js -->
@@ -2863,6 +2863,18 @@
             <!-- Keep artists-view for backwards compatibility but redirect -->
             <section id="artists-view" class="view" style="display:none !important;">
                 <!-- Redirects to art-view -->
+            </section>
+
+            <!-- Articles View -->
+            <section id="articles-view" class="view">
+                <div class="section-header">
+                    <h2>Artigos</h2>
+                    <p class="subtitle">Guias, regras, decks e estratégias em português</p>
+                </div>
+
+                <div id="articles-content" class="news-container">
+                    <!-- Will be populated by articles-service.js -->
+                </div>
             </section>
 
             <!-- News View -->

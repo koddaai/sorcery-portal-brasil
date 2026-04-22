@@ -4330,6 +4330,7 @@ function switchView(viewName) {
     if (viewName === 'dust') initDustView();
     if (viewName === 'promos') initPromosView();
     if (viewName === 'news') initNewsView();
+    if (viewName === 'articles') articlesService.renderArticlesView();
     if (viewName === 'top-cards') initTopCardsView();
     if (viewName === 'marketplace') initMarketplaceView();
     if (viewName === 'forum') initForumView();

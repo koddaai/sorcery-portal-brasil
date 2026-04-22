@@ -223,14 +223,14 @@ class ArticlesService {
      * Render full articles view
      */
     renderArticlesView(filter = null) {
-        const container = document.getElementById('articles-grid');
+        const container = document.getElementById('articles-content');
         if (!container) return;
 
         let articles = filter ? this.getByCategory(filter) : this.getAll();
 
         if (articles.length === 0) {
             container.innerHTML = `
-                <div class="articles-empty-state">
+                <div class="news-empty-state">
                     <i data-lucide="file-text"></i>
                     <h3>Nenhum artigo encontrado</h3>
                     <p>Não há artigos ${filter ? `na categoria "${filter}"` : 'disponíveis'} no momento.</p>
@@ -240,15 +240,18 @@ class ArticlesService {
             return;
         }
 
-        container.innerHTML = articles.map(article =>
-            this.renderCard(article, { compact: false })
-        ).join('');
+        // Render as grid of cards
+        container.innerHTML = `
+            <div class="news-list">
+                ${articles.map(article => this.renderCard(article, { compact: false })).join('')}
+            </div>
+        `;
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
 
     /**
-     * Open article (placeholder - can be expanded to show modal or navigate)
+     * Open article in modal
      */
     openArticle(slug) {
         const article = this.articles.find(a => a.slug === slug);
@@ -257,18 +260,73 @@ class ArticlesService {
             return;
         }
 
-        // For now, show a simple alert or could open a modal
-        // In the future, this could navigate to a full article page
         console.log('[Articles] Opening article:', article.title);
 
-        // Show article modal if exists
-        if (typeof showArticleModal === 'function') {
-            showArticleModal(article);
-        } else {
-            // Fallback: switch to articles view and scroll to it
-            if (typeof switchView === 'function') {
-                switchView('articles');
-            }
+        // Create and show modal
+        this.showArticleModal(article);
+    }
+
+    /**
+     * Show article in a modal
+     */
+    showArticleModal(article) {
+        const icon = this.getCategoryIcon(article.category);
+        const badgeClass = this.getCategoryClass(article.category);
+
+        const modalHTML = `
+            <div class="modal-overlay article-modal-overlay" onclick="articlesService.closeArticleModal(event)">
+                <div class="modal article-modal" onclick="event.stopPropagation()">
+                    <button class="modal-close" onclick="articlesService.closeArticleModal()">
+                        <i data-lucide="x"></i>
+                    </button>
+                    ${article.image ? `
+                        <div class="article-modal-image">
+                            <img src="${article.image}" alt="${article.title}">
+                        </div>
+                    ` : ''}
+                    <div class="article-modal-content">
+                        <div class="article-modal-meta">
+                            <span class="news-badge ${badgeClass}">${article.category}</span>
+                            <span class="article-modal-date">
+                                <i data-lucide="calendar"></i>
+                                ${this.formatDate(article.date)}
+                            </span>
+                        </div>
+                        <h2>${article.title}</h2>
+                        <p class="article-modal-summary">${article.summary}</p>
+                        <div class="article-modal-tags">
+                            ${article.tags.map(tag => `<span class="article-tag">#${tag}</span>`).join(' ')}
+                        </div>
+                        <div class="article-modal-notice">
+                            <i data-lucide="info"></i>
+                            <span>Conteúdo completo em breve. Por enquanto, confira nossos guias e recursos no site.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Remove existing modal if any
+        const existingModal = document.querySelector('.article-modal-overlay');
+        if (existingModal) existingModal.remove();
+
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        document.body.style.overflow = 'hidden';
+
+        // Initialize icons
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    /**
+     * Close article modal
+     */
+    closeArticleModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        const modal = document.querySelector('.article-modal-overlay');
+        if (modal) {
+            modal.remove();
+            document.body.style.overflow = '';
         }
     }
 
@@ -283,6 +341,14 @@ class ArticlesService {
 
 // Create global instance
 const articlesService = new ArticlesService();
+
+// Global function to show all articles
+function showAllArticles() {
+    if (typeof switchView === 'function') {
+        switchView('articles');
+    }
+    articlesService.renderArticlesView();
+}
 
 // Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', async () => {
