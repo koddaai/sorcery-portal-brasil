@@ -11207,7 +11207,6 @@ const deckBrowserState = {
     sortBy: 'views',
     cardSearch: '',
     preconOnly: false,
-    beginnerOnly: false,
     tournamentOnly: false,
     communityOnly: false
 };
@@ -11297,10 +11296,6 @@ function filterDecks(decks) {
 
         // Quick filters (using category field from Curiosa data)
         if (deckBrowserState.preconOnly && deck.category !== 'precon') {
-            return false;
-        }
-
-        if (deckBrowserState.beginnerOnly && deck.category !== 'iniciante') {
             return false;
         }
 
@@ -12187,7 +12182,6 @@ function renderCommunityDecks() {
                        deckBrowserState.avatarFilter !== 'all' ||
                        deckBrowserState.cardSearch ||
                        deckBrowserState.preconOnly ||
-                       deckBrowserState.beginnerOnly ||
                        deckBrowserState.tournamentOnly ||
                        deckBrowserState.communityOnly;
 
@@ -12262,8 +12256,6 @@ function setupDeckBrowser() {
 
             if (filter === 'precon') {
                 deckBrowserState.preconOnly = btn.classList.contains('active');
-            } else if (filter === 'beginner') {
-                deckBrowserState.beginnerOnly = btn.classList.contains('active');
             } else if (filter === 'tournament') {
                 deckBrowserState.tournamentOnly = btn.classList.contains('active');
             } else if (filter === 'community') {
@@ -12283,7 +12275,6 @@ function setupDeckBrowser() {
         deckBrowserState.sortBy = 'views';
         deckBrowserState.cardSearch = '';
         deckBrowserState.preconOnly = false;
-        deckBrowserState.beginnerOnly = false;
         deckBrowserState.tournamentOnly = false;
         deckBrowserState.communityOnly = false;
 
