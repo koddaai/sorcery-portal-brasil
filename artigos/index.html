@@ -712,12 +712,11 @@
             };
 
             try {
-                // Submit to NocoDB
-                const response = await fetch('https://dados.kodda.ai/api/v2/tables/article_submissions/records', {
+                // Submit to NocoDB via proxy (handles authentication)
+                const response = await fetch('https://sorcery-api-proxy.pedro-4e6.workers.dev/api/v2/tables/article_submissions/records', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'xc-token': 'ZLl4Ylb4mM8TUuHSJoOHClz6m7LW5at1maPz0-a4'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(data)
                 });
