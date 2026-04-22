@@ -60,7 +60,7 @@
     <link rel="dns-prefetch" href="https://api.sorcery.com.br">
 
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="styles.min.css?v=107" as="style">
+    <link rel="preload" href="styles.min.css?v=108" as="style">
     <link rel="preload" href="sorcery-logo.webp" as="image" type="image/webp">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" as="style" crossorigin>
 
@@ -88,7 +88,7 @@
     @media(max-width:768px){.header-top{padding:var(--space-3) var(--space-4)}.logo-img{height:28px}.view{padding:var(--space-4)}}
     </style>
     <!-- Full Styles -->
-    <link rel="stylesheet" href="styles.min.css?v=107">
+    <link rel="stylesheet" href="styles.min.css?v=108">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -3264,7 +3264,18 @@
                     <ul id="deck-detail-changelog"></ul>
                 </div>
 
-                <!-- Primer Section -->
+                <!-- Primer/Guide Section (from Curiosa.io) -->
+                <div class="deck-detail-section deck-guide-section" id="deck-detail-guide-section" style="display: none;">
+                    <h3><i data-lucide="book-open"></i> Guia do Deck</h3>
+                    <div class="guide-content" id="deck-guide-content"></div>
+                    <div class="guide-expand-wrapper">
+                        <button class="btn btn-secondary btn-sm" id="deck-guide-expand" onclick="toggleDeckGuide()">
+                            <i data-lucide="chevron-down"></i> Ver mais
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Structured Primer Section (curated) -->
                 <div class="deck-detail-section deck-primer-section" id="deck-detail-primer-section" style="display: none;">
                     <h3><i data-lucide="book-open"></i> Guia do Deck (Primer)</h3>
                     <div class="primer-content">
@@ -4202,7 +4213,7 @@
     <!-- Tesseract.js for OCR -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-    <script src="recommended-decks.min.js?v=20260421"></script>
+    <script src="recommended-decks.min.js?v=20260421b"></script>
     <script src="top-cards.min.js"></script>
     <script src="collection-tracker.min.js"></script>
     <script src="price-service.min.js"></script>
@@ -4237,7 +4248,7 @@
     <script src="messaging-service.min.js"></script>
     <script src="forum-service.min.js"></script>
     <script src="reputation-service.min.js"></script>
-    <script src="app.min.js?v=20260421c"></script>
+    <script src="app.min.js?v=20260421d"></script>
     <script src="offline-manager.min.js"></script>
     <script>
         // Initialize Lucide icons after DOM is ready

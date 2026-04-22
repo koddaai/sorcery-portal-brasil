@@ -17758,7 +17758,137 @@ input:checked + .toggle-slider:before {
     min-width: 100px;
 }
 
-/* Primer Section */
+/* Guide Section (Curiosa.io primers) */
+.deck-guide-section {
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-top: var(--space-4);
+    border: 1px solid var(--accent-gold);
+    box-shadow: var(--shadow-glow);
+}
+
+.deck-guide-section h3 {
+    color: var(--accent-gold);
+    margin-bottom: var(--space-4);
+}
+
+.guide-content {
+    max-height: 400px;
+    overflow: hidden;
+    position: relative;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 0.9375rem;
+    transition: max-height 0.3s ease;
+}
+
+.guide-content.expanded {
+    max-height: none;
+}
+
+.guide-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: linear-gradient(transparent, var(--bg-surface-2));
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.guide-content.expanded::after {
+    opacity: 0;
+}
+
+.guide-content p {
+    margin-bottom: var(--space-3);
+}
+
+.guide-content h1,
+.guide-content h2,
+.guide-content h3,
+.guide-content h4,
+.guide-content h5 {
+    color: var(--text-primary);
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-2);
+    font-family: 'Cinzel', serif;
+}
+
+.guide-content h1 { font-size: 1.5rem; }
+.guide-content h2 { font-size: 1.25rem; }
+.guide-content h3 { font-size: 1.125rem; }
+.guide-content h4 { font-size: 1rem; }
+
+.guide-content ul,
+.guide-content ol {
+    margin-left: var(--space-4);
+    margin-bottom: var(--space-3);
+}
+
+.guide-content li {
+    margin-bottom: var(--space-1);
+}
+
+.guide-content a {
+    color: var(--accent-gold);
+    text-decoration: none;
+}
+
+.guide-content a:hover {
+    text-decoration: underline;
+}
+
+.guide-content strong {
+    color: var(--text-primary);
+}
+
+.guide-content img {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    margin: var(--space-3) 0;
+}
+
+.guide-content blockquote {
+    border-left: 3px solid var(--accent-gold);
+    padding-left: var(--space-3);
+    margin: var(--space-3) 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.guide-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-3) 0;
+}
+
+.guide-content th,
+.guide-content td {
+    padding: var(--space-2);
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.guide-content th {
+    background: var(--bg-surface-3);
+    color: var(--text-primary);
+}
+
+.guide-expand-wrapper {
+    text-align: center;
+    margin-top: var(--space-3);
+}
+
+.guide-expand-wrapper .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* Primer Section (curated) */
 .deck-primer-section {
     background: var(--bg-surface-2);
     border-radius: var(--radius-lg);

@@ -11551,7 +11551,32 @@ function openDeckDetail(deckId) {
         changelogSection.style.display = 'none';
     }
 
-    // Primer Section
+    // Guide Section (from Curiosa.io)
+    const guideSection = document.getElementById('deck-detail-guide-section');
+    const guideContent = document.getElementById('deck-guide-content');
+    const guideExpandBtn = document.getElementById('deck-guide-expand');
+
+    if (deck.guide?.overview && deck.guide.overview.length > 50) {
+        guideSection.style.display = 'block';
+        guideContent.innerHTML = deck.guide.overview;
+        guideContent.classList.remove('expanded');
+
+        // Show/hide expand button based on content height
+        setTimeout(() => {
+            if (guideContent.scrollHeight > 420) {
+                guideExpandBtn.parentElement.style.display = 'block';
+                guideExpandBtn.innerHTML = '<i data-lucide="chevron-down"></i> Ver mais';
+                refreshIcons(guideExpandBtn);
+            } else {
+                guideExpandBtn.parentElement.style.display = 'none';
+                guideContent.classList.add('expanded');
+            }
+        }, 100);
+    } else {
+        guideSection.style.display = 'none';
+    }
+
+    // Primer Section (curated/structured)
     const primerSection = document.getElementById('deck-detail-primer-section');
     if (deck.primer && typeof DECK_GUIDES !== 'undefined' && DECK_GUIDES.deckPrimers) {
         const primer = DECK_GUIDES.deckPrimers.find(p => p.id === deck.primer);
@@ -11639,6 +11664,27 @@ function openDeckDetail(deckId) {
         refreshIcons();
     }
 }
+
+// Toggle deck guide expansion
+function toggleDeckGuide() {
+    const guideContent = document.getElementById('deck-guide-content');
+    const expandBtn = document.getElementById('deck-guide-expand');
+
+    if (!guideContent || !expandBtn) return;
+
+    const isExpanded = guideContent.classList.toggle('expanded');
+
+    if (isExpanded) {
+        expandBtn.innerHTML = '<i data-lucide="chevron-up"></i> Ver menos';
+    } else {
+        expandBtn.innerHTML = '<i data-lucide="chevron-down"></i> Ver mais';
+        // Scroll guide section into view
+        document.getElementById('deck-detail-guide-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    refreshIcons(expandBtn);
+}
+window.toggleDeckGuide = toggleDeckGuide;
 
 // Copy deck list to clipboard
 function copyDeckList(deck) {
