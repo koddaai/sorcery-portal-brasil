@@ -492,6 +492,21 @@
                     </div>
                 </div>
 
+                <!-- Articles Preview -->
+                <div class="articles-section">
+                    <div class="section-header">
+                        <h2>Artigos</h2>
+                        <button onclick="switchView('articles')" class="link-more">Ver Todos <i data-lucide="arrow-right"></i></button>
+                    </div>
+                    <div class="articles-grid" id="landing-articles-grid">
+                        <!-- Dynamic articles loaded by articles-service.js -->
+                        <div class="articles-loading">
+                            <i data-lucide="loader-2" class="spin"></i>
+                            <span>Carregando artigos...</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Latest News Preview -->
                 <div class="news-section">
                     <div class="section-header">
@@ -4247,6 +4262,7 @@
     <script src="flavor-text.min.js"></script>
     <script src="rules-quiz.min.js"></script>
     <script src="news-service.min.js"></script>
+    <script src="articles-service.js"></script>
     <!-- Community Features -->
     <script src="avatar-system.min.js"></script>
     <script src="trade-marketplace.min.js"></script>

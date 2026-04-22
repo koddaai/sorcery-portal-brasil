@@ -10986,6 +10986,154 @@ a.nav-dropdown-item {
     }
 }
 
+/* =====================================================
+   ARTICLES SECTION
+   ===================================================== */
+
+/* Articles Section */
+.articles-section {
+    margin-bottom: var(--space-7);
+}
+
+.articles-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-5);
+}
+
+/* Articles Grid - Landing Page */
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+}
+
+.article-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface-2);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: all var(--duration-normal) var(--ease-out-expo);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.article-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.article-card-image {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--bg-surface-3) 0%, var(--bg-surface-2) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.article-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.article-card:hover .article-card-image img {
+    transform: scale(1.08);
+}
+
+.article-card-image.no-image {
+    background: linear-gradient(135deg, rgba(107,79,162,0.15) 0%, var(--bg-surface-3) 100%);
+}
+
+.article-card-image.no-image i,
+.article-card-image i {
+    width: 40px;
+    height: 40px;
+    color: var(--accent-purple);
+    opacity: 0.6;
+}
+
+.article-card-body {
+    padding: var(--space-4);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.article-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-purple);
+    background: rgba(107,79,162,0.15);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-2);
+    width: fit-content;
+}
+
+.article-card h4 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    line-height: 1.3;
+}
+
+.article-card p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    flex: 1;
+}
+
+/* Articles Loading State */
+.articles-loading {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    color: var(--text-tertiary);
+    padding: var(--space-6);
+}
+
+.articles-loading .spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Article Badge Colors */
+.badge-article { background: rgba(107,79,162,0.15); color: var(--accent-purple); }
+.badge-mecanica { background: linear-gradient(135deg, #4a5568, #718096); color: white; }
+.badge-ruling { background: linear-gradient(135deg, #c53030, #fc8181); color: white; }
+.badge-faq { background: linear-gradient(135deg, #2b6cb0, #63b3ed); color: white; }
+.badge-referencia { background: linear-gradient(135deg, #d69e2e, #f6e05e); color: #1a1a1d; }
+.badge-comunidade { background: linear-gradient(135deg, #2f855a, #68d391); color: white; }
+.badge-lore { background: linear-gradient(135deg, #6b46c1, #b794f4); color: white; }
+.badge-deck { background: linear-gradient(135deg, #dd6b20, #fbd38d); color: #1a1a1d; }
+.badge-meta { background: linear-gradient(135deg, #c53030, #fc8181); color: white; }
+
+/* Responsive Articles */
+@media (max-width: 768px) {
+    .articles-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .articles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 /* Community CTA */
 .community-cta {
     background: linear-gradient(135deg, var(--bg-surface-2) 0%, var(--bg-surface-3) 100%);

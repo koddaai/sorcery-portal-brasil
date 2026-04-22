@@ -1,0 +1,205 @@
+{
+  "lastUpdated": "2026-04-22",
+  "articles": [
+    {
+      "id": "vim-do-magic",
+      "title": "Vim do Magic, o que muda? O guia completo",
+      "summary": "Se você vem de MTG, Sorcery vai parecer familiar em muita coisa e completamente diferente em outras. Os 5 grandes pontos que todo jogador de Magic precisa saber.",
+      "category": "Guia",
+      "tags": ["iniciante", "magic", "comparacao"],
+      "image": "assets/articles/WizardsDen.png",
+      "date": "2026-04-22",
+      "slug": "vim-do-magic-guia-completo"
+    },
+    {
+      "id": "acabei-descobrir",
+      "title": "Acabei de descobrir o jogo. O que compro?",
+      "summary": "Guia de compras para iniciantes: precons, booster boxes, e a melhor forma de começar sua coleção de Sorcery sem gastar demais.",
+      "category": "Guia",
+      "tags": ["iniciante", "compras", "precon"],
+      "image": "assets/articles/RusticVillage.png",
+      "date": "2026-04-22",
+      "slug": "acabei-de-descobrir-o-que-compro"
+    },
+    {
+      "id": "8-duvidas",
+      "title": "8 dúvidas que todo jogador novo tem no primeiro fim de semana",
+      "summary": "As perguntas mais comuns de quem acabou de abrir os precons: minions atacam avatares? Mana tem cor? Artifacts por turno?",
+      "category": "FAQ",
+      "tags": ["iniciante", "regras", "faq"],
+      "image": "assets/articles/DonnybrookInn.jpg",
+      "date": "2026-04-22",
+      "slug": "8-duvidas-jogador-novo"
+    },
+    {
+      "id": "avatares-amigaveis",
+      "title": "Os Avatares mais amigáveis para quem está começando",
+      "summary": "Sorcerer, Necromancer, Geomancer, Seer ou Savior? Descubra qual Avatar combina com seu estilo de jogo.",
+      "category": "Guia",
+      "tags": ["avatar", "iniciante", "deck"],
+      "image": "assets/articles/Geomancer-Press Kit.png",
+      "date": "2026-04-22",
+      "slug": "avatares-amigaveis-iniciante"
+    },
+    {
+      "id": "movimentacao-grid",
+      "title": "Movimentação no grid — o ponto que mais trava quem vem de Magic",
+      "summary": "O grid 4x5 é a maior diferença de Sorcery. Entenda movimento, regiões (surface, underground, void) e posicionamento estratégico.",
+      "category": "Mecânica",
+      "tags": ["regras", "grid", "movimento"],
+      "image": "assets/articles/Battlefield.jpg",
+      "date": "2026-04-22",
+      "slug": "movimentacao-grid-guia"
+    },
+    {
+      "id": "threshold-mana",
+      "title": "Threshold vs. Mana — a diferença que todo novato confunde",
+      "summary": "Mana é gasta, threshold é verificado. Entenda de uma vez por todas como funciona o sistema de recursos de Sorcery.",
+      "category": "Mecânica",
+      "tags": ["regras", "mana", "threshold"],
+      "image": "assets/articles/MaelstromFullArt (1).jpg",
+      "date": "2026-04-22",
+      "slug": "threshold-vs-mana"
+    },
+    {
+      "id": "avatar-dano-direto",
+      "title": "Avatar só morre por DANO DIRETO — atacar site não finaliza",
+      "summary": "A regra mais mal compreendida do jogo: em Death's Door, loss of life não mata. Você precisa de dano direto.",
+      "category": "Ruling",
+      "tags": ["regras", "avatar", "deaths-door"],
+      "image": "assets/articles/ScreamingSkull.jpg",
+      "date": "2026-04-22",
+      "slug": "avatar-dano-direto-deaths-door"
+    },
+    {
+      "id": "glossario-keywords",
+      "title": "Glossário: todas as keywords do jogo em uma página",
+      "summary": "Airborne, Burrowing, Stealth, Genesis, Lethal... todas as palavras-chave de Sorcery explicadas em português.",
+      "category": "Referência",
+      "tags": ["glossario", "keywords", "regras"],
+      "image": "assets/articles/Camelot.png",
+      "date": "2026-04-22",
+      "slug": "glossario-keywords-sorcery"
+    },
+    {
+      "id": "anatomia-carta",
+      "title": "Anatomia de uma carta Sorcery — o que cada elemento significa",
+      "summary": "Custo, threshold, power, tipos, raridades e todas as informações que você encontra em uma carta de Sorcery.",
+      "category": "Guia",
+      "tags": ["carta", "iniciante", "anatomia"],
+      "image": "assets/articles/SirPelleas.png",
+      "date": "2026-04-22",
+      "slug": "anatomia-carta-sorcery"
+    },
+    {
+      "id": "primeira-regra",
+      "title": "A primeira regra de Sorcery é: seja legal",
+      "summary": "Sorcery é declaradamente menos competitivo que MTG. A comunidade tem duas regras de ouro que definem a cultura do jogo.",
+      "category": "Comunidade",
+      "tags": ["comunidade", "cultura", "regras"],
+      "image": "assets/articles/DonnybrookInn.jpg",
+      "date": "2026-04-22",
+      "slug": "primeira-regra-seja-legal"
+    },
+    {
+      "id": "quatro-elementos",
+      "title": "Os quatro elementos do Realm — uma introdução",
+      "summary": "Fire, Water, Earth e Air: entenda a identidade de cada elemento e como eles se comparam às cores de Magic.",
+      "category": "Lore",
+      "tags": ["elementos", "lore", "iniciante"],
+      "image": "assets/articles/Invasion.png",
+      "date": "2026-04-22",
+      "slug": "quatro-elementos-introducao"
+    },
+    {
+      "id": "crescimento-2025",
+      "title": "O crescimento explosivo do jogo em 2025",
+      "summary": "Como Sorcery passou de nicho para fenômeno: números, eventos e a expansão da comunidade global.",
+      "category": "Comunidade",
+      "tags": ["comunidade", "crescimento", "eventos"],
+      "image": "assets/articles/SirPerceval.png",
+      "date": "2026-04-22",
+      "slug": "crescimento-explosivo-2025"
+    },
+    {
+      "id": "deckbuilding-fundamentos",
+      "title": "Deckbuilding em Sorcery — os fundamentos que você precisa saber",
+      "summary": "50 spells, 30 sites, proporções por raridade e as bases para construir seu primeiro deck competitivo.",
+      "category": "Deck",
+      "tags": ["deck", "construcao", "iniciante"],
+      "image": "assets/articles/Witch.png",
+      "date": "2026-04-22",
+      "slug": "deckbuilding-fundamentos"
+    },
+    {
+      "id": "druid-dominante",
+      "title": "Druid — o Avatar dominante do meta",
+      "summary": "Por que Druid é considerado o melhor Avatar do formato atual e como jogar contra ele.",
+      "category": "Meta",
+      "tags": ["meta", "druid", "competitivo"],
+      "image": "assets/articles/CoyNixie.png",
+      "date": "2026-04-22",
+      "slug": "druid-avatar-dominante-meta"
+    },
+    {
+      "id": "nomes-pares",
+      "title": "Nomes dos pares de elementos (Steam, Mud, Mist, Dust, Smoke, Ash)",
+      "summary": "A convenção da comunidade para as combinações de dois elementos. Steam Druid, Mud Necro e mais.",
+      "category": "Referência",
+      "tags": ["elementos", "nomenclatura", "comunidade"],
+      "image": "assets/articles/RiverOfFlame.jpg",
+      "date": "2026-04-22",
+      "slug": "nomes-pares-elementos"
+    },
+    {
+      "id": "precons-beta",
+      "title": "Precons do Beta — o que cada deck elemental ensina",
+      "summary": "Análise dos quatro precons elementais e o que você aprende jogando cada um deles.",
+      "category": "Guia",
+      "tags": ["precon", "iniciante", "deck"],
+      "image": "assets/articles/Flamecaller-Press Kit.png",
+      "date": "2026-04-22",
+      "slug": "precons-beta-analise"
+    },
+    {
+      "id": "ferramentas",
+      "title": "As ferramentas que todo jogador de Sorcery usa",
+      "summary": "Curiosa.io, realms.cards, TTS, CardNexus e todos os recursos essenciais da comunidade.",
+      "category": "Ferramentas",
+      "tags": ["ferramentas", "recursos", "comunidade"],
+      "image": "assets/articles/LoneTower.jpg",
+      "date": "2026-04-22",
+      "slug": "ferramentas-jogador-sorcery"
+    },
+    {
+      "id": "jogar-sozinho",
+      "title": "Como jogar Sorcery sem ninguém por perto",
+      "summary": "Simuladores online, TTS, Discord LFG e todas as formas de jogar quando não há LGS perto de você.",
+      "category": "Guia",
+      "tags": ["online", "tts", "comunidade"],
+      "image": "assets/articles/RemoteDesert.jpg",
+      "date": "2026-04-22",
+      "slug": "jogar-sorcery-online"
+    },
+    {
+      "id": "dust-rewards",
+      "title": "Dust Rewards — o programa de recompensas explicado",
+      "summary": "Como funciona o programa Dust Rewards, onde encontrar os códigos e o que você pode resgatar.",
+      "category": "Guia",
+      "tags": ["dust", "recompensas", "programa"],
+      "image": "assets/articles/MaskOfMayhemFullArt.jpg",
+      "date": "2026-04-22",
+      "slug": "dust-rewards-explicado"
+    },
+    {
+      "id": "smoke-ash-druid",
+      "title": "Smoke and Ash — o Druid Air/Fire que venceu um Crossroads",
+      "summary": "Deck tech do Air/Fire Druid de DuoMaxwell22333, vencedor do Crossroads de Houston.",
+      "category": "Deck Tech",
+      "tags": ["deck", "competitivo", "druid"],
+      "image": "assets/articles/Sparkmage-Press Kit.png",
+      "date": "2026-04-22",
+      "slug": "smoke-ash-druid-deck-tech"
+    }
+  ]
+}
