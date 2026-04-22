@@ -20,17 +20,11 @@ const articlesDB = require('../articles-database.json');
 const authors = {
   'pedro-lourenco': {
     name: 'Pedro Lourenço',
-    avatar: '/assets/authors/pedro-lourenco-avatar.jpg',
-    bio: 'Fundador do Sorcery Brasil. Jogador desde o Beta.',
-    social: {
-      discord: 'Discord BR'
-    }
+    avatar: '/assets/authors/pedro-lourenco-avatar.jpg'
   },
   'equipe': {
     name: 'Equipe Sorcery Brasil',
-    avatar: '/sorcery-logo.webp',
-    bio: 'Conteúdo criado pela comunidade brasileira de Sorcery.',
-    social: {}
+    avatar: '/sorcery-logo.webp'
   }
 };
 
@@ -152,7 +146,6 @@ function generateAuthorSection(article) {
                     <div class="author-info">
                         <span class="author-label">Escrito por</span>
                         <span class="author-name">${author.name}</span>
-                        <span class="author-bio">${author.bio}</span>
                     </div>
                 </div>`;
 }
