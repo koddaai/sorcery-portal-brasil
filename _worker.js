@@ -183,10 +183,69 @@ function injectMetaTags(html, meta) {
   return html;
 }
 
+// ============================================
+// CURIOSA.IO API PROXY
+// Permite requisições cross-origin para API
+// ============================================
+
+async function handleCuriosaProxy(request, url) {
+  // Extract the Curiosa API path
+  const curiosaPath = url.pathname.replace('/api/curiosa/', '');
+  const curiosaUrl = `https://curiosa.io/api/${curiosaPath}${url.search}`;
+
+  try {
+    const response = await fetch(curiosaUrl, {
+      method: request.method,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'SorceryBrasil/1.0',
+      },
+    });
+
+    const data = await response.text();
+
+    return new Response(data, {
+      status: response.status,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Cache-Control': 'public, max-age=3600', // Cache 1 hour
+      },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const userAgent = request.headers.get('User-Agent') || '';
+
+    // Handle CORS preflight
+    if (request.method === 'OPTIONS') {
+      return new Response(null, {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+      });
+    }
+
+    // Proxy requests to Curiosa.io API
+    if (url.pathname.startsWith('/api/curiosa/')) {
+      return handleCuriosaProxy(request, url);
+    }
 
     // Só processa se for crawler E tiver parâmetros de view
     const hasViewParams = url.searchParams.has('view') ||
