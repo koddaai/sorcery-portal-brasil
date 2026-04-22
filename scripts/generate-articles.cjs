@@ -144,7 +144,6 @@ function generateAuthorSection(article) {
                 <div class="author-profile">
                     <img src="${author.avatar}" alt="${author.name}" class="author-avatar">
                     <div class="author-info">
-                        <span class="author-label">Escrito por</span>
                         <span class="author-name">${author.name}</span>
                     </div>
                 </div>`;
@@ -152,8 +151,27 @@ function generateAuthorSection(article) {
 
 // Generate sources section HTML
 function generateSourcesSection(article) {
-  const sources = getSources(article);
+  // Check if article has detailed sources (with titles)
+  if (article.sources && article.sources.length > 0 && typeof article.sources[0] === 'object') {
+    const sourceLinks = article.sources.map(source => {
+      return `<a href="${source.url}" target="_blank" rel="noopener nofollow">
+                            <i data-lucide="external-link" style="width:12px;height:12px;"></i>
+                            ${source.title}
+                        </a>`;
+    }).join('\n                        ');
 
+    return `
+                <!-- Sources -->
+                <div class="article-sources">
+                    <h4><i data-lucide="link" style="width:16px;height:16px;"></i> Fontes e Referências</h4>
+                    <div class="source-links detailed">
+                        ${sourceLinks}
+                    </div>
+                </div>`;
+  }
+
+  // Fallback to default sources based on category
+  const sources = defaultSources[article.category] || ['https://reddit.com/r/SorceryTCG'];
   const sourceLinks = sources.map(url => {
     const domain = new URL(url).hostname.replace('www.', '');
     return `<a href="${url}" target="_blank" rel="noopener nofollow">${domain}</a>`;
@@ -646,6 +664,31 @@ function generateArticlePage(article) {
         display: flex;
         flex-wrap: wrap;
         gap: var(--space-2);
+    }
+    .source-links.detailed {
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    .source-links.detailed a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-2) var(--space-3);
+        background: var(--bg-surface-2);
+        color: var(--text-primary);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: background var(--duration-fast);
+        border: 1px solid var(--border-color);
+    }
+    .source-links.detailed a:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: var(--accent-gold);
+    }
+    .source-links.detailed a i {
+        color: var(--accent-gold);
+        flex-shrink: 0;
     }
     .source-links a {
         display: inline-flex;
