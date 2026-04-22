@@ -11296,20 +11296,20 @@ function filterDecks(decks) {
             }
         }
 
-        // Quick filters
-        if (deckBrowserState.preconOnly && !deck.isPrecon) {
+        // Quick filters (using category field from Curiosa data)
+        if (deckBrowserState.preconOnly && deck.category !== 'precon') {
             return false;
         }
 
-        if (deckBrowserState.beginnerOnly && !deck.beginner) {
+        if (deckBrowserState.beginnerOnly && deck.category !== 'iniciante') {
             return false;
         }
 
-        if (deckBrowserState.tournamentOnly && deck.type !== 'tournament') {
+        if (deckBrowserState.tournamentOnly && deck.category !== 'torneio') {
             return false;
         }
 
-        if (deckBrowserState.communityOnly && deck.isPrecon) {
+        if (deckBrowserState.communityOnly && deck.category !== 'comunidade') {
             return false;
         }
 
