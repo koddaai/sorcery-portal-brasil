@@ -3963,7 +3963,7 @@ Object.entries(VIEW_INFO).forEach(([viewName, info]) => {
  */
 function updateURLHash(viewName, params = {}) {
     const viewInfo = VIEW_INFO[viewName];
-    if (!viewInfo || !viewInfo.slug) return;
+    if (!viewInfo || viewInfo.slug === undefined) return;
 
     let hash = viewInfo.slug;
 
