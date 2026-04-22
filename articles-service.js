@@ -274,8 +274,8 @@ class ArticlesService {
         const badgeClass = this.getCategoryClass(article.category);
 
         const modalHTML = `
-            <div class="modal-overlay article-modal-overlay" onclick="articlesService.closeArticleModal(event)">
-                <div class="modal article-modal" onclick="event.stopPropagation()">
+            <div class="article-modal-overlay" onclick="articlesService.closeArticleModal(event)">
+                <div class="article-modal" onclick="event.stopPropagation()">
                     <button class="modal-close" onclick="articlesService.closeArticleModal()">
                         <i data-lucide="x"></i>
                     </button>
