@@ -1,6 +1,6 @@
 {
-  "lastUpdate": "2026-04-21T21:36:19.191Z",
-  "totalSnapshots": 11,
+  "lastUpdate": "2026-04-22T21:41:06.114Z",
+  "totalSnapshots": 12,
   "snapshots": [
     {
       "date": "2026-04-11",
@@ -1200,12 +1200,121 @@
           "set": "Beta"
         }
       ]
+    },
+    {
+      "date": "2026-04-22",
+      "timestamp": "2026-04-22T21:41:06.105Z",
+      "totalCards": 1152,
+      "totalMarketValue": 18445.93,
+      "averagePrice": 16.01,
+      "top20": [
+        {
+          "name": "Alpha Booster Box Case",
+          "price": 5772.25,
+          "set": "Alpha"
+        },
+        {
+          "name": "Alpha Booster Box",
+          "price": 1050.22,
+          "set": "Alpha"
+        },
+        {
+          "name": "Gothic Booster Case",
+          "price": 916.45,
+          "set": "Gothic"
+        },
+        {
+          "name": "Beta Booster Box Case",
+          "price": 867.03,
+          "set": "Beta"
+        },
+        {
+          "name": "Arthurian Legends Booster Case",
+          "price": 775.74,
+          "set": "Arthurian Legends"
+        },
+        {
+          "name": "The Four Elementals Preconstructed Deck Box",
+          "price": 718.86,
+          "set": "Alpha"
+        },
+        {
+          "name": "Avatar of Air Preconstructed Deck",
+          "price": 293.66,
+          "set": "Alpha"
+        },
+        {
+          "name": "Dragonlord Box",
+          "price": 287.11,
+          "set": "Dragonlord"
+        },
+        {
+          "name": "Courtesan Thais",
+          "price": 275.62,
+          "set": "Alpha"
+        },
+        {
+          "name": "Philosophers Stone",
+          "price": 269.33,
+          "set": "Alpha"
+        },
+        {
+          "name": "Eriks Curiosa",
+          "price": 252.37,
+          "set": "Alpha"
+        },
+        {
+          "name": "Persecutor",
+          "price": 200,
+          "set": "Dust Reward Promos"
+        },
+        {
+          "name": "The Four Elementals Preconstructed Deck Earth",
+          "price": 199,
+          "set": "Alpha"
+        },
+        {
+          "name": "Harbinger",
+          "price": 198.5,
+          "set": "Dust Reward Promos"
+        },
+        {
+          "name": "Avatar of Earth Preconstructed Deck",
+          "price": 193.82,
+          "set": "Alpha"
+        },
+        {
+          "name": "Gothic Booster Box",
+          "price": 171.32,
+          "set": "Gothic"
+        },
+        {
+          "name": "Necromancer",
+          "price": 167.5,
+          "set": "Dust Reward Promos"
+        },
+        {
+          "name": "Ruler of Thul",
+          "price": 165.71,
+          "set": "Alpha"
+        },
+        {
+          "name": "Beta Booster Box",
+          "price": 159.27,
+          "set": "Beta"
+        },
+        {
+          "name": "Ring of Morrigan",
+          "price": 158.74,
+          "set": "Arthurian Legends"
+        }
+      ]
     }
   ],
   "latestChange": {
-    "from": "2026-04-20",
-    "to": "2026-04-21",
-    "valueDiff": 14.77,
-    "percentDiff": 0.08
+    "from": "2026-04-21",
+    "to": "2026-04-22",
+    "valueDiff": -276.82,
+    "percentDiff": -1.48
   }
 }
