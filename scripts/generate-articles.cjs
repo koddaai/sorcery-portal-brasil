@@ -2,6 +2,12 @@
 /**
  * Generate static HTML pages for all articles
  * Creates SEO-optimized pages at /artigos/[slug]/index.html
+ *
+ * Features:
+ * - Author profile with avatar
+ * - Source/reference links
+ * - Community footer with contribution CTA
+ * - Article submission form (NocoDB integration)
  */
 
 const fs = require('fs');
@@ -9,6 +15,27 @@ const path = require('path');
 
 // Load articles database
 const articlesDB = require('../articles-database.json');
+
+// Author configuration
+const authors = {
+  'pedro-lourenco': {
+    name: 'Pedro Lourenço',
+    avatar: '/assets/authors/pedro-lourenco-avatar.jpg',
+    bio: 'Fundador do Sorcery Brasil. Jogador desde o Beta.',
+    social: {
+      discord: 'Discord BR'
+    }
+  },
+  'equipe': {
+    name: 'Equipe Sorcery Brasil',
+    avatar: '/sorcery-logo.webp',
+    bio: 'Conteúdo criado pela comunidade brasileira de Sorcery.',
+    social: {}
+  }
+};
+
+// Default author
+const defaultAuthor = authors['pedro-lourenco'];
 
 // Category icons and colors
 const categoryConfig = {
@@ -23,6 +50,18 @@ const categoryConfig = {
   'Deck Tech': { icon: 'layers', class: 'badge-deck' },
   'Meta': { icon: 'trending-up', class: 'badge-meta' },
   'Ferramentas': { icon: 'wrench', class: 'badge-ferramenta' },
+};
+
+// Default sources by category
+const defaultSources = {
+  'Guia': ['https://reddit.com/r/SorceryTCG', 'https://sorcerytcg.com'],
+  'FAQ': ['https://sorcerytcg.com/rules', 'https://reddit.com/r/SorceryTCG'],
+  'Mecânica': ['https://sorcerytcg.com/rules'],
+  'Ruling': ['https://sorcerytcg.com/rules', 'https://discord.gg/sorcerytcg'],
+  'Referência': ['https://curiosa.io', 'https://realms.cards'],
+  'Deck': ['https://curiosa.io/decks'],
+  'Deck Tech': ['https://curiosa.io/decks', 'https://sorcerydata.com'],
+  'Meta': ['https://sorcerydata.com', 'https://curiosa.io'],
 };
 
 // Convert markdown to HTML
@@ -92,12 +131,232 @@ function formatDate(dateStr) {
   });
 }
 
+// Get sources for an article
+function getSources(article) {
+  // If article has explicit sources, use them
+  if (article.sources && article.sources.length > 0) {
+    return article.sources;
+  }
+  // Otherwise use default sources based on category
+  return defaultSources[article.category] || ['https://reddit.com/r/SorceryTCG'];
+}
+
+// Generate author section HTML
+function generateAuthorSection(article) {
+  const author = article.author ? authors[article.author] : defaultAuthor;
+
+  return `
+                <!-- Author Profile -->
+                <div class="author-profile">
+                    <img src="${author.avatar}" alt="${author.name}" class="author-avatar">
+                    <div class="author-info">
+                        <span class="author-label">Escrito por</span>
+                        <span class="author-name">${author.name}</span>
+                        <span class="author-bio">${author.bio}</span>
+                    </div>
+                </div>`;
+}
+
+// Generate sources section HTML
+function generateSourcesSection(article) {
+  const sources = getSources(article);
+
+  const sourceLinks = sources.map(url => {
+    const domain = new URL(url).hostname.replace('www.', '');
+    return `<a href="${url}" target="_blank" rel="noopener nofollow">${domain}</a>`;
+  }).join('');
+
+  return `
+                <!-- Sources -->
+                <div class="article-sources">
+                    <h4><i data-lucide="link" style="width:16px;height:16px;"></i> Fontes e Referências</h4>
+                    <div class="source-links">
+                        ${sourceLinks}
+                    </div>
+                </div>`;
+}
+
+// Generate community footer HTML
+function generateCommunityFooter() {
+  return `
+                <!-- Community Footer -->
+                <div class="community-footer">
+                    <div class="community-message">
+                        <i data-lucide="heart" style="width:24px;height:24px;color:var(--accent-gold);"></i>
+                        <div>
+                            <h4>Sorcery Brasil é um portal gratuito e independente</h4>
+                            <p>Nosso objetivo é apoiar o crescimento da comunidade de Sorcery no Brasil. Todo o conteúdo é criado por jogadores, para jogadores.</p>
+                        </div>
+                    </div>
+
+                    <div class="contribute-cta">
+                        <h4>Quer contribuir com um artigo?</h4>
+                        <p>Se você tem conhecimento para compartilhar com a comunidade, adoraríamos publicar seu conteúdo!</p>
+                        <button class="btn primary" onclick="openSubmissionForm()">
+                            <i data-lucide="pen-line" style="width:16px;height:16px;"></i>
+                            Submeter Artigo
+                        </button>
+                    </div>
+                </div>`;
+}
+
+// Generate submission form modal HTML
+function generateSubmissionFormModal() {
+  return `
+    <!-- Article Submission Modal -->
+    <div id="submission-modal" class="submission-modal hidden">
+        <div class="submission-modal-content">
+            <button class="modal-close" onclick="closeSubmissionForm()">
+                <i data-lucide="x"></i>
+            </button>
+            <h2>Submeter Artigo</h2>
+            <p class="submission-intro">Preencha o formulário abaixo. Nossa equipe revisará seu artigo e entrará em contato.</p>
+
+            <form id="article-submission-form" onsubmit="submitArticle(event)">
+                <div class="form-group">
+                    <label for="author-name">Seu Nome *</label>
+                    <input type="text" id="author-name" name="authorName" required placeholder="Como você quer ser creditado">
+                </div>
+
+                <div class="form-group">
+                    <label for="author-email">E-mail *</label>
+                    <input type="email" id="author-email" name="authorEmail" required placeholder="Para entrarmos em contato">
+                </div>
+
+                <div class="form-group">
+                    <label for="article-title">Título do Artigo *</label>
+                    <input type="text" id="article-title" name="articleTitle" required placeholder="Ex: Guia de Deck Water Aggro">
+                </div>
+
+                <div class="form-group">
+                    <label for="article-category">Categoria</label>
+                    <select id="article-category" name="articleCategory">
+                        <option value="Guia">Guia</option>
+                        <option value="Deck Tech">Deck Tech</option>
+                        <option value="Mecânica">Mecânica / Regras</option>
+                        <option value="Meta">Meta / Análise</option>
+                        <option value="Lore">Lore</option>
+                        <option value="Comunidade">Comunidade</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="article-content">Conteúdo do Artigo *</label>
+                    <textarea id="article-content" name="articleContent" required rows="12" placeholder="Escreva seu artigo aqui. Você pode usar Markdown para formatação (## títulos, **negrito**, - listas, etc)."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn secondary" onclick="closeSubmissionForm()">Cancelar</button>
+                    <button type="submit" class="btn primary" id="submit-btn">
+                        <i data-lucide="send" style="width:16px;height:16px;"></i>
+                        Enviar Artigo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>`;
+}
+
+// Generate submission form scripts
+function generateSubmissionScripts() {
+  return `
+    <script>
+        // Submission form functions
+        function openSubmissionForm() {
+            document.getElementById('submission-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function closeSubmissionForm() {
+            document.getElementById('submission-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        async function submitArticle(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerHTML;
+
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width:16px;height:16px;"></i> Enviando...';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            const data = {
+                author_name: form.authorName.value,
+                author_email: form.authorEmail.value,
+                title: form.articleTitle.value,
+                category: form.articleCategory.value,
+                content: form.articleContent.value,
+                submitted_at: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            try {
+                // Submit to NocoDB
+                const response = await fetch('https://dados.kodda.ai/api/v2/tables/article_submissions/records', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'xc-token': 'ZLl4Ylb4mM8TUuHSJoOHClz6m7LW5at1maPz0-a4'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success
+                    closeSubmissionForm();
+                    showToast('Artigo enviado com sucesso! Entraremos em contato em breve.', 'success');
+                    form.reset();
+                } else {
+                    throw new Error('Erro ao enviar');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showToast('Erro ao enviar artigo. Tente novamente ou entre em contato pelo Discord.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        // Simple toast notification
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.innerHTML = '<i data-lucide="' + (type === 'success' ? 'check-circle' : 'alert-circle') + '"></i> ' + message;
+            document.body.appendChild(toast);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSubmissionForm();
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('submission-modal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'submission-modal') closeSubmissionForm();
+        });
+    </script>`;
+}
+
 // Generate article HTML page
 function generateArticlePage(article) {
   const config = categoryConfig[article.category] || { icon: 'file-text', class: 'badge-article' };
   const contentHTML = parseMarkdown(article.content);
   const imageUrl = `https://sorcery.com.br/${article.image}`;
   const articleUrl = `https://sorcery.com.br/artigos/${article.slug}/`;
+  const author = article.author ? authors[article.author] : defaultAuthor;
 
   // Schema Article JSON-LD
   const schemaArticle = {
@@ -109,8 +368,8 @@ function generateArticlePage(article) {
     "datePublished": article.date,
     "dateModified": article.date,
     "author": {
-      "@type": "Organization",
-      "name": "Sorcery Brasil"
+      "@type": "Person",
+      "name": author.name
     },
     "publisher": {
       "@type": "Organization",
@@ -165,7 +424,7 @@ function generateArticlePage(article) {
     <title>${article.title} | Sorcery Brasil</title>
     <meta name="description" content="${article.summary}">
     <meta name="keywords" content="${article.tags.join(', ')}, sorcery tcg, sorcery brasil">
-    <meta name="author" content="Sorcery Brasil">
+    <meta name="author" content="${author.name}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="${articleUrl}">
 
@@ -181,7 +440,7 @@ function generateArticlePage(article) {
     <meta property="og:site_name" content="Sorcery Brasil">
     <meta property="article:published_time" content="${article.date}">
     <meta property="article:modified_time" content="${article.date}">
-    <meta property="article:author" content="Sorcery Brasil">
+    <meta property="article:author" content="${author.name}">
     ${article.tags.map(tag => `<meta property="article:tag" content="${tag}">`).join('\n    ')}
 
     <!-- Twitter Card -->
@@ -198,7 +457,7 @@ function generateArticlePage(article) {
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/styles.min.css?v=110">
+    <link rel="stylesheet" href="/styles.min.css?v=111">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -274,6 +533,47 @@ function generateArticlePage(article) {
         border-radius: var(--radius-full);
         font-size: 0.75rem;
     }
+
+    /* Author Profile */
+    .author-profile {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-4);
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-5);
+        border: 1px solid var(--border-color);
+    }
+    .author-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--accent-gold);
+    }
+    .author-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .author-label {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .author-name {
+        font-family: 'Cinzel', serif;
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    .author-bio {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
     .article-content {
         color: var(--text-secondary);
         line-height: 1.8;
@@ -331,6 +631,83 @@ function generateArticlePage(article) {
     .article-content strong {
         color: var(--text-primary);
     }
+
+    /* Sources Section */
+    .article-sources {
+        margin-top: var(--space-5);
+        padding: var(--space-4);
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+    }
+    .article-sources h4 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-3);
+        font-weight: 600;
+    }
+    .source-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+    .source-links a {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        background: var(--bg-surface-2);
+        color: var(--accent-gold);
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        text-decoration: none;
+        transition: background var(--duration-fast);
+    }
+    .source-links a:hover {
+        background: rgba(212, 175, 55, 0.2);
+    }
+
+    /* Community Footer */
+    .community-footer {
+        margin-top: var(--space-6);
+        padding: var(--space-5);
+        background: linear-gradient(135deg, var(--bg-surface-1), var(--bg-surface-2));
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+    }
+    .community-message {
+        display: flex;
+        gap: var(--space-4);
+        margin-bottom: var(--space-5);
+        padding-bottom: var(--space-5);
+        border-bottom: 1px solid var(--border-color);
+    }
+    .community-message h4 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    .community-message p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+    .contribute-cta {
+        text-align: center;
+    }
+    .contribute-cta h4 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    .contribute-cta p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-4);
+    }
+
     .article-footer {
         margin-top: var(--space-6);
         padding-top: var(--space-5);
@@ -362,12 +739,153 @@ function generateArticlePage(article) {
         color: var(--text-primary);
         border: 1px solid var(--border-color);
     }
+
+    /* Submission Modal */
+    .submission-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: var(--space-4);
+    }
+    .submission-modal.hidden {
+        display: none;
+    }
+    .submission-modal-content {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: var(--space-6);
+        position: relative;
+        border: 1px solid var(--border-color);
+    }
+    .submission-modal-content h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-2);
+    }
+    .submission-intro {
+        color: var(--text-secondary);
+        margin-bottom: var(--space-5);
+    }
+    .form-group {
+        margin-bottom: var(--space-4);
+    }
+    .form-group label {
+        display: block;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: var(--space-3);
+        background: var(--bg-surface-2);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+    .form-group textarea {
+        resize: vertical;
+        font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent-gold);
+    }
+    .form-actions {
+        display: flex;
+        gap: var(--space-3);
+        justify-content: flex-end;
+        margin-top: var(--space-5);
+    }
+    .modal-close {
+        position: absolute;
+        top: var(--space-4);
+        right: var(--space-4);
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    .modal-close:hover {
+        color: var(--text-primary);
+    }
+
+    /* Toast */
+    .toast {
+        position: fixed;
+        bottom: var(--space-4);
+        right: var(--space-4);
+        padding: var(--space-3) var(--space-4);
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+    }
+    .toast-success {
+        border-color: #22c55e;
+    }
+    .toast-success i {
+        color: #22c55e;
+    }
+    .toast-error {
+        border-color: #ef4444;
+    }
+    .toast-error i {
+        color: #ef4444;
+    }
+    .toast-exit {
+        animation: slideOut 0.3s ease forwards;
+    }
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+    .spin {
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
     @media (max-width: 768px) {
         .article-page {
             padding: var(--space-4);
         }
         .article-title {
             font-size: 1.5rem;
+        }
+        .author-profile {
+            flex-direction: column;
+            text-align: center;
+        }
+        .community-message {
+            flex-direction: column;
+            text-align: center;
         }
     }
     </style>
@@ -432,13 +950,16 @@ function generateArticlePage(article) {
                 <div class="article-tags">
                     ${article.tags.map(tag => `<span class="article-tag">#${tag}</span>`).join('\n                    ')}
                 </div>
+${generateAuthorSection(article)}
 
                 <!-- Content -->
                 <div class="article-content">
                     ${contentHTML}
                 </div>
+${generateSourcesSection(article)}
+${generateCommunityFooter()}
 
-                <!-- Footer -->
+                <!-- Navigation Footer -->
                 <footer class="article-footer">
                     <p style="color: var(--text-secondary);">
                         Gostou deste artigo? Confira mais conteúdo sobre Sorcery TCG no nosso portal.
@@ -470,6 +991,7 @@ function generateArticlePage(article) {
             </div>
         </footer>
     </div>
+${generateSubmissionFormModal()}
 
     <script>
         // Initialize Lucide icons
@@ -479,12 +1001,15 @@ function generateArticlePage(article) {
             }
         });
     </script>
+${generateSubmissionScripts()}
 </body>
 </html>`;
 }
 
 // Generate index page for /artigos/
 function generateIndexPage(articles) {
+  const author = defaultAuthor;
+
   const articleCards = articles.map(article => {
     const config = categoryConfig[article.category] || { icon: 'file-text', class: 'badge-article' };
     return `
@@ -498,6 +1023,7 @@ function generateIndexPage(articles) {
                         <p>${article.summary}</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> ${formatDate(article.date)}</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> ${author.name}</span>
                         </div>
                     </div>
                 </a>`;
@@ -513,7 +1039,7 @@ function generateIndexPage(articles) {
     <title>Artigos sobre Sorcery TCG | Sorcery Brasil</title>
     <meta name="description" content="Guias, regras, dicas de deck e tudo sobre Sorcery: Contested Realm em português. O melhor conteúdo de Sorcery TCG no Brasil.">
     <meta name="keywords" content="sorcery tcg, sorcery brasil, guias sorcery, regras sorcery, decks sorcery">
-    <meta name="author" content="Sorcery Brasil">
+    <meta name="author" content="${author.name}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://sorcery.com.br/artigos/">
 
@@ -539,7 +1065,7 @@ function generateIndexPage(articles) {
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/styles.min.css?v=110">
+    <link rel="stylesheet" href="/styles.min.css?v=111">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -564,6 +1090,24 @@ function generateIndexPage(articles) {
     .articles-header p {
         color: var(--text-secondary);
         font-size: 1.125rem;
+        max-width: 600px;
+        margin: 0 auto var(--space-5);
+    }
+    .contribute-banner {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-2) var(--space-4);
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid var(--accent-gold);
+        border-radius: var(--radius-full);
+        color: var(--accent-gold);
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background var(--duration-fast);
+    }
+    .contribute-banner:hover {
+        background: rgba(212, 175, 55, 0.2);
     }
     .articles-grid {
         display: grid;
@@ -617,7 +1161,7 @@ function generateIndexPage(articles) {
     .article-card-meta {
         display: flex;
         align-items: center;
-        gap: var(--space-2);
+        gap: var(--space-3);
         margin-top: var(--space-3);
         color: var(--text-secondary);
         font-size: 0.75rem;
@@ -627,6 +1171,116 @@ function generateIndexPage(articles) {
         align-items: center;
         gap: 0.25rem;
     }
+
+    /* Submission Modal (same styles as article pages) */
+    .submission-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: var(--space-4);
+    }
+    .submission-modal.hidden {
+        display: none;
+    }
+    .submission-modal-content {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: var(--space-6);
+        position: relative;
+        border: 1px solid var(--border-color);
+    }
+    .submission-modal-content h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-2);
+    }
+    .submission-intro {
+        color: var(--text-secondary);
+        margin-bottom: var(--space-5);
+    }
+    .form-group {
+        margin-bottom: var(--space-4);
+    }
+    .form-group label {
+        display: block;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: var(--space-3);
+        background: var(--bg-surface-2);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+    .form-group textarea {
+        resize: vertical;
+        font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent-gold);
+    }
+    .form-actions {
+        display: flex;
+        gap: var(--space-3);
+        justify-content: flex-end;
+        margin-top: var(--space-5);
+    }
+    .modal-close {
+        position: absolute;
+        top: var(--space-4);
+        right: var(--space-4);
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    .modal-close:hover {
+        color: var(--text-primary);
+    }
+    .toast {
+        position: fixed;
+        bottom: var(--space-4);
+        right: var(--space-4);
+        padding: var(--space-3) var(--space-4);
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+    }
+    .toast-success { border-color: #22c55e; }
+    .toast-success i { color: #22c55e; }
+    .toast-error { border-color: #ef4444; }
+    .toast-error i { color: #ef4444; }
+    .toast-exit { animation: slideOut 0.3s ease forwards; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
     @media (max-width: 768px) {
         .articles-page {
             padding: var(--space-4);
@@ -667,6 +1321,10 @@ function generateIndexPage(articles) {
                 <header class="articles-header">
                     <h1>Artigos sobre Sorcery TCG</h1>
                     <p>Guias, regras, dicas de deck e tudo sobre Sorcery: Contested Realm em português.</p>
+                    <button class="contribute-banner" onclick="openSubmissionForm()">
+                        <i data-lucide="pen-line" style="width:16px;height:16px;"></i>
+                        Contribuir com um artigo
+                    </button>
                 </header>
 
                 <div class="articles-grid">
@@ -688,6 +1346,7 @@ ${articleCards}
             </div>
         </footer>
     </div>
+${generateSubmissionFormModal()}
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -696,6 +1355,7 @@ ${articleCards}
             }
         });
     </script>
+${generateSubmissionScripts()}
 </body>
 </html>`;
 }
@@ -730,6 +1390,7 @@ function main() {
   console.log(`  ✓ /artigos/`);
 
   console.log(`\n✅ Generated ${articlesDB.articles.length} article pages + index page`);
+  console.log('   Features: Author profile, Sources, Community footer, Submission form');
 }
 
 main();

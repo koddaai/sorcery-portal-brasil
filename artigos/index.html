@@ -8,7 +8,7 @@
     <title>Artigos sobre Sorcery TCG | Sorcery Brasil</title>
     <meta name="description" content="Guias, regras, dicas de deck e tudo sobre Sorcery: Contested Realm em português. O melhor conteúdo de Sorcery TCG no Brasil.">
     <meta name="keywords" content="sorcery tcg, sorcery brasil, guias sorcery, regras sorcery, decks sorcery">
-    <meta name="author" content="Sorcery Brasil">
+    <meta name="author" content="Pedro Lourenço">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://sorcery.com.br/artigos/">
 
@@ -34,7 +34,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="/styles.min.css?v=110">
+    <link rel="stylesheet" href="/styles.min.css?v=111">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
     <!-- Lucide Icons -->
@@ -59,6 +59,24 @@
     .articles-header p {
         color: var(--text-secondary);
         font-size: 1.125rem;
+        max-width: 600px;
+        margin: 0 auto var(--space-5);
+    }
+    .contribute-banner {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-2) var(--space-4);
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid var(--accent-gold);
+        border-radius: var(--radius-full);
+        color: var(--accent-gold);
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background var(--duration-fast);
+    }
+    .contribute-banner:hover {
+        background: rgba(212, 175, 55, 0.2);
     }
     .articles-grid {
         display: grid;
@@ -112,7 +130,7 @@
     .article-card-meta {
         display: flex;
         align-items: center;
-        gap: var(--space-2);
+        gap: var(--space-3);
         margin-top: var(--space-3);
         color: var(--text-secondary);
         font-size: 0.75rem;
@@ -122,6 +140,116 @@
         align-items: center;
         gap: 0.25rem;
     }
+
+    /* Submission Modal (same styles as article pages) */
+    .submission-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: var(--space-4);
+    }
+    .submission-modal.hidden {
+        display: none;
+    }
+    .submission-modal-content {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: var(--space-6);
+        position: relative;
+        border: 1px solid var(--border-color);
+    }
+    .submission-modal-content h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-2);
+    }
+    .submission-intro {
+        color: var(--text-secondary);
+        margin-bottom: var(--space-5);
+    }
+    .form-group {
+        margin-bottom: var(--space-4);
+    }
+    .form-group label {
+        display: block;
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: var(--space-3);
+        background: var(--bg-surface-2);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        font-size: 1rem;
+    }
+    .form-group textarea {
+        resize: vertical;
+        font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--accent-gold);
+    }
+    .form-actions {
+        display: flex;
+        gap: var(--space-3);
+        justify-content: flex-end;
+        margin-top: var(--space-5);
+    }
+    .modal-close {
+        position: absolute;
+        top: var(--space-4);
+        right: var(--space-4);
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    .modal-close:hover {
+        color: var(--text-primary);
+    }
+    .toast {
+        position: fixed;
+        bottom: var(--space-4);
+        right: var(--space-4);
+        padding: var(--space-3) var(--space-4);
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+    }
+    .toast-success { border-color: #22c55e; }
+    .toast-success i { color: #22c55e; }
+    .toast-error { border-color: #ef4444; }
+    .toast-error i { color: #ef4444; }
+    .toast-exit { animation: slideOut 0.3s ease forwards; }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
     @media (max-width: 768px) {
         .articles-page {
             padding: var(--space-4);
@@ -162,6 +290,10 @@
                 <header class="articles-header">
                     <h1>Artigos sobre Sorcery TCG</h1>
                     <p>Guias, regras, dicas de deck e tudo sobre Sorcery: Contested Realm em português.</p>
+                    <button class="contribute-banner" onclick="openSubmissionForm()">
+                        <i data-lucide="pen-line" style="width:16px;height:16px;"></i>
+                        Contribuir com um artigo
+                    </button>
                 </header>
 
                 <div class="articles-grid">
@@ -176,6 +308,7 @@
                         <p>Se você vem de MTG, Sorcery vai parecer familiar em muita coisa e completamente diferente em outras. Os 5 grandes pontos que todo jogador de Magic precisa saber.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -190,6 +323,7 @@
                         <p>Guia de compras para iniciantes: precons, booster boxes, e a melhor forma de começar sua coleção de Sorcery sem gastar demais.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -204,6 +338,7 @@
                         <p>As perguntas mais comuns de quem acabou de abrir os precons: minions atacam avatares? Mana tem cor? Artifacts por turno?</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -218,6 +353,7 @@
                         <p>Sorcerer, Necromancer, Geomancer, Seer ou Savior? Descubra qual Avatar combina com seu estilo de jogo.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -232,6 +368,7 @@
                         <p>O grid 4x5 é a maior diferença de Sorcery. Entenda movimento, regiões (surface, underground, void) e posicionamento estratégico.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -246,6 +383,7 @@
                         <p>Mana é gasta, threshold é verificado. Entenda de uma vez por todas como funciona o sistema de recursos de Sorcery.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -260,6 +398,7 @@
                         <p>A regra mais mal compreendida do jogo: em Death's Door, loss of life não mata. Você precisa de dano direto.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -274,6 +413,7 @@
                         <p>Airborne, Burrowing, Stealth, Genesis, Lethal... todas as palavras-chave de Sorcery explicadas em português.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -288,6 +428,7 @@
                         <p>Custo, threshold, power, tipos, raridades e todas as informações que você encontra em uma carta de Sorcery.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -302,6 +443,7 @@
                         <p>Sorcery é declaradamente menos competitivo que MTG. A comunidade tem duas regras de ouro que definem a cultura do jogo.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -316,6 +458,7 @@
                         <p>Fire, Water, Earth e Air: entenda a identidade de cada elemento e como eles se comparam às cores de Magic.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -330,6 +473,7 @@
                         <p>Como Sorcery passou de nicho para fenômeno: números, eventos e a expansão da comunidade global.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -344,6 +488,7 @@
                         <p>50 spells, 30 sites, proporções por raridade e as bases para construir seu primeiro deck competitivo.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -358,6 +503,7 @@
                         <p>Por que Druid é considerado o melhor Avatar do formato atual e como jogar contra ele.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -372,6 +518,7 @@
                         <p>A convenção da comunidade para as combinações de dois elementos. Steam Druid, Mud Necro e mais.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -386,6 +533,7 @@
                         <p>Análise dos quatro precons elementais e o que você aprende jogando cada um deles.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -400,6 +548,7 @@
                         <p>Curiosa.io, realms.cards, TTS, CardNexus e todos os recursos essenciais da comunidade.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -414,6 +563,7 @@
                         <p>Simuladores online, TTS, Discord LFG e todas as formas de jogar quando não há LGS perto de você.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -428,6 +578,7 @@
                         <p>Como funciona o programa Dust Rewards, onde encontrar os códigos e o que você pode resgatar.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -442,6 +593,7 @@
                         <p>Deck tech do Air/Fire Druid de DuoMaxwell22333, vencedor do Crossroads de Houston.</p>
                         <div class="article-card-meta">
                             <span><i data-lucide="calendar" style="width:12px;height:12px;"></i> 21 de abril de 2026</span>
+                            <span><i data-lucide="user" style="width:12px;height:12px;"></i> Pedro Lourenço</span>
                         </div>
                     </div>
                 </a>
@@ -463,11 +615,153 @@
         </footer>
     </div>
 
+    <!-- Article Submission Modal -->
+    <div id="submission-modal" class="submission-modal hidden">
+        <div class="submission-modal-content">
+            <button class="modal-close" onclick="closeSubmissionForm()">
+                <i data-lucide="x"></i>
+            </button>
+            <h2>Submeter Artigo</h2>
+            <p class="submission-intro">Preencha o formulário abaixo. Nossa equipe revisará seu artigo e entrará em contato.</p>
+
+            <form id="article-submission-form" onsubmit="submitArticle(event)">
+                <div class="form-group">
+                    <label for="author-name">Seu Nome *</label>
+                    <input type="text" id="author-name" name="authorName" required placeholder="Como você quer ser creditado">
+                </div>
+
+                <div class="form-group">
+                    <label for="author-email">E-mail *</label>
+                    <input type="email" id="author-email" name="authorEmail" required placeholder="Para entrarmos em contato">
+                </div>
+
+                <div class="form-group">
+                    <label for="article-title">Título do Artigo *</label>
+                    <input type="text" id="article-title" name="articleTitle" required placeholder="Ex: Guia de Deck Water Aggro">
+                </div>
+
+                <div class="form-group">
+                    <label for="article-category">Categoria</label>
+                    <select id="article-category" name="articleCategory">
+                        <option value="Guia">Guia</option>
+                        <option value="Deck Tech">Deck Tech</option>
+                        <option value="Mecânica">Mecânica / Regras</option>
+                        <option value="Meta">Meta / Análise</option>
+                        <option value="Lore">Lore</option>
+                        <option value="Comunidade">Comunidade</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="article-content">Conteúdo do Artigo *</label>
+                    <textarea id="article-content" name="articleContent" required rows="12" placeholder="Escreva seu artigo aqui. Você pode usar Markdown para formatação (## títulos, **negrito**, - listas, etc)."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn secondary" onclick="closeSubmissionForm()">Cancelar</button>
+                    <button type="submit" class="btn primary" id="submit-btn">
+                        <i data-lucide="send" style="width:16px;height:16px;"></i>
+                        Enviar Artigo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
+        });
+    </script>
+
+    <script>
+        // Submission form functions
+        function openSubmissionForm() {
+            document.getElementById('submission-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+
+        function closeSubmissionForm() {
+            document.getElementById('submission-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        async function submitArticle(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerHTML;
+
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width:16px;height:16px;"></i> Enviando...';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            const data = {
+                author_name: form.authorName.value,
+                author_email: form.authorEmail.value,
+                title: form.articleTitle.value,
+                category: form.articleCategory.value,
+                content: form.articleContent.value,
+                submitted_at: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            try {
+                // Submit to NocoDB
+                const response = await fetch('https://dados.kodda.ai/api/v2/tables/article_submissions/records', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'xc-token': 'ZLl4Ylb4mM8TUuHSJoOHClz6m7LW5at1maPz0-a4'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Success
+                    closeSubmissionForm();
+                    showToast('Artigo enviado com sucesso! Entraremos em contato em breve.', 'success');
+                    form.reset();
+                } else {
+                    throw new Error('Erro ao enviar');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showToast('Erro ao enviar artigo. Tente novamente ou entre em contato pelo Discord.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }
+
+        // Simple toast notification
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = 'toast toast-' + type;
+            toast.innerHTML = '<i data-lucide="' + (type === 'success' ? 'check-circle' : 'alert-circle') + '"></i> ' + message;
+            document.body.appendChild(toast);
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.add('toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSubmissionForm();
+        });
+
+        // Close modal on backdrop click
+        document.getElementById('submission-modal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'submission-modal') closeSubmissionForm();
         });
     </script>
 </body>
