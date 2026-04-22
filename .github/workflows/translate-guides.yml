@@ -32,19 +32,29 @@ jobs:
         working-directory: ./scripts
         timeout-minutes: 60
 
-      - name: Minify recommended-decks.js
-        run: npx terser recommended-decks.js -o recommended-decks.min.js -c -m
-
       - name: Check for changes
         id: git-check
         run: |
           git diff --quiet recommended-decks.js || echo "changes=true" >> $GITHUB_OUTPUT
 
-      - name: Commit and push if changed
+      - name: Commit translations
         if: steps.git-check.outputs.changes == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add recommended-decks.js recommended-decks.min.js
+          git add recommended-decks.js
           git commit -m "chore: translate deck guides to Portuguese [skip ci]"
           git push
+
+      - name: Minify recommended-decks.js
+        if: steps.git-check.outputs.changes == 'true'
+        continue-on-error: true
+        run: npx terser recommended-decks.js -o recommended-decks.min.js -c -m
+
+      - name: Commit minified version
+        if: steps.git-check.outputs.changes == 'true'
+        continue-on-error: true
+        run: |
+          git add recommended-decks.min.js 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "chore: minify recommended-decks.js [skip ci]"
+          git push || true
