@@ -11209,8 +11209,7 @@ const deckBrowserState = {
     preconOnly: false,
     beginnerOnly: false,
     tournamentOnly: false,
-    communityOnly: false,
-    primerOnly: false
+    communityOnly: false
 };
 
 // Get all decks combined (including user-submitted)
@@ -11310,10 +11309,6 @@ function filterDecks(decks) {
         }
 
         if (deckBrowserState.communityOnly && deck.category !== 'comunidade') {
-            return false;
-        }
-
-        if (deckBrowserState.primerOnly && !deck.primer) {
             return false;
         }
 
@@ -12194,8 +12189,7 @@ function renderCommunityDecks() {
                        deckBrowserState.preconOnly ||
                        deckBrowserState.beginnerOnly ||
                        deckBrowserState.tournamentOnly ||
-                       deckBrowserState.communityOnly ||
-                       deckBrowserState.primerOnly;
+                       deckBrowserState.communityOnly;
 
     if (clearBtn) {
         clearBtn.classList.toggle('hidden', !hasFilters);
@@ -12274,8 +12268,6 @@ function setupDeckBrowser() {
                 deckBrowserState.tournamentOnly = btn.classList.contains('active');
             } else if (filter === 'community') {
                 deckBrowserState.communityOnly = btn.classList.contains('active');
-            } else if (filter === 'primer') {
-                deckBrowserState.primerOnly = btn.classList.contains('active');
             }
 
             renderCommunityDecks();
@@ -12294,7 +12286,6 @@ function setupDeckBrowser() {
         deckBrowserState.beginnerOnly = false;
         deckBrowserState.tournamentOnly = false;
         deckBrowserState.communityOnly = false;
-        deckBrowserState.primerOnly = false;
 
         // Reset UI
         document.querySelectorAll('.element-btn').forEach(b => b.classList.remove('active'));
