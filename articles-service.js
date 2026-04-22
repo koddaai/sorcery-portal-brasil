@@ -138,7 +138,7 @@ class ArticlesService {
         // Compact card for landing page - uses news-card classes
         if (compact) {
             return `
-                <a href="#" onclick="articlesService.openArticle('${article.slug}'); return false;" class="news-card news-card-compact">
+                <a href="/artigos/${article.slug}/" class="news-card news-card-compact">
                     ${article.image ? `
                         <div class="news-card-image">
                             <img src="${article.image}" alt="${article.title}" loading="lazy" onerror="this.parentElement.classList.add('no-image')">
@@ -182,10 +182,10 @@ class ArticlesService {
                     <h3>${article.title}</h3>
                     <p class="news-summary">${article.summary}</p>
                     <div class="news-actions">
-                        <button onclick="articlesService.openArticle('${article.slug}')" class="btn primary btn-sm">
+                        <a href="/artigos/${article.slug}/" class="btn primary btn-sm">
                             <i data-lucide="book-open"></i>
                             Ler Artigo
-                        </button>
+                        </a>
                     </div>
                 </div>
             </article>
