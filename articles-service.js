@@ -128,28 +128,28 @@ class ArticlesService {
     }
 
     /**
-     * Render article card HTML
+     * Render article card HTML (uses news-card classes for consistent styling)
      */
     renderCard(article, options = {}) {
         const { compact = false } = options;
         const icon = this.getCategoryIcon(article.category);
         const badgeClass = this.getCategoryClass(article.category);
 
-        // Compact card for landing page
+        // Compact card for landing page - uses news-card classes
         if (compact) {
             return `
-                <a href="#" onclick="articlesService.openArticle('${article.slug}'); return false;" class="article-card article-card-compact">
+                <a href="#" onclick="articlesService.openArticle('${article.slug}'); return false;" class="news-card news-card-compact">
                     ${article.image ? `
-                        <div class="article-card-image">
+                        <div class="news-card-image">
                             <img src="${article.image}" alt="${article.title}" loading="lazy" onerror="this.parentElement.classList.add('no-image')">
                         </div>
                     ` : `
-                        <div class="article-card-image no-image">
+                        <div class="news-card-image no-image">
                             <i data-lucide="${icon}"></i>
                         </div>
                     `}
-                    <div class="article-card-body">
-                        <div class="article-badge ${badgeClass}">${article.category}</div>
+                    <div class="news-card-body">
+                        <div class="news-badge ${badgeClass}">${article.category}</div>
                         <h4>${article.title}</h4>
                         <p>${article.summary}</p>
                     </div>
@@ -159,32 +159,29 @@ class ArticlesService {
 
         // Full card for articles view
         return `
-            <article class="article-card-full">
+            <article class="news-card-full">
                 ${article.image ? `
-                    <div class="article-image">
+                    <div class="news-image">
                         <img src="${article.image}" alt="${article.title}" loading="lazy" onerror="this.style.display='none'">
                     </div>
                 ` : `
-                    <div class="article-image-placeholder">
+                    <div class="news-image-placeholder">
                         <i data-lucide="${icon}"></i>
                     </div>
                 `}
-                <div class="article-content">
-                    <div class="article-meta">
-                        <span class="article-badge ${badgeClass}">
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span class="news-badge ${badgeClass}">
                             ${article.category}
                         </span>
-                        <span class="article-date">
+                        <span class="news-date">
                             <i data-lucide="calendar"></i>
                             ${this.formatDate(article.date)}
                         </span>
                     </div>
                     <h3>${article.title}</h3>
-                    <p class="article-summary">${article.summary}</p>
-                    <div class="article-tags">
-                        ${article.tags.map(tag => `<span class="article-tag">#${tag}</span>`).join('')}
-                    </div>
-                    <div class="article-actions">
+                    <p class="news-summary">${article.summary}</p>
+                    <div class="news-actions">
                         <button onclick="articlesService.openArticle('${article.slug}')" class="btn primary btn-sm">
                             <i data-lucide="book-open"></i>
                             Ler Artigo
@@ -206,7 +203,7 @@ class ArticlesService {
 
         if (latest.length === 0) {
             container.innerHTML = `
-                <div class="articles-empty">
+                <div class="news-loading">
                     <i data-lucide="file-text"></i>
                     <span>Nenhum artigo disponível</span>
                 </div>
