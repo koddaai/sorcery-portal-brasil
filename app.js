@@ -4312,7 +4312,25 @@ function switchView(viewName) {
     if (viewName === 'wishlist') renderWishlist();
     if (viewName === 'stats') updateStatsWithPrices();
     if (viewName === 'artist-stats') { switchView('art'); setTimeout(() => switchArtTab('collection'), 100); return; }
-    if (viewName === 'decks') renderCommunityDecks();
+    if (viewName === 'decks') {
+        // Lazy load recommended-decks.min.js (1.3MB) only when needed
+        if (typeof RECOMMENDED_DECKS === 'undefined') {
+            showContainerLoading('decks-grid', 'Carregando decks...');
+            const script = document.createElement('script');
+            script.src = 'recommended-decks.min.js?v=20260421b';
+            script.onload = () => {
+                hideContainerLoading('decks-grid');
+                renderCommunityDecks();
+            };
+            script.onerror = () => {
+                hideContainerLoading('decks-grid');
+                showErrorToast('Erro ao carregar decks');
+            };
+            document.head.appendChild(script);
+        } else {
+            renderCommunityDecks();
+        }
+    }
     if (viewName === 'trade') renderTradeBinder();
     if (viewName === 'locator') initLocatorView();
     if (viewName === 'codex') initCodexView();

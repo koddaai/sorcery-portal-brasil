@@ -243,6 +243,11 @@
     <!-- Leaflet.js for interactive maps - carregado sob demanda -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" media="print" onload="this.media='all'">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+
+    <!-- Performance: Preconnect to external domains -->
+    <link rel="preconnect" href="https://sorcery-cdn.b-cdn.net">
+    <link rel="preconnect" href="https://api.sorcerytcg.com">
+    <link rel="dns-prefetch" href="https://economia.awesomeapi.com.br">
 </head>
 <body>
     <div id="app">
@@ -4245,8 +4250,8 @@
     <!-- Tesseract.js for OCR -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
-    <script src="recommended-decks.min.js?v=20260421b"></script>
-    <script src="top-cards.min.js"></script>
+    <!-- recommended-decks.min.js (1.3MB) - lazy loaded when decks view is accessed -->
+    <script src="top-cards.min.js" defer></script>
     <script src="collection-tracker.min.js"></script>
     <script src="price-service.min.js"></script>
     <script src="value-tracker.min.js"></script>
@@ -4266,21 +4271,21 @@
     <script src="keyword-parser.min.js"></script>
     <script src="set-progress.min.js"></script>
     <script src="threshold-calculator.min.js"></script>
-    <script src="artist-gallery.min.js"></script>
-    <script src="release-timeline.min.js"></script>
-    <script src="chase-cards-prices.min.js"></script>
+    <script src="artist-gallery.min.js" defer></script>
+    <script src="release-timeline.min.js" defer></script>
+    <script src="chase-cards-prices.min.js" defer></script>
     <script src="tcgcsv-price-service.min.js"></script>
     <script src="tcg-prices.min.js"></script>
     <script src="flavor-text.min.js"></script>
-    <script src="rules-quiz.min.js"></script>
+    <script src="rules-quiz.min.js" defer></script>
     <script src="news-service.min.js"></script>
     <script src="articles-service.js"></script>
     <!-- Community Features -->
-    <script src="avatar-system.min.js"></script>
-    <script src="trade-marketplace.min.js"></script>
-    <script src="messaging-service.min.js"></script>
-    <script src="forum-service.min.js"></script>
-    <script src="reputation-service.min.js"></script>
+    <script src="avatar-system.min.js" defer></script>
+    <script src="trade-marketplace.min.js" defer></script>
+    <script src="messaging-service.min.js" defer></script>
+    <script src="forum-service.min.js" defer></script>
+    <script src="reputation-service.min.js" defer></script>
     <script src="app.min.js?v=20260421d"></script>
     <script src="offline-manager.min.js"></script>
     <script>
