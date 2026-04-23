@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Sorcery Portal Brasil</title>
+        <link>https://sorcery.com.br</link>
+        <description>Portal da comunidade brasileira de Sorcery: Contested Realm - artigos, guias e tutoriais em portugues</description>
+        <language>pt-BR</language>
+        <lastBuildDate>Wed, 23 Apr 2026 12:00:00 -0300</lastBuildDate>
+        <atom:link href="https://sorcery.com.br/feed.xml" rel="self" type="application/rss+xml"/>
+        <image>
+            <url>https://sorcery.com.br/assets/icons/icon-192.png</url>
+            <title>Sorcery Portal Brasil</title>
+            <link>https://sorcery.com.br</link>
+        </image>
+
+        <item>
+            <title>Vim do Magic: vale a pena jogar Sorcery?</title>
+            <link>https://sorcery.com.br/artigos/vim-do-magic-guia-completo/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/vim-do-magic-guia-completo/</guid>
+            <pubDate>Wed, 23 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Guia completo para jogadores de Magic que querem conhecer Sorcery: Contested Realm. Comparacao de mecanicas, diferencas fundamentais e por que vale a pena experimentar.</description>
+            <category>Iniciante</category>
+        </item>
+
+        <item>
+            <title>Acabei de descobrir Sorcery. O que eu compro?</title>
+            <link>https://sorcery.com.br/artigos/acabei-de-descobrir-o-que-compro/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/acabei-de-descobrir-o-que-compro/</guid>
+            <pubDate>Tue, 22 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Guia de primeiras compras para quem esta comecando em Sorcery: Contested Realm. Precons, boosters, boxes - o que vale mais a pena?</description>
+            <category>Iniciante</category>
+        </item>
+
+        <item>
+            <title>8 duvidas que todo jogador novo tem sobre Sorcery</title>
+            <link>https://sorcery.com.br/artigos/8-duvidas-jogador-novo/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/8-duvidas-jogador-novo/</guid>
+            <pubDate>Mon, 21 Apr 2026 10:00:00 -0300</pubDate>
+            <description>FAQ para iniciantes em Sorcery: Contested Realm. As perguntas mais comuns respondidas de forma clara e direta.</description>
+            <category>Iniciante</category>
+        </item>
+
+        <item>
+            <title>Os melhores Avatares para iniciantes</title>
+            <link>https://sorcery.com.br/artigos/avatares-amigaveis-iniciante/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/avatares-amigaveis-iniciante/</guid>
+            <pubDate>Sun, 20 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Quais avatares escolher quando esta aprendendo Sorcery? Analise dos melhores avatares para iniciantes por elemento.</description>
+            <category>Decks</category>
+        </item>
+
+        <item>
+            <title>realms.cards: o simulador online 3D gratuito</title>
+            <link>https://sorcery.com.br/artigos/realms-cards-simulador-online/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/realms-cards-simulador-online/</guid>
+            <pubDate>Sat, 19 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Como usar o realms.cards para jogar Sorcery online gratuitamente. Tutorial completo do simulador 3D da comunidade.</description>
+            <category>Ferramentas</category>
+        </item>
+
+        <item>
+            <title>Movimentacao no grid: fundamentos taticos</title>
+            <link>https://sorcery.com.br/artigos/movimentacao-grid-guia/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/movimentacao-grid-guia/</guid>
+            <pubDate>Fri, 18 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Entenda por que posicionamento e movimentacao sao fundamentais em Sorcery. Guia tatico para melhorar seu jogo.</description>
+            <category>Mecanicas</category>
+        </item>
+
+        <item>
+            <title>Threshold vs Mana: o erro que todo iniciante comete</title>
+            <link>https://sorcery.com.br/artigos/threshold-vs-mana/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/threshold-vs-mana/</guid>
+            <pubDate>Thu, 17 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Explicacao clara da diferenca entre Threshold e Mana em Sorcery: Contested Realm. Conceito fundamental para iniciantes.</description>
+            <category>Mecanicas</category>
+        </item>
+
+        <item>
+            <title>Death's Door: por que seu deck de dano para de funcionar</title>
+            <link>https://sorcery.com.br/artigos/avatar-dano-direto-deaths-door/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/avatar-dano-direto-deaths-door/</guid>
+            <pubDate>Wed, 16 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Entenda a mecanica Death's Door e por que decks de burn precisam de um plano B em Sorcery.</description>
+            <category>Mecanicas</category>
+        </item>
+
+        <item>
+            <title>Glossario de Keywords de Sorcery</title>
+            <link>https://sorcery.com.br/artigos/glossario-keywords-sorcery/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/glossario-keywords-sorcery/</guid>
+            <pubDate>Tue, 15 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Todas as palavras-chave de Sorcery: Contested Realm explicadas. Referencia completa de keywords e habilidades.</description>
+            <category>Referencia</category>
+        </item>
+
+        <item>
+            <title>Anatomia de uma carta Sorcery</title>
+            <link>https://sorcery.com.br/artigos/anatomia-carta-sorcery/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/anatomia-carta-sorcery/</guid>
+            <pubDate>Mon, 14 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Entenda cada elemento visual de uma carta de Sorcery. Guia ilustrado dos componentes das cartas.</description>
+            <category>Referencia</category>
+        </item>
+
+        <item>
+            <title>Primeira regra de Sorcery: seja legal</title>
+            <link>https://sorcery.com.br/artigos/primeira-regra-seja-legal/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/primeira-regra-seja-legal/</guid>
+            <pubDate>Sun, 13 Apr 2026 10:00:00 -0300</pubDate>
+            <description>A cultura da comunidade de Sorcery e por que ela e diferente. Sobre respeito e fair play no jogo.</description>
+            <category>Comunidade</category>
+        </item>
+
+        <item>
+            <title>Os quatro elementos do Realm</title>
+            <link>https://sorcery.com.br/artigos/quatro-elementos-introducao/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/quatro-elementos-introducao/</guid>
+            <pubDate>Sat, 12 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Introducao ao lore dos quatro elementos de Sorcery: Fire, Water, Earth e Air. Filosofia e tematica de cada um.</description>
+            <category>Lore</category>
+        </item>
+
+        <item>
+            <title>O crescimento explosivo do jogo em 2025</title>
+            <link>https://sorcery.com.br/artigos/crescimento-explosivo-2025/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/crescimento-explosivo-2025/</guid>
+            <pubDate>Fri, 11 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Como Sorcery: Contested Realm cresceu em 2025 e se consolidou como alternativa aos grandes TCGs.</description>
+            <category>Comunidade</category>
+        </item>
+
+        <item>
+            <title>Deckbuilding em Sorcery: fundamentos</title>
+            <link>https://sorcery.com.br/artigos/deckbuilding-fundamentos/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/deckbuilding-fundamentos/</guid>
+            <pubDate>Thu, 10 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Os fundamentos de construcao de decks em Sorcery. Spellbook, Atlas, curva de mana e proporcoes ideais.</description>
+            <category>Decks</category>
+        </item>
+
+        <item>
+            <title>O Druid domina o meta... ou voce esta olhando errado?</title>
+            <link>https://sorcery.com.br/artigos/druid-avatar-dominante-meta/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/druid-avatar-dominante-meta/</guid>
+            <pubDate>Wed, 09 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Analise do meta atual de Sorcery e a percepcao sobre o Druid. O avatar e realmente dominante?</description>
+            <category>Meta</category>
+        </item>
+
+        <item>
+            <title>Precons do Beta: o que cada deck ensina</title>
+            <link>https://sorcery.com.br/artigos/precons-beta-analise/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/precons-beta-analise/</guid>
+            <pubDate>Tue, 08 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Analise dos precons do Beta de Sorcery. O que cada deck elemental ensina sobre o jogo.</description>
+            <category>Decks</category>
+        </item>
+
+        <item>
+            <title>As ferramentas que todo jogador de Sorcery usa</title>
+            <link>https://sorcery.com.br/artigos/ferramentas-jogador-sorcery/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/ferramentas-jogador-sorcery/</guid>
+            <pubDate>Mon, 07 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Os melhores recursos e ferramentas da comunidade de Sorcery: databases, deckbuilders, simuladores e mais.</description>
+            <category>Ferramentas</category>
+        </item>
+
+        <item>
+            <title>Como jogar Sorcery sem ninguem por perto</title>
+            <link>https://sorcery.com.br/artigos/jogar-sorcery-online/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/jogar-sorcery-online/</guid>
+            <pubDate>Sun, 06 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Opcoes para jogar Sorcery online: simuladores, webcam play e comunidades. Encontre partidas de qualquer lugar.</description>
+            <category>Ferramentas</category>
+        </item>
+
+        <item>
+            <title>Dust Rewards: como nao perder suas recompensas</title>
+            <link>https://sorcery.com.br/artigos/dust-rewards-explicado/</link>
+            <guid isPermaLink="true">https://sorcery.com.br/artigos/dust-rewards-explicado/</guid>
+            <pubDate>Sat, 05 Apr 2026 10:00:00 -0300</pubDate>
+            <description>Guia completo do programa Dust Rewards da Curiosa. Como acumular e resgatar pontos corretamente.</description>
+            <category>Ferramentas</category>
+        </item>
+
+    </channel>
+</rss>

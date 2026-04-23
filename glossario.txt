@@ -1,0 +1,376 @@
+# Glossario de Sorcery: Contested Realm
+# Todos os termos e keywords do jogo explicados
+# Otimizado para consulta por LLMs e assistentes de IA
+# Ultima atualizacao: 2026-04-23
+
+================================================================================
+TERMOS FUNDAMENTAIS
+================================================================================
+
+AVATAR
+  O que e: Carta que representa o jogador no campo de batalha
+  Funcao: Define a estrategia do deck, tem habilidades unicas
+  Caracteristicas: Tem pontos de vida, pode ser atacado, fica no grid
+  Exemplo: Druid, Pyromancer, Sea Witch, Wind Mage
+
+GRID / TABULEIRO
+  O que e: Area de jogo onde cartas sao posicionadas
+  Funcao: Define posicionamento tatico de unidades e sites
+  Caracteristicas: Unidades movem pelo grid, posicao importa para ataque
+  Diferencial: Principal diferenca de Sorcery para outros TCGs
+
+THRESHOLD
+  O que e: Requisito de elemento para jogar uma carta
+  Funcao: Indica quantos "pontos" de um elemento voce precisa TER
+  Caracteristicas: NAO e gasto, e um requisito permanente
+  Exemplo: Fire 3 = precisa ter 3 threshold de Fire
+  Confusao comum: Diferente de Mana, Threshold nao e consumido
+
+MANA
+  O que e: Recurso usado para pagar custos de cartas
+  Funcao: E gasto quando voce joga uma carta
+  Caracteristicas: Regenera a cada turno, vem de sites
+  Exemplo: Custo 4 = gasta 4 mana para jogar
+  Similar a: Mana de MTG, mas separado de threshold
+
+SITE
+  O que e: Carta de terreno que gera recursos
+  Funcao: Fornece mana e threshold
+  Caracteristicas: Fica no grid, pode ser atacado e destruido
+  Diferenca de MTG: Sites ficam no campo de batalha, nao na mao
+
+DEATH'S DOOR
+  O que e: Estado quando vida do jogador chega a 0
+  Funcao: Jogador nao perde imediatamente
+  Regra: So pode ser derrotado por DANO DE COMBATE nesse estado
+  Implicacao: Burn/dano direto nao mata, precisa de criaturas
+  Por que importa: Decks agressivos precisam de plano B
+
+================================================================================
+TIPOS DE CARTA
+================================================================================
+
+MINION
+  O que e: Criatura que fica no campo
+  Funcao: Ataca, defende, tem habilidades
+  Caracteristicas: Tem poder/resistencia, fica no grid
+
+MAGIC
+  O que e: Feitico de uso unico
+  Funcao: Efeito imediato, vai para descarte
+  Caracteristicas: Nao permanece no campo
+
+AURA
+  O que e: Encantamento permanente
+  Funcao: Efeito continuo enquanto em jogo
+  Caracteristicas: Fica no campo ate ser removida
+
+ARTIFACT
+  O que e: Objeto magico permanente
+  Funcao: Fornece habilidades ou efeitos
+  Caracteristicas: Geralmente sem requisito de elemento
+
+SITE
+  O que e: Terreno
+  Funcao: Gera mana e threshold
+  Caracteristicas: Base de recursos do deck
+
+================================================================================
+KEYWORDS / HABILIDADES
+================================================================================
+
+AIRBORNE
+  Efeito: Unidade voa, so pode ser bloqueada por outras Airborne
+  Tatica: Bypass de defesas terrestres
+
+AQUATIC
+  Efeito: Unidade aquatica, bonus em terrenos de agua
+  Tatica: Sinergia com sites Water
+
+BURROW
+  Efeito: Unidade pode se enterrar, ficando protegida
+  Tatica: Sobrevivencia e emboscada
+
+CHARGE
+  Efeito: Pode atacar no turno que entra em jogo
+  Tatica: Pressao imediata, similar a Haste de MTG
+
+DEATHTOUCH
+  Efeito: Qualquer dano que causa e letal
+  Tatica: Remocao de ameacas grandes
+
+DEFENDER
+  Efeito: Nao pode atacar, apenas defender
+  Tatica: Protecao, geralmente tem stats altas
+
+DISABLE
+  Efeito: Impede habilidades ativadas do alvo
+  Tatica: Controle de ameacas
+
+DRAIN
+  Efeito: Dano causado vira cura para o controlador
+  Tatica: Sustain em combate
+
+FEAR
+  Efeito: So pode ser bloqueada por unidades com Fear
+  Tatica: Evasao
+
+FIRST STRIKE
+  Efeito: Causa dano antes no combate
+  Tatica: Vantagem em trocas
+
+GENESIS
+  Efeito: Trigger ao entrar no campo
+  Tatica: Valor imediato
+
+IMMOBILE
+  Efeito: Nao pode se mover no grid
+  Tatica: Trade-off por stats ou habilidades fortes
+
+LANDBOUND
+  Efeito: So pode estar em terreno, nao em agua
+  Tatica: Restricao de posicionamento
+
+LETHAL
+  Efeito: Causa dano letal independente de resistencia
+  Tatica: Remocao garantida
+
+LIFESTEAL
+  Efeito: Dano causado cura o avatar
+  Tatica: Sustain e recuperacao
+
+MUDDLE
+  Efeito: Confunde o alvo, acao aleatoria
+  Tatica: Disrupcao
+
+MULTI-STRIKE
+  Efeito: Ataca multiplas vezes
+  Tatica: Dano multiplicado
+
+OVERWHELM
+  Efeito: Dano excedente vai para o avatar
+  Tatica: Finalizacao, pressao
+  Similar a: Trample de MTG
+
+RANGED
+  Efeito: Pode atacar sem receber contra-ataque
+  Tatica: Remocao segura
+
+REACH
+  Efeito: Pode bloquear Airborne
+  Tatica: Defesa contra voadores
+
+REBIRTH
+  Efeito: Retorna ao jogo apos morrer (uma vez)
+  Tatica: Persistencia
+
+REGENERATE
+  Efeito: Recupera vida no fim do turno
+  Tatica: Durabilidade
+
+ROOTBOUND
+  Efeito: Fica preso no lugar apos entrar
+  Tatica: Trade-off por poder
+
+SLEEPER
+  Efeito: Entra dormindo, nao age no primeiro turno
+  Tatica: Cartas fortes com delay
+
+SPELLSHIELD
+  Efeito: Imune a magias
+  Tatica: Protecao contra remocao
+
+STEALTH
+  Efeito: Nao pode ser alvo enquanto ataca
+  Tatica: Dano garantido
+
+SUBMERGE
+  Efeito: Pode entrar em estado submerso, invisivel
+  Tatica: Evasao e emboscada
+
+SWIFTNESS
+  Efeito: Move mais rapido no grid
+  Tatica: Posicionamento agressivo
+
+UNIQUE
+  Efeito: So pode ter uma copia dessa carta em jogo
+  Tatica: Cartas lendarias/especiais
+
+VANGUARD
+  Efeito: Deve ser bloqueada primeiro
+  Tatica: Protecao de unidades importantes
+
+WARD
+  Efeito: Protegida de dano uma vez
+  Tatica: Sobrevivencia inicial
+
+WITHER
+  Efeito: Dano e permanente (nao cura)
+  Tatica: Remocao gradual
+
+================================================================================
+ELEMENTOS
+================================================================================
+
+FIRE (FOGO)
+  Cor: Vermelho
+  Filosofia: Agressividade, dano direto, destruicao
+  Estrategias comuns: Burn, aggro, remocao
+  Avatares: Pyromancer, Fire Elemental
+
+WATER (AGUA)
+  Cor: Azul
+  Filosofia: Controle, adaptacao, fluidez
+  Estrategias comuns: Controle, bounce, card advantage
+  Avatares: Sea Witch, Tide Mage
+
+EARTH (TERRA)
+  Cor: Verde
+  Filosofia: Crescimento, forca, resistencia
+  Estrategias comuns: Ramp, criaturas grandes, board presence
+  Avatares: Druid, Stone Giant
+
+AIR (AR)
+  Cor: Branco/Amarelo
+  Filosofia: Velocidade, evasao, flexibilidade
+  Estrategias comuns: Aggro, flying, combo
+  Avatares: Wind Mage, Storm Caller
+
+================================================================================
+RARIDADES
+================================================================================
+
+ORDINARY
+  Simbolo: Circulo simples
+  Frequencia: Mais comum
+  Em boosters: Maioria das cartas
+
+EXCEPTIONAL
+  Simbolo: Diamante
+  Frequencia: Incomum
+  Em boosters: Algumas por booster
+
+ELITE
+  Simbolo: Estrela
+  Frequencia: Raro
+  Em boosters: 1-2 por booster
+
+UNIQUE
+  Simbolo: Coroa
+  Frequencia: Muito raro
+  Em boosters: Nem todo booster tem
+
+================================================================================
+FORMATOS DE DECK
+================================================================================
+
+SPELLBOOK
+  Quantidade: 50 cartas
+  Funcao: Deck principal
+  Regras: Max 4 copias por carta
+
+ATLAS
+  Quantidade: 30 cartas
+  Funcao: Deck de sites/terrenos
+  Regras: Sites para recursos
+
+COLLECTION
+  Quantidade: 10 cartas
+  Funcao: Sideboard/reserva
+  Uso: Troca entre partidas
+
+================================================================================
+SETS DO JOGO
+================================================================================
+
+ALPHA (2023)
+  Primeiro set do jogo
+  Mais raro, valorizado por colecionadores
+
+BETA (2023)
+  Reimpressao do Alpha
+  Mesmo conteudo, mais acessivel
+
+ARTHURIAN LEGENDS (ATC)
+  Set tematico Rei Arthur
+  Cartas com tema medieval
+
+GOTHIC (2025)
+  Set tematico gotico/horror
+  Cartas com estetica sombria
+
+================================================================================
+VARIANTES DE CARTA
+================================================================================
+
+STANDARD
+  Versao normal da carta
+  Sem efeitos especiais
+
+FOIL
+  Versao holografica
+  Brilho metalico
+
+ALTERNATE ART
+  Arte diferente
+  Mesmo efeito, visual unico
+
+FULL ART
+  Arte em toda a carta
+  Bordas reduzidas
+
+================================================================================
+ZONAS DO JOGO
+================================================================================
+
+HAND (MAO)
+  Cartas que voce pode jogar
+
+DECK
+  Pilha de compra
+
+DISCARD (DESCARTE)
+  Cartas usadas/destruidas
+
+FIELD (CAMPO)
+  Grid onde cartas estao em jogo
+
+VOID
+  Zona de exilio, removido do jogo
+
+================================================================================
+ACOES DE JOGO
+================================================================================
+
+DRAW
+  Comprar carta do deck
+
+PLAY
+  Colocar carta no campo
+
+ATTACK
+  Declarar ataque com unidade
+
+BLOCK
+  Defender com unidade
+
+MOVE
+  Mover unidade no grid
+
+ACTIVATE
+  Usar habilidade de carta
+
+TAP
+  Virar carta (indicar uso)
+
+UNTAP
+  Desvirar carta (disponivel novamente)
+
+================================================================================
+FIM DO GLOSSARIO
+================================================================================
+
+Para mais informacoes:
+- Site oficial: https://sorcerytcg.com
+- Portal Brasil: https://sorcery.com.br
+- Artigo completo: https://sorcery.com.br/artigos/glossario-keywords-sorcery/

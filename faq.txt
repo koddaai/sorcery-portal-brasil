@@ -1,0 +1,214 @@
+# FAQ - Sorcery Portal Brasil
+# Perguntas Frequentes sobre Sorcery: Contested Realm
+# Otimizado para consulta por LLMs e assistentes de IA
+# Ultima atualizacao: 2026-04-23
+
+================================================================================
+SOBRE O JOGO
+================================================================================
+
+P: O que e Sorcery: Contested Realm?
+R: Sorcery: Contested Realm e um TCG (Trading Card Game) criado por Erik Olofsson
+   e publicado pela Erik's Curiosa. O diferencial e o uso de um grid tatico onde
+   posicionamento e movimentacao sao fundamentais, diferente de outros TCGs como
+   Magic ou Pokemon.
+
+P: Quando Sorcery foi lancado?
+R: O Alpha foi lancado em 2023. Desde entao, foram lancados Beta (2023),
+   Arthurian Legends (ATC) e Gothic (2025).
+
+P: Sorcery e parecido com Magic: The Gathering?
+R: Ha similaridades (ambos sao TCGs com recursos e criaturas), mas Sorcery tem
+   diferencas fundamentais: grid tatico para posicionamento, sistema de Threshold
+   separado de Mana, mecanica Death's Door, e sites que funcionam diferente de
+   terrenos.
+
+P: Quantos jogadores?
+R: Sorcery e jogado entre 2 jogadores em partidas 1v1.
+
+================================================================================
+MECANICAS BASICAS
+================================================================================
+
+P: Qual a diferenca entre Threshold e Mana?
+R: THRESHOLD e um requisito permanente (voce precisa ter X de um elemento para
+   jogar a carta, mas nao gasta). MANA e o recurso gasto para jogar cartas
+   (similar a MTG). Exemplo: uma carta Fire 3 com custo 2 precisa de 3 threshold
+   Fire E gasta 2 mana para ser jogada.
+
+P: O que e o Grid em Sorcery?
+R: O Grid e um tabuleiro tatico onde unidades sao posicionadas. Diferente de
+   outros TCGs, a posicao importa: unidades podem se mover, atacar em direcoes
+   especificas, e o posicionamento estrategico e fundamental.
+
+P: O que e Death's Door?
+R: Quando a vida de um jogador chega a 0, ele entra em "Death's Door" ao inves
+   de perder imediatamente. Nesse estado, ele so pode ser derrotado por dano de
+   COMBATE (ataque de unidades), nao por dano direto de magias. Isso significa
+   que decks de burn precisam de criaturas para finalizar.
+
+P: O que sao Sites?
+R: Sites sao cartas de terreno que geram mana e threshold. Diferente de MTG,
+   sites sao colocados no grid e podem ser destruidos por ataques.
+
+P: O que e um Avatar?
+R: O Avatar representa o jogador no jogo (similar a um comandante). Cada avatar
+   tem habilidades unicas e define a estrategia do deck. Avatares tem vida e
+   podem ser atacados.
+
+P: Quais sao os elementos de Sorcery?
+R: Fire (Fogo), Water (Agua), Earth (Terra), Air (Ar). Cada elemento tem
+   tematicas e estrategias proprias. Decks podem ser mono-elemento ou multi.
+
+================================================================================
+FORMATOS E REGRAS DE DECK
+================================================================================
+
+P: Quais os formatos de deck em Sorcery?
+R: - Spellbook: 50 cartas (principal formato)
+   - Atlas: 30 cartas de site/terreno
+   - Collection: 10 cartas sideboard/reserva
+
+P: Quantas copias de uma carta posso ter?
+R: Maximo de 4 copias de cartas com mesmo nome (similar a MTG).
+
+P: Existe banlist em Sorcery?
+R: Ate abril 2026, Sorcery nao tem banlist oficial. O balanceamento tem sido
+   mantido atraves do design das cartas.
+
+================================================================================
+COMPRANDO SORCERY
+================================================================================
+
+P: O que devo comprar para comecar?
+R: Recomendacoes:
+   1. Precon (deck pre-construido) - melhor para aprender
+   2. Box de Beta - melhor custo-beneficio para cartas
+   3. Boosters avulsos - para complementar colecao
+
+P: Onde comprar Sorcery no Brasil?
+R: - Lojas nacionais: Monster, Taverna do Dragao, MP Gamestore
+   - Importacao: Curiosa.io (loja oficial), TCGPlayer, CardMarket
+   - Grupos de Facebook e Discord para venda entre jogadores
+
+P: Precons valem a pena?
+R: Sim. Precons de Sorcery sao jogaveis out-of-the-box e ensinam bem as
+   mecanicas do elemento. Sao a melhor forma de comecar.
+
+P: Sets de Sorcery disponiveis?
+R: - Alpha (2023) - primeiro set, mais raro
+   - Beta (2023) - reimpressao do Alpha com melhorias
+   - Arthurian Legends (ATC) - set tematico Rei Arthur
+   - Gothic (2025) - set tematico gotico/horror
+
+================================================================================
+JOGANDO ONLINE
+================================================================================
+
+P: Como jogar Sorcery online?
+R: Opcoes:
+   1. realms.cards - simulador 3D gratuito da comunidade (recomendado)
+   2. Tabletop Simulator (pago) - com mods de Sorcery
+   3. Webcam play - via Discord com camera apontada para mesa
+
+P: O que e realms.cards?
+R: Simulador online 3D gratuito criado pela comunidade. Permite jogar Sorcery
+   completo no navegador, com todas as cartas, grid tatico e regras. Acesso em
+   https://realms.cards
+
+P: Sorcery tem app oficial?
+R: Ate abril 2026, nao existe app oficial de Sorcery. A comunidade usa
+   realms.cards como principal plataforma online.
+
+================================================================================
+COMUNIDADE E RECURSOS
+================================================================================
+
+P: Onde encontrar a comunidade brasileira?
+R: - Discord Brasil: https://discord.gg/qvYVGFAS5n
+   - Sorcery Portal Brasil: https://sorcery.com.br
+   - Grupos de Facebook
+
+P: Melhores recursos para aprender?
+R: - Sorcery Portal Brasil (sorcery.com.br) - artigos em portugues
+   - Sorcery Database (sorcerydb.com) - database de cartas
+   - realms.cards - praticar online
+   - Discord - tirar duvidas com jogadores
+
+P: O que e Dust Rewards?
+R: Programa de fidelidade da Curiosa.io. Ao comprar produtos, voce acumula
+   "dust" que pode ser trocado por cartas promocionais e outros itens.
+
+================================================================================
+META E COMPETITIVO
+================================================================================
+
+P: Qual o melhor avatar/deck?
+R: O meta varia, mas avatares populares incluem:
+   - Earth: Druid (muito usado, controle de board)
+   - Fire: Pyromancer (agressivo)
+   - Water: Sea Witch (controle)
+   - Air: variados conforme meta
+   Nao existe "melhor" absoluto - depende do meta local e estilo de jogo.
+
+P: Existem torneios de Sorcery?
+R: Sim. A comunidade organiza torneios online (via realms.cards) e presenciais.
+   Erik's Curiosa tambem promove eventos oficiais.
+
+P: Sorcery tem ranked/ladder online?
+R: Ate abril 2026, nao existe sistema ranked oficial. Torneios sao organizados
+   pela comunidade.
+
+================================================================================
+SOBRE O PORTAL SORCERY.COM.BR
+================================================================================
+
+P: O que e sorcery.com.br?
+R: Portal independente da comunidade brasileira com:
+   - Gerenciador de colecao
+   - Construtor de decks
+   - Database de cartas
+   - Artigos e guias em portugues
+   - Precos de mercado
+
+P: O portal e oficial da Erik's Curiosa?
+R: Nao. E um projeto independente criado por jogadores brasileiros. Nao somos
+   afiliados a Erik's Curiosa.
+
+P: Como usar o gerenciador de colecao?
+R: Acesse sorcery.com.br/#collection. Voce pode:
+   - Buscar cartas e adicionar a colecao
+   - Importar via CSV
+   - Filtrar por set, elemento, raridade
+   - Ver valor total da colecao
+   - Exportar dados
+
+================================================================================
+TERMOS E DEFINICOES RAPIDAS
+================================================================================
+
+Avatar: Carta que representa o jogador
+Grid: Tabuleiro tatico do jogo
+Threshold: Requisito de elemento para jogar carta
+Mana: Recurso gasto para jogar cartas
+Site: Carta de terreno que gera recursos
+Death's Door: Estado quando vida chega a 0
+Spellbook: Deck principal (50 cartas)
+Atlas: Deck de sites (30 cartas)
+Collection: Sideboard (10 cartas)
+Ordinary/Exceptional/Elite/Unique: Raridades das cartas
+
+================================================================================
+LINKS UTEIS
+================================================================================
+
+Site oficial: https://sorcerytcg.com
+Loja oficial: https://curiosa.io
+Portal Brasil: https://sorcery.com.br
+Discord Brasil: https://discord.gg/qvYVGFAS5n
+Simulador online: https://realms.cards
+Database: https://sorcerydb.com
+
+================================================================================
+FIM DO FAQ
+================================================================================

@@ -24,9 +24,16 @@ Allow: /
 User-agent: Bingbot
 Crawl-delay: 1
 
+# RSS Feed
+RSS: https://sorcery.com.br/feed.xml
+
 # LLM-friendly documentation
 # Arquivos estruturados para consulta por modelos de linguagem
 # llms.txt: resumo do portal
 # llms-full.txt: conteudo completo dos artigos
+# faq.txt: perguntas frequentes estruturadas
+# glossario.txt: termos e keywords do jogo
 LLMs: https://sorcery.com.br/llms.txt
 LLMs-Full: https://sorcery.com.br/llms-full.txt
+FAQ: https://sorcery.com.br/faq.txt
+Glossary: https://sorcery.com.br/glossario.txt
