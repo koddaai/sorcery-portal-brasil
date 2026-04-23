@@ -8371,6 +8371,17 @@ a.nav-dropdown-item {
     display: none;
 }
 
+.form-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-top: 0.25rem;
+}
+
+.form-group input:focus + .form-hint {
+    color: var(--text-secondary);
+}
+
 .forgot-password-link,
 .back-to-login-link {
     display: block;

@@ -14085,17 +14085,54 @@ async function handleLogin(e) {
 async function handleRegister(e) {
     e.preventDefault();
 
-    const name = document.getElementById('register-name').value;
-    const email = document.getElementById('register-email').value;
+    const name = document.getElementById('register-name').value.trim();
+    const email = document.getElementById('register-email').value.trim().toLowerCase();
     const password = document.getElementById('register-password').value;
     const confirmPassword = document.getElementById('register-password-confirm').value;
     const errorEl = document.getElementById('register-error');
     const submitBtn = e.target.querySelector('button[type="submit"]');
 
+    // Helper function to show error
+    const showError = (msg) => {
+        errorEl.textContent = msg;
+        errorEl.classList.remove('hidden');
+    };
+
+    // Validate display name (3-30 chars, valid characters)
+    if (!name || name.length < 3) {
+        showError('Nome deve ter no mínimo 3 caracteres');
+        return;
+    }
+    if (name.length > 30) {
+        showError('Nome deve ter no máximo 30 caracteres');
+        return;
+    }
+    if (!/^[a-zA-Z0-9À-ÿ _-]+$/.test(name)) {
+        showError('Nome contém caracteres inválidos');
+        return;
+    }
+
+    // Validate email format
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('Formato de email inválido');
+        return;
+    }
+
+    // Validate password strength
+    const passwordErrors = [];
+    if (password.length < 8) passwordErrors.push('mínimo 8 caracteres');
+    if (!/[A-Z]/.test(password)) passwordErrors.push('uma letra maiúscula');
+    if (!/[a-z]/.test(password)) passwordErrors.push('uma letra minúscula');
+    if (!/[0-9]/.test(password)) passwordErrors.push('um número');
+
+    if (passwordErrors.length > 0) {
+        showError('Senha deve conter: ' + passwordErrors.join(', '));
+        return;
+    }
+
     // Validate passwords match
     if (password !== confirmPassword) {
-        errorEl.textContent = 'As senhas não coincidem';
-        errorEl.classList.remove('hidden');
+        showError('As senhas não coincidem');
         return;
     }
 

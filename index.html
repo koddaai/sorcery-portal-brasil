@@ -3480,23 +3480,25 @@
                 </form>
 
                 <!-- Register Form -->
-                <form id="register-form" class="auth-form hidden">
+                <form id="register-form" class="auth-form hidden" novalidate>
                     <h3>Criar uma Conta</h3>
                     <div class="form-group">
                         <label for="register-name">Nome de Exibição</label>
-                        <input type="text" id="register-name" required placeholder="Seu nome">
+                        <input type="text" id="register-name" required minlength="3" maxlength="30" placeholder="3-30 caracteres" autocomplete="username">
+                        <small class="form-hint">Letras, números, espaços e _ - permitidos</small>
                     </div>
                     <div class="form-group">
                         <label for="register-email">Email</label>
-                        <input type="email" id="register-email" required placeholder="seu@email.com">
+                        <input type="email" id="register-email" required maxlength="100" placeholder="seu@email.com" autocomplete="email">
                     </div>
                     <div class="form-group">
                         <label for="register-password">Senha</label>
-                        <input type="password" id="register-password" required minlength="6" placeholder="Mínimo 6 caracteres">
+                        <input type="password" id="register-password" required minlength="8" maxlength="100" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+                        <small class="form-hint">Deve conter maiúscula, minúscula e número</small>
                     </div>
                     <div class="form-group">
                         <label for="register-password-confirm">Confirmar Senha</label>
-                        <input type="password" id="register-password-confirm" required placeholder="Repita a senha">
+                        <input type="password" id="register-password-confirm" required placeholder="Repita a senha" autocomplete="new-password">
                     </div>
                     <div id="register-error" class="auth-error hidden"></div>
                     <button type="submit" class="btn primary btn-full">Criar Conta</button>
