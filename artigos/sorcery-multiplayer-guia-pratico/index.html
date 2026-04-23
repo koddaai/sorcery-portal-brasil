@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <title>Como jogar Sorcery TCG com 4 jogadores (guia definitivo) | Sorcery Contested Realm Brasil</title>
-    <meta name="description" content="Guia completo de multiplayer para Sorcery TCG: regras da comunidade, setup, grid 6x6 e variantes para 3-4 jogadores.">
+    <title>Como jogar Sorcery TCG com 4 jogadores (guia prático) | Sorcery Contested Realm Brasil</title>
+    <meta name="description" content="Guia prático para jogar Sorcery TCG com 4 jogadores. Setup simples, regras adaptadas e formato testado pela comunidade.">
     <meta name="keywords" content="multiplayer, sorcery tcg, 4 jogadores, 2v2, grid 6x6">
     <meta name="author" content="Pedro Lourenço">
     <meta name="robots" content="index, follow">
@@ -15,8 +15,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://sorcery.com.br/artigos/sorcery-multiplayer-guia-pratico/">
-    <meta property="og:title" content="Como jogar Sorcery TCG com 4 jogadores (guia definitivo) | Sorcery Contested Realm Brasil">
-    <meta property="og:description" content="Guia completo de multiplayer para Sorcery TCG: regras da comunidade, setup, grid 6x6 e variantes para 3-4 jogadores.">
+    <meta property="og:title" content="Como jogar Sorcery TCG com 4 jogadores (guia prático) | Sorcery Contested Realm Brasil">
+    <meta property="og:description" content="Guia prático para jogar Sorcery TCG com 4 jogadores. Setup simples, regras adaptadas e formato testado pela comunidade.">
     <meta property="og:image" content="https://sorcery.com.br/assets/articles/multiplayer-grid.webp">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -32,8 +32,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://sorcery.com.br/artigos/sorcery-multiplayer-guia-pratico/">
-    <meta name="twitter:title" content="Como jogar Sorcery TCG com 4 jogadores (guia definitivo) | Sorcery Contested Realm Brasil">
-    <meta name="twitter:description" content="Guia completo de multiplayer para Sorcery TCG: regras da comunidade, setup, grid 6x6 e variantes para 3-4 jogadores.">
+    <meta name="twitter:title" content="Como jogar Sorcery TCG com 4 jogadores (guia prático) | Sorcery Contested Realm Brasil">
+    <meta name="twitter:description" content="Guia prático para jogar Sorcery TCG com 4 jogadores. Setup simples, regras adaptadas e formato testado pela comunidade.">
     <meta name="twitter:image" content="https://sorcery.com.br/assets/articles/multiplayer-grid.webp">
 
     <!-- Theme -->
@@ -54,8 +54,8 @@
     {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Como jogar Sorcery TCG com 4 jogadores (guia definitivo)",
-  "description": "Guia completo de multiplayer para Sorcery TCG: regras da comunidade, setup, grid 6x6 e variantes para 3-4 jogadores.",
+  "headline": "Como jogar Sorcery TCG com 4 jogadores (guia prático validado pela comunidade)",
+  "description": "Guia prático para jogar Sorcery TCG com 4 jogadores. Setup simples, regras adaptadas e formato testado pela comunidade.",
   "image": "https://sorcery.com.br/assets/articles/multiplayer-grid.webp",
   "datePublished": "2026-04-23",
   "dateModified": "2026-04-23",
@@ -168,21 +168,11 @@
         flex-direction: column;
         gap: 0.25rem;
     }
-    .author-label {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
     .author-name {
         font-family: 'Cinzel', serif;
         font-size: 1.125rem;
         color: var(--text-primary);
         font-weight: 600;
-    }
-    .author-bio {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
     }
 
     .article-content {
@@ -213,19 +203,6 @@
         margin-bottom: 0.5rem;
         line-height: 1.6;
     }
-    .article-content table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: var(--space-4) 0;
-        font-size: 0.9rem;
-    }
-    .article-content td {
-        padding: var(--space-2) var(--space-3);
-        border: 1px solid var(--border-color);
-    }
-    .article-content tr:nth-child(odd) {
-        background: rgba(255,255,255,0.02);
-    }
     .article-content blockquote {
         border-left: 3px solid var(--accent-gold);
         padding-left: var(--space-4);
@@ -250,6 +227,15 @@
         padding: var(--space-4);
         margin: var(--space-4) 0;
     }
+    .article-content .arrow-point {
+        color: var(--accent-gold);
+        font-weight: 600;
+    }
+    .article-content hr {
+        border: none;
+        border-top: 1px solid var(--border-color);
+        margin: var(--space-5) 0;
+    }
 
     /* Sources Section */
     .article-sources {
@@ -268,12 +254,8 @@
         margin-bottom: var(--space-3);
         font-weight: 600;
     }
-    .source-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-2);
-    }
     .source-links.detailed {
+        display: flex;
         flex-direction: column;
         gap: var(--space-2);
     }
@@ -297,20 +279,6 @@
     .source-links.detailed a i {
         color: var(--accent-gold);
         flex-shrink: 0;
-    }
-    .source-links a {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.25rem 0.75rem;
-        background: var(--bg-surface-2);
-        color: var(--accent-gold);
-        border-radius: var(--radius-full);
-        font-size: 0.75rem;
-        text-decoration: none;
-        transition: background var(--duration-fast);
-    }
-    .source-links a:hover {
-        background: rgba(212, 175, 55, 0.2);
     }
 
     /* Community Footer */
@@ -485,21 +453,11 @@
         z-index: 1001;
         animation: slideIn 0.3s ease;
     }
-    .toast-success {
-        border-color: #22c55e;
-    }
-    .toast-success i {
-        color: #22c55e;
-    }
-    .toast-error {
-        border-color: #ef4444;
-    }
-    .toast-error i {
-        color: #ef4444;
-    }
-    .toast-exit {
-        animation: slideOut 0.3s ease forwards;
-    }
+    .toast-success { border-color: #22c55e; }
+    .toast-success i { color: #22c55e; }
+    .toast-error { border-color: #ef4444; }
+    .toast-error i { color: #ef4444; }
+    .toast-exit { animation: slideOut 0.3s ease forwards; }
     @keyframes slideIn {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
@@ -508,29 +466,17 @@
         from { transform: translateX(0); opacity: 1; }
         to { transform: translateX(100%); opacity: 0; }
     }
-    .spin {
-        animation: spin 1s linear infinite;
-    }
+    .spin { animation: spin 1s linear infinite; }
     @keyframes spin {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
 
     @media (max-width: 768px) {
-        .article-page {
-            padding: var(--space-4);
-        }
-        .article-title {
-            font-size: 1.5rem;
-        }
-        .author-profile {
-            flex-direction: column;
-            text-align: center;
-        }
-        .community-message {
-            flex-direction: column;
-            text-align: center;
-        }
+        .article-page { padding: var(--space-4); }
+        .article-title { font-size: 1.5rem; }
+        .author-profile { flex-direction: column; text-align: center; }
+        .community-message { flex-direction: column; text-align: center; }
     }
     </style>
 </head>
@@ -589,17 +535,16 @@
                 </div>
 
                 <!-- Title -->
-                <h1 class="article-title">Como jogar Sorcery TCG com 4 jogadores (guia definitivo e simples)</h1>
+                <h1 class="article-title">Como jogar Sorcery TCG com 4 jogadores (guia prático validado pela comunidade)</h1>
 
                 <!-- Summary -->
-                <p class="article-summary">Sim, dá pra jogar Sorcery com 3 ou 4 pessoas. Mas o multiplayer não é oficial — ele foi construído pela comunidade. Esse guia pega o que realmente funciona e transforma em algo simples.</p>
+                <p class="article-summary">Sim, dá pra jogar Sorcery com 3 ou 4 pessoas. Mas não existem regras oficiais de multiplayer até hoje. O formato foi construído pela comunidade — e esse guia pega o que realmente funciona.</p>
 
                 <!-- Tags -->
                 <div class="article-tags">
                     <span class="article-tag">#multiplayer</span>
-                    <span class="article-tag">#sorcery-tcg</span>
                     <span class="article-tag">#4-jogadores</span>
-                    <span class="article-tag">#2v2</span>
+                    <span class="article-tag">#sorcery-tcg</span>
                 </div>
 
                 <!-- Author Profile -->
@@ -612,105 +557,245 @@
 
                 <!-- Content -->
                 <div class="article-content">
-                    <blockquote>O multiplayer não é oficial. Ele foi construído pela comunidade. Esse guia pega o que realmente funciona.</blockquote>
+                    <blockquote><strong>Não existem regras oficiais de multiplayer até hoje.</strong></blockquote>
+
+                    <p>O formato foi construído pela comunidade — especialmente em espaços como o <a href="https://reddit.com/r/SorceryTCG" target="_blank" rel="noopener">Reddit r/SorceryTCG</a> e projetos colaborativos no Google Drive.</p>
+
+                    <p>Esse guia pega o que realmente funciona e transforma em algo simples.</p>
+
+                    <p class="arrow-point">→ você consegue jogar hoje.</p>
+
+                    <hr>
 
                     <h2>Baixe o grid pronto</h2>
-                    <p>Antes de qualquer coisa, use os materiais da comunidade:</p>
-                    <p><a href="https://drive.google.com/drive/folders/1BpYVR-j6l9TkVkJHCHJi2QCvYZSrCLw1" target="_blank" rel="noopener">Google Drive — Materiais de Multiplayer</a></p>
-                    <p>Você encontra:</p>
+
+                    <p>Antes da teoria:</p>
+
+                    <p class="arrow-point">→ use o material já testado pela comunidade:</p>
+
+                    <div class="highlight-box">
+                        <a href="https://drive.google.com/drive/folders/1BpYVR-j6l9TkVkJHCHJi2QCvYZSrCLw1" target="_blank" rel="noopener"><strong>Google Drive — Materiais de Multiplayer</strong></a>
+                    </div>
+
+                    <p>Lá você encontra:</p>
                     <ul>
-                        <li>Grid 6x6 pronto</li>
-                        <li>Arquivos para impressão</li>
-                        <li>Layouts multiplayer</li>
+                        <li>grid 6x6 pronto</li>
+                        <li>arquivos para impressão</li>
+                        <li>layouts multiplayer</li>
                     </ul>
 
-                    <h2>Veja antes de jogar (recomendado)</h2>
-                    <p>Se você nunca jogou Sorcery, <strong>veja uma partida primeiro</strong>. Isso ajuda a entender:</p>
+                    <p class="arrow-point">→ esse é o padrão mais utilizado atualmente.</p>
+
+                    <hr>
+
+                    <h2>O que a comunidade já resolveu</h2>
+
+                    <p>Após muitos testes e discussões (principalmente no <a href="https://reddit.com/r/SorceryTCG" target="_blank" rel="noopener">Reddit</a>), alguns padrões se repetem:</p>
+
                     <ul>
-                        <li>Movimento</li>
-                        <li>Combate</li>
-                        <li>Ritmo</li>
+                        <li>o grid <strong>6x6 funciona melhor para 4 jogadores</strong></li>
+                        <li>partidas travam sem <strong>objetivo central</strong></li>
+                        <li>jogadores eliminados precisam sair sem quebrar o jogo</li>
+                        <li>o resto das regras pode continuar igual</li>
                     </ul>
-                    <p>Sorcery mantém as mesmas regras base mesmo em multiplayer. Não há regras especiais — apenas adaptações de setup.</p>
+
+                    <p class="arrow-point">→ é exatamente isso que vamos usar.</p>
+
+                    <hr>
 
                     <h2>Setup em 5 minutos</h2>
 
                     <h3>1. Grid</h3>
-                    <p>Use um grid <strong>6x6</strong> — padrão mais usado pela comunidade.</p>
+                    <p>Use um grid <strong>6x6</strong></p>
+                    <p class="arrow-point">→ esse formato aparece de forma consistente tanto em materiais compartilhados quanto em discussões da comunidade.</p>
 
                     <h3>2. Jogadores</h3>
-                    <p>4 jogadores, cada um em um lado do grid.</p>
+                    <ul>
+                        <li>4 jogadores</li>
+                        <li>cada um em um lado do grid</li>
+                    </ul>
 
                     <h3>3. Posição inicial</h3>
-                    <p>Cada jogador começa na borda e posiciona o Avatar no seu lado.</p>
+                    <p>Cada jogador:</p>
+                    <ul>
+                        <li>começa na borda</li>
+                        <li>posiciona o Avatar no seu lado</li>
+                    </ul>
 
-                    <h3>4. Objetivo no centro</h3>
+                    <h3>4. Objetivo no centro (regra mais importante)</h3>
+
                     <div class="highlight-box">
-                        <strong>Isso é essencial!</strong> Marque o centro do grid. Sem isso, o jogo trava. Com isso, todo mundo se move em direção a algo.
+                        <strong>Marque o centro do grid.</strong><br><br>
+                        Isso não é opcional na prática. Discussões recorrentes mostram que:
+                        <ul style="margin-bottom:0;">
+                            <li>sem objetivo → jogo trava</li>
+                            <li>com objetivo → jogo flui</li>
+                        </ul>
+                        <br>
+                        → simples assim.
                     </div>
 
                     <h3>5. Turnos</h3>
-                    <p>Sorteie quem começa e siga no <strong>sentido horário</strong>.</p>
+                    <ul>
+                        <li>sorteie quem começa</li>
+                        <li>siga no sentido horário</li>
+                    </ul>
+
+                    <hr>
 
                     <h2>Regras multiplayer (mínimas)</h2>
 
+                    <p>Aqui está o ponto mais importante:</p>
+                    <p class="arrow-point">→ você não precisa reinventar o jogo</p>
+
                     <h3>Jogador eliminado</h3>
-                    <p>Quando alguém perde:</p>
+                    <p>Quando um jogador perde:</p>
                     <ul>
-                        <li>Unidades saem do jogo</li>
-                        <li>Sites viram <strong>rubble</strong></li>
+                        <li>unidades saem do jogo</li>
+                        <li>sites viram <strong>rubble</strong></li>
                     </ul>
-                    <p>Esse é o consenso da comunidade.</p>
 
-                    <h3>Aleatoriedade</h3>
-                    <p>Use app de RNG ou dados para resolver efeitos aleatórios.</p>
+                    <p class="arrow-point">→ esse é um dos consensos mais fortes da comunidade</p>
 
-                    <h3>Direção</h3>
-                    <p>"Top/bottom" pode virar esquerda/direita dependendo da posição do jogador.</p>
+                    <p>Evita:</p>
+                    <ul>
+                        <li>snowball</li>
+                        <li>travamento de board</li>
+                    </ul>
+
+                    <h3>Casas aleatórias</h3>
+                    <p>Use:</p>
+                    <ul>
+                        <li>app de RNG</li>
+                        <li>ou dados</li>
+                    </ul>
+                    <p class="arrow-point">→ grids maiores exigem adaptação simples — prática comum relatada pela comunidade.</p>
+
+                    <h3>Orientação de cartas</h3>
+                    <p>Como há vários lados:</p>
+                    <ul>
+                        <li>"top/bottom" também pode ser "left/right"</li>
+                    </ul>
+                    <p class="arrow-point">→ ajuste natural em multiplayer.</p>
+
+                    <hr>
+
+                    <h2>O que NÃO muda</h2>
+
+                    <p>Isso é importante:</p>
+                    <p class="arrow-point">→ <strong>quase tudo continua igual ao jogo base</strong></p>
+
+                    <ul>
+                        <li>mana</li>
+                        <li>combate</li>
+                        <li>invocação</li>
+                        <li>movimento</li>
+                    </ul>
+
+                    <p>Isso acontece porque o multiplayer reutiliza o sistema original de Sorcery.</p>
+
+                    <hr>
 
                     <h2>Como vencer</h2>
-                    <p><strong>Último Avatar vivo ganha.</strong></p>
 
-                    <h2>Problemas comuns</h2>
+                    <p class="arrow-point">→ último Avatar vivo ganha</p>
 
-                    <h3>Jogo travado</h3>
-                    <p><strong>Solução:</strong> objetivo no centro. Isso força movimento e interação.</p>
+                    <hr>
 
-                    <h3>Partida longa</h3>
+                    <h2>Qual formato escolher?</h2>
+
+                    <p>Existem duas formas principais usadas pela comunidade:</p>
+
+                    <h3>Free-for-All (4 jogadores)</h3>
+                    <ul>
+                        <li>cada um por si</li>
+                        <li>grid 6x6</li>
+                        <li>formato mais comum</li>
+                    </ul>
+                    <p class="arrow-point">→ amplamente discutido no <a href="https://reddit.com/r/SorceryTCG" target="_blank" rel="noopener">Reddit</a></p>
+
+                    <h3>2v2 (Two-Headed Dragon)</h3>
+                    <p>Formato estruturado por grupos da comunidade:</p>
+                    <ul>
+                        <li>jogo em equipe</li>
+                        <li>mais equilibrado</li>
+                        <li>regras adicionais</li>
+                    </ul>
+                    <p class="arrow-point">→ melhor para grupos mais avançados</p>
+
+                    <h3>Regra prática</h3>
+                    <ul>
+                        <li>começou agora → FFA 6x6</li>
+                        <li>grupo fixo → 2v2</li>
+                    </ul>
+
+                    <hr>
+
+                    <h2>Problemas comuns (e soluções)</h2>
+
+                    <h3>Jogo trava</h3>
+                    <p><strong>Causa:</strong> ninguém quer atacar</p>
+                    <p class="arrow-point">→ <strong>solução:</strong> objetivo central</p>
+
+                    <h3>Partida demora muito</h3>
                     <p><strong>Soluções:</strong></p>
                     <ul>
-                        <li>Reduzir HP inicial</li>
-                        <li>Jogar mais agressivo</li>
+                        <li>reduzir HP</li>
+                        <li>acelerar turnos</li>
                     </ul>
 
                     <h3>Jogador eliminado cedo</h3>
                     <p><strong>Soluções:</strong></p>
                     <ul>
-                        <li>Jogar 2v2 (equipes)</li>
-                        <li>Partidas mais curtas</li>
+                        <li>jogar 2v2</li>
+                        <li>partidas mais curtas</li>
                     </ul>
 
-                    <h2>Variação: 2v2</h2>
+                    <hr>
+
+                    <h2>Quer ver isso funcionando?</h2>
+
+                    <p>Buscar por:</p>
                     <ul>
-                        <li>Formar duplas</li>
-                        <li>Objetivo em equipe</li>
-                        <li>Último time vence</li>
+                        <li>"sorcery tcg 4 player gameplay"</li>
+                        <li>"sorcery multiplayer"</li>
                     </ul>
-                    <p>Essa variação é <strong>mais equilibrada</strong> e evita o problema de eliminação precoce.</p>
 
-                    <h2>O que realmente importa</h2>
+                    <p>Mostra partidas reais da comunidade.</p>
+
+                    <p class="arrow-point">→ útil porque:</p>
+                    <ul>
+                        <li>visualiza o grid</li>
+                        <li>entende ritmo</li>
+                        <li>reduz curva de aprendizado</li>
+                    </ul>
+
+                    <hr>
+
+                    <h2>Resumo (o que realmente importa)</h2>
+
                     <div class="highlight-box">
                         Se você lembrar só disso:
                         <ul style="margin-bottom:0;">
-                            <li><strong>Grid 6x6</strong></li>
-                            <li><strong>Objetivo central</strong></li>
-                            <li><strong>Sites viram rubble</strong></li>
+                            <li><strong>use grid 6x6</strong></li>
+                            <li><strong>coloque objetivo no centro</strong></li>
+                            <li><strong>transforme sites em rubble</strong></li>
+                            <li><strong>jogue normalmente</strong></li>
                         </ul>
-                        Já funciona.
+                        <br>
+                        → isso já funciona
                     </div>
 
+                    <hr>
+
                     <h2>Conclusão</h2>
-                    <p>Multiplayer em Sorcery não é sobre regras oficiais. É sobre <strong>usar o que funciona</strong>.</p>
+
+                    <p>Multiplayer em Sorcery não é sobre seguir regras oficiais.</p>
+
+                    <p>É sobre:</p>
+
+                    <p class="arrow-point">→ usar o que funciona na prática</p>
+
                     <p>E isso já é suficiente pra jogar hoje.</p>
                 </div>
 
@@ -735,6 +820,9 @@
                             Google Drive — Materiais de Multiplayer
                         </a>
                     </div>
+                    <p style="margin-top: var(--space-3); font-size: 0.8rem; color: var(--text-secondary);">
+                        <em>Nota: Não há regras oficiais de multiplayer publicadas pela Erik's Curiosa até o momento.</em>
+                    </p>
                 </div>
 
                 <!-- Related Articles -->
@@ -865,16 +953,12 @@
     </div>
 
     <script>
-        // Initialize Lucide icons
         document.addEventListener('DOMContentLoaded', () => {
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
         });
     </script>
 
     <script>
-        // Submission form functions
         function openSubmissionForm() {
             document.getElementById('submission-modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
@@ -888,12 +972,10 @@
 
         async function submitArticle(event) {
             event.preventDefault();
-
             const form = event.target;
             const submitBtn = document.getElementById('submit-btn');
             const originalText = submitBtn.innerHTML;
 
-            // Disable button and show loading
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i data-lucide="loader-2" class="spin" style="width:16px;height:16px;"></i> Enviando...';
             if (typeof lucide !== 'undefined') lucide.createIcons();
@@ -909,18 +991,14 @@
             };
 
             try {
-                // Submit to NocoDB via proxy (handles authentication)
                 const response = await fetch('https://sorcery-api-proxy.pedro-4e6.workers.dev/submit-article', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
                 const result = await response.json();
                 if (result.success) {
-                    // Success
                     closeSubmissionForm();
                     showToast('Artigo enviado com sucesso! Entraremos em contato em breve.', 'success');
                     form.reset();
@@ -937,7 +1015,6 @@
             }
         }
 
-        // Simple toast notification
         function showToast(message, type) {
             const toast = document.createElement('div');
             toast.className = 'toast toast-' + type;
@@ -951,16 +1028,12 @@
             }, 5000);
         }
 
-        // Close modal on escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') closeSubmissionForm();
         });
 
-        // Close modal on backdrop click
         document.getElementById('submission-modal').addEventListener('click', (e) => {
-            if (e.target.classList.contains('submission-modal')) {
-                closeSubmissionForm();
-            }
+            if (e.target.classList.contains('submission-modal')) closeSubmissionForm();
         });
     </script>
 </body>
