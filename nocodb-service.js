@@ -145,17 +145,34 @@ class NocoDBService {
                 }
             }
 
-            // Check if user exists
+            // Em modo proxy, usar endpoint seguro de registro
+            if (this.isProxyMode) {
+                const response = await fetch(`${this.baseUrl}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, displayName })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create user');
+                }
+
+                this.currentUser = data.user;
+                this.saveSession();
+                return this.currentUser;
+            }
+
+            // Modo direto (localhost) - manter lógica original
             const existing = await this.findUserByEmail(email);
             if (existing) {
                 throw new Error('Email already registered');
             }
 
-            // Gerar salt único e hash seguro usando PBKDF2
             const salt = generateSalt();
             const passwordHash = await hashPasswordSecure(password, salt);
 
-            // Create user
             const response = await fetch(this.getTableUrl(this.tables.users), {
                 method: 'POST',
                 headers: this.getHeaders(),
@@ -199,6 +216,31 @@ class NocoDBService {
                 }
             }
 
+            // Em modo proxy, usar endpoint seguro de login
+            if (this.isProxyMode) {
+                const response = await fetch(`${this.baseUrl}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+
+                // Resetar tentativas de login após sucesso
+                if (typeof rateLimiter !== 'undefined') {
+                    rateLimiter.resetLoginAttempts(email);
+                }
+
+                this.currentUser = data.user;
+                this.saveSession();
+                return this.currentUser;
+            }
+
+            // Modo direto (localhost) - manter lógica original
             const user = await this.findUserByEmail(email);
             if (!user) {
                 throw new Error('User not found');
@@ -278,10 +320,25 @@ class NocoDBService {
         }
 
         try {
-            await this.updateRecord(this.tables.users, this.currentUser.id, {
-                terms_accepted: true,
-                terms_accepted_at: new Date().toISOString()
-            });
+            // Em modo proxy, usar endpoint seguro
+            if (this.isProxyMode) {
+                const response = await fetch(`${this.baseUrl}/auth/accept-terms`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: this.currentUser.id })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Erro ao aceitar termos');
+                }
+            } else {
+                // Modo direto (localhost)
+                await this.updateRecord(this.tables.users, this.currentUser.id, {
+                    terms_accepted: true,
+                    terms_accepted_at: new Date().toISOString()
+                });
+            }
 
             // Update local session
             this.currentUser.termsAccepted = true;

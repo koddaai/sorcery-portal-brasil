@@ -23,10 +23,12 @@ const ALLOWED_ORIGINS = [
 // WHITELIST DE TABELAS E OPERAÇÕES
 // ============================================
 const TABLE_PERMISSIONS = {
-  // BLOQUEADO: Nunca permitir acesso direto
+  // USERS: Acesso restrito - apenas leitura pública (campos seguros)
   'users': {
-    blocked: true,
-    reason: 'Acesso direto à tabela de usuários não permitido'
+    GET: { public: true, stripSensitive: true },
+    POST: { blocked: true, reason: 'Use /auth/register' },
+    PATCH: { blocked: true, reason: 'Use endpoints /auth/*' },
+    DELETE: { blocked: true }
   },
 
   // Coleção: usuário só acessa seus próprios dados
@@ -204,12 +206,12 @@ function checkPermissions(tableName, method, userId, path) {
 
   // Método bloqueado
   if (methodConfig.blocked) {
-    return { allowed: false, reason: `Método ${method} bloqueado para '${tableName}'` };
+    return { allowed: false, reason: methodConfig.reason || `Método ${method} bloqueado para '${tableName}'` };
   }
 
   // Acesso público
   if (methodConfig.public) {
-    return { allowed: true };
+    return { allowed: true, stripSensitive: methodConfig.stripSensitive };
   }
 
   // Requer userId
@@ -220,11 +222,97 @@ function checkPermissions(tableName, method, userId, path) {
   return { allowed: true, requireOwnerCheck: methodConfig.ownerOnly };
 }
 
+// Remover campos sensíveis de dados de usuário
+function stripSensitiveFields(data) {
+  const sensitiveFields = ['password_hash', 'password_salt', 'reset_token', 'reset_token_expires'];
+
+  if (Array.isArray(data)) {
+    return data.map(item => stripSensitiveFields(item));
+  }
+
+  if (data && typeof data === 'object') {
+    const cleaned = { ...data };
+    for (const field of sensitiveFields) {
+      delete cleaned[field];
+    }
+    // Também limpar dentro de 'list' se existir (formato NocoDB)
+    if (cleaned.list) {
+      cleaned.list = stripSensitiveFields(cleaned.list);
+    }
+    return cleaned;
+  }
+
+  return data;
+}
+
 // Gerar token seguro para reset de senha
 function generateResetToken() {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
   return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Gerar salt para senha
+function generateSalt() {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return Array.from(array, b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Hash de senha com PBKDF2 (compatível com o cliente)
+async function hashPassword(password, salt) {
+  const encoder = new TextEncoder();
+  const passwordBuffer = encoder.encode(password);
+  const saltBuffer = encoder.encode(salt);
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    passwordBuffer,
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+
+  const bits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: saltBuffer,
+      iterations: 100000,
+      hash: 'SHA-256'
+    },
+    key,
+    256
+  );
+
+  return Array.from(new Uint8Array(bits))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+// Verificar senha (timing-safe comparison)
+async function verifyPassword(password, salt, storedHash) {
+  const computedHash = await hashPassword(password, salt);
+
+  if (computedHash.length !== storedHash.length) {
+    return false;
+  }
+
+  let result = 0;
+  for (let i = 0; i < computedHash.length; i++) {
+    result |= computedHash.charCodeAt(i) ^ storedHash.charCodeAt(i);
+  }
+
+  return result === 0;
+}
+
+// Hash legado (SHA-256 simples) para compatibilidade
+async function hashPasswordLegacy(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 // ============================================
@@ -462,6 +550,271 @@ async function handleVerifyResetToken(request, env, origin) {
   }
 }
 
+// ============================================
+// LOGIN HANDLER
+// ============================================
+async function handleLogin(request, env, origin) {
+  try {
+    const { email, password } = await request.json();
+
+    if (!email || !password) {
+      return new Response(JSON.stringify({ error: 'Email e senha são obrigatórios' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    const user = await findUserByEmail(email, env);
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'User not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Verificar senha
+    let passwordValid = false;
+    let needsHashUpgrade = false;
+
+    if (user.password_salt && user.password_salt !== 'legacy') {
+      // Hash seguro PBKDF2
+      passwordValid = await verifyPassword(password, user.password_salt, user.password_hash);
+    } else {
+      // Hash legado SHA-256
+      const legacyHash = await hashPasswordLegacy(password);
+      passwordValid = user.password_hash === legacyHash;
+      if (passwordValid) {
+        needsHashUpgrade = true;
+      }
+    }
+
+    if (!passwordValid) {
+      return new Response(JSON.stringify({ error: 'Invalid password' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Migrar hash legado para PBKDF2
+    if (needsHashUpgrade) {
+      try {
+        const newSalt = generateSalt();
+        const newHash = await hashPassword(password, newSalt);
+        await fetch(`${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users/${user.Id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'xc-token': env.NOCODB_TOKEN
+          },
+          body: JSON.stringify({
+            password_hash: newHash,
+            password_salt: newSalt
+          })
+        });
+        console.log('Password hash upgraded to PBKDF2 for user:', user.Id);
+      } catch (e) {
+        console.warn('Failed to upgrade password hash:', e);
+      }
+    }
+
+    // Retornar dados seguros (sem password_hash!)
+    return new Response(JSON.stringify({
+      success: true,
+      user: {
+        id: user.Id,
+        email: user.email,
+        displayName: user.display_name,
+        avatarId: user.avatar_id || 1,
+        termsAccepted: user.terms_accepted || false
+      }
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+
+  } catch (error) {
+    console.error('Login error:', error);
+    return new Response(JSON.stringify({ error: 'Erro interno' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+  }
+}
+
+// ============================================
+// REGISTER HANDLER
+// ============================================
+async function handleRegister(request, env, origin) {
+  try {
+    const { email, password, displayName } = await request.json();
+
+    if (!email || !password || !displayName) {
+      return new Response(JSON.stringify({ error: 'Email, senha e nome são obrigatórios' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Verificar se usuário já existe
+    const existing = await findUserByEmail(email, env);
+    if (existing) {
+      return new Response(JSON.stringify({ error: 'Email already registered' }), {
+        status: 409,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Criar hash seguro
+    const salt = generateSalt();
+    const passwordHash = await hashPassword(password, salt);
+
+    // Criar usuário
+    const url = `${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users`;
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'xc-token': env.NOCODB_TOKEN
+      },
+      body: JSON.stringify({
+        email: email,
+        password_hash: passwordHash,
+        password_salt: salt,
+        display_name: displayName,
+        avatar_id: 1,
+        terms_accepted: false,
+        created_at: new Date().toISOString()
+      })
+    });
+
+    if (!resp.ok) {
+      const error = await resp.text();
+      console.error('Registration error:', error);
+      return new Response(JSON.stringify({ error: 'Erro ao criar conta' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    const newUser = await resp.json();
+
+    return new Response(JSON.stringify({
+      success: true,
+      user: {
+        id: newUser.Id,
+        email: newUser.email,
+        displayName: newUser.display_name,
+        avatarId: newUser.avatar_id || 1,
+        termsAccepted: false
+      }
+    }), {
+      status: 201,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+
+  } catch (error) {
+    console.error('Register error:', error);
+    return new Response(JSON.stringify({ error: 'Erro interno' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+  }
+}
+
+// ============================================
+// ACCEPT TERMS HANDLER
+// ============================================
+async function handleAcceptTerms(request, env, origin) {
+  try {
+    const { userId } = await request.json();
+
+    if (!userId) {
+      return new Response(JSON.stringify({ error: 'userId é obrigatório' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    const url = `${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users/${userId}`;
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'xc-token': env.NOCODB_TOKEN
+      },
+      body: JSON.stringify({
+        terms_accepted: true,
+        terms_accepted_at: new Date().toISOString()
+      })
+    });
+
+    if (!resp.ok) {
+      return new Response(JSON.stringify({ error: 'Erro ao aceitar termos' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+
+  } catch (error) {
+    console.error('Accept terms error:', error);
+    return new Response(JSON.stringify({ error: 'Erro interno' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+  }
+}
+
+// ============================================
+// UPDATE AVATAR HANDLER
+// ============================================
+async function handleUpdateAvatar(request, env, origin) {
+  try {
+    const { userId, avatarId } = await request.json();
+
+    if (!userId || avatarId === undefined) {
+      return new Response(JSON.stringify({ error: 'userId e avatarId são obrigatórios' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    const url = `${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users/${userId}`;
+    const resp = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'xc-token': env.NOCODB_TOKEN
+      },
+      body: JSON.stringify({ avatar_id: avatarId })
+    });
+
+    if (!resp.ok) {
+      return new Response(JSON.stringify({ error: 'Erro ao atualizar avatar' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    return new Response(JSON.stringify({ success: true, avatarId }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+
+  } catch (error) {
+    console.error('Update avatar error:', error);
+    return new Response(JSON.stringify({ error: 'Erro interno' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+  }
+}
+
 async function handleResetPassword(request, env, origin) {
   try {
     const { email, token, passwordHash, passwordSalt } = await request.json();
@@ -556,12 +909,20 @@ export default {
       return new Response(JSON.stringify({
         status: 'ok',
         service: 'Sorcery API Proxy',
-        version: '3.0.0',
+        version: '3.1.0',
         security: 'whitelist-enabled'
       }), { headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) } });
     }
 
     // Auth endpoints (rotas especiais)
+    if (path === '/auth/login' && request.method === 'POST') {
+      return handleLogin(request, env, origin);
+    }
+
+    if (path === '/auth/register' && request.method === 'POST') {
+      return handleRegister(request, env, origin);
+    }
+
     if (path === '/auth/send-reset-email' && request.method === 'POST') {
       return handleSendResetEmail(request, env, origin);
     }
@@ -572,6 +933,14 @@ export default {
 
     if (path === '/auth/reset-password' && request.method === 'POST') {
       return handleResetPassword(request, env, origin);
+    }
+
+    if (path === '/auth/accept-terms' && request.method === 'POST') {
+      return handleAcceptTerms(request, env, origin);
+    }
+
+    if (path === '/auth/update-avatar' && request.method === 'POST') {
+      return handleUpdateAvatar(request, env, origin);
     }
 
     // ============================================
@@ -668,6 +1037,18 @@ export default {
         ...getSecurityHeaders(),
         'Content-Type': resp.headers.get('Content-Type') || 'application/json'
       });
+
+      // Se precisa remover campos sensíveis (ex: tabela users)
+      if (permission.stripSensitive && resp.ok) {
+        try {
+          const data = await resp.json();
+          const cleanedData = stripSensitiveFields(data);
+          return new Response(JSON.stringify(cleanedData), { status: resp.status, headers: respHeaders });
+        } catch (e) {
+          // Se não for JSON, retornar como está
+          return new Response(resp.body, { status: resp.status, headers: respHeaders });
+        }
+      }
 
       return new Response(resp.body, { status: resp.status, headers: respHeaders });
 
