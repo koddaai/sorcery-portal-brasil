@@ -15298,7 +15298,8 @@ function cleanupCommunityServices() {
 async function checkTermsAcceptance() {
     if (nocoDBService?.isLoggedIn()) {
         const user = nocoDBService.getCurrentUser();
-        if (user && !user.accepted_terms_at) {
+        // Check termsAccepted (boolean from login response)
+        if (user && !user.termsAccepted) {
             showTermsModal();
         }
     }
