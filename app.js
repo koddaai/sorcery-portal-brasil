@@ -5088,15 +5088,15 @@ function initCuriosTab() {
     container.innerHTML = `
         <div class="curios-intro">
             <div class="curios-intro-content">
-                <h3><i data-lucide="sparkles"></i> O Mistério dos Curios</h3>
+                <h3><i data-lucide="sparkles"></i> O Mistério do Curio</h3>
                 <p>
-                    Curios são cartas <strong>extremamente raras</strong> escondidas em boosters de Sorcery: Contested Realm.
+                    Curio são cartas <strong>extremamente raras</strong> escondidas em boosters de Sorcery: Contested Realm.
                     A Erik's Curiosa <em>não reconhece oficialmente</em> a existência dessas cartas, deixando que a comunidade
                     descubra e catalogue cada uma — uma experiência que remete à era dourada dos TCGs nos anos 90.
                 </p>
                 <p>
                     Descritas apenas como <em>"cartas mistério muito raras celebrando a história da criação de Sorcery"</em>,
-                    os Curios incluem sketches de desenvolvimento, artes alternativas, erros propositais de impressão,
+                    o Curio inclui sketches de desenvolvimento, artes alternativas, erros propositais de impressão,
                     protótipos com nomes antigos e variantes únicas que contam a evolução do jogo.
                 </p>
             </div>
@@ -5117,7 +5117,7 @@ function initCuriosTab() {
         </div>
 
         <div class="curios-types-section">
-            <h3><i data-lucide="layers"></i> Tipos de Curios</h3>
+            <h3><i data-lucide="layers"></i> Tipos de Curio</h3>
             <div class="curios-types-grid">
                 <div class="curio-type-item">
                     <i data-lucide="pencil" style="color: #9CA3AF"></i>
@@ -5166,7 +5166,7 @@ function initCuriosTab() {
 
         <div class="curios-gallery-section">
             <div class="curios-set-header">
-                <h3><i data-lucide="box"></i> Curios do Alpha</h3>
+                <h3><i data-lucide="box"></i> Curio do Alpha</h3>
                 <span class="curios-set-count">${curioData.alpha.length} descobertos</span>
             </div>
             <div class="curios-gallery">
@@ -5176,7 +5176,7 @@ function initCuriosTab() {
 
         <div class="curios-gallery-section">
             <div class="curios-set-header">
-                <h3><i data-lucide="box"></i> Curios do Beta</h3>
+                <h3><i data-lucide="box"></i> Curio do Beta</h3>
                 <span class="curios-set-count">${curioData.beta.length} descobertos</span>
             </div>
             <div class="curios-gallery">
@@ -5186,12 +5186,12 @@ function initCuriosTab() {
 
         <div class="curios-resources">
             <h3><i data-lucide="bookmark"></i> Recursos da Comunidade</h3>
-            <p>O <strong>Collector Arthouse</strong>, mantido por Mike Servati, é a principal fonte de informações sobre Curios, com arquivo completo de todas as descobertas e comparações detalhadas.</p>
+            <p>O <strong>Collector Arthouse</strong>, mantido por Mike Servati, é a principal fonte de informações sobre Curio, com arquivo completo de todas as descobertas e comparações detalhadas.</p>
             <div class="curios-links">
                 <a href="https://www.collectorarthouse.com/curio-cards" target="_blank" rel="noopener noreferrer" class="curios-resource-link primary">
                     <i data-lucide="archive"></i>
                     <div>
-                        <strong>Catálogo Completo de Curios</strong>
+                        <strong>Catálogo Completo de Curio</strong>
                         <span>Arquivo oficial com todas as descobertas</span>
                     </div>
                     <i data-lucide="external-link"></i>
