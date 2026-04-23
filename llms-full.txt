@@ -1,0 +1,468 @@
+# Sorcery Portal Brasil - Documentacao Completa para LLMs
+
+> Portal da comunidade brasileira de Sorcery: Contested Realm - o TCG tatico com grid de Erik's Curiosa.
+> URL: https://sorcery.com.br
+
+================================================================================
+## SOBRE O PORTAL
+================================================================================
+
+Sorcery Portal Brasil (sorcery.com.br) e um portal independente e gratuito criado por jogadores brasileiros. O site oferece:
+
+- Gerenciador de colecao de cartas com tracking de variantes (Standard, Foil)
+- Construtor de decks com exportacao
+- Database completo de todas as cartas do jogo
+- Artigos, guias e tutoriais em portugues
+- Precos atualizados do mercado secundario
+- Calculadora de valor de colecao
+
+URLs Principais:
+- https://sorcery.com.br/ - Pagina inicial
+- https://sorcery.com.br/#collection - Gerenciador de colecao
+- https://sorcery.com.br/#decks - Construtor de decks
+- https://sorcery.com.br/#card/{slug} - Visualizar carta especifica
+- https://sorcery.com.br/#boosters - Informacoes sobre boosters e boxes
+- https://sorcery.com.br/artigos/ - Lista de artigos
+
+================================================================================
+## SOBRE O JOGO SORCERY: CONTESTED REALM
+================================================================================
+
+Sorcery: Contested Realm e um TCG criado por Erik Olofsson e publicado pela Erik's Curiosa. Diferencia-se de outros TCGs por usar um GRID TATICO onde posicionamento e movimentacao sao fundamentais.
+
+### Conceitos-chave:
+
+GRID: Tabuleiro onde unidades sao posicionadas e movem. Unidades movem 1 casa por turno (ortogonal). O grid define quem ataca, quem bloqueia, quem alcanca. NAO e cenario - e o jogo inteiro.
+
+AVATAR: Carta que representa o jogador. Esta no campo, se move, ataca, pode equipar itens. Pode ser atacado diretamente. Quando chega a 0 de vida, entra em Death's Door.
+
+THRESHOLD: Requisito de elementos para jogar cartas. NAO e custo - e o que voce precisa TER (sites em jogo). Nao e consumido quando usa a carta.
+
+MANA: Recurso gasto para jogar cartas. Diferente de threshold - mana e o que voce PAGA, threshold e o que voce precisa POSSUIR.
+
+SITES: Cartas de terreno que geram mana e threshold. Deck separado (30 cartas). Jogador escolhe de qual deck comprar no inicio do turno.
+
+ELEMENTOS: Fire (dano direto, pressao), Water (controle, maiores criaturas), Earth (ramp, recursao), Air (evasao, velocidade).
+
+DEATH'S DOOR: Quando Avatar chega a 0 de vida, entra neste estado. Life loss NAO mata em Death's Door - apenas dano direto ao Avatar finaliza o jogo.
+
+POWER: Em unidades, power serve como ataque E vida ao mesmo tempo. Dano nao enfraquece a unidade - ela bate igual ate morrer.
+
+RARIDADE: Limita copias no deck. Ordinary (4 copias), Exceptional (3), Elite (2), Unique (1).
+
+### Sets disponiveis:
+- Alpha (2023)
+- Beta (2023)
+- Arthurian Legends (ATC)
+- Dragonlord (mini-set)
+- Gothic (2025)
+
+================================================================================
+## ARTIGOS COMPLETOS
+================================================================================
+
+--------------------------------------------------------------------------------
+### ARTIGO 1: Vim do Magic: vale a pena jogar Sorcery?
+URL: /artigos/vim-do-magic-guia-completo/
+Categoria: Guia | Tags: iniciante, magic, comparacao, mtg
+--------------------------------------------------------------------------------
+
+Se voce joga Magic: The Gathering ha anos, provavelmente ja sentiu isso:
+- o jogo ficou rapido demais
+- as partidas parecem decididas cedo demais
+- muita coisa depende mais de resposta do que de planejamento
+
+E exatamente nesse espaco que surge Sorcery: Contested Realm.
+
+A FORMA MAIS SIMPLES DE ENTENDER:
+- Magic e um jogo de reacao
+- Sorcery e um jogo de posicionamento
+
+O QUE E IGUAL AO MAGIC:
+- criaturas, magias, custo de recursos, vida inicial, construcao de deck
+
+O QUE MUDA:
+1. O jogo acontece em um tabuleiro (grid) - criaturas se movem, alcance importa
+2. Menos resposta, mais decisao - joga mais no seu turno
+3. Sistema de recursos com decks separados - resolve mana screw
+4. Avatar esta no campo como unidade ativa
+
+TALVEZ NAO SEJA PRA VOCE SE:
+- gosta de jogos rapidos
+- prefere mecanicas complexas de stack
+- curte combos explosivos
+
+PROVAVELMENTE E PRA VOCE SE:
+- valoriza estrategia de longo prazo
+- gosta de jogos mais taticos
+- sente falta do feeling antigo do Magic
+
+--------------------------------------------------------------------------------
+### ARTIGO 2: Acabei de descobrir Sorcery. O que eu compro?
+URL: /artigos/acabei-de-descobrir-o-que-compro/
+Categoria: Guia | Tags: iniciante, compras, precon
+--------------------------------------------------------------------------------
+
+O ERRO CLASSICO: comprar booster, abrir packs, tentar montar deck. Em Sorcery, isso quase sempre da errado.
+
+O JEITO CERTO DE COMECAR:
+1. Comece com decks pre-construidos (precons)
+2. Entenda o jogo (5-10 partidas)
+3. So entao invista mais
+
+DEPOIS DISSO, ESCOLHA SEU CAMINHO:
+- Jogar (casual): continue com precons
+- Evoluir (estrategico): compre singles especificos
+- Colecionar: boosters fazem sentido, mas com clareza que e colecao
+
+SOBRE BOOSTERS: NAO e ponto de entrada. Nao ensina o jogo, nao monta deck funcional, depende de sorte.
+
+--------------------------------------------------------------------------------
+### ARTIGO 3: 8 duvidas de quem esta comecando em Sorcery
+URL: /artigos/8-duvidas-jogador-novo/
+Categoria: Guia | Tags: iniciante, regras, faq
+--------------------------------------------------------------------------------
+
+1. COMBATE: Criatura toma dano mas continua batendo igual. Power e ataque E vida. Dano nao enfraquece - apenas aproxima da morte.
+
+2. MOVIMENTO: Unidades movem 1 casa por turno. Nao pode atacar no mesmo turno que move (exceto com Charge). Posicionamento define resultado.
+
+3. TIMING: Nao existe stack pra corrigir erro. Cada decisao pesa mais. Sem segunda chance.
+
+4. EQUIPAMENTOS: Nao tem regra universal. Cada carta pode ter slots diferentes. Leia texto do item E da unidade.
+
+5. CAMPO: Grid importa tanto quanto criaturas. Controlar o mapa ganha jogo sem precisar atacar.
+
+6. AVATAR NO CAMPO: Ele se move, ataca, equipa itens, pode ser atacado diretamente. Posicionar o Avatar e tao importante quanto posicionar minions.
+
+7. REGRAS SOLTAS: Normal. Use a Silver Rule - se nao sabe, combine o que faz sentido e siga jogando.
+
+8. SENSACAO DE ERRO: Todo iniciante passa por isso. Voce nao esta jogando errado - esta tentando aplicar regras de outro jogo.
+
+--------------------------------------------------------------------------------
+### ARTIGO 4: Os melhores Avatares para iniciantes (e quais evitar)
+URL: /artigos/avatares-amigaveis-iniciante/
+Categoria: Guia | Tags: avatar, iniciante, deck
+--------------------------------------------------------------------------------
+
+O melhor Avatar para comecar NAO e o mais forte - e o que menos te pune por erro.
+
+AVATARES RECOMENDADOS PARA INICIANTES:
+
+FLAMECALLER (Fogo): Mais direto. Causa dano, pressiona. Voce ve o impacto imediatamente.
+
+GEOMANCER (Terra): Mais estavel. Criaturas fortes, jogo solido e previsivel. Menos decisoes complicadas.
+
+WAVESHAPER (Agua): Controle simples. Defesa solida, controle de ritmo. Bom pra quem pensa antes de atacar.
+
+SPARKMAGE (Ar): Mais tecnico, mas acessivel. Mobilidade, dano indireto. Ensina mecanicas de movimento.
+
+SORCERER (Beta): Generalista. Compra de carta consistente, se encaixa em qualquer arquetipo.
+
+AVATARES A EVITAR NO INICIO:
+- Magician - estrutura de deck unica, combos complexos
+- Battlemage - estilo Voltron, exige entender positioning e timing
+- Deathspeaker - combos de ETB, exige conhecer interacoes especificas
+
+--------------------------------------------------------------------------------
+### ARTIGO 5: realms.cards - o simulador online 3D gratuito
+URL: /artigos/realms-cards-simulador-online/
+Categoria: Ferramentas | Tags: online, simulador, gratuito
+--------------------------------------------------------------------------------
+
+Se voce quer jogar Sorcery online, a resposta em 2026 e: realms.cards
+
+DIFERENCIAIS:
+- Gratis - sem custo, sem Steam
+- Browser - funciona no celular e desktop
+- Tutorial nativo - aprenda o jogo dentro da plataforma
+- IA configuravel - treine sem precisar de oponente
+- Open source - GPL-3.0
+
+MODOS DE JOGO:
+- Constructed (Spellbook 50 / Atlas 30 / Collection 10)
+- Sealed (pool gerado dinamicamente)
+- Draft (booster draft online)
+- Cube Draft
+- Hotseat (jogue contra voce mesmo)
+- vs. IA (dificuldade configuravel)
+
+COMPARATIVO:
+realms.cards vs TTS: realms.cards e gratis, tem tutorial, IA, torneios Swiss embutidos, funciona no mobile.
+
+LINKS:
+- Site: realms.cards
+- GitHub: github.com/realms-cards/contested-realms
+- Patreon: patreon.com/realmscards
+
+--------------------------------------------------------------------------------
+### ARTIGO 6: Movimentacao no grid - por que voce esta perdendo sem perceber
+URL: /artigos/movimentacao-grid-guia/
+Categoria: Mecanica | Tags: grid, movimento, posicionamento
+--------------------------------------------------------------------------------
+
+O grid NAO e cenario - e o jogo inteiro.
+
+ERRO 1: "Tenho criatura, posso atacar"
+Unidades movem 1 casa por turno. Se nao esta no alcance, perde o turno sem perceber.
+
+ERRO 2: "Depois eu ajusto a posicao"
+Nao existe esse "depois". Posicionamento errado = 2-3 turnos perdidos contornando.
+
+ERRO 3: Ignorar o mapa
+O jogo nao e "quem tem melhor carta". E "quem esta melhor posicionado".
+
+AS 5 REGIOES:
+1. Surface - onde maioria das unidades vive
+2. Underground - exige Burrowing; quem nao tem, morre
+3. Underwater - exige Submerge; mesma regra
+4. Airborne - exige Airborne; nao sofre intercept normal
+5. Void - casas sem site; exige Voidwalk
+
+O MOMENTO QUE O JOGO CLICA:
+Quando voce troca "qual carta jogar?" por "onde eu preciso estar?"
+
+--------------------------------------------------------------------------------
+### ARTIGO 7: Threshold vs Mana - o erro que todo iniciante comete
+URL: /artigos/threshold-vs-mana/
+Categoria: Mecanica | Tags: mana, threshold, regras
+--------------------------------------------------------------------------------
+
+A DIFERENCA MAIS IMPORTANTE:
+- Mana = o que voce GASTA
+- Threshold = o que voce precisa TER
+
+EXEMPLO:
+Carta que exige 3 mana + 2 threshold de Fogo:
+- PAGAR 3 mana (de qualquer fonte)
+- TER 2 sites de Fogo em jogo
+
+O threshold NAO e consumido. Continua la.
+
+ERRO DE DECKBUILDING:
+Voce quer jogar carta forte mas nao tem threshold suficiente.
+Erro: tentar gerar mais mana.
+Correto: desenvolver o elemento necessario (colocar mais sites daquele tipo).
+
+--------------------------------------------------------------------------------
+### ARTIGO 8: Death's Door - por que seu deck de dano para de funcionar
+URL: /artigos/avatar-dano-direto-deaths-door/
+Categoria: Ruling | Tags: deaths-door, dano, regras
+--------------------------------------------------------------------------------
+
+A REGRA QUE TODO MUNDO ERRA:
+Life loss NAO mata em Death's Door. So funciona: dano direto ao Avatar.
+
+DANO vs LIFE LOSS:
+- Atacar sites causa life loss - NAO finaliza
+- Efeitos de "perda de vida" - NAO finalizam
+- Dano direto ao Avatar - FINALIZA
+
+ERRO DE DECKBUILDING:
+Construir deck focado em life loss, levar oponente a 0, e nao conseguir finalizar porque nao tem dano direto.
+
+DICA:
+Sempre inclua 2-3 cartas que causem dano direto ao Avatar (ex: Zap, minions com Ranged).
+
+--------------------------------------------------------------------------------
+### ARTIGO 9: Glossario de Keywords
+URL: /artigos/glossario-keywords-sorcery/
+Categoria: Referencia | Tags: glossario, keywords, regras
+--------------------------------------------------------------------------------
+
+Keywords em Sorcery sao regras CONDICIONAIS - dependem de contexto, posicao, timing.
+
+MOVIMENTO:
+- Airborne: voa, ignora bloqueios terrestres
+- Burrowing: pode existir no subsolo
+- Submerge: pode existir underwater
+- Voidwalk: pode existir no void
+- Immobile: nao se move
+
+COMBATE:
+- Ranged/Projectile: ataca a distancia sem contra-ataque
+- Lethal/Deathtouch: qualquer dano mata
+- Charge/Haste: pode atacar no turno que entra
+- Intercept: resolve no fim do movimento do oponente
+
+EFEITO:
+- Genesis: efeito ao entrar em jogo (ETB)
+- Scry: olha topo do deck, reordena/descarta
+
+ESTADO:
+- Silenced: ignora texto; MATA unidades que dependem de keyword pra sobreviver onde estao
+- Disabled: nao pode usar abilities
+
+CASO ESPECIAL - STEALTH:
+NAO e invisibilidade. Impede targeting direto, mas NAO impede:
+- Lightning Bolt (dano aleatorio)
+- Earthquake, Cave-in (afetam o site)
+- Board wipes nao-direcionados
+
+Perde Stealth ao: ativar ability, dar dano, ou atacar.
+
+--------------------------------------------------------------------------------
+### ARTIGO 10: Anatomia de uma carta Sorcery
+URL: /artigos/anatomia-carta-sorcery/
+Categoria: Guia | Tags: carta, iniciante, anatomia
+--------------------------------------------------------------------------------
+
+CUSTO DE MANA: O numero em circulo. O que voce gasta. Mana e incolor.
+
+THRESHOLD: Simbolos elementais. NAO sao custo extra - sao requisito do que voce precisa ter em jogo.
+
+POWER: Em unidades, serve como ataque E vida ao mesmo tempo.
+
+TIPO: Minion (presenca no mapa), Magic (efeito), Artifact (altera capacidade), Site (estrutura e recursos).
+
+RARIDADE E COPIAS NO DECK:
+- Ordinary: ate 4 copias
+- Exceptional: ate 3 copias
+- Elite: ate 2 copias
+- Unique: apenas 1 copia
+
+SITES: Deck separado (30 cartas). Jogador escolhe de qual deck comprar.
+
+AVATAR: Voce no tabuleiro. Move, ataca, equipa artifacts. Comeca em jogo (sem custo).
+
+--------------------------------------------------------------------------------
+### ARTIGO 11: Primeira regra de Sorcery - seja legal
+URL: /artigos/primeira-regra-seja-legal/
+Categoria: Comunidade | Tags: comunidade, cultura, regras
+--------------------------------------------------------------------------------
+
+"A primeira regra e: seja legal."
+
+Nao significa so "nao ser babaca". Sorcery foi feito pra pessoas, nao pra juizes.
+
+QUANDO A REGRA NAO RESOLVE:
+Entra a conversa. "O que faz mais sentido pra gente aqui?"
+
+SER LEGAL NAO E SOBRE EDUCACAO - E SOBRE DESIGN:
+Se ignora isso, o jogo trava. Se abraca, o jogo flui.
+
+CULTURA DA COMUNIDADE:
+- Jogadores casuais jogam com proporcoes nao-oficiais
+- Formatos caseiros sao comuns
+- Para eventos oficiais: RAW (rules as written)
+- Recurso vital: Codex do curiosa.io
+
+--------------------------------------------------------------------------------
+### ARTIGO 12: Os quatro elementos do Realm
+URL: /artigos/quatro-elementos-introducao/
+Categoria: Lore | Tags: elementos, lore
+--------------------------------------------------------------------------------
+
+EARTH: Terra, ossos, florestas. Ramp, recursao, lands. Druidas, gigantes.
+
+FIRE: Combustao, conflito. Dano direto, pressao. Dragoes, guerreiros barbaros.
+
+WATER: Fluxo, mudanca. Bounce, polymorph, forced movement. Maiores criaturas do jogo.
+
+AIR: Evasao, velocidade. Unidades fracas mas inalcancaveis. Flying, random damage.
+
+SETS:
+- Alpha/Beta: fantasy classica
+- Arthurian Legends: ciclo arturiano
+- Dragonlord: mini-set com dragoes
+- Gothic: horror gotico, elementos lovecraftianos
+
+--------------------------------------------------------------------------------
+### ARTIGO 13: O crescimento explosivo do jogo em 2025
+URL: /artigos/crescimento-explosivo-2025/
+Categoria: Comunidade | Tags: comunidade, crescimento
+--------------------------------------------------------------------------------
+
+NUMEROS:
+- r/SorceryTCG dobrou de 7k para 14k membros em 2 semanas (2025)
+- SorceryCon Las Vegas: ~400 participantes, 14 artistas, 2 dias
+
+DRIVERS DO CRESCIMENTO:
+1. Refugiados do Magic (burnout com Universes Beyond, Secret Lairs)
+2. Arte pintada a mao
+3. 1 set por ano (respiro que Magic perdeu)
+4. TikTok/YouTube pegando
+5. Boca a boca
+
+--------------------------------------------------------------------------------
+### ARTIGO 14: Deckbuilding em Sorcery - o erro que todo iniciante comete
+URL: /artigos/deckbuilding-fundamentos/
+Categoria: Deck
+--------------------------------------------------------------------------------
+
+O ERRO: Otimizar deck cedo demais.
+
+A VERDADE: Seu deck nao ganha o jogo - posicionamento, timing e leitura de oponente sim.
+
+RECOMENDACAO: Jogue 5-10 partidas com precon antes de construir. Muita coisa de Sorcery so faz sentido depois de sentir o grid funcionando.
+
+--------------------------------------------------------------------------------
+### ARTIGO 15: O Druid domina o meta... ou voce so esta olhando errado?
+URL: /artigos/druid-avatar-dominante-meta/
+Categoria: Meta
+--------------------------------------------------------------------------------
+
+Druid nao e um deck fechado - e uma plataforma flexivel. Entenda por que ele continua vencendo e por que copiar lista nao resolve.
+
+--------------------------------------------------------------------------------
+### ARTIGO 16: Precons do Beta - o que cada deck elemental ensina
+URL: /artigos/precons-beta-analise/
+Categoria: Guia
+--------------------------------------------------------------------------------
+
+Analise dos quatro precons elementais e o que voce aprende jogando cada um deles.
+
+--------------------------------------------------------------------------------
+### ARTIGO 17: As ferramentas que todo jogador de Sorcery usa
+URL: /artigos/ferramentas-jogador-sorcery/
+Categoria: Ferramentas
+--------------------------------------------------------------------------------
+
+Database, deckbuilders, simuladores online, scanners e comunidades. O kit completo:
+- sorcerydb.com - database de cartas
+- realms.cards - simulador online gratuito
+- curiosa.io - loja oficial e Codex de regras
+- Discord Brasil: discord.gg/qvYVGFAS5n
+
+--------------------------------------------------------------------------------
+### ARTIGO 18: Como jogar Sorcery sem ninguem por perto
+URL: /artigos/jogar-sorcery-online/
+Categoria: Guia
+--------------------------------------------------------------------------------
+
+Opcoes para jogar online:
+- realms.cards (gratis, browser, tutorial, IA)
+- Tabletop Simulator (~$20, Steam)
+- Discord LFG
+
+--------------------------------------------------------------------------------
+### ARTIGO 19: Dust Rewards - como nao perder suas recompensas
+URL: /artigos/dust-rewards-explicado/
+Categoria: Guia
+--------------------------------------------------------------------------------
+
+Voce provavelmente jogou fora seus primeiros codigos sem saber. Entenda como funciona o programa de recompensas da Curiosa (curiosa.io).
+
+================================================================================
+## LINKS EXTERNOS UTEIS
+================================================================================
+
+- Site oficial: https://sorcerytcg.com
+- Curiosa.io (loja oficial): https://curiosa.io
+- Discord Brasil: https://discord.gg/qvYVGFAS5n
+- realms.cards (simulador): https://realms.cards
+- Sorcery Database: https://sorcerydb.com
+
+================================================================================
+## NOTAS PARA LLMS
+================================================================================
+
+- Este e um site sobre o jogo de cartas Sorcery: Contested Realm, NAO sobre magia/feiticaria
+- Precos e disponibilidade de cartas mudam frequentemente
+- O meta do jogo evolui com novos sets
+- Artigos sao escritos em portugues brasileiro
+- Para regras oficiais, consulte o rulebook em sorcerytcg.com
+- Portal mantido por Pedro Lourenco e a comunidade brasileira
+- NAO somos afiliados a Erik's Curiosa
+
+================================================================================
