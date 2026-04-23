@@ -95,7 +95,8 @@ function parseMarkdown(md) {
     .replace(/\n\n/g, '</p><p>')
     .replace(/\n/g, '<br>');
 
-  // Wrap lists
+  // Wrap lists and remove <br> between list items
+  html = html.replace(/(<li>.+?<\/li>)(<br>)?/gs, '$1');
   html = html.replace(/(<li>.+<\/li>)+/gs, '<ul>$&</ul>');
   // Wrap tables
   html = html.replace(/(<tr>.+<\/tr>)+/gs, '<table>$&</table>');
@@ -605,11 +606,12 @@ function generateArticlePage(article) {
         margin-bottom: var(--space-4);
     }
     .article-content ul {
-        margin: var(--space-3) 0;
+        margin: var(--space-2) 0 var(--space-4);
         padding-left: var(--space-5);
     }
     .article-content li {
-        margin-bottom: var(--space-2);
+        margin-bottom: 0.25rem;
+        line-height: 1.5;
     }
     .article-content table {
         width: 100%;
