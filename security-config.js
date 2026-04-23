@@ -4,9 +4,15 @@
 //
 // ⚠️  AVISO DE SEGURANÇA ⚠️
 //
-// Debug mode - set to false in production
-// Can also be controlled via URL param ?debug=true
+// Debug mode - APENAS em localhost por segurança
+// Previne exposição de logs sensíveis em produção
 const DEBUG_MODE = (() => {
+    const hostname = window.location?.hostname || '';
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+
+    // Debug só funciona em localhost
+    if (!isLocalhost) return false;
+
     const urlParams = new URLSearchParams(window.location?.search || '');
     return urlParams.get('debug') === 'true' || localStorage.getItem('sorcery-debug') === 'true';
 })();

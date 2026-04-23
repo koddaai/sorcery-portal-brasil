@@ -92,8 +92,10 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Lucide Icons - defer para não bloquear renderização -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+    <!-- Lucide Icons - versão fixa com SRI para segurança -->
+    <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"
+            integrity="sha384-m/CoPp6wBQz6MoZXP+VveuxfvSx0NGXiQyyakzXVOVHgG1fP5bM/UiO4pSNPV6PT"
+            crossorigin="anonymous" defer></script>
 
     <!-- Structured Data - JSON-LD: WebApplication -->
     <script type="application/ld+json">
@@ -4260,8 +4262,10 @@
         </div>
     </footer>
 
-    <!-- Tesseract.js for OCR -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <!-- Tesseract.js for OCR - versão fixa com SRI -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"
+            integrity="sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F"
+            crossorigin="anonymous"></script>
 
     <script src="recommended-decks.min.js?v=20260421b" defer></script>
     <script src="top-cards.min.js" defer></script>
