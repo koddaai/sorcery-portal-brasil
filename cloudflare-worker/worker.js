@@ -561,7 +561,7 @@ async function sendResetEmail(email, token, displayName, env) {
 
 // Notificar admin sobre nova submissão de artigo
 async function sendArticleSubmissionNotification(data, env) {
-  const adminEmail = 'pedrolrnz@gmail.com';
+  const adminEmail = 'pedro@kodda.ai';
 
   const resp = await fetch('https://api.resend.com/emails', {
     method: 'POST',
