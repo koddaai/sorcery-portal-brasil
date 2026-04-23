@@ -308,8 +308,8 @@
 
             <!-- Navigation Bar -->
             <nav class="nav-bar">
-                <!-- Primary Navigation -->
-                <div class="nav-primary">
+                <!-- Navigation Items -->
+                <div class="nav-items">
                     <button class="nav-btn" data-view="cards" data-tooltip="Catálogo de Cards">
                         <i data-lucide="layers"></i>
                         <span>Cards</span>
@@ -318,26 +318,15 @@
                         <i data-lucide="brush"></i>
                         <span>Artistas</span>
                     </button>
-                    <button class="nav-btn" data-view="community" data-tooltip="Lojas no Brasil">
-                        <i data-lucide="store"></i>
-                        <span>Lojas</span>
-                    </button>
                     <a class="nav-btn" href="/artigos/" data-tooltip="Artigos e Guias">
                         <i data-lucide="newspaper"></i>
                         <span>Artigos</span>
                     </a>
-                    <button class="nav-btn" data-view="decks" data-tooltip="Explorar Decks">
-                        <i data-lucide="layout-grid"></i>
-                        <span>Decks</span>
+                    <button class="nav-btn" data-view="community" data-tooltip="Lojas no Brasil">
+                        <i data-lucide="store"></i>
+                        <span>Lojas</span>
                     </button>
-                    <button class="nav-btn" data-view="collection" data-tooltip="Minha Coleção">
-                        <i data-lucide="folder-heart"></i>
-                        <span>Coleção</span>
-                    </button>
-                </div>
 
-                <!-- Dropdown Menus -->
-                <div class="nav-dropdowns">
                     <!-- Aprender Dropdown -->
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Aprender" data-tooltip="Aprender">
@@ -371,6 +360,35 @@
                         </div>
                     </div>
 
+                    <!-- Comunidade Dropdown -->
+                    <div class="nav-dropdown">
+                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Comunidade" data-tooltip="Comunidade">
+                            <i data-lucide="users"></i>
+                            <span>Comunidade</span>
+                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
+                        </button>
+                        <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Comunidade">
+                            <button class="nav-dropdown-item" data-view="news" role="menuitem">
+                                <i data-lucide="newspaper"></i> Notícias
+                            </button>
+                            <button class="nav-dropdown-item" data-view="meta" role="menuitem">
+                                <i data-lucide="trophy"></i> Meta & Tier List
+                            </button>
+                            <button class="nav-dropdown-item" data-view="forum" role="menuitem">
+                                <i data-lucide="message-square"></i> Fórum
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="nav-btn" data-view="decks" data-tooltip="Explorar Decks">
+                        <i data-lucide="layout-grid"></i>
+                        <span>Decks</span>
+                    </button>
+                    <button class="nav-btn" data-view="collection" data-tooltip="Minha Coleção">
+                        <i data-lucide="folder-heart"></i>
+                        <span>Coleção</span>
+                    </button>
+
                     <!-- Ferramentas Dropdown -->
                     <div class="nav-dropdown">
                         <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Ferramentas" data-tooltip="Ferramentas">
@@ -397,26 +415,6 @@
                                 <i data-lucide="library"></i> Sorcery Rec
                                 <i data-lucide="external-link" class="external-icon"></i>
                             </a>
-                        </div>
-                    </div>
-
-                    <!-- Comunidade Dropdown - Inclui Explorar -->
-                    <div class="nav-dropdown">
-                        <button class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-label="Menu Comunidade" data-tooltip="Comunidade">
-                            <i data-lucide="users"></i>
-                            <span>Comunidade</span>
-                            <i data-lucide="chevron-down" class="dropdown-arrow"></i>
-                        </button>
-                        <div class="nav-dropdown-menu" role="menu" aria-label="Opções de Comunidade">
-                            <button class="nav-dropdown-item" data-view="news" role="menuitem">
-                                <i data-lucide="newspaper"></i> Notícias
-                            </button>
-                            <button class="nav-dropdown-item" data-view="meta" role="menuitem">
-                                <i data-lucide="trophy"></i> Meta & Tier List
-                            </button>
-                            <button class="nav-dropdown-item" data-view="forum" role="menuitem">
-                                <i data-lucide="message-square"></i> Fórum
-                            </button>
                         </div>
                     </div>
                 </div>

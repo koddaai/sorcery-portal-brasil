@@ -389,13 +389,9 @@ h5 {
     border-top: 1px solid rgba(255,255,255,0.04);
 }
 
-.nav-primary {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-}
-
-.nav-dropdowns {
+.nav-primary,
+.nav-dropdowns,
+.nav-items {
     display: flex;
     align-items: center;
     gap: var(--space-1);
@@ -6123,7 +6119,8 @@ a.nav-dropdown-item {
     }
 
     .nav-primary,
-    .nav-dropdowns {
+    .nav-dropdowns,
+    .nav-items {
         flex-shrink: 0;
     }
 
