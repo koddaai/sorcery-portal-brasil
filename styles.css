@@ -2429,6 +2429,108 @@ a.nav-dropdown-item {
     margin-bottom: var(--space-4);
 }
 
+/* Section Highlight */
+.section-highlight {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    margin-top: var(--space-4);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.section-highlight i {
+    width: 18px;
+    height: 18px;
+    color: var(--accent-gold);
+    flex-shrink: 0;
+}
+
+/* Big Number in Product Card */
+.big-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+/* Warning Box */
+.warning-box {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+}
+
+.warning-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.warning-list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.warning-list li i {
+    width: 20px;
+    height: 20px;
+    color: #f59e0b;
+    flex-shrink: 0;
+}
+
+/* Notice Box */
+.notice-box {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    background: var(--bg-surface-2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+}
+
+.notice-box > i {
+    width: 24px;
+    height: 24px;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.notice-box h4 {
+    font-size: 1rem;
+    margin-bottom: var(--space-1);
+    color: var(--text-primary);
+}
+
+.notice-box p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Featured Set Card */
+.set-info-card.set-featured {
+    border: 2px solid var(--set-color, var(--accent-gold));
+    background: linear-gradient(135deg, rgba(var(--set-color-rgb, 59, 130, 246), 0.1), transparent);
+}
+
+.set-info-card.set-featured .set-cards {
+    font-size: 1rem;
+}
+
 /* Pull Rates Table */
 .pull-rates-table {
     background: var(--bg-surface-2);
