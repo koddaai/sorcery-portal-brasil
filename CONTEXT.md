@@ -40,6 +40,22 @@ sorcery-collection-manager/
 ├── promo-tracker.js        # Tracker de promos e exclusivos
 ├── release-timeline.js     # Timeline de lançamentos
 ├── cards-database.json     # Fallback local de cards
+├── sitemap.xml             # Mapa do site para SEO
+├── feed.xml                # RSS feed de artigos
+├── faq.txt                 # FAQ estruturado para AIs
+├── glossario.txt           # Glossário de termos para AIs
+├── llms.txt                # Informações para LLMs
+├── robots.txt              # Instruções para crawlers
+├── _headers                # Headers HTTP (Cloudflare Pages)
+├── artigos/                # 19 artigos em HTML
+│   ├── 8-duvidas-jogador-novo/
+│   ├── acabei-de-descobrir-o-que-compro/
+│   ├── vim-do-magic-vale-a-pena/
+│   └── ... (16 outros)
+├── cloudflare-worker/      # API Proxy Worker
+│   ├── worker.js           # Código do worker (auth, proxy, emails)
+│   ├── wrangler.toml       # Configuração Wrangler
+│   └── package.json
 └── CONTEXT.md              # Este arquivo
 ```
 
@@ -97,9 +113,36 @@ sorcery-collection-manager/
 
 ### Integrações
 - [x] API Sorcery TCG (`/api/cards`)
-- [x] NocoDB para sync de dados
+- [x] NocoDB para sync de dados (https://dados.kodda.ai)
 - [x] LocalStorage para persistência offline
 - [x] Lucide Icons CDN
+- [x] Cloudflare Workers (API proxy + auth + emails)
+- [x] Cloudflare Pages (hosting)
+- [x] Resend API (emails transacionais)
+- [x] TCGCSV.com (preços TCGPlayer via GitHub Actions)
+
+### Arquitetura de Backend
+
+**Cloudflare Worker** (`sorcery-api-proxy.pedro-4e6.workers.dev`):
+- Proxy seguro para NocoDB com whitelist de tabelas
+- Endpoints de autenticação: `/auth/login`, `/auth/register`, `/auth/send-reset-email`, etc.
+- Endpoint de submissão: `/submit-article`
+- Rate limiting: 100 req/min geral, 10 tentativas/5min para auth
+- Secrets: `NOCODB_TOKEN`, `RESEND_API_KEY`
+
+**NocoDB** (`dados.kodda.ai`):
+- Base ID: `pybbgkutded1ay0`
+- Tabelas: `users`, `collection`, `wishlist`, `trade_binder`, `decks`, `article_submissions`
+
+**Emails via Resend**:
+- Domínio verificado: `sorcery.com.br`
+- From: `noreply@sorcery.com.br`
+- Templates: boas-vindas, reset de senha, notificação de artigo
+
+**Preços TCGPlayer**:
+- GitHub Actions workflow atualiza preços diariamente
+- Fonte: TCGCSV.com (agregador third-party)
+- Arquivo gerado: `tcg-prices.js`
 
 ---
 
@@ -353,8 +396,58 @@ Este projeto é open source. Contribuições são bem-vindas!
 ## Changelog
 
 ### Abril 2026 - Atualização Major
+
+**Cloudflare Worker (`cloudflare-worker/worker.js`):**
+- Proxy seguro para NocoDB com whitelist de tabelas
+- Sistema de autenticação completo (login, registro, reset de senha)
+- Rate limiting por IP (100 req/min geral, 10 req/5min para auth)
+- Hash seguro PBKDF2 com migração de hash legado SHA-256
+- Emails transacionais via Resend API:
+  - Email de boas-vindas ao registrar
+  - Email de reset de senha
+  - Notificação de submissão de artigo (para pedro@kodda.ai)
+- Endpoint `/submit-article` para formulário de artigos
+- Variáveis de ambiente: `NOCODB_TOKEN`, `RESEND_API_KEY`
+
+**Sistema de Submissão de Artigos:**
+- Formulário em todos os 19 artigos (`/artigos/*/index.html`)
+- Validação: nome (2+ chars), email, título (5+ chars), conteúdo (100+ chars)
+- Salva em NocoDB (tabela `article_submissions`)
+- Envia email de notificação para admin
+- Endpoint: `POST /submit-article`
+
+**SEO e Discoverability:**
+- `sitemap.xml` - Mapa do site com todos os artigos
+- `feed.xml` - RSS feed com 19 artigos
+- `faq.txt` - FAQ estruturado para AIs (~400 linhas)
+- `glossario.txt` - Glossário de termos para AIs (~500 linhas)
+- `llms.txt` - Informações para LLMs
+- `robots.txt` - Inclui referências para RSS, FAQ, Glossário
+- `_headers` - Content-type correto para arquivos .txt
+
+**Artigos Publicados (19 total):**
+- 8 dúvidas de quem está começando
+- Acabei de descobrir, o que compro?
+- Vim do Magic, vale a pena?
+- Threshold vs Mana
+- Movimentação no grid
+- Death's Door explicado
+- Deckbuilding: erro do iniciante
+- Melhores avatares para iniciantes
+- Anatomia de uma carta
+- Glossário de keywords
+- realms.cards simulador online
+- Como jogar sem ninguém por perto
+- Ferramentas do jogador
+- Druid domina o meta?
+- Precons do Beta
+- Dust Rewards
+- Os quatro elementos
+- Crescimento em 2025
+- Primeira regra: seja legal
+
 **Novos Módulos de Funcionalidades:**
-- `variant-tracker.js` - Sistema de tracking multi-variante (Standard/Foil/Rainbow)
+- `variant-tracker.js` - Sistema de tracking multi-variante (Standard/Foil apenas, Rainbow removido)
 - `keyword-parser.js` - Parser de keywords e detector de erratas (90+ keywords)
 - `set-progress.js` - Tracker de progresso por set com achievements
 - `threshold-calculator.js` - Calculadora de threshold e curva de mana

@@ -45,32 +45,51 @@ Sorcery: Contested Realm é um TCG (Trading Card Game) criado por Erik Olofsson 
 
 ### Guias para Iniciantes
 - **Vim do Magic: vale a pena jogar Sorcery?** — Comparação para jogadores de MTG
+  - URL: https://sorcery.com.br/artigos/vim-do-magic-vale-a-pena/
 - **Acabei de descobrir Sorcery. O que eu compro?** — Guia de primeiras compras
+  - URL: https://sorcery.com.br/artigos/acabei-de-descobrir-o-que-compro/
 - **8 dúvidas de quem está começando em Sorcery** — FAQ de iniciantes
+  - URL: https://sorcery.com.br/artigos/8-duvidas-jogador-novo/
 - **Os melhores Avatares para iniciantes** — Quais avatares escolher para aprender
+  - URL: https://sorcery.com.br/artigos/melhores-avatares-iniciantes/
 
 ### Mecânicas e Regras
 - **Threshold vs Mana: o erro que todo iniciante comete** — Explicação clara da diferença
+  - URL: https://sorcery.com.br/artigos/threshold-vs-mana/
 - **Movimentação no grid: por que você está perdendo sem perceber** — Fundamentos táticos
+  - URL: https://sorcery.com.br/artigos/movimentacao-grid/
 - **Death's Door: por que seu deck de dano para de funcionar** — Regra de finalização
+  - URL: https://sorcery.com.br/artigos/deaths-door-explicado/
 - **Glossário de Keywords** — Todas as palavras-chave explicadas
+  - URL: https://sorcery.com.br/artigos/glossario-keywords/
 - **Anatomia de uma carta Sorcery** — Elementos visuais das cartas
+  - URL: https://sorcery.com.br/artigos/anatomia-carta-sorcery/
 
 ### Construção de Decks
 - **Deckbuilding em Sorcery: o erro que todo iniciante comete** — Fundamentos
+  - URL: https://sorcery.com.br/artigos/deckbuilding-erro-iniciante/
 - **O Druid domina o meta… ou você só está olhando errado?** — Análise de meta
+  - URL: https://sorcery.com.br/artigos/druid-domina-meta/
 - **Precons do Beta — o que cada deck elemental ensina** — Análise dos precons
+  - URL: https://sorcery.com.br/artigos/precons-beta-analise/
 
 ### Ferramentas e Recursos
 - **realms.cards: o simulador online 3D gratuito** — Como jogar online gratuitamente
+  - URL: https://sorcery.com.br/artigos/realms-cards-simulador-online/
 - **Como jogar Sorcery sem ninguém por perto** — Opções de jogo online
+  - URL: https://sorcery.com.br/artigos/jogar-sorcery-online/
 - **As ferramentas que todo jogador de Sorcery usa** — Recursos da comunidade
+  - URL: https://sorcery.com.br/artigos/ferramentas-jogador-sorcery/
 - **Dust Rewards: como não perder suas recompensas** — Programa de fidelidade
+  - URL: https://sorcery.com.br/artigos/dust-rewards-guia/
 
 ### Lore e Comunidade
 - **Os quatro elementos do Realm — uma introdução** — Lore dos elementos
+  - URL: https://sorcery.com.br/artigos/quatro-elementos-realm/
 - **O crescimento explosivo do jogo em 2025** — História da comunidade
+  - URL: https://sorcery.com.br/artigos/crescimento-sorcery-2025/
 - **Primeira regra de Sorcery: seja legal** — Cultura da comunidade
+  - URL: https://sorcery.com.br/artigos/primeira-regra-seja-legal/
 
 ## Funcionalidades do Portal
 
@@ -94,18 +113,36 @@ Sorcery: Contested Realm é um TCG (Trading Card Game) criado por Erik Olofsson 
 - Filtros avançados
 - Busca por nome, tipo, texto
 
+## Recursos para AI/LLMs
+
+- **FAQ Estruturado:** https://sorcery.com.br/faq.txt
+- **Glossário de Termos:** https://sorcery.com.br/glossario.txt
+- **RSS Feed:** https://sorcery.com.br/feed.xml
+- **Sitemap:** https://sorcery.com.br/sitemap.xml
+
 ## Links Externos Úteis
 
 - Site oficial: https://sorcerytcg.com
 - Curiosa.io (loja oficial): https://curiosa.io
 - Discord Brasil: https://discord.gg/qvYVGFAS5n
+- WhatsApp Brasil: https://chat.whatsapp.com/CrLIAZFkedhCmnntkXbmha
 - realms.cards (simulador online): https://realms.cards
 - Sorcery Database: https://sorcerydb.com
+- TCGPlayer: https://www.tcgplayer.com/search/sorcery-contested-realm
+
+## Arquitetura Técnica
+
+- **Frontend:** HTML5, CSS3, JavaScript vanilla, hospedado no Cloudflare Pages
+- **Backend:** Cloudflare Worker como API proxy para NocoDB
+- **Database:** NocoDB (self-hosted em dados.kodda.ai)
+- **Emails:** Resend API (domínio sorcery.com.br verificado)
+- **Preços:** TCGCSV.com (agregador de preços TCGPlayer)
 
 ## Contato
 
 O portal é mantido por Pedro Lourenço e a comunidade brasileira de Sorcery.
 Não somos afiliados à Erik's Curiosa.
+Email: pedro@kodda.ai
 
 ## Notas para LLMs
 

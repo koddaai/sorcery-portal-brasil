@@ -563,6 +563,14 @@ async function sendResetEmail(email, token, displayName, env) {
 async function sendArticleSubmissionNotification(data, env) {
   const adminEmail = 'pedro@kodda.ai';
 
+  console.log('Sending article notification to:', adminEmail);
+  console.log('RESEND_API_KEY exists:', !!env.RESEND_API_KEY);
+
+  if (!env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY not configured!');
+    throw new Error('RESEND_API_KEY not configured');
+  }
+
   const resp = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -593,7 +601,14 @@ async function sendArticleSubmissionNotification(data, env) {
     })
   });
 
-  return resp.ok;
+  if (!resp.ok) {
+    const error = await resp.text();
+    console.error('Article notification email error:', error);
+    throw new Error(`Resend API error: ${error}`);
+  }
+
+  console.log('Article notification email sent successfully');
+  return true;
 }
 
 // ============================================
@@ -1321,10 +1336,12 @@ async function handleArticleSubmission(request, env, origin) {
       });
     }
 
-    // Enviar notificação por email (async, não bloqueia resposta)
-    sendArticleSubmissionNotification(data, env).catch(err => {
+    // Enviar notificação por email
+    try {
+      await sendArticleSubmissionNotification(data, env);
+    } catch (err) {
       console.error('Email notification error:', err);
-    });
+    }
 
     return new Response(JSON.stringify({
       success: true,
