@@ -258,6 +258,43 @@ h5 {
     color: var(--accent-gold);
 }
 
+/* Header Navigation (Article Pages) */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.nav-link {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all var(--duration-normal) var(--ease-out-expo);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+}
+
+.nav-link:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.nav-link.active {
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+    color: var(--bg-dark);
+    box-shadow: 0 2px 12px rgba(212, 175, 55, 0.35);
+}
+
 /* Header Actions */
 .header-actions {
     display: flex;
