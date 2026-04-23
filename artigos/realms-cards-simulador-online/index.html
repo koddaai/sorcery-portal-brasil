@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>realms.cards: o simulador online 3D gratuito para jogar Sorcery | Sorcery Contested Realm Brasil</title>
+    <meta name="description" content="Plataforma web gratuita com tabuleiro 3D, tutorial integrado, IA para treinar e torneios Swiss. Funciona no celular. O ponto de partida para quem quer jogar online.">
+    <meta name="keywords" content="online, simulador, gratuito, tutorial, ia, torneio, sorcery tcg, sorcery brasil">
+    <meta name="author" content="Pedro Lourenco">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sorcery.com.br/artigos/realms-cards-simulador-online/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://sorcery.com.br/artigos/realms-cards-simulador-online/">
+    <meta property="og:title" content="realms.cards: o simulador online 3D gratuito para jogar Sorcery | Sorcery Contested Realm Brasil">
+    <meta property="og:description" content="Plataforma web gratuita com tabuleiro 3D, tutorial integrado, IA para treinar e torneios Swiss. Funciona no celular.">
+    <meta property="og:image" content="https://sorcery.com.br/assets/articles/Battlefield.webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Sorcery Contested Realm Brasil">
+    <meta property="article:published_time" content="2026-04-23">
+    <meta property="article:modified_time" content="2026-04-23">
+    <meta property="article:author" content="Pedro Lourenco">
+    <meta property="article:tag" content="online">
+    <meta property="article:tag" content="simulador">
+    <meta property="article:tag" content="gratuito">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://sorcery.com.br/artigos/realms-cards-simulador-online/">
+    <meta name="twitter:title" content="realms.cards: o simulador online 3D gratuito para jogar Sorcery | Sorcery Contested Realm Brasil">
+    <meta name="twitter:description" content="Plataforma web gratuita com tabuleiro 3D, tutorial integrado, IA para treinar e torneios Swiss. Funciona no celular.">
+    <meta name="twitter:image" content="https://sorcery.com.br/assets/articles/Battlefield.webp">
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#d4af37">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles.min.css?v=111">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+    <!-- Schema Article -->
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "realms.cards: o simulador online 3D gratuito para jogar Sorcery",
+  "description": "Plataforma web gratuita com tabuleiro 3D, tutorial integrado, IA para treinar e torneios Swiss. Funciona no celular.",
+  "image": "https://sorcery.com.br/assets/articles/Battlefield.webp",
+  "datePublished": "2026-04-23",
+  "dateModified": "2026-04-23",
+  "author": {
+    "@type": "Person",
+    "name": "Pedro Lourenco"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Sorcery Contested Realm Brasil",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://sorcery.com.br/sorcery-logo.webp"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://sorcery.com.br/artigos/realms-cards-simulador-online/"
+  },
+  "keywords": "online, simulador, gratuito, tutorial, ia, torneio"
+}
+    </script>
+
+    <style>
+    .article-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: var(--space-6);
+    }
+    .article-breadcrumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+    }
+    .article-breadcrumbs a {
+        color: var(--accent-gold);
+        text-decoration: none;
+    }
+    .article-breadcrumbs a:hover {
+        text-decoration: underline;
+    }
+    .article-breadcrumbs span {
+        color: var(--text-secondary);
+    }
+    .article-hero {
+        width: 100%;
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-5);
+        aspect-ratio: 16/9;
+        object-fit: cover;
+    }
+    .article-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        align-items: center;
+        margin-bottom: var(--space-4);
+    }
+    .article-title {
+        font-family: 'Cinzel', serif;
+        font-size: 2rem;
+        color: var(--text-primary);
+        margin-bottom: var(--space-3);
+        line-height: 1.2;
+    }
+    .article-summary {
+        font-size: 1.125rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+        line-height: 1.6;
+    }
+    .article-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: var(--space-5);
+    }
+    .article-tag {
+        background: rgba(212, 175, 55, 0.1);
+        color: var(--accent-gold);
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+    }
+    .author-profile {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-4);
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-5);
+        border: 1px solid var(--border-color);
+    }
+    .author-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--accent-gold);
+    }
+    .author-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .author-name {
+        font-family: 'Cinzel', serif;
+        font-size: 1.125rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    .article-content {
+        color: var(--text-secondary);
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+    .article-content h1, .article-content h2, .article-content h3 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        margin: var(--space-5) 0 var(--space-3);
+    }
+    .article-content h2 {
+        font-size: 1.5rem;
+        color: var(--accent-gold);
+    }
+    .article-content h3 {
+        font-size: 1.25rem;
+    }
+    .article-content p {
+        margin-bottom: var(--space-4);
+    }
+    .article-content ul {
+        margin: var(--space-2) 0 var(--space-4);
+        padding-left: var(--space-5);
+    }
+    .article-content li {
+        margin-bottom: 0.25rem;
+        line-height: 1.5;
+    }
+    .article-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: var(--space-4) 0;
+        font-size: 0.9rem;
+    }
+    .article-content th, .article-content td {
+        padding: var(--space-2) var(--space-3);
+        border: 1px solid var(--border-color);
+        text-align: left;
+    }
+    .article-content th {
+        background: var(--bg-surface-2);
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+    .article-content tr:nth-child(odd) {
+        background: rgba(255,255,255,0.02);
+    }
+    .article-content blockquote {
+        border-left: 3px solid var(--accent-gold);
+        padding-left: var(--space-4);
+        margin: var(--space-4) 0;
+        font-style: italic;
+        color: var(--text-secondary);
+    }
+    .article-content a {
+        color: var(--accent-gold);
+        text-decoration: none;
+    }
+    .article-content a:hover {
+        text-decoration: underline;
+    }
+    .article-content strong {
+        color: var(--text-primary);
+    }
+    .article-content hr {
+        border: none;
+        border-top: 1px solid var(--border-color);
+        margin: var(--space-5) 0;
+    }
+    .article-sources {
+        margin-top: var(--space-5);
+        padding: var(--space-4);
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+    }
+    .article-sources h4 {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-3);
+        font-weight: 600;
+    }
+    .source-links.detailed {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+    .source-links.detailed a {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-2) var(--space-3);
+        background: var(--bg-surface-2);
+        color: var(--text-primary);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: background var(--duration-fast);
+        border: 1px solid var(--border-color);
+    }
+    .source-links.detailed a:hover {
+        background: rgba(212, 175, 55, 0.1);
+        border-color: var(--accent-gold);
+    }
+    .source-links.detailed a i {
+        color: var(--accent-gold);
+        flex-shrink: 0;
+    }
+    .community-footer {
+        margin-top: var(--space-6);
+        padding: var(--space-5);
+        background: linear-gradient(135deg, var(--bg-surface-1), var(--bg-surface-2));
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+    }
+    .community-message {
+        display: flex;
+        gap: var(--space-4);
+        margin-bottom: var(--space-5);
+        padding-bottom: var(--space-5);
+        border-bottom: 1px solid var(--border-color);
+    }
+    .community-message h4 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    .community-message p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.6;
+    }
+    .contribute-cta {
+        text-align: center;
+    }
+    .contribute-cta h4 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    .contribute-cta p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-4);
+    }
+    .article-footer {
+        margin-top: var(--space-6);
+        padding-top: var(--space-5);
+        border-top: 1px solid var(--border-color);
+    }
+    .article-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        margin-top: var(--space-4);
+    }
+    .article-cta a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-3) var(--space-4);
+        background: var(--accent-gold);
+        color: var(--bg-dark);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-weight: 600;
+        transition: opacity var(--duration-fast);
+    }
+    .article-cta a:hover {
+        opacity: 0.9;
+    }
+    .article-cta a.secondary {
+        background: var(--bg-surface-2);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+    @media (max-width: 640px) {
+        .article-page {
+            padding: var(--space-4);
+        }
+        .article-title {
+            font-size: 1.5rem;
+        }
+        .community-message {
+            flex-direction: column;
+        }
+    }
+    </style>
+</head>
+<body>
+    <!-- Header will be injected or use simple back link -->
+    <header style="background: var(--bg-surface-1); border-bottom: 1px solid var(--border-color); padding: var(--space-3) var(--space-4);">
+        <nav style="max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); text-decoration: none; font-family: 'Cinzel', serif; font-weight: 600;">
+                <img src="/sorcery-logo.webp" alt="Sorcery" style="height: 32px;">
+                Sorcery Brasil
+            </a>
+            <a href="/artigos/" style="color: var(--accent-gold); text-decoration: none; font-size: 0.875rem;">
+                <i data-lucide="arrow-left" style="width:14px;height:14px;"></i>
+                Voltar aos Artigos
+            </a>
+        </nav>
+    </header>
+
+    <!-- Article Content -->
+    <main class="main-content">
+        <article class="article-page">
+            <!-- Breadcrumbs -->
+            <nav class="article-breadcrumbs" aria-label="Breadcrumb">
+                <a href="/">Inicio</a>
+                <span>></span>
+                <a href="/artigos/">Artigos</a>
+                <span>></span>
+                <span>realms.cards</span>
+            </nav>
+
+            <!-- Hero Image -->
+            <img
+                src="/assets/articles/Battlefield.webp"
+                alt="realms.cards - simulador online de Sorcery"
+                class="article-hero"
+                loading="eager"
+            >
+
+            <!-- Meta -->
+            <div class="article-meta">
+                <span class="news-badge badge-ferramenta">Ferramentas</span>
+                <span class="article-date">
+                    <i data-lucide="calendar" style="width:14px;height:14px;"></i>
+                    23 de abril de 2026
+                </span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="article-title">realms.cards: o simulador online 3D gratuito para jogar Sorcery</h1>
+
+            <!-- Summary -->
+            <p class="article-summary">Plataforma web gratuita com tabuleiro 3D, tutorial integrado, IA para treinar e torneios Swiss. Funciona no celular. O ponto de partida para quem quer jogar online.</p>
+
+            <!-- Tags -->
+            <div class="article-tags">
+                <span class="article-tag">#online</span>
+                <span class="article-tag">#simulador</span>
+                <span class="article-tag">#gratuito</span>
+                <span class="article-tag">#tutorial</span>
+                <span class="article-tag">#torneio</span>
+            </div>
+
+            <!-- Author Profile -->
+            <div class="author-profile">
+                <img src="/assets/authors/pedro-lourenco-avatar.jpg" alt="Pedro Lourenco" class="author-avatar">
+                <div class="author-info">
+                    <span class="author-name">Pedro Lourenco</span>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="article-content">
+                <p>Se voce quer jogar Sorcery online mas nao sabe por onde comecar, a resposta em 2026 e simples:</p>
+
+                <p><strong>realms.cards</strong></p>
+
+                <p>Plataforma web gratuita, funciona no navegador (desktop e mobile), tem tutorial integrado, IA para treinar sozinho, e suporta desde casual ate torneios Swiss com multiplas rodadas.</p>
+
+                <hr>
+
+                <h2>Por que realms.cards e diferente</h2>
+
+                <p>Enquanto TTS exige compra (~$20 USD) e curva de aprendizado, realms.cards:</p>
+
+                <ul>
+                    <li><strong>Gratis</strong> - sem custo, sem Steam</li>
+                    <li><strong>Browser</strong> - funciona no celular e desktop</li>
+                    <li><strong>Tutorial nativo</strong> - aprenda o jogo dentro da plataforma</li>
+                    <li><strong>IA configuravel</strong> - treine sem precisar de oponente</li>
+                    <li><strong>Open source</strong> - qualquer um pode contribuir ou hospedar</li>
+                </ul>
+
+                <hr>
+
+                <h2>Quem criou</h2>
+
+                <p>Projeto fan-made desenvolvido pelo usuario <strong>Heavy_Bluebird_9692</strong> (Reddit), sob o handle oficial <strong>kingofthe</strong>.</p>
+
+                <p>Inspiracao declarada: <strong>Jinteki.net</strong>, o simulador classico de Netrunner que virou referencia na comunidade.</p>
+
+                <p>Em 2025 entrou em open beta. Em meados do ano foi 100% open-sourced no GitHub com licenca <strong>GPL-3.0</strong>.</p>
+
+                <hr>
+
+                <h2>O que tem no realms.cards</h2>
+
+                <h3>Modos de jogo</h3>
+
+                <table>
+                    <tr>
+                        <th>Modo</th>
+                        <th>Descricao</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Constructed</strong></td>
+                        <td>Formato oficial (Spellbook 50 / Atlas 30 / Collection 10)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sealed</strong></td>
+                        <td>Pool gerado dinamicamente do set escolhido</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Draft</strong></td>
+                        <td>Booster draft online com rotacao de packs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cube Draft</strong></td>
+                        <td>Monte um cube customizado</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hotseat</strong></td>
+                        <td>Jogue contra voce mesmo - ideal pra aprender</td>
+                    </tr>
+                    <tr>
+                        <td><strong>vs. IA</strong></td>
+                        <td>Adversarios controlados por IA com dificuldade configuravel</td>
+                    </tr>
+                </table>
+
+                <h3>Tabuleiro 3D interativo</h3>
+
+                <p>O tabuleiro e renderizado em <strong>3D</strong> usando React Three Fiber + Three.js:</p>
+
+                <ul>
+                    <li>Veja unidades em camadas (underground, surface, airborne)</li>
+                    <li>Acompanhe line of sight visualmente</li>
+                    <li>Experiencia proxima do jogo fisico</li>
+                </ul>
+
+                <h3>Tutorial integrado</h3>
+
+                <p>Sequencia guiada que ensina:</p>
+
+                <ul>
+                    <li>Mecanicas basicas (invocar, mover, atacar)</li>
+                    <li>Threshold vs. mana</li>
+                    <li>Combate, intercept, stealth</li>
+                    <li>Uso de sites e threshold</li>
+                </ul>
+
+                <h3>IA para treinar</h3>
+
+                <p>Treine sem precisar de oponente humano:</p>
+
+                <ul>
+                    <li>Dificuldade configuravel</li>
+                    <li>Internalize regras sem pressao</li>
+                    <li>Teste builds antes de enfrentar humanos</li>
+                </ul>
+
+                <h3>Torneios Swiss</h3>
+
+                <p>A plataforma organiza torneios completos:</p>
+
+                <ul>
+                    <li>Swiss pairing automatico</li>
+                    <li>Standings em tempo real</li>
+                    <li>Replays de cada partida</li>
+                    <li>Leaderboard global permanente</li>
+                </ul>
+
+                <h3>Mobile otimizado</h3>
+
+                <p>Funciona bem em celular e tablet - raro em simuladores de TCG.</p>
+
+                <hr>
+
+                <h2>Comparativo com alternativas</h2>
+
+                <table>
+                    <tr>
+                        <th>Feature</th>
+                        <th>realms.cards</th>
+                        <th>TTS</th>
+                        <th>spells.bar</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Custo</strong></td>
+                        <td>Gratis</td>
+                        <td>~$20 USD</td>
+                        <td>Gratis</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Plataforma</strong></td>
+                        <td>Browser</td>
+                        <td>Steam</td>
+                        <td>Browser</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tutorial</strong></td>
+                        <td>Sim</td>
+                        <td>Nao</td>
+                        <td>Nao</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IA / CPU</strong></td>
+                        <td>Sim</td>
+                        <td>Nao</td>
+                        <td>Nao</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Torneios Swiss</strong></td>
+                        <td>Embutido</td>
+                        <td>Manual</td>
+                        <td>Nao</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Mobile</strong></td>
+                        <td>Otimizado</td>
+                        <td>Nao</td>
+                        <td>Parcial</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Open source</strong></td>
+                        <td>GPL-3.0</td>
+                        <td>Nao</td>
+                        <td>Nao</td>
+                    </tr>
+                </table>
+
+                <p><strong>Veredicto:</strong></p>
+                <ul>
+                    <li><strong>Iniciante</strong>: realms.cards - tutorial + IA resolvem a barreira de entrada</li>
+                    <li><strong>Competitivo</strong>: Sorcery League ainda usa TTS, mas realms.cards fecha essa lacuna</li>
+                    <li><strong>Casual</strong>: realms.cards pela facilidade</li>
+                </ul>
+
+                <hr>
+
+                <h2>Como comecar</h2>
+
+                <h3>Semana 1 - Orientacao</h3>
+                <ol>
+                    <li>Acesse <strong>realms.cards</strong> no navegador</li>
+                    <li>Faca login via <strong>Discord OAuth</strong></li>
+                    <li>Complete o <strong>tutorial interativo</strong> (30-60min)</li>
+                </ol>
+
+                <h3>Semana 2 - Solo</h3>
+                <ol start="4">
+                    <li>Jogue <strong>3-5 partidas contra IA</strong>, comecando na dificuldade facil</li>
+                    <li>Use o <strong>deck editor</strong> pra montar sua primeira lista</li>
+                </ol>
+
+                <h3>Semana 3 - Social</h3>
+                <ol start="6">
+                    <li>Entre no <strong>Discord oficial</strong> do realms.cards</li>
+                    <li>Quando sentir pronto, <strong>entre na queue</strong> pra jogar online</li>
+                </ol>
+
+                <hr>
+
+                <h2>Apoie o projeto</h2>
+
+                <p>O criador opera o realms.cards <strong>no vermelho financeiramente</strong>. Para manter os servidores:</p>
+
+                <ul>
+                    <li><strong>Patreon</strong>: <a href="https://patreon.com/realmscards" target="_blank" rel="noopener">patreon.com/realmscards</a></li>
+                    <li><strong>Contribuir codigo</strong> no GitHub</li>
+                    <li><strong>Feedback ativo</strong> - bugs, UX, features</li>
+                    <li><strong>Divulgar</strong> - cada novo usuario ajuda</li>
+                </ul>
+
+                <p>Projetos fan-made dessa qualidade sao raros. Se o seu grupo adotar a ferramenta, considere retribuir.</p>
+
+                <hr>
+
+                <h2>Links uteis</h2>
+
+                <ul>
+                    <li><strong>Site</strong>: <a href="https://realms.cards" target="_blank" rel="noopener">realms.cards</a></li>
+                    <li><strong>GitHub</strong>: <a href="https://github.com/realms-cards/contested-realms" target="_blank" rel="noopener">github.com/realms-cards/contested-realms</a></li>
+                    <li><strong>Patreon</strong>: <a href="https://patreon.com/realmscards" target="_blank" rel="noopener">patreon.com/realmscards</a></li>
+                </ul>
+
+                <hr>
+
+                <h2>TL;DR</h2>
+
+                <p>Se voce e jogador de Sorcery que quer jogar online:</p>
+
+                <ul>
+                    <li><strong>realms.cards</strong> e gratuito, funciona no browser</li>
+                    <li>Tem tutorial pra aprender, IA pra treinar</li>
+                    <li>Suporta torneios Swiss completos</li>
+                    <li>E o ponto de partida pra quem nao tem LGS perto</li>
+                </ul>
+
+                <hr>
+
+                <h2>Conclusao</h2>
+
+                <p>realms.cards resolve o problema mais comum de quem descobre Sorcery: "quero jogar, mas nao tenho com quem".</p>
+
+                <p>Gratuito, acessivel, com tutorial e IA. Se voce esta comecando em 2026, e por aqui que voce entra no jogo online.</p>
+            </div>
+
+            <!-- Sources -->
+            <div class="article-sources">
+                <h4><i data-lucide="link" style="width:16px;height:16px;"></i> Fontes e Referencias</h4>
+                <div class="source-links detailed">
+                    <a href="https://reddit.com/r/SorceryTCG/comments/1po046d" target="_blank" rel="noopener nofollow">
+                        <i data-lucide="external-link" style="width:12px;height:12px;"></i>
+                        Play Sorcery online (for free) at realms.cards
+                    </a>
+                    <a href="https://github.com/realms-cards/contested-realms" target="_blank" rel="noopener nofollow">
+                        <i data-lucide="external-link" style="width:12px;height:12px;"></i>
+                        GitHub: realms-cards/contested-realms
+                    </a>
+                    <a href="https://patreon.com/realmscards" target="_blank" rel="noopener nofollow">
+                        <i data-lucide="external-link" style="width:12px;height:12px;"></i>
+                        Patreon: realmscards
+                    </a>
+                </div>
+            </div>
+
+            <!-- Community Footer -->
+            <div class="community-footer">
+                <div class="community-message">
+                    <i data-lucide="heart" style="width:24px;height:24px;color:var(--accent-gold);"></i>
+                    <div>
+                        <h4>Sorcery Contested Realm Brasil e um portal gratuito e independente</h4>
+                        <p>Nosso objetivo e apoiar o crescimento da comunidade de Sorcery no Brasil. Todo o conteudo e criado por jogadores, para jogadores.</p>
+                    </div>
+                </div>
+
+                <div class="contribute-cta">
+                    <h4>Quer contribuir com um artigo?</h4>
+                    <p>Se voce tem conhecimento para compartilhar com a comunidade, adorariamos publicar seu conteudo!</p>
+                    <a href="/artigos/" class="btn primary">
+                        <i data-lucide="pen-line" style="width:16px;height:16px;"></i>
+                        Ver Todos os Artigos
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation Footer -->
+            <footer class="article-footer">
+                <p style="color: var(--text-secondary);">
+                    Gostou deste artigo? Confira mais conteudo sobre Sorcery TCG no nosso portal.
+                </p>
+                <div class="article-cta">
+                    <a href="https://realms.cards" target="_blank" rel="noopener">
+                        <i data-lucide="play" style="width:16px;height:16px;"></i>
+                        Jogar no realms.cards
+                    </a>
+                    <a href="/artigos/" class="secondary">
+                        <i data-lucide="book-open" style="width:16px;height:16px;"></i>
+                        Mais Artigos
+                    </a>
+                </div>
+            </footer>
+        </article>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>
