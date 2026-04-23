@@ -1,4 +1,4 @@
-// Sorcery Portal Brasil - NocoDB API Proxy + Email Service
+// Sorcery Contested Realm Brasil - NocoDB API Proxy + Email Service
 // Este Worker atua como proxy seguro para a API do NocoDB
 // e envia emails de reset de senha via Resend
 //
@@ -381,9 +381,9 @@ async function sendWelcomeEmail(email, displayName, env) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      from: 'Sorcery Portal Brasil <noreply@sorcery.com.br>',
+      from: 'Sorcery Contested Realm Brasil <noreply@sorcery.com.br>',
       to: [email],
-      subject: 'Bem-vindo ao Sorcery Portal Brasil! 🎴',
+      subject: 'Bem-vindo ao Sorcery Contested Realm Brasil! 🎴',
       html: `
         <!DOCTYPE html>
         <html>
@@ -399,7 +399,7 @@ async function sendWelcomeEmail(email, displayName, env) {
                   <tr>
                     <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4a 100%);">
                       <h1 style="margin: 0; color: #d4af37; font-size: 28px; font-weight: 700;">
-                        Sorcery Portal Brasil
+                        Sorcery Contested Realm Brasil
                       </h1>
                     </td>
                   </tr>
@@ -441,7 +441,7 @@ async function sendWelcomeEmail(email, displayName, env) {
                   <tr>
                     <td style="padding: 30px 40px; background-color: #0f0f1a; border-top: 1px solid #2a2a4a;">
                       <p style="color: #666; font-size: 12px; margin: 0; text-align: center;">
-                        Sorcery Portal Brasil - A comunidade brasileira de Sorcery: Contested Realm
+                        Sorcery Contested Realm Brasil - A comunidade brasileira de Sorcery: Contested Realm
                       </p>
                     </td>
                   </tr>
@@ -474,9 +474,9 @@ async function sendResetEmail(email, token, displayName, env) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      from: 'Sorcery Portal Brasil <noreply@sorcery.com.br>',
+      from: 'Sorcery Contested Realm Brasil <noreply@sorcery.com.br>',
       to: [email],
-      subject: 'Redefinir sua senha - Sorcery Portal Brasil',
+      subject: 'Redefinir sua senha - Sorcery Contested Realm Brasil',
       html: `
         <!DOCTYPE html>
         <html>
@@ -492,7 +492,7 @@ async function sendResetEmail(email, token, displayName, env) {
                   <tr>
                     <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4a 100%);">
                       <h1 style="margin: 0; color: #d4af37; font-size: 28px; font-weight: 700;">
-                        Sorcery Portal Brasil
+                        Sorcery Contested Realm Brasil
                       </h1>
                     </td>
                   </tr>
@@ -525,7 +525,7 @@ async function sendResetEmail(email, token, displayName, env) {
                   <tr>
                     <td style="padding: 30px 40px; background-color: #0f0f1a; border-top: 1px solid #2a2a4a;">
                       <p style="color: #666; font-size: 12px; margin: 0; text-align: center;">
-                        Sorcery Portal Brasil
+                        Sorcery Contested Realm Brasil
                       </p>
                       <p style="color: #444; font-size: 11px; margin: 10px 0 0; text-align: center;">
                         <a href="${resetLink}" style="color: #d4af37; word-break: break-all;">${resetLink}</a>
@@ -1029,7 +1029,7 @@ async function handleRegister(request, env, origin, clientIP) {
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'Conta criada com sucesso! Bem-vindo ao Sorcery Portal Brasil.',
+      message: 'Conta criada com sucesso! Bem-vindo ao Sorcery Contested Realm Brasil.',
       user: {
         id: newUser.Id,
         email: newUser.email,
