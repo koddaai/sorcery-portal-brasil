@@ -23,3 +23,10 @@ Allow: /
 # Bingbot
 User-agent: Bingbot
 Crawl-delay: 1
+
+# LLM-friendly documentation
+# Arquivos estruturados para consulta por modelos de linguagem
+# llms.txt: resumo do portal
+# llms-full.txt: conteudo completo dos artigos
+LLMs: https://sorcery.com.br/llms.txt
+LLMs-Full: https://sorcery.com.br/llms-full.txt
