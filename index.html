@@ -318,6 +318,14 @@
                         <i data-lucide="brush"></i>
                         <span>Artistas</span>
                     </button>
+                    <button class="nav-btn" data-view="community" data-tooltip="Lojas no Brasil">
+                        <i data-lucide="store"></i>
+                        <span>Lojas</span>
+                    </button>
+                    <a class="nav-btn" href="/artigos/" data-tooltip="Artigos e Guias">
+                        <i data-lucide="newspaper"></i>
+                        <span>Artigos</span>
+                    </a>
                     <button class="nav-btn" data-view="decks" data-tooltip="Explorar Decks">
                         <i data-lucide="layout-grid"></i>
                         <span>Decks</span>
@@ -325,10 +333,6 @@
                     <button class="nav-btn" data-view="collection" data-tooltip="Minha Coleção">
                         <i data-lucide="folder-heart"></i>
                         <span>Coleção</span>
-                    </button>
-                    <button class="nav-btn" data-view="community" data-tooltip="Lojas no Brasil">
-                        <i data-lucide="store"></i>
-                        <span>Lojas</span>
                     </button>
                 </div>
 
@@ -467,6 +471,21 @@
                     </div>
                 </div>
 
+                <!-- Articles Preview -->
+                <div class="news-section">
+                    <div class="section-header">
+                        <h2>Artigos</h2>
+                        <button onclick="showAllArticles()" class="link-more">Ver Todos <i data-lucide="arrow-right"></i></button>
+                    </div>
+                    <div class="news-grid" id="landing-articles-grid">
+                        <!-- Dynamic articles loaded by articles-service.js -->
+                        <div class="news-loading">
+                            <i data-lucide="loader-2" class="spin"></i>
+                            <span>Carregando artigos...</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Quick Features -->
                 <div class="features-section">
                     <div class="features-grid">
@@ -497,21 +516,6 @@
                             </div>
                             <h3 data-i18n="featureCodex">Codex de Regras</h3>
                             <p data-i18n="featureCodexDesc">Consulte todas as regras e mecânicas do jogo</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Articles Preview -->
-                <div class="news-section">
-                    <div class="section-header">
-                        <h2>Artigos</h2>
-                        <button onclick="showAllArticles()" class="link-more">Ver Todos <i data-lucide="arrow-right"></i></button>
-                    </div>
-                    <div class="news-grid" id="landing-articles-grid">
-                        <!-- Dynamic articles loaded by articles-service.js -->
-                        <div class="news-loading">
-                            <i data-lucide="loader-2" class="spin"></i>
-                            <span>Carregando artigos...</span>
                         </div>
                     </div>
                 </div>
@@ -579,7 +583,7 @@
                             <div class="about-stat-label">Elementos</div>
                         </div>
                         <div class="about-stat">
-                            <div class="about-stat-value animate-count" data-target="6">0</div>
+                            <div class="about-stat-value animate-count" data-target="5">0</div>
                             <div class="about-stat-label">Expansões</div>
                         </div>
                     </div>

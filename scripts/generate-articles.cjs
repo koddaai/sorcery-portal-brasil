@@ -23,7 +23,7 @@ const authors = {
     avatar: '/assets/authors/pedro-lourenco-avatar.jpg'
   },
   'equipe': {
-    name: 'Equipe Sorcery Brasil',
+    name: 'Equipe Sorcery Contested Realm Brasil',
     avatar: '/sorcery-logo.webp'
   }
 };
@@ -196,7 +196,7 @@ function generateCommunityFooter() {
                     <div class="community-message">
                         <i data-lucide="heart" style="width:24px;height:24px;color:var(--accent-gold);"></i>
                         <div>
-                            <h4>Sorcery Brasil é um portal gratuito e independente</h4>
+                            <h4>Sorcery Contested Realm Brasil é um portal gratuito e independente</h4>
                             <p>Nosso objetivo é apoiar o crescimento da comunidade de Sorcery no Brasil. Todo o conteúdo é criado por jogadores, para jogadores.</p>
                         </div>
                     </div>
@@ -384,7 +384,7 @@ function generateArticlePage(article) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Sorcery Brasil",
+      "name": "Sorcery Contested Realm Brasil",
       "logo": {
         "@type": "ImageObject",
         "url": "https://sorcery.com.br/sorcery-logo.webp"
@@ -432,7 +432,7 @@ function generateArticlePage(article) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <title>${article.title} | Sorcery Brasil</title>
+    <title>${article.title} | Sorcery Contested Realm Brasil</title>
     <meta name="description" content="${article.summary}">
     <meta name="keywords" content="${article.tags.join(', ')}, sorcery tcg, sorcery brasil">
     <meta name="author" content="${author.name}">
@@ -442,13 +442,13 @@ function generateArticlePage(article) {
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:url" content="${articleUrl}">
-    <meta property="og:title" content="${article.title} | Sorcery Brasil">
+    <meta property="og:title" content="${article.title} | Sorcery Contested Realm Brasil">
     <meta property="og:description" content="${article.summary}">
     <meta property="og:image" content="${imageUrl}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:locale" content="pt_BR">
-    <meta property="og:site_name" content="Sorcery Brasil">
+    <meta property="og:site_name" content="Sorcery Contested Realm Brasil">
     <meta property="article:published_time" content="${article.date}">
     <meta property="article:modified_time" content="${article.date}">
     <meta property="article:author" content="${author.name}">
@@ -457,7 +457,7 @@ function generateArticlePage(article) {
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="${articleUrl}">
-    <meta name="twitter:title" content="${article.title} | Sorcery Brasil">
+    <meta name="twitter:title" content="${article.title} | Sorcery Contested Realm Brasil">
     <meta name="twitter:description" content="${article.summary}">
     <meta name="twitter:image" content="${imageUrl}">
 
@@ -1019,7 +1019,7 @@ ${generateCommunityFooter()}
         <footer class="footer" style="background: var(--bg-surface-1); padding: var(--space-5) var(--space-6); margin-top: var(--space-6); border-top: 1px solid var(--border-color);">
             <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
                 <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                    © 2026 Sorcery Brasil. Não somos afiliados à Erik's Curiosa.
+                    © 2026 Sorcery Contested Realm Brasil. Não somos afiliados à Erik's Curiosa.
                     <br>
                     <a href="https://sorcerytcg.com" target="_blank" rel="noopener" style="color: var(--accent-gold);">Site Oficial</a> ·
                     <a href="https://curiosa.io" target="_blank" rel="noopener" style="color: var(--accent-gold);">Curiosa.io</a> ·
@@ -1073,7 +1073,7 @@ function generateIndexPage(articles) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <title>Artigos sobre Sorcery TCG | Sorcery Brasil</title>
+    <title>Artigos sobre Sorcery TCG | Sorcery Contested Realm Brasil</title>
     <meta name="description" content="Guias, regras, dicas de deck e tudo sobre Sorcery: Contested Realm em português. O melhor conteúdo de Sorcery TCG no Brasil.">
     <meta name="keywords" content="sorcery tcg, sorcery brasil, guias sorcery, regras sorcery, decks sorcery">
     <meta name="author" content="${author.name}">
@@ -1083,15 +1083,15 @@ function generateIndexPage(articles) {
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sorcery.com.br/artigos/">
-    <meta property="og:title" content="Artigos sobre Sorcery TCG | Sorcery Brasil">
+    <meta property="og:title" content="Artigos sobre Sorcery TCG | Sorcery Contested Realm Brasil">
     <meta property="og:description" content="Guias, regras, dicas de deck e tudo sobre Sorcery: Contested Realm em português.">
     <meta property="og:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
     <meta property="og:locale" content="pt_BR">
-    <meta property="og:site_name" content="Sorcery Brasil">
+    <meta property="og:site_name" content="Sorcery Contested Realm Brasil">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Artigos sobre Sorcery TCG | Sorcery Brasil">
+    <meta name="twitter:title" content="Artigos sobre Sorcery TCG | Sorcery Contested Realm Brasil">
     <meta name="twitter:description" content="Guias, regras, dicas de deck e tudo sobre Sorcery: Contested Realm em português.">
     <meta name="twitter:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
 
@@ -1374,7 +1374,7 @@ ${articleCards}
         <footer class="footer" style="background: var(--bg-surface-1); padding: var(--space-5) var(--space-6); margin-top: var(--space-6); border-top: 1px solid var(--border-color);">
             <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
                 <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                    © 2026 Sorcery Brasil. Não somos afiliados à Erik's Curiosa.
+                    © 2026 Sorcery Contested Realm Brasil. Não somos afiliados à Erik's Curiosa.
                     <br>
                     <a href="https://sorcerytcg.com" target="_blank" rel="noopener" style="color: var(--accent-gold);">Site Oficial</a> ·
                     <a href="https://curiosa.io" target="_blank" rel="noopener" style="color: var(--accent-gold);">Curiosa.io</a> ·
