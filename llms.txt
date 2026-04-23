@@ -82,6 +82,8 @@ Sorcery: Contested Realm é um TCG (Trading Card Game) criado por Erik Olofsson 
   - URL: https://sorcery.com.br/artigos/ferramentas-jogador-sorcery/
 - **Dust Rewards: como não perder suas recompensas** — Programa de fidelidade
   - URL: https://sorcery.com.br/artigos/dust-rewards-guia/
+- **Como jogar Sorcery com 4 jogadores** — Guia de multiplayer da comunidade
+  - URL: https://sorcery.com.br/artigos/sorcery-multiplayer-guia-pratico/
 
 ### Lore e Comunidade
 - **Os quatro elementos do Realm — uma introdução** — Lore dos elementos

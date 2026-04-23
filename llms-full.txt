@@ -443,6 +443,46 @@ Categoria: Guia
 
 Voce provavelmente jogou fora seus primeiros codigos sem saber. Entenda como funciona o programa de recompensas da Curiosa (curiosa.io).
 
+--------------------------------------------------------------------------------
+### ARTIGO 20: Como jogar Sorcery TCG com 4 jogadores (guia definitivo)
+URL: /artigos/sorcery-multiplayer-guia-pratico/
+Categoria: Guia | Tags: multiplayer, 4 jogadores, 2v2
+--------------------------------------------------------------------------------
+
+Sim, da pra jogar Sorcery com 3 ou 4 pessoas. Mas o multiplayer NAO e oficial — foi construido pela comunidade.
+
+SETUP RAPIDO:
+- Grid 6x6 (padrao da comunidade)
+- 4 jogadores, cada um em um lado
+- Avatar na borda de cada jogador
+- OBJETIVO NO CENTRO (essencial para o jogo nao travar)
+- Turnos em sentido horario
+
+REGRAS MINIMAS:
+- Jogador eliminado: unidades saem, sites viram rubble
+- Direcao: "top/bottom" adapta para sua posicao
+- Aleatoriedade: use app RNG ou dados
+
+COMO VENCER:
+- Ultimo Avatar vivo ganha
+
+PROBLEMAS COMUNS:
+- Jogo travado? Objetivo no centro resolve
+- Partida longa? Reduzir HP ou jogar mais agressivo
+- Eliminacao cedo? Jogar 2v2 em equipes
+
+VARIACAO 2v2:
+- Formar duplas
+- Objetivo em equipe
+- Mais equilibrado
+
+O QUE IMPORTA:
+- Grid 6x6
+- Objetivo central
+- Sites viram rubble
+
+Materiais: https://drive.google.com/drive/folders/1BpYVR-j6l9TkVkJHCHJi2QCvYZSrCLw1
+
 ================================================================================
 ## LINKS EXTERNOS UTEIS
 ================================================================================

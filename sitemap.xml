@@ -172,6 +172,14 @@
         <priority>0.8</priority>
     </url>
 
+    <!-- Sorcery Multiplayer guia prático -->
+    <url>
+        <loc>https://sorcery.com.br/artigos/sorcery-multiplayer-guia-pratico/</loc>
+        <lastmod>2026-04-23</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
     <!-- ==================== SPA VIEWS ==================== -->
 
     <!-- Catálogo de Cards -->
