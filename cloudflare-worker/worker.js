@@ -552,6 +552,143 @@ async function sendResetEmail(email, token, displayName, env) {
 }
 
 // ============================================
+// VALIDAÇÕES DE ENTRADA
+// ============================================
+
+function validateEmail(email) {
+  if (!email || typeof email !== 'string') {
+    return { valid: false, error: 'Email é obrigatório' };
+  }
+
+  const trimmed = email.trim().toLowerCase();
+
+  if (trimmed.length > 100) {
+    return { valid: false, error: 'Email muito longo (máx. 100 caracteres)' };
+  }
+
+  // Regex para validação de email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(trimmed)) {
+    return { valid: false, error: 'Formato de email inválido' };
+  }
+
+  return { valid: true, value: trimmed };
+}
+
+function validatePassword(password) {
+  if (!password || typeof password !== 'string') {
+    return { valid: false, error: 'Senha é obrigatória' };
+  }
+
+  const errors = [];
+
+  if (password.length < 8) {
+    errors.push('mínimo 8 caracteres');
+  }
+
+  if (password.length > 100) {
+    errors.push('máximo 100 caracteres');
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    errors.push('uma letra maiúscula');
+  }
+
+  if (!/[a-z]/.test(password)) {
+    errors.push('uma letra minúscula');
+  }
+
+  if (!/[0-9]/.test(password)) {
+    errors.push('um número');
+  }
+
+  if (errors.length > 0) {
+    return { valid: false, error: `Senha deve conter: ${errors.join(', ')}` };
+  }
+
+  return { valid: true };
+}
+
+function validateDisplayName(displayName) {
+  if (!displayName || typeof displayName !== 'string') {
+    return { valid: false, error: 'Nome de exibição é obrigatório' };
+  }
+
+  const trimmed = displayName.trim();
+
+  if (trimmed.length < 3) {
+    return { valid: false, error: 'Nome deve ter no mínimo 3 caracteres' };
+  }
+
+  if (trimmed.length > 30) {
+    return { valid: false, error: 'Nome deve ter no máximo 30 caracteres' };
+  }
+
+  // Permitir letras, números, espaços, underscores e hífens
+  if (!/^[a-zA-Z0-9À-ÿ _-]+$/.test(trimmed)) {
+    return { valid: false, error: 'Nome contém caracteres inválidos' };
+  }
+
+  return { valid: true, value: trimmed };
+}
+
+// ============================================
+// RATE LIMITING PARA AUTH (por IP)
+// ============================================
+const authRateLimitMap = new Map();
+const AUTH_RATE_LIMIT_WINDOW = 300000; // 5 minutos
+const AUTH_RATE_LIMIT_MAX = 10; // 10 tentativas por 5 minutos
+const LOCKOUT_DURATION = 900000; // 15 minutos de bloqueio
+
+function checkAuthRateLimit(ip, endpoint) {
+  const key = `${ip}:${endpoint}`;
+  const now = Date.now();
+  const record = authRateLimitMap.get(key);
+
+  // Limpar registros antigos periodicamente
+  if (authRateLimitMap.size > 10000) {
+    for (const [k, v] of authRateLimitMap) {
+      if (now - v.timestamp > AUTH_RATE_LIMIT_WINDOW * 2) {
+        authRateLimitMap.delete(k);
+      }
+    }
+  }
+
+  if (!record) {
+    authRateLimitMap.set(key, { timestamp: now, count: 1, lockedUntil: 0 });
+    return { allowed: true, remaining: AUTH_RATE_LIMIT_MAX - 1 };
+  }
+
+  // Verificar se está bloqueado
+  if (record.lockedUntil > now) {
+    const waitSeconds = Math.ceil((record.lockedUntil - now) / 1000);
+    return { allowed: false, locked: true, waitSeconds };
+  }
+
+  // Reset se passou a janela
+  if (now - record.timestamp > AUTH_RATE_LIMIT_WINDOW) {
+    authRateLimitMap.set(key, { timestamp: now, count: 1, lockedUntil: 0 });
+    return { allowed: true, remaining: AUTH_RATE_LIMIT_MAX - 1 };
+  }
+
+  // Incrementar contador
+  record.count++;
+
+  // Bloquear se excedeu limite
+  if (record.count > AUTH_RATE_LIMIT_MAX) {
+    record.lockedUntil = now + LOCKOUT_DURATION;
+    return { allowed: false, locked: true, waitSeconds: Math.ceil(LOCKOUT_DURATION / 1000) };
+  }
+
+  return { allowed: true, remaining: AUTH_RATE_LIMIT_MAX - record.count };
+}
+
+function resetAuthRateLimit(ip, endpoint) {
+  const key = `${ip}:${endpoint}`;
+  authRateLimitMap.delete(key);
+}
+
+// ============================================
 // AUTH HANDLERS
 // ============================================
 
@@ -660,22 +797,44 @@ async function handleVerifyResetToken(request, env, origin) {
 // ============================================
 // LOGIN HANDLER
 // ============================================
-async function handleLogin(request, env, origin) {
+async function handleLogin(request, env, origin, clientIP) {
   try {
+    // Rate limiting
+    const rateCheck = checkAuthRateLimit(clientIP, 'login');
+    if (!rateCheck.allowed) {
+      return new Response(JSON.stringify({
+        error: `Muitas tentativas. Aguarde ${rateCheck.waitSeconds} segundos.`,
+        locked: true,
+        waitSeconds: rateCheck.waitSeconds
+      }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
     const { email, password } = await request.json();
 
-    if (!email || !password) {
-      return new Response(JSON.stringify({ error: 'Email e senha são obrigatórios' }), {
+    // Validar email
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      return new Response(JSON.stringify({ error: emailValidation.error }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
     }
 
-    const user = await findUserByEmail(email, env);
+    if (!password) {
+      return new Response(JSON.stringify({ error: 'Senha é obrigatória' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    const user = await findUserByEmail(emailValidation.value, env);
 
     if (!user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
-        status: 404,
+      return new Response(JSON.stringify({ error: 'Email ou senha incorretos' }), {
+        status: 401,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
     }
@@ -697,36 +856,42 @@ async function handleLogin(request, env, origin) {
     }
 
     if (!passwordValid) {
-      return new Response(JSON.stringify({ error: 'Invalid password' }), {
+      return new Response(JSON.stringify({
+        error: 'Email ou senha incorretos',
+        remaining: rateCheck.remaining
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
     }
 
-    // Migrar hash legado para PBKDF2
+    // Login bem-sucedido - resetar rate limit
+    resetAuthRateLimit(clientIP, 'login');
+
+    // Atualizar último login e migrar hash se necessário
+    const updateData = { last_login: new Date().toISOString() };
+
     if (needsHashUpgrade) {
-      try {
-        const newSalt = generateSalt();
-        const newHash = await hashPassword(password, newSalt);
-        await fetch(`${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users/${user.Id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'xc-token': env.NOCODB_TOKEN
-          },
-          body: JSON.stringify({
-            password_hash: newHash,
-            password_salt: newSalt
-          })
-        });
-        console.log('Password hash upgraded to PBKDF2 for user:', user.Id);
-      } catch (e) {
-        console.warn('Failed to upgrade password hash:', e);
-      }
+      const newSalt = generateSalt();
+      const newHash = await hashPassword(password, newSalt);
+      updateData.password_hash = newHash;
+      updateData.password_salt = newSalt;
     }
 
-    // Retornar dados seguros (sem password_hash!)
-    // NocoDB pode retornar boolean, number (1/0), ou string ("true"/"false")
+    try {
+      await fetch(`${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users/${user.Id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'xc-token': env.NOCODB_TOKEN
+        },
+        body: JSON.stringify(updateData)
+      });
+    } catch (e) {
+      console.warn('Failed to update user data:', e);
+    }
+
+    // Retornar dados seguros
     const termsAccepted = user.terms_accepted === true ||
                           user.terms_accepted === 1 ||
                           user.terms_accepted === '1' ||
@@ -748,7 +913,7 @@ async function handleLogin(request, env, origin) {
 
   } catch (error) {
     console.error('Login error:', error);
-    return new Response(JSON.stringify({ error: 'Erro interno' }), {
+    return new Response(JSON.stringify({ error: 'Erro interno do servidor' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
     });
@@ -758,30 +923,62 @@ async function handleLogin(request, env, origin) {
 // ============================================
 // REGISTER HANDLER
 // ============================================
-async function handleRegister(request, env, origin) {
+async function handleRegister(request, env, origin, clientIP) {
   try {
+    // Rate limiting
+    const rateCheck = checkAuthRateLimit(clientIP, 'register');
+    if (!rateCheck.allowed) {
+      return new Response(JSON.stringify({
+        error: `Muitas tentativas. Aguarde ${rateCheck.waitSeconds} segundos.`,
+        locked: true
+      }), {
+        status: 429,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
     const { email, password, displayName } = await request.json();
 
-    if (!email || !password || !displayName) {
-      return new Response(JSON.stringify({ error: 'Email, senha e nome são obrigatórios' }), {
+    // Validar email
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      return new Response(JSON.stringify({ error: emailValidation.error, field: 'email' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Validar senha
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      return new Response(JSON.stringify({ error: passwordValidation.error, field: 'password' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Validar nome de exibição
+    const nameValidation = validateDisplayName(displayName);
+    if (!nameValidation.valid) {
+      return new Response(JSON.stringify({ error: nameValidation.error, field: 'displayName' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
     }
 
     // Verificar se email já existe
-    const existingEmail = await findUserByEmail(email, env);
+    const existingEmail = await findUserByEmail(emailValidation.value, env);
     if (existingEmail) {
-      return new Response(JSON.stringify({ error: 'Email já cadastrado' }), {
+      return new Response(JSON.stringify({ error: 'Este email já está cadastrado', field: 'email' }), {
         status: 409,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
     }
 
     // Verificar se nome de exibição já existe
-    const existingName = await findUserByDisplayName(displayName, env);
+    const existingName = await findUserByDisplayName(nameValidation.value, env);
     if (existingName) {
-      return new Response(JSON.stringify({ error: 'Nome de exibição já está em uso. Escolha outro nome.' }), {
+      return new Response(JSON.stringify({ error: 'Este nome já está em uso. Escolha outro.', field: 'displayName' }), {
         status: 409,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
@@ -800,20 +997,21 @@ async function handleRegister(request, env, origin) {
         'xc-token': env.NOCODB_TOKEN
       },
       body: JSON.stringify({
-        email: email,
+        email: emailValidation.value,
         password_hash: passwordHash,
         password_salt: salt,
-        display_name: displayName,
+        display_name: nameValidation.value,
         avatar_id: 1,
         terms_accepted: false,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        last_login: new Date().toISOString()
       })
     });
 
     if (!resp.ok) {
       const error = await resp.text();
       console.error('Registration error:', error);
-      return new Response(JSON.stringify({ error: 'Erro ao criar conta' }), {
+      return new Response(JSON.stringify({ error: 'Erro ao criar conta. Tente novamente.' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
@@ -823,14 +1021,15 @@ async function handleRegister(request, env, origin) {
 
     // Enviar email de boas-vindas (não bloqueia o registro se falhar)
     try {
-      await sendWelcomeEmail(email, displayName, env);
-      console.log('Welcome email sent to:', email);
+      await sendWelcomeEmail(emailValidation.value, nameValidation.value, env);
+      console.log('Welcome email sent to:', emailValidation.value);
     } catch (e) {
       console.warn('Failed to send welcome email:', e);
     }
 
     return new Response(JSON.stringify({
       success: true,
+      message: 'Conta criada com sucesso! Bem-vindo ao Sorcery Portal Brasil.',
       user: {
         id: newUser.Id,
         email: newUser.email,
@@ -845,7 +1044,7 @@ async function handleRegister(request, env, origin) {
 
   } catch (error) {
     console.error('Register error:', error);
-    return new Response(JSON.stringify({ error: 'Erro interno' }), {
+    return new Response(JSON.stringify({ error: 'Erro interno do servidor' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
     });
@@ -1039,18 +1238,18 @@ export default {
       return new Response(JSON.stringify({
         status: 'ok',
         service: 'Sorcery API Proxy',
-        version: '3.2.0',
+        version: '4.0.0',
         security: 'whitelist-enabled'
       }), { headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) } });
     }
 
     // Auth endpoints (rotas especiais)
     if (path === '/auth/login' && request.method === 'POST') {
-      return handleLogin(request, env, origin);
+      return handleLogin(request, env, origin, clientIP);
     }
 
     if (path === '/auth/register' && request.method === 'POST') {
-      return handleRegister(request, env, origin);
+      return handleRegister(request, env, origin, clientIP);
     }
 
     if (path === '/auth/send-reset-email' && request.method === 'POST') {
