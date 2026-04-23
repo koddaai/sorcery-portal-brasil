@@ -619,6 +619,12 @@ async function handleLogin(request, env, origin) {
     }
 
     // Retornar dados seguros (sem password_hash!)
+    // NocoDB pode retornar boolean, number (1/0), ou string ("true"/"false")
+    const termsAccepted = user.terms_accepted === true ||
+                          user.terms_accepted === 1 ||
+                          user.terms_accepted === '1' ||
+                          user.terms_accepted === 'true';
+
     return new Response(JSON.stringify({
       success: true,
       user: {
@@ -626,7 +632,7 @@ async function handleLogin(request, env, origin) {
         email: user.email,
         displayName: user.display_name,
         avatarId: user.avatar_id || 1,
-        termsAccepted: user.terms_accepted || false
+        termsAccepted: termsAccepted
       }
     }), {
       status: 200,
@@ -909,7 +915,7 @@ export default {
       return new Response(JSON.stringify({
         status: 'ok',
         service: 'Sorcery API Proxy',
-        version: '3.1.0',
+        version: '3.1.1',
         security: 'whitelist-enabled'
       }), { headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) } });
     }
