@@ -132,14 +132,6 @@
         <priority>0.8</priority>
     </url>
 
-    <!-- Nomes pares elementos -->
-    <url>
-        <loc>https://sorcery.com.br/artigos/nomes-pares-elementos/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-
     <!-- Precons Beta análise -->
     <url>
         <loc>https://sorcery.com.br/artigos/precons-beta-analise/</loc>
@@ -167,14 +159,6 @@
     <!-- Dust Rewards explicado -->
     <url>
         <loc>https://sorcery.com.br/artigos/dust-rewards-explicado/</loc>
-        <lastmod>2026-04-22</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-
-    <!-- Smoke Ash Druid deck tech -->
-    <url>
-        <loc>https://sorcery.com.br/artigos/smoke-ash-druid-deck-tech/</loc>
         <lastmod>2026-04-22</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
