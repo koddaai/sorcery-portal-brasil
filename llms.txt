@@ -117,6 +117,7 @@ Sorcery: Contested Realm é um TCG (Trading Card Game) criado por Erik Olofsson 
 
 - **FAQ Estruturado:** https://sorcery.com.br/faq.txt
 - **Glossário de Termos:** https://sorcery.com.br/glossario.txt
+- **Lojas no Brasil:** https://sorcery.com.br/lojas.txt
 - **RSS Feed:** https://sorcery.com.br/feed.xml
 - **Sitemap:** https://sorcery.com.br/sitemap.xml
 

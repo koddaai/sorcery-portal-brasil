@@ -37,3 +37,4 @@ LLMs: https://sorcery.com.br/llms.txt
 LLMs-Full: https://sorcery.com.br/llms-full.txt
 FAQ: https://sorcery.com.br/faq.txt
 Glossary: https://sorcery.com.br/glossario.txt
+Stores: https://sorcery.com.br/lojas.txt

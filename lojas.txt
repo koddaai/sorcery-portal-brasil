@@ -1,0 +1,234 @@
+# Lojas de Sorcery: Contested Realm no Brasil
+# Atualizado em Abril 2026
+# Fonte: https://sorcery.com.br
+
+## Sobre Este Arquivo
+
+Este arquivo lista lojas brasileiras que vendem produtos de Sorcery: Contested Realm.
+Tipos de produtos: Sealed (boosters, boxes, precons), Singles (cartas avulsas), Acessórios (sleeves, playmats, deckboxes).
+
+---
+
+## SÃO PAULO - Capital
+
+### Kirin Studio
+- Tipo: Sealed/Singles
+- Endereço: Rua Cotoxó, 774 - Perdizes (Garagem)
+- Cidade: São Paulo, SP
+- Telefone: (11) 98631-1370
+- Site: https://www.kirinstudio.com.br
+- Eventos: Não
+- Descrição: Cards, acessórios e produtos premium
+
+### Magic Domain
+- Tipo: Sealed/Singles
+- Endereço: Rua Domingos de Morais, 1837 - Vila Mariana
+- Cidade: São Paulo, SP
+- Telefone: (11) 5084-9864
+- Site: https://www.magicdomain.com.br
+- Eventos: Sim
+- Descrição: Loja de TCG com torneios semanais
+
+### Flow Games
+- Tipo: Sealed/Singles
+- Endereço: Rua Dona Geniveva D'Ascolli, 17 - Vila Prudente
+- Cidade: São Paulo, SP
+- Telefone: (11) 91475-3637
+- Site: https://www.flowstore.com.br
+- Eventos: Sim
+- Descrição: Loja especializada em TCG com espaço para torneios
+
+---
+
+## SÃO PAULO - Interior
+
+### Mont Card Shop
+- Tipo: Sealed/Singles
+- Endereço: Rua Roxo Moreira, 1624
+- Cidade: Campinas, SP
+- Telefone: (19) 99777-8291
+- Site: https://www.montshop.com.br
+- Eventos: Sim
+- Descrição: Grande variedade de produtos Sorcery, singles e selados
+
+### Cripta Arcana
+- Tipo: Singles
+- Endereço: Rua Lions Club, 255 - Vila Nova
+- Cidade: Campinas, SP
+- Telefone: (19) 99527-2369
+- Site: https://www.criptaarcana.com.br
+- Eventos: Não
+- Descrição: Especialista em cards avulsos
+
+### Monster Games Cards
+- Tipo: Sealed
+- Endereço: Rua Rio Branco, 678 - Centro
+- Cidade: Salto, SP
+- Telefone: (11) 94521-9428
+- Site: https://www.monstergamescards.com.br
+- Eventos: Não
+- Descrição: Produtos selados e boosters
+
+### Gold House MTG
+- Tipo: Sealed/Singles
+- Endereço: Av. Sabato Ronsini, 401 - Vila Garrido (Sala 01)
+- Cidade: Santa Bárbara D'Oeste, SP
+- Telefone: (11) 93446-2696
+- Site: https://www.goldhousemtg.com.br
+- Eventos: Sim
+- Descrição: TCGs variados, boosters, precons e acessórios. Eventos Ter-Sex 17h-2h
+
+### Jogando TCG
+- Tipo: Acessórios
+- Endereço: Rua São Cristóvão, 115 - Jardim Patrícia
+- Cidade: Itaquaquecetuba, SP
+- Telefone: (11) 97074-2794
+- Site: https://www.jogandotcg.com.br
+- Eventos: Não
+- Descrição: Playmats, sleeves e deckboxes
+
+### Forja Hobby Store
+- Tipo: Sealed
+- Endereço: Av. José Ricci, 114 - Residencial Mais Parque Mirassol
+- Cidade: Mirassol, SP
+- Telefone: (17) 99122-3099
+- Site: https://www.forjahobbystore.com.br
+- Eventos: Sim
+- Descrição: Boosters e precons de Sorcery
+
+### CHQ Jogos
+- Tipo: Sealed/Singles
+- Endereço: Santo André
+- Cidade: Santo André, SP
+- Telefone: (11) 4432-1653
+- Site: https://www.chqjogos.com.br
+- Eventos: Sim
+- Descrição: Board games e TCG com espaço para eventos
+
+### Covil do Mago
+- Tipo: Sealed/Singles
+- Endereço: Bauru (consultar endereço pelo telefone)
+- Cidade: Bauru, SP
+- Telefone: (14) 99690-4239
+- Site: https://www.covildomagohobbystore.com.br
+- Eventos: Sim
+- Descrição: Cupom: OLDGUY5 - Produtos Sorcery completos
+
+---
+
+## RIO DE JANEIRO
+
+### Bolsa do Infinito
+- Tipo: Sealed/Singles
+- Endereço: Rua Conde de Bonfim, 685 - Tijuca (Loja D - Galeria)
+- Cidade: Rio de Janeiro, RJ
+- Telefone: (21) 3082-5091
+- Site: https://www.bolsadoinfinito.com.br
+- Eventos: Sim
+- Descrição: Cards avulsos e acessórios para TCG
+
+---
+
+## CEARÁ
+
+### Odisseia Neon
+- Tipo: Sealed/Singles
+- Endereço: Av. Raimundo Alcoforado, 341 - Alto Guaramiranga
+- Cidade: Canindé, CE
+- Telefone: (85) 92151-2249
+- Site: https://www.odisseianeonloja.com.br
+- Eventos: Sim
+- Descrição: Maior loja de Sorcery do Ceará
+
+---
+
+## GOIÁS
+
+### Paladins Games
+- Tipo: Sealed/Singles
+- Endereço: Rua S 01, nº 54, Sala 4, Ed. Free Shopp
+- Cidade: Goiânia, GO
+- Telefone: (62) 3954-1813
+- Site: https://paladinsgames.com.br/card-games-sorcery-contested-realm
+- Eventos: Sim
+- Descrição: Cards e jogos com torneios regulares
+
+---
+
+## MINAS GERAIS
+
+### DMG Card Shop
+- Tipo: Singles
+- Endereço: Rua Alferes Esteves, 278 - Centro (Loja)
+- Cidade: Pará de Minas, MG
+- Telefone: (37) 99967-2856
+- Site: https://www.dmgcardshop.com.br
+- Eventos: Não
+- Descrição: Cards avulsos de Sorcery e outros TCGs
+
+---
+
+## PARANÁ
+
+### Paladino Hobbies
+- Tipo: Singles
+- Endereço: Rua Padre Anchieta, 2454 - Bigorrilho (Lj 24)
+- Cidade: Curitiba, PR
+- Telefone: (41) 3082-9520
+- Site: https://www.paladinohobbies.com.br
+- Eventos: Sim
+- Descrição: Cards e hobbies em Curitiba
+
+---
+
+## LOJAS ONLINE
+
+### MYP Cards
+- Tipo: Singles
+- Site: https://www.mypcards.com/sorcery
+- Descrição: Especialista em singles de Sorcery - Loja online
+
+### Toca do Yeti
+- Tipo: Acessórios
+- Site: https://www.tocadoyeti.com.br
+- Descrição: Playmats personalizados e acessórios - Loja online
+
+### Btn's Oficial
+- Tipo: Acessórios
+- Site: https://www.btnsoficial.com.br
+- Descrição: Acessórios para TCG - Loja online
+
+### Ateliê 3D Verso
+- Tipo: Acessórios
+- Site: https://www.instagram.com/atelie3dverso
+- Descrição: Cupom: EDY5 - Acessórios personalizados
+
+---
+
+## COMUNIDADE BRASILEIRA
+
+### Discord Brasil
+- Link: https://discord.gg/qvYVGFAS5n
+- Descrição: Servidor oficial da comunidade brasileira
+
+### WhatsApp Brasil
+- Link: https://chat.whatsapp.com/CrLIAZFkedhCmnntkXbmha
+- Descrição: Grupo da comunidade brasileira
+
+---
+
+## LINKS OFICIAIS
+
+- Site Oficial: https://sorcerytcg.com
+- Loja Oficial (Curiosa.io): https://curiosa.io
+- Como Jogar: https://sorcerytcg.com/how-to-play
+- Eventos Oficiais: https://sorcerytcg.com/events
+
+---
+
+## NOTAS
+
+- Lista atualizada em Abril 2026
+- Nem todas as lojas possuem estoque permanente de Sorcery
+- Recomendamos confirmar disponibilidade antes de visitar
+- Para adicionar sua loja, entre em contato: pedro@kodda.ai
