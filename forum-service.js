@@ -436,6 +436,55 @@ A comunidade valoriza mais a experiência de jogo do que a competição acirrada
     }
 ];
 
+// Simple markdown parser for forum content
+function parseForumMarkdown(text) {
+    if (!text) return '';
+
+    // First escape HTML to prevent XSS
+    let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+    // Parse markdown
+    html = html
+        // Bold: **text** or __text__
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/__(.+?)__/g, '<strong>$1</strong>')
+        // Italic: *text* or _text_
+        .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+        .replace(/_([^_]+)_/g, '<em>$1</em>')
+        // Headers
+        .replace(/^### (.+)$/gm, '<h4>$1</h4>')
+        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+        .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+        // Lists
+        .replace(/^- (.+)$/gm, '<li>$1</li>')
+        .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+        // Blockquotes
+        .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>')
+        // Line breaks
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>');
+
+    // Wrap lists
+    html = html.replace(/(<li>.*<\/li>)+/g, '<ul>$&</ul>');
+
+    // Wrap in paragraph
+    html = '<p>' + html + '</p>';
+
+    // Clean up empty paragraphs
+    html = html.replace(/<p><\/p>/g, '');
+    html = html.replace(/<p>(<h[234]>)/g, '$1');
+    html = html.replace(/(<\/h[234]>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<ul>)/g, '$1');
+    html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<blockquote>)/g, '$1');
+    html = html.replace(/(<\/blockquote>)<\/p>/g, '$1');
+
+    return html;
+}
+
 class ForumService {
     constructor() {
         this.posts = [];
@@ -873,7 +922,7 @@ class ForumService {
                 </div>
 
                 <div class="post-full-content">
-                    ${escapeHtml(post.content).replace(/\n/g, '<br>')}
+                    ${parseForumMarkdown(post.content)}
                 </div>
 
                 <div class="post-stats-bar">
