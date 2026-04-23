@@ -56,6 +56,11 @@ class NocoDBService {
             headers['xc-token'] = this.apiToken;
         }
 
+        // IMPORTANTE: Enviar User-Id para o proxy validar permissões
+        if (this.currentUser) {
+            headers['X-User-Id'] = this.currentUser.id || this.currentUser.Id;
+        }
+
         // Adicionar headers de segurança (CSRF)
         if (typeof addSecurityHeaders === 'function') {
             return addSecurityHeaders(headers);
