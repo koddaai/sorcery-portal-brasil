@@ -393,7 +393,10 @@ h5 {
 .nav-dropdowns,
 .nav-items {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
     gap: var(--space-1);
 }
 
