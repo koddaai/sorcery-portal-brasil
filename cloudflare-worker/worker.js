@@ -117,6 +117,14 @@ const TABLE_PERMISSIONS = {
     POST: { requireUserId: true },
     PATCH: { blocked: true },
     DELETE: { blocked: true }
+  },
+
+  // Submissões de artigos: escrita pública (formulário de contato)
+  'article_submissions': {
+    GET: { blocked: true, reason: 'Acesso restrito' },
+    POST: { public: true },
+    PATCH: { blocked: true },
+    DELETE: { blocked: true }
   }
 };
 
@@ -549,6 +557,43 @@ async function sendResetEmail(email, token, displayName, env) {
   }
 
   return { success: true };
+}
+
+// Notificar admin sobre nova submissão de artigo
+async function sendArticleSubmissionNotification(data, env) {
+  const adminEmail = 'pedrolrnz@gmail.com';
+
+  const resp = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: 'Sorcery Portal Brasil <noreply@sorcery.com.br>',
+      to: [adminEmail],
+      subject: `[Novo Artigo] ${data.title}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8"></head>
+        <body style="font-family: sans-serif; padding: 20px; background: #1a1a2e; color: #fff;">
+          <h1 style="color: #d4af37;">Nova Submissão de Artigo</h1>
+          <p><strong>Autor:</strong> ${data.author_name}</p>
+          <p><strong>Email:</strong> ${data.author_email}</p>
+          <p><strong>Título:</strong> ${data.title}</p>
+          <p><strong>Categoria:</strong> ${data.category}</p>
+          <p><strong>Data:</strong> ${new Date().toLocaleString('pt-BR')}</p>
+          <hr style="border-color: #333;">
+          <h3>Conteúdo:</h3>
+          <pre style="background: #0a0a0f; padding: 15px; border-radius: 8px; white-space: pre-wrap; overflow-x: auto;">${data.content}</pre>
+        </body>
+        </html>
+      `
+    })
+  });
+
+  return resp.ok;
 }
 
 // ============================================
@@ -1209,6 +1254,96 @@ async function handleResetPassword(request, env, origin) {
 }
 
 // ============================================
+// SUBMISSÃO DE ARTIGOS
+// ============================================
+
+async function handleArticleSubmission(request, env, origin) {
+  try {
+    const body = await request.json();
+
+    // Validações básicas
+    if (!body.author_name || body.author_name.trim().length < 2) {
+      return new Response(JSON.stringify({ success: false, error: 'Nome do autor é obrigatório' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    if (!body.author_email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.author_email)) {
+      return new Response(JSON.stringify({ success: false, error: 'Email inválido' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    if (!body.title || body.title.trim().length < 5) {
+      return new Response(JSON.stringify({ success: false, error: 'Título deve ter pelo menos 5 caracteres' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    if (!body.content || body.content.trim().length < 100) {
+      return new Response(JSON.stringify({ success: false, error: 'Conteúdo deve ter pelo menos 100 caracteres' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Preparar dados para salvar
+    const data = {
+      author_name: body.author_name.trim(),
+      author_email: body.author_email.trim().toLowerCase(),
+      title: body.title.trim(),
+      category: body.category || 'Guia',
+      content: body.content.trim(),
+      submitted_at: new Date().toISOString(),
+      status: 'pending'
+    };
+
+    // Salvar no NocoDB
+    const nocoUrl = `${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/article_submissions`;
+    const nocoResp = await fetch(nocoUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'xc-token': env.NOCODB_TOKEN
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!nocoResp.ok) {
+      const error = await nocoResp.text();
+      console.error('NocoDB error:', error);
+      return new Response(JSON.stringify({ success: false, error: 'Erro ao salvar artigo' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Enviar notificação por email (async, não bloqueia resposta)
+    sendArticleSubmissionNotification(data, env).catch(err => {
+      console.error('Email notification error:', err);
+    });
+
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'Artigo enviado com sucesso! Entraremos em contato em breve.'
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+
+  } catch (error) {
+    console.error('Article submission error:', error);
+    return new Response(JSON.stringify({ success: false, error: 'Erro ao processar submissão' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+    });
+  }
+}
+
+// ============================================
 // HANDLER PRINCIPAL
 // ============================================
 
@@ -1270,6 +1405,13 @@ export default {
 
     if (path === '/auth/update-avatar' && request.method === 'POST') {
       return handleUpdateAvatar(request, env, origin);
+    }
+
+    // ============================================
+    // SUBMISSÃO DE ARTIGOS
+    // ============================================
+    if (path === '/submit-article' && request.method === 'POST') {
+      return handleArticleSubmission(request, env, origin);
     }
 
     // ============================================
