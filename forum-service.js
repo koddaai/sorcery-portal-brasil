@@ -4,23 +4,38 @@
 // ============================================
 
 const FORUM_CATEGORIES = {
-    'primeiros-passos': { name: 'Primeiros Passos', icon: 'baby', description: 'Guias e dúvidas para quem está começando no Sorcery', color: '#22c55e' },
-    'regras-mecanicas': { name: 'Regras & Mecânicas', icon: 'scale', description: 'Discussões sobre regras, rulings e mecânicas do jogo', color: '#3b82f6' },
-    'duvidas-cartas': { name: 'Dúvidas sobre Cartas', icon: 'help-circle', description: 'Perguntas sobre interações e funcionamento de cartas específicas', color: '#8b5cf6' },
-    'decks-construcao': { name: 'Decks & Construção', icon: 'hammer', description: 'Deck techs, combos, estratégias e listas', color: '#f59e0b' },
-    'meta-competitivo': { name: 'Meta & Competitivo', icon: 'trophy', description: 'Discussões sobre meta, tier lists e torneios', color: '#ef4444' },
-    'lore-arte': { name: 'Lore & Arte', icon: 'palette', description: 'História do jogo, artistas e flavor', color: '#a855f7' },
-    'ferramentas': { name: 'Ferramentas & Recursos', icon: 'wrench', description: 'Apps, sites, ferramentas úteis e recursos da comunidade', color: '#14b8a6' },
-    'eventos': { name: 'Eventos', icon: 'calendar', description: 'Torneios, encontros e eventos da comunidade', color: '#f97316' },
-    'geral': { name: 'Geral', icon: 'message-circle', description: 'Discussões gerais sobre Sorcery', color: '#9ca3af' }
+    'geral': { name: 'Geral', icon: 'message-circle', description: 'Dúvidas, regras, cartas e discussões sobre Sorcery', color: '#3b82f6' },
+    'decks-meta': { name: 'Decks & Meta', icon: 'trophy', description: 'Deck techs, estratégias, tier lists e competitivo', color: '#f59e0b' },
+    'classificados': { name: 'Classificados', icon: 'tag', description: 'Compra, venda e troca de cartas', color: '#22c55e' },
+    'eventos': { name: 'Eventos', icon: 'calendar', description: 'Torneios, encontros e eventos da comunidade', color: '#f97316' }
 };
+
+// Mapeamento de categorias antigas para novas (para posts existentes)
+const CATEGORY_MIGRATION = {
+    'primeiros-passos': 'geral',
+    'regras-mecanicas': 'geral',
+    'duvidas-cartas': 'geral',
+    'duvidas': 'geral',
+    'dicas': 'geral',
+    'decks-construcao': 'decks-meta',
+    'meta-competitivo': 'decks-meta',
+    'lore-arte': 'geral',
+    'ferramentas': 'geral',
+    'limited': 'decks-meta',
+    'promocoes': 'geral'
+};
+
+// Helper para migrar categoria antiga para nova
+function migrateCategory(category) {
+    return CATEGORY_MIGRATION[category] || category;
+}
 
 // Posts estáticos - conteúdo editorial publicado pela equipe
 const STATIC_FORUM_POSTS = [
     // Primeiros Passos
     {
         Id: 's1',
-        category: 'primeiros-passos',
+        category: 'geral',
         Title: '8 dúvidas que todo jogador novo tem no primeiro fim de semana',
         content: `Selecionei as perguntas mais recorrentes de quem abriu os precons pela primeira vez:
 
@@ -55,7 +70,7 @@ São fixos ao site, não movem nem podem ser pegos. Se o site for destruído, o 
     },
     {
         Id: 's2',
-        category: 'primeiros-passos',
+        category: 'geral',
         Title: 'Vim do Magic, o que muda? O guia completo',
         content: `Se você joga Magic há anos e quer experimentar Sorcery, aqui estão as principais diferenças:
 
@@ -84,7 +99,7 @@ Quando seu Avatar chega a 0, você não perde imediatamente. Entra em Death's Do
     },
     {
         Id: 's3',
-        category: 'primeiros-passos',
+        category: 'geral',
         Title: 'Os Avatares mais amigáveis para quem está começando',
         content: `Para iniciantes, alguns avatares são mais intuitivos que outros. Minha recomendação:
 
@@ -110,7 +125,7 @@ Ranged natural facilita entender o combate à distância. Mobilidade boa para ap
     // Regras & Mecânicas
     {
         Id: 's4',
-        category: 'regras-mecanicas',
+        category: 'geral',
         Title: 'Threshold vs. Mana — a diferença que todo novato confunde',
         content: `Se você veio de Magic, ignore seu instinto. Em Sorcery:
 
@@ -129,7 +144,7 @@ Para spells multi-elemento: basta ter o threshold mínimo de cada elemento simul
     },
     {
         Id: 's5',
-        category: 'regras-mecanicas',
+        category: 'geral',
         Title: 'Avatar só morre por DANO DIRETO — atacar site não finaliza o jogo',
         content: `Esta é a regra mais mal compreendida do jogo, e o rulebook não enfatiza bem:
 
@@ -150,7 +165,7 @@ Não é raro ver partidas onde os dois Avatares ficam em Death's Door se persegu
     // Dúvidas sobre Cartas
     {
         Id: 's6',
-        category: 'duvidas-cartas',
+        category: 'geral',
         Title: 'Yog-Sothoth — a carta mais confusa do jogo, explicada',
         content: `Duas leituras circulam, e uma delas está confirmada errada:
 
@@ -175,7 +190,7 @@ Yog-Sothoth ocupa **todas as 20 casas** do grid simultaneamente — superfície,
     // Decks & Construção
     {
         Id: 's7',
-        category: 'decks-construcao',
+        category: 'decks-meta',
         Title: 'Deckbuilding em Sorcery — os fundamentos',
         content: `Antes de montar seu primeiro deck, entenda a estrutura:
 
@@ -203,7 +218,7 @@ Lembre da regra de Death's Door: você PRECISA de dano direto. Inclua pelo menos
     },
     {
         Id: 's8',
-        category: 'decks-construcao',
+        category: 'decks-meta',
         Title: 'Frog Swarm — a base para decks de tokens',
         content: `Para quem quer montar um deck de tokens de sapo (sim, existe e é bom):
 
@@ -231,7 +246,7 @@ Lembre da regra de Death's Door: você PRECISA de dano direto. Inclua pelo menos
     // Meta & Competitivo
     {
         Id: 's9',
-        category: 'meta-competitivo',
+        category: 'decks-meta',
         Title: 'Druid — o Avatar dominante do meta atual',
         content: `Não tem como falar de meta sem falar de Druid. Ele domina por razões estruturais:
 
@@ -260,7 +275,7 @@ O próximo set pode trazer um Hunter que counter-meta beasts, mas por enquanto, 
     },
     {
         Id: 's10',
-        category: 'meta-competitivo',
+        category: 'decks-meta',
         Title: 'Staples do set Gothic — o que comprar de single',
         content: `Consenso da comunidade para montar singles do Gothic:
 
@@ -290,7 +305,7 @@ O próximo set pode trazer um Hunter que counter-meta beasts, mas por enquanto, 
     // Limited
     {
         Id: 's11',
-        category: 'limited',
+        category: 'decks-meta',
         Title: 'Primeiro draft de Sorcery — o que precisa saber antes de sentar',
         content: `Dicas para quem vai draftar pela primeira vez:
 
@@ -318,7 +333,7 @@ O próximo set pode trazer um Hunter que counter-meta beasts, mas por enquanto, 
     // Ferramentas
     {
         Id: 's12',
-        category: 'ferramentas',
+        category: 'geral',
         Title: 'As ferramentas que todo jogador de Sorcery usa',
         content: `Lista das ferramentas essenciais da comunidade:
 
@@ -351,7 +366,7 @@ O próximo set pode trazer um Hunter que counter-meta beasts, mas por enquanto, 
     // Lore & Arte
     {
         Id: 's13',
-        category: 'lore-arte',
+        category: 'geral',
         Title: 'Os quatro elementos do Realm — uma introdução à lore',
         content: `Sorcery se passa no Realm, um mundo onde quatro elementos primordiais competem pelo domínio:
 
@@ -571,7 +586,17 @@ class ForumService {
             for (const key of Object.keys(FORUM_CATEGORIES)) {
                 let dbPosts = [];
                 try {
-                    dbPosts = await nocoDBService.getForumPosts({ category: key, limit: 100 });
+                    // Carregar posts da categoria atual e categorias que migram para ela
+                    const categoriesToLoad = [key];
+                    for (const [oldCat, newCat] of Object.entries(CATEGORY_MIGRATION)) {
+                        if (newCat === key) {
+                            categoriesToLoad.push(oldCat);
+                        }
+                    }
+                    for (const cat of categoriesToLoad) {
+                        const posts = await nocoDBService.getForumPosts({ category: cat, limit: 100 });
+                        dbPosts.push(...posts);
+                    }
                 } catch (e) {
                     // DB might not be available
                 }
@@ -597,6 +622,8 @@ class ForumService {
             let dbPosts = [];
             try {
                 dbPosts = await nocoDBService.getForumPosts({ sort: 'recent', limit: 5 });
+                // Migrar categorias antigas
+                dbPosts.forEach(p => p.category = migrateCategory(p.category));
             } catch (e) {
                 // DB might not be available
             }
@@ -647,12 +674,25 @@ class ForumService {
 
             let dbPosts = [];
             try {
-                dbPosts = await nocoDBService.getForumPosts({
-                    category: this.currentCategory,
-                    sort: this.filters.sort,
-                    offset: this.pagination.offset,
-                    limit: this.pagination.limit
-                });
+                // Carregar posts da categoria atual e categorias que migram para ela
+                const categoriesToLoad = [this.currentCategory];
+                for (const [oldCat, newCat] of Object.entries(CATEGORY_MIGRATION)) {
+                    if (newCat === this.currentCategory) {
+                        categoriesToLoad.push(oldCat);
+                    }
+                }
+
+                for (const cat of categoriesToLoad) {
+                    const posts = await nocoDBService.getForumPosts({
+                        category: cat,
+                        sort: this.filters.sort,
+                        offset: this.pagination.offset,
+                        limit: this.pagination.limit
+                    });
+                    // Migrar categoria dos posts carregados
+                    posts.forEach(p => p.category = migrateCategory(p.category));
+                    dbPosts.push(...posts);
+                }
 
                 // Get comment counts for db posts
                 for (const post of dbPosts) {

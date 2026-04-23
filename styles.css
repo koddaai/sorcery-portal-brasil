@@ -20639,12 +20639,10 @@ button:disabled .spin,
     height: 24px;
 }
 
-.forum-category-card-icon.cat-duvidas { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.forum-category-card-icon.cat-geral { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.forum-category-card-icon.cat-decks-meta { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
 .forum-category-card-icon.cat-classificados { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
-.forum-category-card-icon.cat-promocoes { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
-.forum-category-card-icon.cat-dicas { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-.forum-category-card-icon.cat-eventos { background: rgba(168, 85, 247, 0.15); color: #a855f7; }
-.forum-category-card-icon.cat-geral { background: rgba(107, 114, 128, 0.15); color: #9ca3af; }
+.forum-category-card-icon.cat-eventos { background: rgba(249, 115, 22, 0.15); color: #f97316; }
 
 .forum-category-card-title {
     font-family: 'Cinzel', serif;
@@ -20728,12 +20726,10 @@ button:disabled .spin,
     flex-shrink: 0;
 }
 
-.forum-recent-item-category.cat-duvidas { background: #3b82f6; }
+.forum-recent-item-category.cat-geral { background: #3b82f6; }
+.forum-recent-item-category.cat-decks-meta { background: #f59e0b; }
 .forum-recent-item-category.cat-classificados { background: #22c55e; }
-.forum-recent-item-category.cat-promocoes { background: #ef4444; }
-.forum-recent-item-category.cat-dicas { background: #f59e0b; }
-.forum-recent-item-category.cat-eventos { background: #a855f7; }
-.forum-recent-item-category.cat-geral { background: #9ca3af; }
+.forum-recent-item-category.cat-eventos { background: #f97316; }
 
 .forum-recent-item-content {
     flex: 1;
