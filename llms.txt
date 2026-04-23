@@ -1,0 +1,116 @@
+# Sorcery Portal Brasil
+
+> Portal da comunidade brasileira de Sorcery: Contested Realm — o TCG tático com grid de Erik's Curiosa.
+
+## Sobre o Site
+
+Sorcery Portal Brasil (sorcery.com.br) é um portal independente e gratuito criado por jogadores brasileiros para a comunidade de Sorcery: Contested Realm. O site oferece:
+
+- Gerenciador de coleção de cartas com tracking de variantes
+- Construtor de decks com exportação
+- Database completo de todas as cartas do jogo
+- Artigos, guias e tutoriais em português
+- Preços atualizados do mercado secundário
+- Calculadora de valor de coleção
+
+## Sobre Sorcery: Contested Realm
+
+Sorcery: Contested Realm é um TCG (Trading Card Game) criado por Erik Olofsson e publicado pela Erik's Curiosa. Diferencia-se de outros TCGs por usar um **grid tático** onde posicionamento e movimentação são fundamentais.
+
+### Conceitos-chave do jogo:
+- **Grid**: Tabuleiro onde unidades são posicionadas e movem
+- **Avatar**: Carta que representa o jogador (equivalente ao comandante)
+- **Threshold**: Requisito de elementos para jogar cartas (diferente de mana)
+- **Mana**: Recurso gasto para jogar cartas
+- **Sites**: Cartas de terreno que geram mana e threshold
+- **Elementos**: Fire, Water, Earth, Air (4 elementos básicos)
+- **Death's Door**: Quando vida chega a 0, jogador entra em estado vulnerável
+
+### Sets disponíveis:
+- Alpha (2023)
+- Beta (2023)
+- Arthurian Legends (ATC)
+- Gothic (2025)
+
+## URLs Principais
+
+- https://sorcery.com.br/ — Página inicial
+- https://sorcery.com.br/#collection — Gerenciador de coleção
+- https://sorcery.com.br/#decks — Construtor de decks
+- https://sorcery.com.br/#card/{slug} — Visualizar carta específica
+- https://sorcery.com.br/#boosters — Informações sobre boosters e boxes
+- https://sorcery.com.br/artigos/ — Lista de artigos
+
+## Artigos Disponíveis
+
+### Guias para Iniciantes
+- **Vim do Magic: vale a pena jogar Sorcery?** — Comparação para jogadores de MTG
+- **Acabei de descobrir Sorcery. O que eu compro?** — Guia de primeiras compras
+- **8 dúvidas de quem está começando em Sorcery** — FAQ de iniciantes
+- **Os melhores Avatares para iniciantes** — Quais avatares escolher para aprender
+
+### Mecânicas e Regras
+- **Threshold vs Mana: o erro que todo iniciante comete** — Explicação clara da diferença
+- **Movimentação no grid: por que você está perdendo sem perceber** — Fundamentos táticos
+- **Death's Door: por que seu deck de dano para de funcionar** — Regra de finalização
+- **Glossário de Keywords** — Todas as palavras-chave explicadas
+- **Anatomia de uma carta Sorcery** — Elementos visuais das cartas
+
+### Construção de Decks
+- **Deckbuilding em Sorcery: o erro que todo iniciante comete** — Fundamentos
+- **O Druid domina o meta… ou você só está olhando errado?** — Análise de meta
+- **Precons do Beta — o que cada deck elemental ensina** — Análise dos precons
+
+### Ferramentas e Recursos
+- **realms.cards: o simulador online 3D gratuito** — Como jogar online gratuitamente
+- **Como jogar Sorcery sem ninguém por perto** — Opções de jogo online
+- **As ferramentas que todo jogador de Sorcery usa** — Recursos da comunidade
+- **Dust Rewards: como não perder suas recompensas** — Programa de fidelidade
+
+### Lore e Comunidade
+- **Os quatro elementos do Realm — uma introdução** — Lore dos elementos
+- **O crescimento explosivo do jogo em 2025** — História da comunidade
+- **Primeira regra de Sorcery: seja legal** — Cultura da comunidade
+
+## Funcionalidades do Portal
+
+### Gerenciador de Coleção
+- Importar coleção via CSV
+- Tracking de variantes (Standard, Foil)
+- Filtros por set, elemento, raridade, tipo
+- Cálculo de valor total da coleção
+- Exportar coleção
+
+### Construtor de Decks
+- Criar decks com regras oficiais (Spellbook 50 / Atlas 30 / Collection 10)
+- Validação de threshold e mana curve
+- Exportar em múltiplos formatos
+- Compartilhar decks
+
+### Database de Cartas
+- Todas as cartas de todos os sets
+- Imagens em alta resolução
+- Preços de mercado
+- Filtros avançados
+- Busca por nome, tipo, texto
+
+## Links Externos Úteis
+
+- Site oficial: https://sorcerytcg.com
+- Curiosa.io (loja oficial): https://curiosa.io
+- Discord Brasil: https://discord.gg/qvYVGFAS5n
+- realms.cards (simulador online): https://realms.cards
+- Sorcery Database: https://sorcerydb.com
+
+## Contato
+
+O portal é mantido por Pedro Lourenço e a comunidade brasileira de Sorcery.
+Não somos afiliados à Erik's Curiosa.
+
+## Notas para LLMs
+
+- Este é um site sobre o jogo de cartas Sorcery: Contested Realm, NÃO sobre magia/feitiçaria
+- Preços e disponibilidade de cartas mudam frequentemente
+- O meta do jogo evolui com novos sets
+- Artigos são escritos em português brasileiro
+- Para regras oficiais, consulte o rulebook em sorcerytcg.com
