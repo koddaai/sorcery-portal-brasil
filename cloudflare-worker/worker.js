@@ -335,6 +335,22 @@ async function findUserByEmail(email, env) {
   return data.list && data.list.length > 0 ? data.list[0] : null;
 }
 
+async function findUserByDisplayName(displayName, env) {
+  const url = `${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users?where=(display_name,eq,${encodeURIComponent(displayName)})`;
+
+  const resp = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      'xc-token': env.NOCODB_TOKEN
+    }
+  });
+
+  if (!resp.ok) return null;
+
+  const data = await resp.json();
+  return data.list && data.list.length > 0 ? data.list[0] : null;
+}
+
 async function updateUserResetToken(userId, token, env) {
   const url = `${NOCODB_BASE_URL}/api/v1/db/data/noco/${NOCODB_BASE_ID}/users/${userId}`;
 
@@ -356,6 +372,97 @@ async function updateUserResetToken(userId, token, env) {
 // ============================================
 // EMAIL SERVICE
 // ============================================
+
+async function sendWelcomeEmail(email, displayName, env) {
+  const resp = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: 'Sorcery Portal Brasil <noreply@sorcery.com.br>',
+      to: [email],
+      subject: 'Bem-vindo ao Sorcery Portal Brasil! 🎴',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #0a0a0f; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0f; padding: 40px 20px;">
+            <tr>
+              <td align="center">
+                <table width="100%" max-width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; background-color: #1a1a2e; border-radius: 16px; overflow: hidden; border: 1px solid #2a2a4a;">
+                  <tr>
+                    <td style="padding: 40px 40px 20px; text-align: center; background: linear-gradient(135deg, #1a1a2e 0%, #2a2a4a 100%);">
+                      <h1 style="margin: 0; color: #d4af37; font-size: 28px; font-weight: 700;">
+                        Sorcery Portal Brasil
+                      </h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 30px 40px;">
+                      <p style="color: #ffffff; font-size: 20px; margin: 0 0 10px;">
+                        Bem-vindo${displayName ? `, <strong>${displayName}</strong>` : ''}! 🎉
+                      </p>
+                      <p style="color: #a0a0a0; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                        Sua conta foi criada com sucesso! Agora você faz parte da comunidade brasileira de Sorcery: Contested Realm.
+                      </p>
+                      <p style="color: #ffffff; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                        O que você pode fazer no portal:
+                      </p>
+                      <ul style="color: #a0a0a0; font-size: 15px; line-height: 1.8; margin: 0 0 20px; padding-left: 20px;">
+                        <li>📚 Gerenciar sua coleção de cartas</li>
+                        <li>💰 Acompanhar preços do mercado</li>
+                        <li>🔄 Criar listas de troca e wishlist</li>
+                        <li>🗣️ Participar do fórum da comunidade</li>
+                        <li>🏪 Encontrar lojas no Brasil</li>
+                        <li>📖 Acessar guias e dicas</li>
+                      </ul>
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td align="center" style="padding: 20px 0;">
+                            <a href="${FRONTEND_URL}"
+                               style="display: inline-block; padding: 16px 40px; background: linear-gradient(135deg, #d4af37 0%, #b8962e 100%); color: #0a0a0f; text-decoration: none; font-size: 16px; font-weight: 600; border-radius: 8px;">
+                              Acessar o Portal
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      <p style="color: #a0a0a0; font-size: 14px; line-height: 1.6; margin: 30px 0 0; text-align: center;">
+                        Junte-se também ao nosso <a href="https://discord.gg/sorcerybrasil" style="color: #d4af37;">Discord</a>
+                        e <a href="https://chat.whatsapp.com/CrLIAZFkedhCmnntkXbmha" style="color: #d4af37;">WhatsApp</a>!
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 30px 40px; background-color: #0f0f1a; border-top: 1px solid #2a2a4a;">
+                      <p style="color: #666; font-size: 12px; margin: 0; text-align: center;">
+                        Sorcery Portal Brasil - A comunidade brasileira de Sorcery: Contested Realm
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
+      `
+    })
+  });
+
+  if (!resp.ok) {
+    const error = await resp.text();
+    console.error('Welcome email error:', error);
+    return { success: false, error };
+  }
+
+  return { success: true };
+}
 
 async function sendResetEmail(email, token, displayName, env) {
   const resetLink = `${FRONTEND_URL}/#reset-password?token=${token}&email=${encodeURIComponent(email)}`;
@@ -662,10 +769,19 @@ async function handleRegister(request, env, origin) {
       });
     }
 
-    // Verificar se usuário já existe
-    const existing = await findUserByEmail(email, env);
-    if (existing) {
-      return new Response(JSON.stringify({ error: 'Email already registered' }), {
+    // Verificar se email já existe
+    const existingEmail = await findUserByEmail(email, env);
+    if (existingEmail) {
+      return new Response(JSON.stringify({ error: 'Email já cadastrado' }), {
+        status: 409,
+        headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
+      });
+    }
+
+    // Verificar se nome de exibição já existe
+    const existingName = await findUserByDisplayName(displayName, env);
+    if (existingName) {
+      return new Response(JSON.stringify({ error: 'Nome de exibição já está em uso. Escolha outro nome.' }), {
         status: 409,
         headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) }
       });
@@ -704,6 +820,14 @@ async function handleRegister(request, env, origin) {
     }
 
     const newUser = await resp.json();
+
+    // Enviar email de boas-vindas (não bloqueia o registro se falhar)
+    try {
+      await sendWelcomeEmail(email, displayName, env);
+      console.log('Welcome email sent to:', email);
+    } catch (e) {
+      console.warn('Failed to send welcome email:', e);
+    }
 
     return new Response(JSON.stringify({
       success: true,
@@ -915,7 +1039,7 @@ export default {
       return new Response(JSON.stringify({
         status: 'ok',
         service: 'Sorcery API Proxy',
-        version: '3.1.1',
+        version: '3.2.0',
         security: 'whitelist-enabled'
       }), { headers: { 'Content-Type': 'application/json', ...getCorsHeaders(origin) } });
     }
