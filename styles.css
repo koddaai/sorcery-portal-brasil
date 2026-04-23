@@ -21041,6 +21041,47 @@ button:disabled .spin,
     color: var(--text-primary);
 }
 
+.post-full-content p {
+    margin-bottom: 1em;
+}
+
+.post-full-content p:last-child {
+    margin-bottom: 0;
+}
+
+.post-full-content strong {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.post-full-content em {
+    font-style: italic;
+}
+
+.post-full-content h2, .post-full-content h3, .post-full-content h4 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    font-family: 'Cinzel', serif;
+    color: var(--text-primary);
+}
+
+.post-full-content ul, .post-full-content ol {
+    margin: 1em 0;
+    padding-left: 1.5em;
+}
+
+.post-full-content li {
+    margin-bottom: 0.5em;
+}
+
+.post-full-content blockquote {
+    border-left: 3px solid var(--accent-primary);
+    padding-left: 1em;
+    margin: 1em 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
 .post-stats-bar {
     display: flex;
     gap: var(--space-4);
@@ -21092,6 +21133,16 @@ button:disabled .spin,
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     margin-bottom: var(--space-4);
+}
+
+.login-notice a {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-notice a:hover {
+    text-decoration: underline;
 }
 
 .locked-notice i {
