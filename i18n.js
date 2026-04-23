@@ -21,7 +21,7 @@ const translations = {
         scanner: 'Scanner',
 
         // Home Page
-        heroSubtitle: 'O jogo de cartas colecionáveis com arte pintada à mão por mestres da fantasia',
+        heroSubtitle: 'Cartas, decks, preços, lojas, artistas e a comunidade em um só lugar.',
         exploreCards: 'Conheça as Cartas',
         howToPlay: 'Como Jogar',
         gothicExpansion: 'Expansão Gothic Disponível',
@@ -182,7 +182,7 @@ const translations = {
         scanner: 'Scanner',
 
         // Home Page
-        heroSubtitle: 'The collectible card game with hand-painted art by fantasy masters',
+        heroSubtitle: 'Cards, decks, prices, stores, artists and the community in one place.',
         exploreCards: 'Discover the Cards',
         howToPlay: 'How to Play',
         gothicExpansion: 'Gothic Expansion Available',
@@ -343,7 +343,7 @@ const translations = {
         scanner: 'Escáner',
 
         // Home Page
-        heroSubtitle: 'El juego de cartas coleccionables con arte pintado a mano por maestros de la fantasía',
+        heroSubtitle: 'Cartas, decks, precios, tiendas, artistas y la comunidad en un solo lugar.',
         exploreCards: 'Conoce las Cartas',
         howToPlay: 'Cómo Jugar',
         gothicExpansion: 'Expansión Gothic Disponible',
