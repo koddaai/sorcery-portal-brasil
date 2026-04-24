@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>FAQ Sorcery TCG | Perguntas Frequentes sobre Sorcery: Contested Realm</title>
+    <meta name="description" content="Perguntas frequentes sobre Sorcery: Contested Realm. O que e Sorcery, como jogar, onde comprar no Brasil, diferenca entre threshold e mana, Death's Door.">
+    <meta name="keywords" content="faq sorcery, perguntas sorcery tcg, duvidas sorcery, o que e sorcery, threshold vs mana, deaths door sorcery">
+    <meta name="author" content="Pedro Lourenco">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sorcery.com.br/faq/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sorcery.com.br/faq/">
+    <meta property="og:title" content="FAQ Sorcery TCG | Perguntas Frequentes">
+    <meta property="og:description" content="Perguntas frequentes sobre Sorcery: Contested Realm. Tudo que voce precisa saber.">
+    <meta property="og:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Sorcery Contested Realm Brasil">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FAQ Sorcery TCG | Perguntas Frequentes">
+    <meta name="twitter:description" content="Perguntas frequentes sobre Sorcery: Contested Realm.">
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#d4af37">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles.min.css?v=111">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+    <!-- BreadcrumbList Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Sorcery Brasil",
+                "item": "https://sorcery.com.br/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "FAQ",
+                "item": "https://sorcery.com.br/faq/"
+            }
+        ]
+    }
+    </script>
+
+    <!-- FAQPage Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "O que e Sorcery: Contested Realm?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Sorcery: Contested Realm e um TCG criado por Erik Olofsson e publicado pela Erik's Curiosa. O diferencial e o uso de um grid tatico onde posicionamento e movimentacao sao fundamentais."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Qual a diferenca entre Threshold e Mana?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Threshold e um requisito permanente (voce precisa ter X de um elemento, mas nao gasta). Mana e o recurso gasto para jogar cartas. Exemplo: uma carta Fire 3 com custo 2 precisa de 3 threshold Fire E gasta 2 mana."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "O que e Deaths Door em Sorcery?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Quando a vida de um jogador chega a 0, ele entra em Deaths Door ao inves de perder imediatamente. Nesse estado, ele so pode ser derrotado por dano de combate (ataque de unidades ao Avatar), nao por dano direto de magias."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Onde comprar Sorcery no Brasil?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Existem varias lojas brasileiras que vendem Sorcery, incluindo Kirin Studio, Magic Domain, Flow Games em Sao Paulo, Bolsa do Infinito no Rio de Janeiro, e lojas online como MYP Cards. Veja a lista completa em sorcery.com.br/lojas/"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Como jogar Sorcery online?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "A principal opcao e o realms.cards, um simulador 3D gratuito criado pela comunidade. Tambem e possivel jogar via Tabletop Simulator ou webcam play via Discord."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <style>
+    .faq-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: var(--space-6);
+    }
+    .faq-header {
+        text-align: center;
+        margin-bottom: var(--space-6);
+    }
+    .faq-header h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 2.5rem;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-3);
+    }
+    .faq-header p {
+        color: var(--text-secondary);
+        font-size: 1.125rem;
+        max-width: 700px;
+        margin: 0 auto var(--space-4);
+    }
+    .faq-breadcrumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+        justify-content: center;
+    }
+    .faq-breadcrumbs a {
+        color: var(--accent-gold);
+        text-decoration: none;
+    }
+    .faq-breadcrumbs a:hover {
+        text-decoration: underline;
+    }
+    .faq-section {
+        margin-bottom: var(--space-6);
+    }
+    .faq-section-title {
+        font-family: 'Cinzel', serif;
+        font-size: 1.5rem;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-4);
+        padding-bottom: var(--space-2);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .faq-section-title i {
+        width: 24px;
+        height: 24px;
+    }
+    .faq-item {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-3);
+        border: 1px solid var(--border-color);
+        overflow: hidden;
+    }
+    .faq-question {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--space-4);
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: left;
+        cursor: pointer;
+        transition: background var(--duration-fast);
+    }
+    .faq-question:hover {
+        background: rgba(212, 175, 55, 0.05);
+    }
+    .faq-question i {
+        width: 20px;
+        height: 20px;
+        color: var(--accent-gold);
+        transition: transform var(--duration-fast);
+        flex-shrink: 0;
+    }
+    .faq-item.open .faq-question i {
+        transform: rotate(180deg);
+    }
+    .faq-answer {
+        display: none;
+        padding: 0 var(--space-4) var(--space-4);
+        color: var(--text-secondary);
+        line-height: 1.7;
+    }
+    .faq-item.open .faq-answer {
+        display: block;
+    }
+    .faq-answer a {
+        color: var(--accent-gold);
+    }
+    .quick-links {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-5);
+        margin-bottom: var(--space-6);
+        border: 1px solid var(--border-color);
+    }
+    .quick-links h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-4);
+    }
+    .quick-links-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-3);
+    }
+    .quick-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: var(--space-3);
+        background: var(--bg-surface-2);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        text-decoration: none;
+        border: 1px solid var(--border-color);
+        transition: all var(--duration-fast);
+    }
+    .quick-link:hover {
+        border-color: var(--accent-gold);
+        color: var(--accent-gold);
+    }
+    .quick-link i {
+        width: 20px;
+        height: 20px;
+        color: var(--accent-gold);
+    }
+    .cta-section {
+        background: linear-gradient(135deg, var(--bg-surface-1) 0%, var(--bg-surface-2) 100%);
+        border-radius: var(--radius-lg);
+        padding: var(--space-6);
+        text-align: center;
+        border: 1px solid var(--accent-gold);
+    }
+    .cta-section h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-3);
+    }
+    .cta-section p {
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+    }
+    .cta-buttons {
+        display: flex;
+        gap: var(--space-3);
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-3) var(--space-5);
+        background: var(--accent-gold);
+        color: var(--bg-dark);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all var(--duration-fast);
+    }
+    .cta-btn:hover {
+        background: #e5c04a;
+        transform: translateY(-2px);
+    }
+    .cta-btn.secondary {
+        background: transparent;
+        border: 1px solid var(--accent-gold);
+        color: var(--accent-gold);
+    }
+    .cta-btn i {
+        width: 20px;
+        height: 20px;
+    }
+    @media (max-width: 768px) {
+        .faq-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <a href="/" class="logo">
+                    <picture>
+                        <source srcset="/sorcery-logo.webp" type="image/webp">
+                        <img src="/sorcery-logo.png" alt="Sorcery" class="logo-img" width="40" height="40">
+                    </picture>
+                    <div class="logo-text">
+                        <span class="logo-divider">|</span>
+                        <span class="logo-brasil">BRASIL</span>
+                    </div>
+                </a>
+                <nav class="header-nav-simple">
+                    <a href="/" class="nav-link">Inicio</a>
+                    <a href="/artigos/" class="nav-link">Artigos</a>
+                    <a href="/regras/" class="nav-link">Regras</a>
+                    <a href="/faq/" class="nav-link active">FAQ</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="faq-page">
+                <!-- Breadcrumbs -->
+                <nav class="faq-breadcrumbs" aria-label="Navegacao">
+                    <a href="/">Inicio</a>
+                    <span>/</span>
+                    <span>FAQ</span>
+                </nav>
+
+                <!-- Header -->
+                <div class="faq-header">
+                    <h1>Perguntas Frequentes</h1>
+                    <p>Respostas para as duvidas mais comuns sobre Sorcery: Contested Realm.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <section class="quick-links">
+                    <h2>Links Rapidos</h2>
+                    <div class="quick-links-grid">
+                        <a href="/regras/" class="quick-link">
+                            <i data-lucide="book-open"></i>
+                            Regras do Jogo
+                        </a>
+                        <a href="/lojas/" class="quick-link">
+                            <i data-lucide="store"></i>
+                            Lojas no Brasil
+                        </a>
+                        <a href="/decks/" class="quick-link">
+                            <i data-lucide="layers"></i>
+                            Decks
+                        </a>
+                        <a href="https://realms.cards" target="_blank" class="quick-link">
+                            <i data-lucide="gamepad-2"></i>
+                            Jogar Online
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Sobre o Jogo -->
+                <section class="faq-section">
+                    <h2 class="faq-section-title">
+                        <i data-lucide="help-circle"></i>
+                        Sobre o Jogo
+                    </h2>
+
+                    <div class="faq-item open">
+                        <button class="faq-question">
+                            O que e Sorcery: Contested Realm?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Sorcery: Contested Realm e um TCG (Trading Card Game) criado por Erik Olofsson e publicado pela Erik's Curiosa. O diferencial e o uso de um grid tatico onde posicionamento e movimentacao sao fundamentais, diferente de outros TCGs como Magic ou Pokemon.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Sorcery e parecido com Magic: The Gathering?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Ha similaridades (ambos sao TCGs com recursos e criaturas), mas Sorcery tem diferencas fundamentais: grid tatico para posicionamento, sistema de Threshold separado de Mana, mecanica Death's Door, e sites que funcionam diferente de terrenos.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Quando Sorcery foi lancado?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            O Alpha foi lancado em 2023. Desde entao, foram lancados Beta (2023), Arthurian Legends (ATC, 2024) e Gothic (2025).
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Mecanicas -->
+                <section class="faq-section">
+                    <h2 class="faq-section-title">
+                        <i data-lucide="cog"></i>
+                        Mecanicas do Jogo
+                    </h2>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Qual a diferenca entre Threshold e Mana?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <strong>THRESHOLD</strong> e um requisito permanente (voce precisa ter X de um elemento para jogar a carta, mas nao gasta). <strong>MANA</strong> e o recurso gasto para jogar cartas (similar a MTG). Exemplo: uma carta Fire 3 com custo 2 precisa de 3 threshold Fire E gasta 2 mana para ser jogada.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            O que e Death's Door?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Quando a vida de um jogador chega a 0, ele entra em "Death's Door" ao inves de perder imediatamente. Nesse estado, ele so pode ser derrotado por dano de COMBATE (ataque de unidades ao Avatar), nao por dano direto de magias. Isso significa que decks de burn precisam de criaturas para finalizar.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            O que e o Grid em Sorcery?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            O Grid e um tabuleiro tatico onde unidades sao posicionadas. Diferente de outros TCGs, a posicao importa: unidades podem se mover, atacar em direcoes especificas, e o posicionamento estrategico e fundamental.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Quais sao os elementos de Sorcery?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Fire (Fogo), Water (Agua), Earth (Terra), Air (Ar). Cada elemento tem tematicas e estrategias proprias. Decks podem ser mono-elemento ou multi-elemento.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Comprando -->
+                <section class="faq-section">
+                    <h2 class="faq-section-title">
+                        <i data-lucide="shopping-cart"></i>
+                        Comprando Sorcery
+                    </h2>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            O que devo comprar para comecar?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Recomendacoes:<br>
+                            1. <strong>Precon</strong> (deck pre-construido) - melhor para aprender<br>
+                            2. <strong>Box de Beta</strong> - melhor custo-beneficio para cartas<br>
+                            3. <strong>Boosters avulsos</strong> - para complementar colecao
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Onde comprar Sorcery no Brasil?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Existem varias <a href="/lojas/">lojas brasileiras</a> que vendem Sorcery, incluindo Kirin Studio, Magic Domain e Flow Games em Sao Paulo, Bolsa do Infinito no Rio de Janeiro, e lojas online como MYP Cards. Para importacao: Curiosa.io (loja oficial), TCGPlayer, CardMarket.
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Precons valem a pena?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Sim. Precons de Sorcery sao jogaveis out-of-the-box e ensinam bem as mecanicas do elemento. Sao a melhor forma de comecar.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Jogando Online -->
+                <section class="faq-section">
+                    <h2 class="faq-section-title">
+                        <i data-lucide="monitor"></i>
+                        Jogando Online
+                    </h2>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Como jogar Sorcery online?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Opcoes:<br>
+                            1. <a href="https://realms.cards" target="_blank">realms.cards</a> - simulador 3D gratuito da comunidade (recomendado)<br>
+                            2. Tabletop Simulator (pago) - com mods de Sorcery<br>
+                            3. Webcam play - via Discord com camera apontada para mesa
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Sorcery tem app oficial?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Ate abril 2026, nao existe app oficial de Sorcery. A comunidade usa realms.cards como principal plataforma online.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Comunidade -->
+                <section class="faq-section">
+                    <h2 class="faq-section-title">
+                        <i data-lucide="users"></i>
+                        Comunidade
+                    </h2>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Onde encontrar a comunidade brasileira?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            - <a href="https://discord.gg/qvYVGFAS5n" target="_blank">Discord Brasil</a><br>
+                            - <a href="https://chat.whatsapp.com/CrLIAZFkedhCmnntkXbmha" target="_blank">WhatsApp Brasil</a><br>
+                            - <a href="/">Sorcery Portal Brasil</a><br>
+                            - Grupos de Facebook
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            O que e Dust Rewards?
+                            <i data-lucide="chevron-down"></i>
+                        </button>
+                        <div class="faq-answer">
+                            Programa de fidelidade da Curiosa.io. Ao comprar produtos, voce acumula "dust" que pode ser trocado por cartas promocionais e outros itens.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA -->
+                <section class="cta-section">
+                    <h2>Ainda tem duvidas?</h2>
+                    <p>Entre em contato com a comunidade no Discord ou explore nossos artigos detalhados.</p>
+                    <div class="cta-buttons">
+                        <a href="https://discord.gg/qvYVGFAS5n" target="_blank" class="cta-btn">
+                            <i data-lucide="message-circle"></i>
+                            Discord Brasil
+                        </a>
+                        <a href="/artigos/" class="cta-btn secondary">
+                            <i data-lucide="newspaper"></i>
+                            Ver Artigos
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer" style="background: var(--bg-surface-1); padding: var(--space-5); text-align: center; border-top: 1px solid var(--border-color); margin-top: var(--space-6);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                Sorcery Brasil - Portal da comunidade brasileira de Sorcery: Contested Realm
+            </p>
+            <p style="color: var(--text-secondary); font-size: 0.75rem; margin-top: var(--space-2);">
+                Nao somos afiliados a Erik's Curiosa. Sorcery: Contested Realm e suas marcas pertencem a Erik's Curiosa.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            // FAQ accordion functionality
+            document.querySelectorAll('.faq-question').forEach(button => {
+                button.addEventListener('click', () => {
+                    const item = button.parentElement;
+                    item.classList.toggle('open');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>Cartas de Sorcery TCG | Catalogo Completo de Cards</title>
+    <meta name="description" content="Catalogo completo de cartas de Sorcery: Contested Realm. Busque por nome, set, elemento, raridade. Alpha, Beta, Arthurian Legends, Gothic e mais.">
+    <meta name="keywords" content="cartas sorcery, cards sorcery tcg, catalogo sorcery, sorcery alpha, sorcery beta, sorcery gothic, cartas tcg">
+    <meta name="author" content="Pedro Lourenco">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sorcery.com.br/cards/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sorcery.com.br/cards/">
+    <meta property="og:title" content="Cartas de Sorcery TCG | Catalogo Completo de Cards">
+    <meta property="og:description" content="Catalogo completo de cartas de Sorcery: Contested Realm. Busque por nome, set, elemento, raridade.">
+    <meta property="og:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Sorcery Contested Realm Brasil">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://sorcery.com.br/cards/">
+    <meta name="twitter:title" content="Cartas de Sorcery TCG | Catalogo Completo de Cards">
+    <meta name="twitter:description" content="Catalogo completo de cartas de Sorcery: Contested Realm.">
+    <meta name="twitter:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#d4af37">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles.min.css?v=111">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+    <!-- BreadcrumbList Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Sorcery Brasil",
+                "item": "https://sorcery.com.br/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Cards",
+                "item": "https://sorcery.com.br/cards/"
+            }
+        ]
+    }
+    </script>
+
+    <!-- CollectionPage Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Catalogo de Cartas de Sorcery: Contested Realm",
+        "description": "Database completo de todas as cartas de Sorcery TCG com filtros por set, elemento, tipo e raridade",
+        "url": "https://sorcery.com.br/cards/",
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Cartas de Sorcery",
+            "description": "Todas as cartas dos sets Alpha, Beta, Arthurian Legends, Gothic e Dragonlord",
+            "numberOfItems": 1100
+        }
+    }
+    </script>
+
+    <style>
+    .cards-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-6);
+    }
+    .cards-header {
+        text-align: center;
+        margin-bottom: var(--space-6);
+    }
+    .cards-header h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 2.5rem;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-3);
+    }
+    .cards-header p {
+        color: var(--text-secondary);
+        font-size: 1.125rem;
+        max-width: 700px;
+        margin: 0 auto var(--space-4);
+    }
+    .cards-breadcrumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+        justify-content: center;
+    }
+    .cards-breadcrumbs a {
+        color: var(--accent-gold);
+        text-decoration: none;
+    }
+    .cards-breadcrumbs a:hover {
+        text-decoration: underline;
+    }
+    .stats-row {
+        display: flex;
+        justify-content: center;
+        gap: var(--space-5);
+        flex-wrap: wrap;
+        margin-bottom: var(--space-6);
+    }
+    .stat-box {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        text-align: center;
+        border: 1px solid var(--border-color);
+        min-width: 140px;
+    }
+    .stat-box .stat-value {
+        font-family: 'Cinzel', serif;
+        font-size: 2rem;
+        color: var(--accent-gold);
+    }
+    .stat-box .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+    .section-title {
+        font-family: 'Cinzel', serif;
+        font-size: 1.5rem;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-4);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .section-title i {
+        width: 24px;
+        height: 24px;
+    }
+    .sets-section {
+        margin-bottom: var(--space-6);
+    }
+    .sets-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--space-4);
+    }
+    .set-card {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        border: 1px solid var(--border-color);
+        transition: transform var(--duration-fast), box-shadow var(--duration-fast);
+    }
+    .set-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .set-card h3 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        font-size: 1.25rem;
+        margin-bottom: var(--space-2);
+    }
+    .set-year {
+        color: var(--accent-gold);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-2);
+    }
+    .set-desc {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+    .set-cards-count {
+        margin-top: var(--space-3);
+        padding-top: var(--space-3);
+        border-top: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .set-cards-count i {
+        width: 14px;
+        height: 14px;
+        color: var(--accent-gold);
+    }
+    .types-section {
+        margin-bottom: var(--space-6);
+    }
+    .types-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: var(--space-4);
+    }
+    .type-card {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        text-align: center;
+        border: 1px solid var(--border-color);
+    }
+    .type-card i {
+        width: 32px;
+        height: 32px;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-2);
+    }
+    .type-card h3 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        font-size: 1rem;
+        margin-bottom: var(--space-1);
+    }
+    .type-card p {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+    }
+    .elements-section {
+        margin-bottom: var(--space-6);
+    }
+    .elements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: var(--space-4);
+    }
+    .element-card {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+    .element-card img {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+    .element-card-content h3 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        font-size: 1rem;
+        margin-bottom: var(--space-1);
+    }
+    .element-card-content p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+    .element-card.fire { border-left: 3px solid #ef4444; }
+    .element-card.water { border-left: 3px solid #3b82f6; }
+    .element-card.earth { border-left: 3px solid #22c55e; }
+    .element-card.air { border-left: 3px solid #a855f7; }
+    .rarities-section {
+        margin-bottom: var(--space-6);
+    }
+    .rarities-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-4);
+    }
+    .rarity-card {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        text-align: center;
+        border: 1px solid var(--border-color);
+    }
+    .rarity-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-full);
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: var(--space-2);
+    }
+    .rarity-badge.ordinary { background: #6b7280; color: white; }
+    .rarity-badge.exceptional { background: #3b82f6; color: white; }
+    .rarity-badge.elite { background: #a855f7; color: white; }
+    .rarity-badge.unique { background: var(--accent-gold); color: black; }
+    .rarity-card p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+    .cta-section {
+        background: linear-gradient(135deg, var(--bg-surface-1) 0%, var(--bg-surface-2) 100%);
+        border-radius: var(--radius-lg);
+        padding: var(--space-6);
+        text-align: center;
+        border: 1px solid var(--accent-gold);
+    }
+    .cta-section h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-3);
+    }
+    .cta-section p {
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-3) var(--space-5);
+        background: var(--accent-gold);
+        color: var(--bg-dark);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all var(--duration-fast);
+    }
+    .cta-btn:hover {
+        background: #e5c04a;
+        transform: translateY(-2px);
+    }
+    .cta-btn i {
+        width: 20px;
+        height: 20px;
+    }
+    @media (max-width: 768px) {
+        .cards-header h1 {
+            font-size: 1.75rem;
+        }
+        .stats-row {
+            gap: var(--space-3);
+        }
+        .stat-box {
+            min-width: 100px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <a href="/" class="logo">
+                    <picture>
+                        <source srcset="/sorcery-logo.webp" type="image/webp">
+                        <img src="/sorcery-logo.png" alt="Sorcery" class="logo-img" width="40" height="40">
+                    </picture>
+                    <div class="logo-text">
+                        <span class="logo-divider">|</span>
+                        <span class="logo-brasil">BRASIL</span>
+                    </div>
+                </a>
+                <nav class="header-nav-simple">
+                    <a href="/" class="nav-link">Inicio</a>
+                    <a href="/artigos/" class="nav-link">Artigos</a>
+                    <a href="/lojas/" class="nav-link">Lojas</a>
+                    <a href="/cards/" class="nav-link active">Cards</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="cards-page">
+                <!-- Breadcrumbs -->
+                <nav class="cards-breadcrumbs" aria-label="Navegacao">
+                    <a href="/">Inicio</a>
+                    <span>/</span>
+                    <span>Cards</span>
+                </nav>
+
+                <!-- Header -->
+                <div class="cards-header">
+                    <h1>Catalogo de Cartas</h1>
+                    <p>Database completo de todas as cartas de Sorcery: Contested Realm. Busque por nome, filtre por set, elemento, tipo e raridade.</p>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value">1100+</div>
+                        <div class="stat-label">Cartas Unicas</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Sets</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">Elementos</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Tipos de Carta</div>
+                    </div>
+                </div>
+
+                <!-- Sets Section -->
+                <section class="sets-section">
+                    <h2 class="section-title">
+                        <i data-lucide="package"></i>
+                        Sets Disponiveis
+                    </h2>
+                    <div class="sets-grid">
+                        <div class="set-card">
+                            <h3>Alpha</h3>
+                            <div class="set-year">2023</div>
+                            <p class="set-desc">O primeiro set de Sorcery, introduzindo os quatro elementos e as mecanicas fundamentais do jogo.</p>
+                            <div class="set-cards-count">
+                                <i data-lucide="layers"></i>
+                                <span>~270 cartas</span>
+                            </div>
+                        </div>
+
+                        <div class="set-card">
+                            <h3>Beta</h3>
+                            <div class="set-year">2023</div>
+                            <p class="set-desc">Expansao do universo Alpha com novas mecanicas e precons elementais para iniciantes.</p>
+                            <div class="set-cards-count">
+                                <i data-lucide="layers"></i>
+                                <span>~270 cartas</span>
+                            </div>
+                        </div>
+
+                        <div class="set-card">
+                            <h3>Arthurian Legends</h3>
+                            <div class="set-year">2024</div>
+                            <p class="set-desc">Set tematico baseado nas lendas do Rei Arthur, Camelot e os Cavaleiros da Tavola Redonda.</p>
+                            <div class="set-cards-count">
+                                <i data-lucide="layers"></i>
+                                <span>~200 cartas</span>
+                            </div>
+                        </div>
+
+                        <div class="set-card">
+                            <h3>Gothic</h3>
+                            <div class="set-year">2025</div>
+                            <p class="set-desc">Atmosfera sombria com vampiros, horror gotico e novas mecanicas como Necromancer.</p>
+                            <div class="set-cards-count">
+                                <i data-lucide="layers"></i>
+                                <span>~200 cartas</span>
+                            </div>
+                        </div>
+
+                        <div class="set-card">
+                            <h3>Dragonlord</h3>
+                            <div class="set-year">2025</div>
+                            <p class="set-desc">Dragoes majestosos e novas estrategias elementais.</p>
+                            <div class="set-cards-count">
+                                <i data-lucide="layers"></i>
+                                <span>~200 cartas</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Types Section -->
+                <section class="types-section">
+                    <h2 class="section-title">
+                        <i data-lucide="shapes"></i>
+                        Tipos de Carta
+                    </h2>
+                    <div class="types-grid">
+                        <div class="type-card">
+                            <i data-lucide="user"></i>
+                            <h3>Avatar</h3>
+                            <p>Seu personagem no jogo</p>
+                        </div>
+                        <div class="type-card">
+                            <i data-lucide="sword"></i>
+                            <h3>Minion</h3>
+                            <p>Criaturas de combate</p>
+                        </div>
+                        <div class="type-card">
+                            <i data-lucide="sparkles"></i>
+                            <h3>Magic</h3>
+                            <p>Feiticos instantaneos</p>
+                        </div>
+                        <div class="type-card">
+                            <i data-lucide="shield"></i>
+                            <h3>Artifact</h3>
+                            <p>Itens permanentes</p>
+                        </div>
+                        <div class="type-card">
+                            <i data-lucide="zap"></i>
+                            <h3>Aura</h3>
+                            <p>Encantamentos em cartas</p>
+                        </div>
+                        <div class="type-card">
+                            <i data-lucide="map-pin"></i>
+                            <h3>Site</h3>
+                            <p>Terrenos que geram mana</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Elements Section -->
+                <section class="elements-section">
+                    <h2 class="section-title">
+                        <i data-lucide="flame"></i>
+                        Os Quatro Elementos
+                    </h2>
+                    <div class="elements-grid">
+                        <div class="element-card fire">
+                            <img src="/assets/elements/fire.png" alt="Fogo" loading="lazy">
+                            <div class="element-card-content">
+                                <h3>Fogo</h3>
+                                <p>Agressao e destruicao direta. Ideal para vitorias rapidas e explosivas.</p>
+                            </div>
+                        </div>
+                        <div class="element-card water">
+                            <img src="/assets/elements/water.png" alt="Agua" loading="lazy">
+                            <div class="element-card-content">
+                                <h3>Agua</h3>
+                                <p>Controle e manipulacao. Perfeito para estrategias de longo prazo.</p>
+                            </div>
+                        </div>
+                        <div class="element-card earth">
+                            <img src="/assets/elements/earth.png" alt="Terra" loading="lazy">
+                            <div class="element-card-content">
+                                <h3>Terra</h3>
+                                <p>Resistencia e crescimento. Construa um exercito imparavel.</p>
+                            </div>
+                        </div>
+                        <div class="element-card air">
+                            <img src="/assets/elements/air.png" alt="Ar" loading="lazy">
+                            <div class="element-card-content">
+                                <h3>Ar</h3>
+                                <p>Velocidade e evasao. Supere seu oponente com mobilidade.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Rarities Section -->
+                <section class="rarities-section">
+                    <h2 class="section-title">
+                        <i data-lucide="gem"></i>
+                        Raridades
+                    </h2>
+                    <div class="rarities-grid">
+                        <div class="rarity-card">
+                            <span class="rarity-badge ordinary">Ordinary</span>
+                            <p>Cartas comuns, base de qualquer deck</p>
+                        </div>
+                        <div class="rarity-card">
+                            <span class="rarity-badge exceptional">Exceptional</span>
+                            <p>Cartas incomuns com efeitos especiais</p>
+                        </div>
+                        <div class="rarity-card">
+                            <span class="rarity-badge elite">Elite</span>
+                            <p>Cartas raras e poderosas</p>
+                        </div>
+                        <div class="rarity-card">
+                            <span class="rarity-badge unique">Unique</span>
+                            <p>As cartas mais raras e valiosas</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA -->
+                <section class="cta-section">
+                    <h2>Explore o Catalogo Completo</h2>
+                    <p>Acesse nosso catalogo interativo para buscar cartas, ver precos, adicionar a sua colecao e construir decks.</p>
+                    <a href="/#cards" class="cta-btn">
+                        <i data-lucide="layers"></i>
+                        Ver Todas as Cartas
+                    </a>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer" style="background: var(--bg-surface-1); padding: var(--space-5); text-align: center; border-top: 1px solid var(--border-color); margin-top: var(--space-6);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                Sorcery Brasil - Portal da comunidade brasileira de Sorcery: Contested Realm
+            </p>
+            <p style="color: var(--text-secondary); font-size: 0.75rem; margin-top: var(--space-2);">
+                Nao somos afiliados a Erik's Curiosa. Sorcery: Contested Realm e suas marcas pertencem a Erik's Curiosa.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

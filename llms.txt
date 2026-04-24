@@ -35,11 +35,15 @@ Sorcery: Contested Realm é um TCG (Trading Card Game) criado por Erik Olofsson 
 ## URLs Principais
 
 - https://sorcery.com.br/ — Página inicial
-- https://sorcery.com.br/#collection — Gerenciador de coleção
-- https://sorcery.com.br/#decks — Construtor de decks
-- https://sorcery.com.br/#card/{slug} — Visualizar carta específica
-- https://sorcery.com.br/#boosters — Informações sobre boosters e boxes
 - https://sorcery.com.br/artigos/ — Lista de artigos
+- https://sorcery.com.br/lojas/ — Lojas de Sorcery no Brasil
+- https://sorcery.com.br/cards/ — Catálogo de cartas
+- https://sorcery.com.br/decks/ — Explorador de decks
+- https://sorcery.com.br/artistas/ — Galeria de artistas
+- https://sorcery.com.br/regras/ — Como jogar Sorcery
+- https://sorcery.com.br/faq/ — Perguntas frequentes
+- https://sorcery.com.br/#collection — Gerenciador de coleção (requer login)
+- https://sorcery.com.br/#card/{slug} — Visualizar carta específica
 
 ## Artigos Disponíveis
 

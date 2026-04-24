@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>Regras de Sorcery TCG | Como Jogar Sorcery: Contested Realm</title>
+    <meta name="description" content="Aprenda as regras de Sorcery: Contested Realm. Guia completo de como jogar, fases do turno, combate, threshold vs mana, Death's Door e mais.">
+    <meta name="keywords" content="regras sorcery, como jogar sorcery, sorcery tcg regras, tutorial sorcery, aprender sorcery, sorcery contested realm regras">
+    <meta name="author" content="Pedro Lourenco">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sorcery.com.br/regras/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sorcery.com.br/regras/">
+    <meta property="og:title" content="Regras de Sorcery TCG | Como Jogar Sorcery: Contested Realm">
+    <meta property="og:description" content="Aprenda as regras de Sorcery: Contested Realm. Guia completo de como jogar.">
+    <meta property="og:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Sorcery Contested Realm Brasil">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://sorcery.com.br/regras/">
+    <meta name="twitter:title" content="Regras de Sorcery TCG | Como Jogar Sorcery: Contested Realm">
+    <meta name="twitter:description" content="Aprenda as regras de Sorcery: Contested Realm.">
+    <meta name="twitter:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#d4af37">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles.min.css?v=111">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+    <!-- BreadcrumbList Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Sorcery Brasil",
+                "item": "https://sorcery.com.br/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Regras",
+                "item": "https://sorcery.com.br/regras/"
+            }
+        ]
+    }
+    </script>
+
+    <!-- HowTo Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "Como Jogar Sorcery: Contested Realm",
+        "description": "Guia passo a passo para aprender as regras de Sorcery TCG",
+        "step": [
+            {
+                "@type": "HowToStep",
+                "name": "Preparacao",
+                "text": "Cada jogador comeca com 20 de vida, compra 7 cartas e escolhe seu Avatar"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "Fase de Site",
+                "text": "Jogue um Site do Atlas para gerar mana e threshold"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "Fase Principal",
+                "text": "Jogue cartas do Spellbook usando mana e respeitando threshold"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "Fase de Combate",
+                "text": "Mova e ataque com suas criaturas no grid"
+            },
+            {
+                "@type": "HowToStep",
+                "name": "Vitoria",
+                "text": "Reduza a vida do oponente a 0 e finalize no Deaths Door"
+            }
+        ]
+    }
+    </script>
+
+    <style>
+    .regras-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: var(--space-6);
+    }
+    .regras-header {
+        text-align: center;
+        margin-bottom: var(--space-6);
+    }
+    .regras-header h1 {
+        font-family: 'Cinzel', serif;
+        font-size: 2.5rem;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-3);
+    }
+    .regras-header p {
+        color: var(--text-secondary);
+        font-size: 1.125rem;
+        max-width: 700px;
+        margin: 0 auto var(--space-4);
+    }
+    .regras-breadcrumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+        justify-content: center;
+    }
+    .regras-breadcrumbs a {
+        color: var(--accent-gold);
+        text-decoration: none;
+    }
+    .regras-breadcrumbs a:hover {
+        text-decoration: underline;
+    }
+    .rule-section {
+        background: var(--bg-surface-1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-5);
+        margin-bottom: var(--space-5);
+        border: 1px solid var(--border-color);
+    }
+    .rule-section h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-3);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .rule-section h2 i {
+        width: 24px;
+        height: 24px;
+    }
+    .rule-section h3 {
+        font-family: 'Cinzel', serif;
+        color: var(--text-primary);
+        font-size: 1.125rem;
+        margin: var(--space-4) 0 var(--space-2);
+    }
+    .rule-section p {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: var(--space-3);
+    }
+    .rule-section ul {
+        color: var(--text-secondary);
+        margin-left: var(--space-4);
+        margin-bottom: var(--space-3);
+    }
+    .rule-section li {
+        margin-bottom: var(--space-2);
+        line-height: 1.6;
+    }
+    .highlight-box {
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid var(--accent-gold);
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        margin: var(--space-4) 0;
+    }
+    .highlight-box h4 {
+        color: var(--accent-gold);
+        margin-bottom: var(--space-2);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .highlight-box h4 i {
+        width: 18px;
+        height: 18px;
+    }
+    .highlight-box p {
+        margin-bottom: 0;
+    }
+    .phases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-3);
+        margin: var(--space-4) 0;
+    }
+    .phase-card {
+        background: var(--bg-surface-2);
+        border-radius: var(--radius-md);
+        padding: var(--space-3);
+        text-align: center;
+        border: 1px solid var(--border-color);
+    }
+    .phase-number {
+        width: 32px;
+        height: 32px;
+        background: var(--accent-gold);
+        color: var(--bg-dark);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        margin: 0 auto var(--space-2);
+    }
+    .phase-card h4 {
+        color: var(--text-primary);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-1);
+    }
+    .phase-card p {
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        margin-bottom: 0;
+    }
+    .external-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--accent-gold);
+        text-decoration: none;
+        padding: var(--space-2) var(--space-4);
+        border: 1px solid var(--accent-gold);
+        border-radius: var(--radius-md);
+        transition: all var(--duration-fast);
+        margin-top: var(--space-3);
+    }
+    .external-link:hover {
+        background: rgba(212, 175, 55, 0.1);
+    }
+    .external-link i {
+        width: 16px;
+        height: 16px;
+    }
+    .cta-section {
+        background: linear-gradient(135deg, var(--bg-surface-1) 0%, var(--bg-surface-2) 100%);
+        border-radius: var(--radius-lg);
+        padding: var(--space-6);
+        text-align: center;
+        border: 1px solid var(--accent-gold);
+    }
+    .cta-section h2 {
+        font-family: 'Cinzel', serif;
+        color: var(--accent-gold);
+        margin-bottom: var(--space-3);
+    }
+    .cta-section p {
+        color: var(--text-secondary);
+        margin-bottom: var(--space-4);
+    }
+    .cta-buttons {
+        display: flex;
+        gap: var(--space-3);
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: var(--space-3) var(--space-5);
+        background: var(--accent-gold);
+        color: var(--bg-dark);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all var(--duration-fast);
+    }
+    .cta-btn:hover {
+        background: #e5c04a;
+        transform: translateY(-2px);
+    }
+    .cta-btn.secondary {
+        background: transparent;
+        border: 1px solid var(--accent-gold);
+        color: var(--accent-gold);
+    }
+    .cta-btn i {
+        width: 20px;
+        height: 20px;
+    }
+    @media (max-width: 768px) {
+        .regras-header h1 {
+            font-size: 1.75rem;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <a href="/" class="logo">
+                    <picture>
+                        <source srcset="/sorcery-logo.webp" type="image/webp">
+                        <img src="/sorcery-logo.png" alt="Sorcery" class="logo-img" width="40" height="40">
+                    </picture>
+                    <div class="logo-text">
+                        <span class="logo-divider">|</span>
+                        <span class="logo-brasil">BRASIL</span>
+                    </div>
+                </a>
+                <nav class="header-nav-simple">
+                    <a href="/" class="nav-link">Inicio</a>
+                    <a href="/artigos/" class="nav-link">Artigos</a>
+                    <a href="/regras/" class="nav-link active">Regras</a>
+                    <a href="/lojas/" class="nav-link">Lojas</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="regras-page">
+                <!-- Breadcrumbs -->
+                <nav class="regras-breadcrumbs" aria-label="Navegacao">
+                    <a href="/">Inicio</a>
+                    <span>/</span>
+                    <span>Regras</span>
+                </nav>
+
+                <!-- Header -->
+                <div class="regras-header">
+                    <h1>Como Jogar Sorcery</h1>
+                    <p>Aprenda as regras fundamentais de Sorcery: Contested Realm e domine o grid tatico.</p>
+                </div>
+
+                <!-- Objetivo -->
+                <section class="rule-section">
+                    <h2><i data-lucide="target"></i> Objetivo do Jogo</h2>
+                    <p>Em Sorcery, voce assume o papel de um Avatar poderoso em um duelo magico. O objetivo e reduzir a vida do oponente a zero e entao elimina-lo no <strong>Death's Door</strong>.</p>
+                    <p>Cada jogador comeca com <strong>20 pontos de vida</strong>. Quando a vida chega a zero, o jogador entra no estado Death's Door e deve ser atingido mais uma vez para perder o jogo.</p>
+                </section>
+
+                <!-- Setup -->
+                <section class="rule-section">
+                    <h2><i data-lucide="play"></i> Preparacao</h2>
+                    <ul>
+                        <li>Cada jogador posiciona seu <strong>Avatar</strong> no centro de sua linha inicial do grid</li>
+                        <li>Embaralhe seu <strong>Spellbook</strong> (50 cartas) e seu <strong>Atlas</strong> (30 Sites)</li>
+                        <li>Compre <strong>7 cartas</strong> do Spellbook como mao inicial</li>
+                        <li>O jogador que comeca nao compra carta no primeiro turno</li>
+                    </ul>
+                </section>
+
+                <!-- Fases do Turno -->
+                <section class="rule-section">
+                    <h2><i data-lucide="rotate-cw"></i> Fases do Turno</h2>
+                    <div class="phases-grid">
+                        <div class="phase-card">
+                            <div class="phase-number">1</div>
+                            <h4>Fase de Compra</h4>
+                            <p>Compre uma carta do Spellbook</p>
+                        </div>
+                        <div class="phase-card">
+                            <div class="phase-number">2</div>
+                            <h4>Fase de Site</h4>
+                            <p>Jogue um Site do Atlas</p>
+                        </div>
+                        <div class="phase-card">
+                            <div class="phase-number">3</div>
+                            <h4>Fase Principal</h4>
+                            <p>Jogue cartas e ative habilidades</p>
+                        </div>
+                        <div class="phase-card">
+                            <div class="phase-number">4</div>
+                            <h4>Fase de Combate</h4>
+                            <p>Mova e ataque no grid</p>
+                        </div>
+                        <div class="phase-card">
+                            <div class="phase-number">5</div>
+                            <h4>Fase Final</h4>
+                            <p>Passe o turno</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Threshold vs Mana -->
+                <section class="rule-section">
+                    <h2><i data-lucide="zap"></i> Threshold vs Mana</h2>
+                    <p>Esta e a mecanica mais importante de entender em Sorcery:</p>
+
+                    <h3>Mana</h3>
+                    <p>Mana e o <strong>recurso que voce gasta</strong> para jogar cartas. Cada Site gera mana quando virado. Sites podem gerar mana de qualquer elemento, nao apenas do seu elemento nativo.</p>
+
+                    <h3>Threshold</h3>
+                    <p>Threshold e um <strong>requisito permanente</strong>, nao um custo. Uma carta com "Fire 2" requer que voce tenha pelo menos 2 Sites de Fire em jogo. O threshold <strong>nao e gasto</strong> - voce so precisa atingi-lo.</p>
+
+                    <div class="highlight-box">
+                        <h4><i data-lucide="lightbulb"></i> Dica Importante</h4>
+                        <p>Voce pode usar Sites de Fire para gerar mana para cartas de Water, desde que tenha o threshold de Water necessario em outros Sites!</p>
+                    </div>
+                </section>
+
+                <!-- Grid e Combate -->
+                <section class="rule-section">
+                    <h2><i data-lucide="grid-3x3"></i> O Grid e Combate</h2>
+                    <p>Sorcery usa um <strong>grid tatico 4x4</strong> onde posicionamento e fundamental:</p>
+                    <ul>
+                        <li><strong>Movimento:</strong> Criaturas podem mover uma casa por turno (ortogonal ou diagonal)</li>
+                        <li><strong>Alcance:</strong> Criaturas sem Range so atacam casas adjacentes</li>
+                        <li><strong>Blocking:</strong> Criaturas podem bloquear ataques a outras criaturas e ao Avatar</li>
+                        <li><strong>Sites no grid:</strong> Sites sao jogados adjacentes a Sites existentes ou ao Avatar</li>
+                    </ul>
+
+                    <h3>Combate</h3>
+                    <p>O combate acontece simultaneamente. Ambas as criaturas causam dano ao mesmo tempo. Se o dano recebido iguala ou supera a defesa, a criatura e destruida.</p>
+                </section>
+
+                <!-- Death's Door -->
+                <section class="rule-section">
+                    <h2><i data-lucide="skull"></i> Death's Door</h2>
+                    <p>Quando a vida de um jogador chega a <strong>zero ou menos</strong>, ele entra no estado Death's Door:</p>
+                    <ul>
+                        <li>O jogador nao perde imediatamente</li>
+                        <li>Dano adicional nao reduz mais a vida (ja esta em zero)</li>
+                        <li>Para vencer, voce precisa causar <strong>dano direto ao Avatar</strong> enquanto o oponente esta no Death's Door</li>
+                        <li>Dano a criaturas nao finaliza o jogo - precisa atingir o Avatar</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <h4><i data-lucide="alert-triangle"></i> Atencao</h4>
+                        <p>Isso significa que decks de dano direto precisam de um plano para finalizar atraves de criaturas ou magias que atinjam o Avatar!</p>
+                    </div>
+                </section>
+
+                <!-- Links -->
+                <section class="rule-section">
+                    <h2><i data-lucide="book-open"></i> Recursos Oficiais</h2>
+                    <p>Para regras completas e detalhadas, consulte o rulebook oficial:</p>
+                    <a href="https://sorcerytcg.com/how-to-play" target="_blank" rel="noopener" class="external-link">
+                        <i data-lucide="external-link"></i>
+                        Rulebook Oficial (Ingles)
+                    </a>
+                </section>
+
+                <!-- CTA -->
+                <section class="cta-section">
+                    <h2>Pronto para Jogar?</h2>
+                    <p>Explore nossos artigos com dicas avancadas ou pratique online gratuitamente.</p>
+                    <div class="cta-buttons">
+                        <a href="/artigos/" class="cta-btn">
+                            <i data-lucide="newspaper"></i>
+                            Ver Artigos
+                        </a>
+                        <a href="https://realms.cards" target="_blank" rel="noopener" class="cta-btn secondary">
+                            <i data-lucide="gamepad-2"></i>
+                            Jogar Online
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer" style="background: var(--bg-surface-1); padding: var(--space-5); text-align: center; border-top: 1px solid var(--border-color); margin-top: var(--space-6);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                Sorcery Brasil - Portal da comunidade brasileira de Sorcery: Contested Realm
+            </p>
+            <p style="color: var(--text-secondary); font-size: 0.75rem; margin-top: var(--space-2);">
+                Nao somos afiliados a Erik's Curiosa. Sorcery: Contested Realm e suas marcas pertencem a Erik's Curiosa.
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

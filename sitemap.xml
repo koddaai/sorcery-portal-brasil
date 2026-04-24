@@ -180,4 +180,54 @@
         <priority>0.8</priority>
     </url>
 
+    <!-- ==================== PÁGINAS DE SEÇÃO ==================== -->
+
+    <!-- Lojas no Brasil -->
+    <url>
+        <loc>https://sorcery.com.br/lojas/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Artistas -->
+    <url>
+        <loc>https://sorcery.com.br/artistas/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Cards / Catálogo -->
+    <url>
+        <loc>https://sorcery.com.br/cards/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Decks -->
+    <url>
+        <loc>https://sorcery.com.br/decks/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Regras / Como Jogar -->
+    <url>
+        <loc>https://sorcery.com.br/regras/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- FAQ -->
+    <url>
+        <loc>https://sorcery.com.br/faq/</loc>
+        <lastmod>2026-04-24</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
 </urlset>
