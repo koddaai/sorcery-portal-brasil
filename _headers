@@ -21,10 +21,16 @@
   Cache-Control: public, max-age=31536000, immutable
 
 # HTML - no cache, always fresh
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
 /index.html
   Cache-Control: public, max-age=0, must-revalidate
 
-/
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/artigos/*
   Cache-Control: public, max-age=0, must-revalidate
 
 # JSON data - cache for 1 hour
