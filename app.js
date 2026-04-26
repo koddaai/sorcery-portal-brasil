@@ -14540,7 +14540,7 @@ async function fetchCollectionFromCloudSilently() {
             saveToStorage();
 
             // Update UI
-            updateCollectionStats();
+            updateStats();
             refreshCurrentView();
 
             console.log(`[AutoSync] Loaded ${cloudRecords.length} cards from cloud`);
