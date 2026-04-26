@@ -3,7 +3,7 @@
 // PWA Offline Support
 // ============================================
 
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `sorcery-portal-${CACHE_VERSION}`;
 const DATA_CACHE_NAME = `sorcery-data-${CACHE_VERSION}`;
 

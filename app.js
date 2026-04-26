@@ -14070,6 +14070,11 @@ async function handleLogin(e) {
         // Dispatch login event for community services
         document.dispatchEvent(new CustomEvent('userLoggedIn', { detail: { user } }));
 
+        // Auto-fetch collection from cloud if local is empty (new browser/device)
+        if (collection.size === 0) {
+            fetchCollectionFromCloudSilently();
+        }
+
         // Clear form
         e.target.reset();
     } catch (error) {
@@ -14491,6 +14496,41 @@ document.addEventListener('DOMContentLoaded', () => {
         strategySelect.addEventListener('change', updateSyncStrategyHint);
     }
 });
+
+// Silently fetch collection from cloud when local is empty (new browser/device)
+async function fetchCollectionFromCloudSilently() {
+    if (!nocoDBService.currentUser) return;
+
+    try {
+        console.log('[AutoSync] Local collection empty, fetching from cloud...');
+        const cloudRecords = await nocoDBService.getCloudCollection();
+
+        if (cloudRecords && cloudRecords.length > 0) {
+            const now = new Date().toISOString();
+
+            // Populate local collection
+            cloudRecords.forEach(record => {
+                collection.set(record.card_name, {
+                    qty: record.quantity || 1,
+                    addedAt: record.created_at || now
+                });
+            });
+
+            // Save to localStorage
+            saveCollection();
+
+            // Update UI
+            updateCollectionStats();
+            refreshCurrentView();
+
+            console.log(`[AutoSync] Loaded ${cloudRecords.length} cards from cloud`);
+            showSuccessToast(`${cloudRecords.length} cards carregados da nuvem`, 'Colecao sincronizada');
+        }
+    } catch (error) {
+        console.error('[AutoSync] Failed to fetch from cloud:', error);
+        // Silent fail - don't bother user
+    }
+}
 
 // Handle sync upload (Smart Sync)
 async function handleSyncUpload() {
