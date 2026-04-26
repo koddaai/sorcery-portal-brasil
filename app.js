@@ -2404,6 +2404,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadFromStorage();
     loadUserDecks();
 
+    // If user is logged in but collection is empty (new browser/device), fetch from cloud
+    if (typeof nocoDBService !== 'undefined' && nocoDBService.currentUser && collection.size === 0) {
+        console.log('[Init] User logged in but collection empty, fetching from cloud...');
+        fetchCollectionFromCloudSilently();
+    }
+
     await loadCards();
     setupEventListeners();
     setupConfirmModalHandlers(); // Confirmation dialog handlers
