@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "lastUpdate": "2026-04-25T21:26:52.024Z",
+  "lastUpdate": "2026-04-26T21:27:59.617Z",
   "source": "tcgcsv.com",
   "totalCards": 1283,
   "totalProducts": 3136,
-  "totalPriced": 2895,
+  "totalPriced": 2898,
   "cards": {
     "Abundance": [
       {
@@ -198,7 +198,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.7,
-        "mid": 1.35,
+        "mid": 1.36,
         "high": 2.99,
         "market": 1.33,
         "productId": 522802
@@ -670,7 +670,7 @@
         "low": 0.65,
         "mid": 1.05,
         "high": 10.95,
-        "market": 1.02,
+        "market": 1.03,
         "productId": 522795
       }
     ],
@@ -699,7 +699,7 @@
         "low": 3.49,
         "mid": 5.09,
         "high": 10.09,
-        "market": 4.4,
+        "market": 4.45,
         "productId": 522818
       },
       {
@@ -853,7 +853,7 @@
         "low": 41.71,
         "mid": 46.19,
         "high": 149.94,
-        "market": 42.88,
+        "market": 42.59,
         "productId": 522858
       },
       {
@@ -900,7 +900,7 @@
         "low": 4.5,
         "mid": 6.31,
         "high": 26.98,
-        "market": 5.29,
+        "market": 4.82,
         "productId": 522832
       }
     ],
@@ -938,7 +938,7 @@
         "low": 3.75,
         "mid": 5,
         "high": 8.88,
-        "market": 4.58,
+        "market": 4.61,
         "productId": 522835
       }
     ],
@@ -960,7 +960,7 @@
         "low": 1.79,
         "mid": 2.9,
         "high": 7.5,
-        "market": 1.89,
+        "market": 1.9,
         "productId": 521578
       },
       {
@@ -1031,7 +1031,7 @@
         "low": 35.08,
         "mid": 42.95,
         "high": 42.97,
-        "market": 41.58,
+        "market": 41.74,
         "productId": 521583
       }
     ],
@@ -1098,7 +1098,7 @@
         "low": 0.39,
         "mid": 0.95,
         "high": 3.45,
-        "market": 0.86,
+        "market": 0.85,
         "productId": 523122
       },
       {
@@ -1212,7 +1212,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.5,
-        "mid": 0.63,
+        "mid": 0.61,
         "high": 6.81,
         "market": 0.53,
         "productId": 523136
@@ -1269,7 +1269,7 @@
       {
         "set": "Beta",
         "finish": "Foil",
-        "low": 7.4,
+        "low": 7.05,
         "mid": 12,
         "high": 15.9,
         "market": 5.17,
@@ -1283,7 +1283,7 @@
         "low": 0.92,
         "mid": 1.29,
         "high": 9.99,
-        "market": 1.03,
+        "market": 1.04,
         "productId": 521680
       },
       {
@@ -1301,7 +1301,7 @@
         "low": 0.16,
         "mid": 0.5,
         "high": 3.25,
-        "market": 0.45,
+        "market": 0.43,
         "productId": 523142
       },
       {
@@ -1370,7 +1370,7 @@
         "low": 2.85,
         "mid": 4.26,
         "high": 8.95,
-        "market": 3.6,
+        "market": 3.83,
         "productId": 521685
       },
       {
@@ -1388,16 +1388,16 @@
         "low": 3.35,
         "mid": 4.95,
         "high": 7.6,
-        "market": 3.51,
+        "market": 3.92,
         "productId": 523146
       },
       {
         "set": "Beta",
         "finish": "Foil",
-        "low": 29.45,
+        "low": 28,
         "mid": 39.99,
         "high": 40,
-        "market": 20.71,
+        "market": 20.87,
         "productId": 523147
       }
     ],
@@ -1408,7 +1408,7 @@
         "low": 0.06,
         "mid": 0.25,
         "high": 0.75,
-        "market": 0.16,
+        "market": 0.17,
         "productId": 521687
       },
       {
@@ -1426,7 +1426,7 @@
         "low": 0.03,
         "mid": 0.15,
         "high": 2.99,
-        "market": 0.11,
+        "market": 0.12,
         "productId": 523148
       },
       {
@@ -1464,7 +1464,7 @@
         "low": 0.16,
         "mid": 0.34,
         "high": 3.2,
-        "market": 0.34,
+        "market": 0.33,
         "productId": 523154
       },
       {
@@ -1473,7 +1473,7 @@
         "low": 14,
         "mid": 16.82,
         "high": 20,
-        "market": 6.92,
+        "market": 6.91,
         "productId": 523155
       }
     ],
@@ -1551,7 +1551,7 @@
         "low": 1.98,
         "mid": 2.31,
         "high": 24.99,
-        "market": 2.06,
+        "market": 2.07,
         "productId": 523158
       },
       {
@@ -1627,7 +1627,7 @@
         "low": 14.04,
         "mid": 15.25,
         "high": 99.99,
-        "market": 13.83,
+        "market": 13.87,
         "productId": 523169
       }
     ],
@@ -1801,7 +1801,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.25,
-        "mid": 0.45,
+        "mid": 0.44,
         "high": 1.95,
         "market": 0.39,
         "productId": 522739
@@ -2051,7 +2051,7 @@
         "low": 1.5,
         "mid": 1.81,
         "high": 6.08,
-        "market": 1.7,
+        "market": 1.73,
         "productId": 522925
       }
     ],
@@ -2127,7 +2127,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1,
-        "mid": 1.45,
+        "mid": 1.41,
         "high": 5.78,
         "market": 1.24,
         "productId": 522871
@@ -2303,7 +2303,7 @@
         "low": 50.4,
         "mid": 55,
         "high": 149.94,
-        "market": 53.05,
+        "market": 52.94,
         "productId": 522890
       },
       {
@@ -2312,7 +2312,7 @@
         "low": 215.91,
         "mid": 220,
         "high": 350,
-        "market": 229.88,
+        "market": 229.37,
         "productId": 522892
       }
     ],
@@ -2339,9 +2339,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1.25,
-        "mid": 1.89,
+        "mid": 1.88,
         "high": 5,
-        "market": 1.56,
+        "market": 1.55,
         "productId": 522906
       },
       {
@@ -2408,7 +2408,7 @@
         "low": 0.03,
         "mid": 0.2,
         "high": 3.02,
-        "market": 0.13,
+        "market": 0.14,
         "productId": 522932
       },
       {
@@ -2457,7 +2457,7 @@
         "low": 0.25,
         "mid": 0.5,
         "high": 1.77,
-        "market": 0.47,
+        "market": 0.46,
         "productId": 523030
       },
       {
@@ -3196,7 +3196,7 @@
         "low": 3.45,
         "mid": 4.34,
         "high": 8.88,
-        "market": 3.92,
+        "market": 3.88,
         "productId": 522859
       }
     ],
@@ -3225,7 +3225,7 @@
         "low": 0.67,
         "mid": 0.76,
         "high": 3.64,
-        "market": 0.72,
+        "market": 0.68,
         "productId": 523224
       },
       {
@@ -3263,7 +3263,7 @@
         "low": 6.52,
         "mid": 7.92,
         "high": 8.8,
-        "market": 7.92,
+        "market": 7.9,
         "productId": 523226
       },
       {
@@ -3301,7 +3301,7 @@
         "low": 3.68,
         "mid": 4.95,
         "high": 29.99,
-        "market": 3.77,
+        "market": 3.78,
         "productId": 522863
       },
       {
@@ -3515,7 +3515,7 @@
         "low": 1.69,
         "mid": 2.25,
         "high": 7.5,
-        "market": 1.71,
+        "market": 1.7,
         "productId": 521834
       },
       {
@@ -3531,9 +3531,9 @@
         "set": "Beta",
         "finish": "Foil",
         "low": 7.85,
-        "mid": 9.48,
+        "mid": 10,
         "high": 28.75,
-        "market": 8.22,
+        "market": 8.23,
         "productId": 523232
       }
     ],
@@ -3598,7 +3598,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.5,
-        "mid": 0.88,
+        "mid": 0.84,
         "high": 4.67,
         "market": 0.74,
         "productId": 523233
@@ -3638,7 +3638,7 @@
         "low": 0.49,
         "mid": 0.75,
         "high": 4,
-        "market": 0.62,
+        "market": 0.63,
         "productId": 523239
       },
       {
@@ -3647,7 +3647,7 @@
         "low": 59,
         "mid": 84.84,
         "high": 99.99,
-        "market": 36.72,
+        "market": 37.14,
         "productId": 523240
       }
     ],
@@ -3841,7 +3841,7 @@
         "low": 1.75,
         "mid": 3.1,
         "high": 5.5,
-        "market": 2.63,
+        "market": 2.65,
         "productId": 522929
       }
     ],
@@ -3868,9 +3868,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 4.28,
-        "mid": 5.71,
+        "mid": 5.6,
         "high": 19.99,
-        "market": 5.8,
+        "market": 5.92,
         "productId": 522933
       },
       {
@@ -3917,7 +3917,7 @@
         "low": 1.24,
         "mid": 1.4,
         "high": 5.26,
-        "market": 1.36,
+        "market": 1.35,
         "productId": 523258
       }
     ],
@@ -3984,7 +3984,7 @@
         "low": 0.05,
         "mid": 0.25,
         "high": 3.06,
-        "market": 0.16,
+        "market": 0.17,
         "productId": 522954
       },
       {
@@ -4033,7 +4033,7 @@
         "low": 0.5,
         "mid": 0.75,
         "high": 5.53,
-        "market": 0.74,
+        "market": 0.75,
         "productId": 522953
       },
       {
@@ -4107,7 +4107,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.75,
-        "mid": 1.2,
+        "mid": 1.19,
         "high": 3,
         "market": 1.11,
         "productId": 522985
@@ -4147,7 +4147,7 @@
         "low": 0.2,
         "mid": 0.34,
         "high": 1.63,
-        "market": 0.29,
+        "market": 0.3,
         "productId": 523261
       },
       {
@@ -4185,7 +4185,7 @@
         "low": 0.04,
         "mid": 0.25,
         "high": 3.03,
-        "market": 0.18,
+        "market": 0.17,
         "productId": 523265
       },
       {
@@ -4419,7 +4419,7 @@
         "low": 0.19,
         "mid": 0.4,
         "high": 3.23,
-        "market": 0.38,
+        "market": 0.36,
         "productId": 523263
       },
       {
@@ -4428,7 +4428,7 @@
         "low": 27,
         "mid": 29.25,
         "high": 114.99,
-        "market": 28.54,
+        "market": 28.19,
         "productId": 523264
       }
     ],
@@ -4497,7 +4497,7 @@
         "low": 10.79,
         "mid": 11.38,
         "high": 11.99,
-        "market": 7.98,
+        "market": 7.84,
         "productId": 521893
       },
       {
@@ -4593,7 +4593,7 @@
         "low": 0.03,
         "mid": 0.24,
         "high": 3.04,
-        "market": 0.18,
+        "market": 0.19,
         "productId": 523280
       },
       {
@@ -4631,7 +4631,7 @@
         "low": 29.12,
         "mid": 30,
         "high": 39.99,
-        "market": 29.12,
+        "market": 29.2,
         "productId": 523283
       },
       {
@@ -4825,7 +4825,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 2.23,
-        "mid": 3.4,
+        "mid": 3.45,
         "high": 7,
         "market": 2.7,
         "productId": 523010
@@ -4874,7 +4874,7 @@
         "low": 0.3,
         "mid": 0.83,
         "high": 3.33,
-        "market": 0.74,
+        "market": 0.77,
         "productId": 523363
       },
       {
@@ -4923,7 +4923,7 @@
         "low": 1.39,
         "mid": 1.99,
         "high": 3.5,
-        "market": 1.85,
+        "market": 1.92,
         "productId": 523297
       },
       {
@@ -4961,7 +4961,7 @@
         "low": 0.1,
         "mid": 0.25,
         "high": 3.04,
-        "market": 0.19,
+        "market": 0.2,
         "productId": 523312
       },
       {
@@ -5097,7 +5097,7 @@
         "low": 3,
         "mid": 4.9,
         "high": 7.95,
-        "market": 4.7,
+        "market": 4.75,
         "productId": 523370
       },
       {
@@ -5106,7 +5106,7 @@
         "low": 41.8,
         "mid": 49.95,
         "high": 50,
-        "market": 33.25,
+        "market": 33.7,
         "productId": 523372
       }
     ],
@@ -5193,7 +5193,7 @@
         "low": 0.75,
         "mid": 1.42,
         "high": 2.99,
-        "market": 0.99,
+        "market": 0.98,
         "productId": 523326
       }
     ],
@@ -5320,7 +5320,7 @@
         "low": 5.99,
         "mid": 7.5,
         "high": 19.99,
-        "market": 6.79,
+        "market": 6.88,
         "productId": 523335
       },
       {
@@ -5394,7 +5394,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.75,
-        "mid": 1.12,
+        "mid": 1.1,
         "high": 5.45,
         "market": 1.04,
         "productId": 523339
@@ -5470,9 +5470,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.2,
-        "mid": 0.66,
+        "mid": 0.67,
         "high": 2.9,
-        "market": 0.63,
+        "market": 0.62,
         "productId": 523379
       },
       {
@@ -5481,7 +5481,7 @@
         "low": 5.09,
         "mid": 10,
         "high": 74.99,
-        "market": 7.7,
+        "market": 7.54,
         "productId": 523381
       }
     ],
@@ -5590,7 +5590,7 @@
         "low": 10,
         "mid": 12.62,
         "high": 16,
-        "market": 12.49,
+        "market": 12.2,
         "productId": 523042
       }
     ],
@@ -5601,7 +5601,7 @@
         "low": 0.75,
         "mid": 1.07,
         "high": 6,
-        "market": 0.77,
+        "market": 0.76,
         "productId": 521962
       },
       {
@@ -5619,7 +5619,7 @@
         "low": 0.15,
         "mid": 0.31,
         "high": 3.17,
-        "market": 0.28,
+        "market": 0.29,
         "productId": 523384
       },
       {
@@ -5628,7 +5628,7 @@
         "low": 2.84,
         "mid": 3.49,
         "high": 25.95,
-        "market": 2.86,
+        "market": 2.92,
         "productId": 523386
       }
     ],
@@ -5733,7 +5733,7 @@
         "low": 1,
         "mid": 2,
         "high": 12.75,
-        "market": 1.53,
+        "market": 1.57,
         "productId": 523398
       },
       {
@@ -5793,7 +5793,7 @@
         "low": 0.01,
         "mid": 0.25,
         "high": 3.56,
-        "market": 0.14,
+        "market": 0.15,
         "productId": 523409
       },
       {
@@ -5840,9 +5840,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 7.2,
-        "mid": 8.39,
+        "mid": 8.46,
         "high": 49.99,
-        "market": 7.56,
+        "market": 7.62,
         "productId": 523424
       },
       {
@@ -5880,7 +5880,7 @@
         "low": 1.25,
         "mid": 1.99,
         "high": 6.5,
-        "market": 1.6,
+        "market": 1.63,
         "productId": 523489
       },
       {
@@ -5918,7 +5918,7 @@
         "low": 0.05,
         "mid": 0.51,
         "high": 3.4,
-        "market": 0.48,
+        "market": 0.49,
         "productId": 523430
       },
       {
@@ -5963,7 +5963,7 @@
         "set": "Beta",
         "finish": "Foil",
         "low": 2.85,
-        "mid": 4.53,
+        "mid": 4.52,
         "high": 12.99,
         "market": 4.36,
         "productId": 523439
@@ -6193,7 +6193,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.1,
-        "mid": 0.38,
+        "mid": 0.36,
         "high": 1.75,
         "market": 0.33,
         "productId": 523499
@@ -6233,7 +6233,7 @@
         "low": 0.8,
         "mid": 2,
         "high": 5,
-        "market": 1.64,
+        "market": 1.66,
         "productId": 523445
       },
       {
@@ -6253,7 +6253,7 @@
         "low": 0.76,
         "mid": 1.03,
         "high": 6,
-        "market": 0.75,
+        "market": 0.74,
         "productId": 521999
       },
       {
@@ -6269,7 +6269,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.04,
-        "mid": 0.67,
+        "mid": 0.66,
         "high": 1.76,
         "market": 0.62,
         "productId": 523324
@@ -6309,14 +6309,14 @@
         "low": 0.48,
         "mid": 0.62,
         "high": 1.8,
-        "market": 0.6,
+        "market": 0.59,
         "productId": 523504
       },
       {
         "set": "Beta",
         "finish": "Foil",
         "low": 5.92,
-        "mid": 7.47,
+        "mid": 7.49,
         "high": 15,
         "market": 6.79,
         "productId": 523505
@@ -6581,7 +6581,7 @@
         "low": 2.55,
         "mid": 3.79,
         "high": 29.99,
-        "market": 3.29,
+        "market": 3.27,
         "productId": 523462
       },
       {
@@ -6616,10 +6616,10 @@
       {
         "set": "Beta",
         "finish": "Normal",
-        "low": 4.71,
-        "mid": 6.89,
+        "low": 5.25,
+        "mid": 6.9,
         "high": 9.5,
-        "market": 6.87,
+        "market": 6.77,
         "productId": 523473
       },
       {
@@ -6732,8 +6732,8 @@
         "finish": "Normal",
         "low": 0.4,
         "mid": 0.75,
-        "high": 3.88,
-        "market": 0.73,
+        "high": 3.42,
+        "market": 0.74,
         "productId": 523516
       },
       {
@@ -6809,7 +6809,7 @@
         "low": 0.05,
         "mid": 0.54,
         "high": 3.25,
-        "market": 0.5,
+        "market": 0.51,
         "productId": 523483
       },
       {
@@ -6923,7 +6923,7 @@
         "low": 0.19,
         "mid": 0.42,
         "high": 2.1,
-        "market": 0.32,
+        "market": 0.33,
         "productId": 523518
       },
       {
@@ -7008,7 +7008,7 @@
         "low": 0.99,
         "mid": 1.34,
         "high": 60,
-        "market": 1.3,
+        "market": 1.27,
         "productId": 523369
       }
     ],
@@ -7035,7 +7035,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.05,
-        "mid": 0.74,
+        "mid": 0.72,
         "high": 3.5,
         "market": 0.68,
         "productId": 523058
@@ -7073,7 +7073,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.25,
-        "mid": 0.47,
+        "mid": 0.45,
         "high": 50,
         "market": 0.39,
         "productId": 523452
@@ -7124,7 +7124,7 @@
         "low": 0.01,
         "mid": 0.15,
         "high": 2.94,
-        "market": 0.1,
+        "market": 0.09,
         "productId": 523459
       },
       {
@@ -7198,9 +7198,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 2.04,
-        "mid": 3.64,
+        "mid": 3.63,
         "high": 9.95,
-        "market": 2.95,
+        "market": 2.97,
         "productId": 523539
       },
       {
@@ -7383,7 +7383,7 @@
         "low": 0.5,
         "mid": 1.26,
         "high": 4.45,
-        "market": 1.21,
+        "market": 1.19,
         "productId": 523477
       }
     ],
@@ -7401,7 +7401,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1.5,
-        "mid": 2.6,
+        "mid": 2.58,
         "high": 9.95,
         "market": 2.2,
         "productId": 523686
@@ -7537,7 +7537,7 @@
         "low": 0.99,
         "mid": 1.25,
         "high": 30,
-        "market": 1.18,
+        "market": 1.23,
         "productId": 523487
       }
     ],
@@ -7548,7 +7548,7 @@
         "low": 0.25,
         "mid": 0.38,
         "high": 3,
-        "market": 0.37,
+        "market": 0.44,
         "productId": 522070
       },
       {
@@ -7624,7 +7624,7 @@
         "low": 3.52,
         "mid": 4.71,
         "high": 5.99,
-        "market": 4.92,
+        "market": 4.88,
         "productId": 523529
       }
     ],
@@ -7673,7 +7673,7 @@
         "low": 2.95,
         "mid": 3.46,
         "high": 6.99,
-        "market": 3.39,
+        "market": 3.4,
         "productId": 523694
       }
     ],
@@ -7722,7 +7722,7 @@
         "low": 0.25,
         "mid": 0.5,
         "high": 4.68,
-        "market": 0.37,
+        "market": 0.38,
         "productId": 522080
       },
       {
@@ -7749,7 +7749,7 @@
         "low": 2.2,
         "mid": 3,
         "high": 5.95,
-        "market": 2.7,
+        "market": 2.57,
         "productId": 523704
       }
     ],
@@ -7769,14 +7769,14 @@
         "low": 0.65,
         "mid": 0.99,
         "high": 9.45,
-        "market": 0.82,
+        "market": 0.84,
         "productId": 522093
       },
       {
         "set": "Beta",
         "finish": "Normal",
         "low": 0.15,
-        "mid": 0.35,
+        "mid": 0.34,
         "high": 1.54,
         "market": 0.26,
         "productId": 523125
@@ -7941,7 +7941,7 @@
         "low": 3.99,
         "mid": 5.99,
         "high": 12.12,
-        "market": 4.66,
+        "market": 4.63,
         "productId": 523403
       },
       {
@@ -8091,7 +8091,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 23,
-        "mid": 26.53,
+        "mid": 26.5,
         "high": 49.99,
         "market": 25.97,
         "productId": 523534
@@ -8180,7 +8180,7 @@
         "low": 2.79,
         "mid": 3.5,
         "high": 10.49,
-        "market": 3.02,
+        "market": 3.01,
         "productId": 523536
       },
       {
@@ -8649,7 +8649,7 @@
         "low": 0.11,
         "mid": 0.25,
         "high": 3.08,
-        "market": 0.2,
+        "market": 0.19,
         "productId": 523721
       },
       {
@@ -8959,7 +8959,7 @@
         "low": 0.23,
         "mid": 0.49,
         "high": 3.29,
-        "market": 0.46,
+        "market": 0.47,
         "productId": 523433
       },
       {
@@ -8968,7 +8968,7 @@
         "low": 20.99,
         "mid": 27.95,
         "high": 35,
-        "market": 22.18,
+        "market": 20.62,
         "productId": 523435
       }
     ],
@@ -8979,7 +8979,7 @@
         "low": 0.82,
         "mid": 1,
         "high": 6,
-        "market": 0.93,
+        "market": 0.95,
         "productId": 522150
       },
       {
@@ -9044,7 +9044,7 @@
         "low": 3,
         "mid": 3.47,
         "high": 7.95,
-        "market": 3.26,
+        "market": 3.3,
         "productId": 523421
       }
     ],
@@ -9084,7 +9084,7 @@
         "low": 0.13,
         "mid": 0.29,
         "high": 1,
-        "market": 0.24,
+        "market": 0.23,
         "productId": 523234
       },
       {
@@ -9093,7 +9093,7 @@
         "low": 4.31,
         "mid": 4.99,
         "high": 21.98,
-        "market": 4.14,
+        "market": 4.13,
         "productId": 523236
       }
     ],
@@ -9104,7 +9104,7 @@
         "low": 1.25,
         "mid": 1.75,
         "high": 6,
-        "market": 1.32,
+        "market": 1.27,
         "productId": 522158
       },
       {
@@ -9218,7 +9218,7 @@
         "low": 24,
         "mid": 30.78,
         "high": 149.99,
-        "market": 28.24,
+        "market": 28.23,
         "productId": 523468
       }
     ],
@@ -9247,7 +9247,7 @@
         "low": 2,
         "mid": 2.75,
         "high": 9.99,
-        "market": 2.65,
+        "market": 2.67,
         "productId": 523470
       },
       {
@@ -9392,7 +9392,7 @@
         "low": 0.89,
         "mid": 1.03,
         "high": 9.99,
-        "market": 0.96,
+        "market": 0.98,
         "productId": 523501
       }
     ],
@@ -9421,7 +9421,7 @@
         "low": 39,
         "mid": 45,
         "high": 149.99,
-        "market": 41.01,
+        "market": 40.97,
         "productId": 523506
       },
       {
@@ -9468,7 +9468,7 @@
         "low": 0.44,
         "mid": 1.36,
         "high": 4,
-        "market": 1.1,
+        "market": 1.07,
         "productId": 522744
       }
     ],
@@ -9497,7 +9497,7 @@
         "low": 0.88,
         "mid": 1.17,
         "high": 4.44,
-        "market": 1.13,
+        "market": 1.14,
         "productId": 522745
       },
       {
@@ -9506,7 +9506,7 @@
         "low": 8,
         "mid": 11.43,
         "high": 25,
-        "market": 11.02,
+        "market": 10.95,
         "productId": 522746
       }
     ],
@@ -9593,7 +9593,7 @@
         "low": 0.9,
         "mid": 1.12,
         "high": 10,
-        "market": 1.08,
+        "market": 1.09,
         "productId": 522807
       }
     ],
@@ -9662,7 +9662,7 @@
         "low": 0.08,
         "mid": 0.21,
         "high": 1.22,
-        "market": 0.18,
+        "market": 0.17,
         "productId": 522815
       },
       {
@@ -9834,9 +9834,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1.99,
-        "mid": 2.49,
+        "mid": 2.5,
         "high": 6.98,
-        "market": 2.52,
+        "market": 2.56,
         "productId": 522849
       },
       {
@@ -9883,7 +9883,7 @@
         "low": 0.99,
         "mid": 1.2,
         "high": 25,
-        "market": 1.11,
+        "market": 1.12,
         "productId": 522979
       }
     ],
@@ -9912,7 +9912,7 @@
         "low": 3.48,
         "mid": 4,
         "high": 12.75,
-        "market": 3.73,
+        "market": 3.74,
         "productId": 522864
       },
       {
@@ -9988,7 +9988,7 @@
         "low": 3.42,
         "mid": 5.63,
         "high": 19.99,
-        "market": 4.31,
+        "market": 4.45,
         "productId": 522996
       },
       {
@@ -9997,7 +9997,7 @@
         "low": 15.2,
         "mid": 19.48,
         "high": 99.99,
-        "market": 16,
+        "market": 15.92,
         "productId": 523003
       }
     ],
@@ -10323,7 +10323,7 @@
         "low": 0.95,
         "mid": 1.49,
         "high": 10,
-        "market": 1.44,
+        "market": 1.41,
         "productId": 522894
       }
     ],
@@ -10524,7 +10524,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 2.98,
-        "mid": 3.49,
+        "mid": 3.39,
         "high": 8.49,
         "market": 3,
         "productId": 523496
@@ -10700,7 +10700,7 @@
         "low": 6.29,
         "mid": 8,
         "high": 49.99,
-        "market": 7.44,
+        "market": 7.4,
         "productId": 523512
       },
       {
@@ -10883,7 +10883,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.28,
-        "mid": 0.5,
+        "mid": 0.49,
         "high": 2,
         "market": 0.44,
         "productId": 522955
@@ -10921,7 +10921,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.61,
-        "mid": 0.99,
+        "mid": 0.98,
         "high": 2.8,
         "market": 0.9,
         "productId": 523563
@@ -11001,7 +11001,7 @@
         "low": 3,
         "mid": 4.22,
         "high": 39.99,
-        "market": 3.89,
+        "market": 3.88,
         "productId": 523567
       },
       {
@@ -11077,7 +11077,7 @@
         "low": 15.48,
         "mid": 17.99,
         "high": 20,
-        "market": 16.68,
+        "market": 16.77,
         "productId": 523152
       },
       {
@@ -11086,7 +11086,7 @@
         "low": 41.08,
         "mid": 44.64,
         "high": 65,
-        "market": 33.17,
+        "market": 33.87,
         "productId": 523153
       }
     ],
@@ -11097,7 +11097,7 @@
         "low": 76.94,
         "mid": 122.99,
         "high": 150,
-        "market": 83.16,
+        "market": 83.83,
         "productId": 522295
       },
       {
@@ -11153,7 +11153,7 @@
         "low": 17.2,
         "mid": 20.03,
         "high": 22.95,
-        "market": 19.38,
+        "market": 19.26,
         "productId": 523163
       }
     ],
@@ -11191,7 +11191,7 @@
         "low": 49.8,
         "mid": 76.42,
         "high": 288.88,
-        "market": 61.4,
+        "market": 60.76,
         "productId": 523579
       }
     ],
@@ -11220,7 +11220,7 @@
         "low": 12.8,
         "mid": 15.6,
         "high": 39.99,
-        "market": 14.88,
+        "market": 14.75,
         "productId": 523581
       },
       {
@@ -11229,7 +11229,7 @@
         "low": 28.9,
         "mid": 38.99,
         "high": 70,
-        "market": 33.97,
+        "market": 33.87,
         "productId": 523582
       }
     ],
@@ -11352,9 +11352,9 @@
         "set": "Beta",
         "finish": "Foil",
         "low": 1,
-        "mid": 1.71,
+        "mid": 1.74,
         "high": 6,
-        "market": 1.57,
+        "market": 1.51,
         "productId": 523170
       }
     ],
@@ -11432,7 +11432,7 @@
         "low": 0.48,
         "mid": 0.64,
         "high": 3.58,
-        "market": 0.57,
+        "market": 0.59,
         "productId": 523358
       },
       {
@@ -11541,7 +11541,7 @@
         "low": 0.5,
         "mid": 1.02,
         "high": 2,
-        "market": 1.02,
+        "market": 1.03,
         "productId": 523174
       },
       {
@@ -11579,7 +11579,7 @@
         "low": 2.4,
         "mid": 2.9,
         "high": 15,
-        "market": 2.6,
+        "market": 2.7,
         "productId": 523364
       },
       {
@@ -11615,9 +11615,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 4.27,
-        "mid": 4.87,
+        "mid": 4.95,
         "high": 9.99,
-        "market": 4.77,
+        "market": 4.79,
         "productId": 523177
       },
       {
@@ -11702,7 +11702,7 @@
         "low": 5,
         "mid": 6.31,
         "high": 35,
-        "market": 5.28,
+        "market": 5.37,
         "productId": 523186
       }
     ],
@@ -11731,7 +11731,7 @@
         "low": 3.6,
         "mid": 5,
         "high": 19.9,
-        "market": 4.05,
+        "market": 4.1,
         "productId": 523187
       },
       {
@@ -11804,10 +11804,10 @@
       {
         "set": "Beta",
         "finish": "Normal",
-        "low": 1.18,
+        "low": 1.36,
         "mid": 2.47,
         "high": 5,
-        "market": 2.11,
+        "market": 2.1,
         "productId": 523368
       },
       {
@@ -11816,7 +11816,7 @@
         "low": 29.99,
         "mid": 34.97,
         "high": 100,
-        "market": 33.14,
+        "market": 32.66,
         "productId": 523371
       }
     ],
@@ -11845,7 +11845,7 @@
         "low": 0.04,
         "mid": 0.46,
         "high": 2.2,
-        "market": 0.47,
+        "market": 0.42,
         "productId": 523193
       },
       {
@@ -11903,7 +11903,7 @@
         "low": 0.25,
         "mid": 0.4,
         "high": 1.61,
-        "market": 0.35,
+        "market": 0.36,
         "productId": 523195
       },
       {
@@ -11912,7 +11912,7 @@
         "low": 3.13,
         "mid": 3.61,
         "high": 20,
-        "market": 3.48,
+        "market": 3.52,
         "productId": 523197
       }
     ],
@@ -11977,7 +11977,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.3,
-        "mid": 0.49,
+        "mid": 0.48,
         "high": 1.63,
         "market": 0.47,
         "productId": 523375
@@ -12115,7 +12115,7 @@
         "low": 3.5,
         "mid": 4.21,
         "high": 24.99,
-        "market": 4.13,
+        "market": 4.14,
         "productId": 523206
       },
       {
@@ -12343,7 +12343,7 @@
         "low": 0.95,
         "mid": 1.63,
         "high": 19.99,
-        "market": 1.57,
+        "market": 1.63,
         "productId": 523078
       },
       {
@@ -12381,7 +12381,7 @@
         "low": 7.15,
         "mid": 8.59,
         "high": 16.98,
-        "market": 7.51,
+        "market": 7.56,
         "productId": 523084
       },
       {
@@ -12613,7 +12613,7 @@
         "low": 3.99,
         "mid": 4.11,
         "high": 5.98,
-        "market": 4.4,
+        "market": 4.39,
         "productId": 523106
       }
     ],
@@ -12640,7 +12640,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.37,
-        "mid": 0.55,
+        "mid": 0.54,
         "high": 1.68,
         "market": 0.43,
         "productId": 523108
@@ -12651,7 +12651,7 @@
         "low": 2.74,
         "mid": 3.28,
         "high": 49.99,
-        "market": 3.21,
+        "market": 3.29,
         "productId": 523111
       }
     ],
@@ -12671,7 +12671,7 @@
         "low": 11.05,
         "mid": 19.98,
         "high": 180,
-        "market": 22.5,
+        "market": 25,
         "productId": 522386
       },
       {
@@ -12798,7 +12798,7 @@
         "low": 7.5,
         "mid": 10.67,
         "high": 12.44,
-        "market": 5.95,
+        "market": 6.11,
         "productId": 522394
       },
       {
@@ -12816,7 +12816,7 @@
         "low": 2.49,
         "mid": 3.5,
         "high": 5,
-        "market": 2.51,
+        "market": 2.59,
         "productId": 522977
       },
       {
@@ -13115,7 +13115,7 @@
         "low": 0.18,
         "mid": 0.44,
         "high": 1.55,
-        "market": 0.4,
+        "market": 0.41,
         "productId": 523009
       },
       {
@@ -13189,9 +13189,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1.3,
-        "mid": 2.25,
+        "mid": 2.63,
         "high": 39.99,
-        "market": 2.1,
+        "market": 2.09,
         "productId": 522775
       },
       {
@@ -13287,7 +13287,7 @@
         "low": 3.08,
         "mid": 9.95,
         "high": 23,
-        "market": 3.49,
+        "market": 3.39,
         "productId": 522432
       }
     ],
@@ -13396,7 +13396,7 @@
         "low": 0.9,
         "mid": 1.59,
         "high": 6,
-        "market": 0.94,
+        "market": 0.89,
         "productId": 522440
       },
       {
@@ -13412,7 +13412,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.2,
-        "mid": 0.46,
+        "mid": 0.45,
         "high": 1.64,
         "market": 0.35,
         "productId": 523064
@@ -13481,7 +13481,7 @@
         "low": 0.86,
         "mid": 1.13,
         "high": 9.5,
-        "market": 0.98,
+        "market": 0.99,
         "productId": 522444
       },
       {
@@ -13490,7 +13490,7 @@
         "low": 0.24,
         "mid": 0.5,
         "high": 1.7,
-        "market": 0.45,
+        "market": 0.44,
         "productId": 523404
       },
       {
@@ -13510,7 +13510,7 @@
         "low": 2.99,
         "mid": 4.55,
         "high": 12,
-        "market": 3.77,
+        "market": 3.79,
         "productId": 522446
       },
       {
@@ -13528,7 +13528,7 @@
         "low": 0.04,
         "mid": 0.25,
         "high": 3.08,
-        "market": 0.16,
+        "market": 0.17,
         "productId": 522777
       },
       {
@@ -13814,7 +13814,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.51,
-        "mid": 0.77,
+        "mid": 0.74,
         "high": 2.25,
         "market": 0.59,
         "productId": 522779
@@ -13959,7 +13959,7 @@
         "low": 5.99,
         "mid": 7.33,
         "high": 39.99,
-        "market": 6.65,
+        "market": 6.61,
         "productId": 523107
       },
       {
@@ -13979,7 +13979,7 @@
         "low": 17.99,
         "mid": 24.99,
         "high": 31,
-        "market": 17.88,
+        "market": 18.17,
         "productId": 522471
       }
     ],
@@ -13990,7 +13990,7 @@
         "low": 0.77,
         "mid": 1.25,
         "high": 6,
-        "market": 0.91,
+        "market": 0.87,
         "productId": 522472
       },
       {
@@ -14017,7 +14017,7 @@
         "low": 4.6,
         "mid": 6.65,
         "high": 16,
-        "market": 6.11,
+        "market": 5.96,
         "productId": 523117
       }
     ],
@@ -14055,7 +14055,7 @@
         "low": 1.13,
         "mid": 1.33,
         "high": 5,
-        "market": 1.31,
+        "market": 1.3,
         "productId": 523397
       }
     ],
@@ -14231,7 +14231,7 @@
         "low": 3.8,
         "mid": 4.95,
         "high": 29.99,
-        "market": 4.1,
+        "market": 4.14,
         "productId": 523520
       },
       {
@@ -14461,7 +14461,7 @@
         "low": 41.49,
         "mid": 45,
         "high": 147.2,
-        "market": 47.98,
+        "market": 47.64,
         "productId": 550754
       }
     ],
@@ -14510,7 +14510,7 @@
         "low": 11.72,
         "mid": 13.07,
         "high": 99.99,
-        "market": 13.25,
+        "market": 13.68,
         "productId": 523301
       }
     ],
@@ -14548,7 +14548,7 @@
         "low": 1,
         "mid": 1.29,
         "high": 9.99,
-        "market": 1.09,
+        "market": 1.16,
         "productId": 523527
       }
     ],
@@ -14599,7 +14599,7 @@
         "low": 0.18,
         "mid": 0.4,
         "high": 1,
-        "market": 0.39,
+        "market": 0.4,
         "productId": 522808
       },
       {
@@ -14735,7 +14735,7 @@
         "low": 12.89,
         "mid": 14.11,
         "high": 44.99,
-        "market": 13.83,
+        "market": 13.91,
         "productId": 522971
       },
       {
@@ -14822,7 +14822,7 @@
         "low": 3.34,
         "mid": 3.77,
         "high": 55.45,
-        "market": 3.64,
+        "market": 3.66,
         "productId": 522814
       }
     ],
@@ -14851,7 +14851,7 @@
         "low": 6,
         "mid": 8.49,
         "high": 29.99,
-        "market": 6.99,
+        "market": 7.05,
         "productId": 523543
       },
       {
@@ -14898,7 +14898,7 @@
         "low": 3.5,
         "mid": 3.81,
         "high": 7.77,
-        "market": 3.71,
+        "market": 3.64,
         "productId": 523338
       }
     ],
@@ -14974,7 +14974,7 @@
         "low": 3.2,
         "mid": 5.85,
         "high": 49.75,
-        "market": 5.85,
+        "market": 5.18,
         "productId": 522982
       }
     ],
@@ -15110,7 +15110,7 @@
         "low": 0.1,
         "mid": 0.23,
         "high": 0.69,
-        "market": 0.22,
+        "market": 0.23,
         "productId": 522536
       },
       {
@@ -15159,7 +15159,7 @@
         "low": 1.21,
         "mid": 1.63,
         "high": 6,
-        "market": 1.28,
+        "market": 1.27,
         "productId": 522539
       },
       {
@@ -15213,7 +15213,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 0.4,
-        "mid": 0.82,
+        "mid": 0.81,
         "high": 2.04,
         "market": 0.82,
         "productId": 523548
@@ -15235,7 +15235,7 @@
         "low": 32.35,
         "mid": 40.25,
         "high": 60,
-        "market": 34.04,
+        "market": 33.98,
         "productId": 522542
       },
       {
@@ -15288,10 +15288,10 @@
       {
         "set": "Beta",
         "finish": "Normal",
-        "low": 9,
+        "low": 9.05,
         "mid": 9.72,
         "high": 29.99,
-        "market": 9.48,
+        "market": 9.47,
         "productId": 523551
       },
       {
@@ -15300,7 +15300,7 @@
         "low": 126,
         "mid": 131.48,
         "high": 180,
-        "market": 114.18,
+        "market": 114.99,
         "productId": 523553
       }
     ],
@@ -15318,9 +15318,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1.98,
-        "mid": 4.5,
+        "mid": 4.57,
         "high": 14.55,
-        "market": 2.69,
+        "market": 2.72,
         "productId": 522997
       },
       {
@@ -15387,7 +15387,7 @@
         "low": 1.25,
         "mid": 1.73,
         "high": 5.5,
-        "market": 1.5,
+        "market": 1.55,
         "productId": 523562
       },
       {
@@ -15396,7 +15396,7 @@
         "low": 8.75,
         "mid": 12,
         "high": 35,
-        "market": 13.62,
+        "market": 13.24,
         "productId": 523564
       }
     ],
@@ -15425,7 +15425,7 @@
         "low": 1.35,
         "mid": 2.29,
         "high": 24.99,
-        "market": 1.88,
+        "market": 1.9,
         "productId": 523006
       },
       {
@@ -15494,7 +15494,7 @@
         "low": 0.83,
         "mid": 1.18,
         "high": 4.25,
-        "market": 0.87,
+        "market": 0.95,
         "productId": 522558
       },
       {
@@ -15532,7 +15532,7 @@
         "low": 0.99,
         "mid": 1,
         "high": 5,
-        "market": null,
+        "market": 0.99,
         "productId": 522561
       }
     ],
@@ -15561,7 +15561,7 @@
         "low": 0.05,
         "mid": 0.24,
         "high": 3.03,
-        "market": 0.16,
+        "market": 0.15,
         "productId": 523020
       },
       {
@@ -15570,7 +15570,7 @@
         "low": 0.55,
         "mid": 1.53,
         "high": 10,
-        "market": 1.29,
+        "market": 1.22,
         "productId": 523022
       }
     ],
@@ -15657,9 +15657,9 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1.22,
-        "mid": 2.16,
+        "mid": 2.15,
         "high": 4.85,
-        "market": 2.12,
+        "market": 2.1,
         "productId": 523035
       },
       {
@@ -15746,7 +15746,7 @@
         "low": 0.05,
         "mid": 0.25,
         "high": 3.08,
-        "market": 0.18,
+        "market": 0.17,
         "productId": 522908
       },
       {
@@ -15882,7 +15882,7 @@
         "low": 88.8,
         "mid": 95.86,
         "high": 295.45,
-        "market": 93.43,
+        "market": 93.38,
         "productId": 523597
       },
       {
@@ -16025,7 +16025,7 @@
         "set": "Beta",
         "finish": "Normal",
         "low": 1.96,
-        "mid": 2.88,
+        "mid": 2.84,
         "high": 5,
         "market": 2.66,
         "productId": 522942
@@ -16172,7 +16172,7 @@
         "low": 1.88,
         "mid": 2.46,
         "high": 8,
-        "market": 2.34,
+        "market": 2.35,
         "productId": 523099
       }
     ],
@@ -16673,7 +16673,7 @@
         "low": 34.95,
         "mid": 36.98,
         "high": 39,
-        "market": 23.67,
+        "market": 24.24,
         "productId": 530305
       }
     ],
@@ -16748,7 +16748,7 @@
         "low": 166,
         "mid": 249.99,
         "high": 2999,
-        "market": 162.08,
+        "market": 164.24,
         "productId": 522759
       }
     ],
@@ -16770,7 +16770,7 @@
         "low": 59.26,
         "mid": 69.8,
         "high": 151.51,
-        "market": 66.95,
+        "market": 65.02,
         "productId": 522783
       }
     ],
@@ -17000,9 +17000,9 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 129,
-        "mid": 147.19,
+        "mid": 148.88,
         "high": 200,
-        "market": 133.1,
+        "market": 133.12,
         "productId": 563830
       }
     ],
@@ -17033,9 +17033,9 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 3.25,
-        "mid": 5.15,
+        "mid": 5.3,
         "high": 15,
-        "market": 3.69,
+        "market": 3.75,
         "productId": 585127
       },
       {
@@ -17095,7 +17095,7 @@
         "low": 0.07,
         "mid": 0.25,
         "high": 1,
-        "market": 0.2,
+        "market": 0.21,
         "productId": 585133
       },
       {
@@ -17104,7 +17104,7 @@
         "low": 3,
         "mid": 4,
         "high": 7.5,
-        "market": 3.84,
+        "market": 3.75,
         "productId": 585134
       }
     ],
@@ -17115,7 +17115,7 @@
         "low": 0.93,
         "mid": 1.18,
         "high": 4.99,
-        "market": 1.11,
+        "market": 1.13,
         "productId": 585135
       },
       {
@@ -17124,7 +17124,7 @@
         "low": 9.18,
         "mid": 10.49,
         "high": 15.95,
-        "market": 9.86,
+        "market": 9.49,
         "productId": 585136
       }
     ],
@@ -17144,7 +17144,7 @@
         "low": 39.09,
         "mid": 40.5,
         "high": 74.99,
-        "market": 39.63,
+        "market": 39.64,
         "productId": 585138
       }
     ],
@@ -17195,7 +17195,7 @@
         "low": 2.75,
         "mid": 4.78,
         "high": 20,
-        "market": 3.44,
+        "market": 3.46,
         "productId": 585143
       },
       {
@@ -17282,7 +17282,7 @@
         "set": "Arthurian Legends",
         "finish": "Foil",
         "low": 0.59,
-        "mid": 0.93,
+        "mid": 0.92,
         "high": 9.99,
         "market": 0.83,
         "productId": 585152
@@ -17324,7 +17324,7 @@
         "low": 1,
         "mid": 2.62,
         "high": 10.01,
-        "market": 2.48,
+        "market": 2.41,
         "productId": 585156
       }
     ],
@@ -17455,7 +17455,7 @@
         "low": 26.1,
         "mid": 33.47,
         "high": 61.4,
-        "market": 30.77,
+        "market": 30.82,
         "productId": 585169
       },
       {
@@ -17464,7 +17464,7 @@
         "low": 99.99,
         "mid": 109.99,
         "high": 149.95,
-        "market": 101.12,
+        "market": 104.49,
         "productId": 585170
       }
     ],
@@ -17495,7 +17495,7 @@
         "low": 0.1,
         "mid": 0.25,
         "high": 1,
-        "market": 0.2,
+        "market": 0.21,
         "productId": 585173
       },
       {
@@ -17513,7 +17513,7 @@
         "low": 23.5,
         "mid": 29.01,
         "high": 40,
-        "market": null,
+        "market": 25.99,
         "productId": 678660
       }
     ],
@@ -17524,7 +17524,7 @@
         "low": 3.68,
         "mid": 4.95,
         "high": 29,
-        "market": 3.85,
+        "market": 3.8,
         "productId": 585175
       },
       {
@@ -17544,7 +17544,7 @@
         "low": 0.34,
         "mid": 0.75,
         "high": 11.28,
-        "market": 0.59,
+        "market": 0.58,
         "productId": 585177
       },
       {
@@ -17602,7 +17602,7 @@
         "set": "Arthurian Legends",
         "finish": "Foil",
         "low": 0.69,
-        "mid": 0.94,
+        "mid": 0.91,
         "high": 5.5,
         "market": 0.81,
         "productId": 585183
@@ -17702,7 +17702,7 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 0.1,
-        "mid": 0.42,
+        "mid": 0.43,
         "high": 2.99,
         "market": 0.39,
         "productId": 585192
@@ -17804,7 +17804,7 @@
         "low": 0.01,
         "mid": 0.15,
         "high": 1.39,
-        "market": 0.12,
+        "market": 0.11,
         "productId": 585202
       },
       {
@@ -17824,7 +17824,7 @@
         "low": 0.12,
         "mid": 0.32,
         "high": 1,
-        "market": 0.32,
+        "market": 0.33,
         "productId": 585204
       },
       {
@@ -17893,7 +17893,7 @@
         "low": 0.9,
         "mid": 1.01,
         "high": 16.39,
-        "market": 0.98,
+        "market": 0.97,
         "productId": 585211
       }
     ],
@@ -17904,7 +17904,7 @@
         "low": 0.05,
         "mid": 0.2,
         "high": 1,
-        "market": 0.13,
+        "market": 0.12,
         "productId": 585212
       },
       {
@@ -17924,7 +17924,7 @@
         "low": 4,
         "mid": 5.15,
         "high": 20,
-        "market": 4.14,
+        "market": 4.18,
         "productId": 585214
       },
       {
@@ -17944,7 +17944,7 @@
         "low": 0.69,
         "mid": 0.81,
         "high": 14.35,
-        "market": 0.81,
+        "market": 0.8,
         "productId": 585216
       }
     ],
@@ -17975,7 +17975,7 @@
         "low": 4.49,
         "mid": 9.5,
         "high": 44.9,
-        "market": 5.05,
+        "market": 5.04,
         "productId": 585220
       },
       {
@@ -17995,7 +17995,7 @@
         "low": 0.05,
         "mid": 0.21,
         "high": 1.6,
-        "market": 0.15,
+        "market": 0.16,
         "productId": 585222
       },
       {
@@ -18015,7 +18015,7 @@
         "low": 2,
         "mid": 6.13,
         "high": 25.5,
-        "market": 4.85,
+        "market": 4.88,
         "productId": 585224
       },
       {
@@ -18035,7 +18035,7 @@
         "low": 8.15,
         "mid": 12,
         "high": 50,
-        "market": 8.96,
+        "market": 9,
         "productId": 585226
       },
       {
@@ -18133,7 +18133,7 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 0.06,
-        "mid": 0.2,
+        "mid": 0.21,
         "high": 1,
         "market": 0.15,
         "productId": 585236
@@ -18223,10 +18223,10 @@
       {
         "set": "Arthurian Legends",
         "finish": "Normal",
-        "low": 19.5,
-        "mid": 24.93,
+        "low": 20.49,
+        "mid": 26.66,
         "high": 98.99,
-        "market": 22.44,
+        "market": 22.18,
         "productId": 585245
       },
       {
@@ -18315,7 +18315,7 @@
         "low": 118.66,
         "mid": 119.98,
         "high": 139.99,
-        "market": 117.72,
+        "market": 117.93,
         "productId": 585254
       }
     ],
@@ -18324,7 +18324,7 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 0.16,
-        "mid": 0.42,
+        "mid": 0.41,
         "high": 2.99,
         "market": 0.34,
         "productId": 585255
@@ -18355,7 +18355,7 @@
         "low": 3.67,
         "mid": 4.7,
         "high": 33.98,
-        "market": 4.39,
+        "market": 4.33,
         "productId": 585258
       }
     ],
@@ -18415,7 +18415,7 @@
         "low": 0.95,
         "mid": 1.24,
         "high": 5,
-        "market": 1.19,
+        "market": 1.2,
         "productId": 585264
       }
     ],
@@ -18444,9 +18444,9 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 0.13,
-        "mid": 0.45,
+        "mid": 0.46,
         "high": 3.35,
-        "market": 0.34,
+        "market": 0.35,
         "productId": 585267
       },
       {
@@ -18553,7 +18553,7 @@
         "set": "Arthurian Legends",
         "finish": "Foil",
         "low": 4.21,
-        "mid": 5.3,
+        "mid": 5.32,
         "high": 23,
         "market": 5.13,
         "productId": 585278
@@ -18706,7 +18706,7 @@
         "low": 45.29,
         "mid": 52.94,
         "high": 75,
-        "market": 49.76,
+        "market": 49.54,
         "productId": 585293
       },
       {
@@ -18764,7 +18764,7 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 0.4,
-        "mid": 1,
+        "mid": 1.04,
         "high": 2.35,
         "market": 0.98,
         "productId": 585299
@@ -18795,7 +18795,7 @@
         "low": 6.5,
         "mid": 11.15,
         "high": 18,
-        "market": 7.46,
+        "market": 7.22,
         "productId": 585302
       }
     ],
@@ -18895,7 +18895,7 @@
         "low": 15,
         "mid": 18,
         "high": 29.99,
-        "market": 17.5,
+        "market": 17.42,
         "productId": 585311
       },
       {
@@ -19055,7 +19055,7 @@
         "low": 7.85,
         "mid": 8.99,
         "high": 18,
-        "market": 8.44,
+        "market": 8.83,
         "productId": 585327
       }
     ],
@@ -19115,7 +19115,7 @@
         "low": 3.99,
         "mid": 5,
         "high": 20,
-        "market": 4.67,
+        "market": 4.65,
         "productId": 585333
       }
     ],
@@ -19146,7 +19146,7 @@
         "low": 3,
         "mid": 5,
         "high": 29.98,
-        "market": 3.24,
+        "market": 3.27,
         "productId": 585336
       },
       {
@@ -19195,7 +19195,7 @@
         "low": 69.5,
         "mid": 89.99,
         "high": 130,
-        "market": 60.63,
+        "market": 61.82,
         "productId": 585341
       }
     ],
@@ -19235,7 +19235,7 @@
         "low": 4.45,
         "mid": 6.2,
         "high": 18.5,
-        "market": 6.19,
+        "market": 6.07,
         "productId": 585345
       }
     ],
@@ -19246,7 +19246,7 @@
         "low": 90.05,
         "mid": 95.57,
         "high": 150,
-        "market": 94.74,
+        "market": 94.76,
         "productId": 585346
       },
       {
@@ -19366,7 +19366,7 @@
         "low": 0.05,
         "mid": 0.25,
         "high": 1,
-        "market": 0.2,
+        "market": 0.19,
         "productId": 585358
       },
       {
@@ -19424,7 +19424,7 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 0.97,
-        "mid": 1.65,
+        "mid": 1.68,
         "high": 2.5,
         "market": 1.79,
         "productId": 585364
@@ -19575,7 +19575,7 @@
         "low": 1.11,
         "mid": 1.7,
         "high": 19.54,
-        "market": 1.3,
+        "market": 1.31,
         "productId": 585379
       }
     ],
@@ -19606,7 +19606,7 @@
         "low": 14.3,
         "mid": 16.44,
         "high": 29.99,
-        "market": 15.23,
+        "market": 15.21,
         "productId": 585382
       },
       {
@@ -19746,7 +19746,7 @@
         "low": 6,
         "mid": 10,
         "high": 29.99,
-        "market": 8.27,
+        "market": 8.53,
         "productId": 585396
       },
       {
@@ -19766,7 +19766,7 @@
         "low": 0.1,
         "mid": 0.33,
         "high": 3.35,
-        "market": 0.25,
+        "market": 0.26,
         "productId": 585398
       },
       {
@@ -19792,7 +19792,7 @@
       {
         "set": "Arthurian Legends",
         "finish": "Foil",
-        "low": 909.17,
+        "low": 910.48,
         "mid": 1150,
         "high": 2400,
         "market": 496,
@@ -19926,7 +19926,7 @@
         "low": 0.07,
         "mid": 0.22,
         "high": 1,
-        "market": 0.18,
+        "market": 0.17,
         "productId": 585414
       },
       {
@@ -20015,7 +20015,7 @@
         "low": 5,
         "mid": 7.88,
         "high": 60,
-        "market": 7.8,
+        "market": 7.72,
         "productId": 585423
       }
     ],
@@ -20026,7 +20026,7 @@
         "low": 0.12,
         "mid": 0.31,
         "high": 9.99,
-        "market": 0.31,
+        "market": 0.32,
         "productId": 585424
       },
       {
@@ -20106,7 +20106,7 @@
         "low": 13.62,
         "mid": 17.13,
         "high": 49.95,
-        "market": 14.4,
+        "market": 14.48,
         "productId": 585432
       },
       {
@@ -20126,7 +20126,7 @@
         "low": 2,
         "mid": 3.74,
         "high": 18.79,
-        "market": 3.39,
+        "market": 3.41,
         "productId": 585434
       },
       {
@@ -20206,7 +20206,7 @@
         "low": 0.13,
         "mid": 0.38,
         "high": 13.99,
-        "market": 0.34,
+        "market": 0.33,
         "productId": 585442
       },
       {
@@ -20306,7 +20306,7 @@
         "low": 5.33,
         "mid": 7.02,
         "high": 29.99,
-        "market": 6.17,
+        "market": 6.16,
         "productId": 585452
       },
       {
@@ -20435,7 +20435,7 @@
         "low": 2.9,
         "mid": 3.72,
         "high": 5.5,
-        "market": 3.72,
+        "market": 3.65,
         "productId": 585465
       }
     ],
@@ -20586,7 +20586,7 @@
         "low": 0.25,
         "mid": 0.99,
         "high": 11.25,
-        "market": 0.9,
+        "market": 0.91,
         "productId": 585480
       }
     ],
@@ -20597,7 +20597,7 @@
         "low": 0.08,
         "mid": 0.25,
         "high": 1,
-        "market": 0.17,
+        "market": 0.18,
         "productId": 585481
       },
       {
@@ -20606,7 +20606,7 @@
         "low": 2.4,
         "mid": 3.5,
         "high": 24,
-        "market": 3.41,
+        "market": 3.42,
         "productId": 585482
       }
     ],
@@ -20617,7 +20617,7 @@
         "low": 0.19,
         "mid": 0.65,
         "high": 2.69,
-        "market": 0.53,
+        "market": 0.54,
         "productId": 585483
       },
       {
@@ -20626,7 +20626,7 @@
         "low": 5.5,
         "mid": 7.1,
         "high": 12.5,
-        "market": 6.02,
+        "market": 6.04,
         "productId": 585484
       }
     ],
@@ -20637,7 +20637,7 @@
         "low": 0.02,
         "mid": 0.2,
         "high": 1.49,
-        "market": 0.12,
+        "market": 0.13,
         "productId": 585485
       },
       {
@@ -20657,7 +20657,7 @@
         "low": 0.12,
         "mid": 0.25,
         "high": 14.35,
-        "market": 0.21,
+        "market": 0.2,
         "productId": 585487
       }
     ],
@@ -20699,7 +20699,7 @@
         "low": 0.09,
         "mid": 0.27,
         "high": 8.73,
-        "market": 0.23,
+        "market": 0.22,
         "productId": 585491
       }
     ],
@@ -20730,7 +20730,7 @@
         "low": 19.25,
         "mid": 24.45,
         "high": 40,
-        "market": 21.18,
+        "market": 21.17,
         "productId": 585494
       },
       {
@@ -20770,7 +20770,7 @@
         "low": 3.5,
         "mid": 4.9,
         "high": 25,
-        "market": 4.7,
+        "market": 4.73,
         "productId": 585498
       },
       {
@@ -20790,7 +20790,7 @@
         "low": 17.79,
         "mid": 20,
         "high": 45,
-        "market": 19.29,
+        "market": 19.25,
         "productId": 585500
       },
       {
@@ -20810,7 +20810,7 @@
         "low": 20,
         "mid": 22.2,
         "high": 34.48,
-        "market": 21.77,
+        "market": 21.67,
         "productId": 585502
       },
       {
@@ -20819,7 +20819,7 @@
         "low": 119,
         "mid": 119,
         "high": 119,
-        "market": 73.82,
+        "market": 76.83,
         "productId": 585503
       }
     ],
@@ -20850,7 +20850,7 @@
         "low": 4.53,
         "mid": 6,
         "high": 12,
-        "market": 5.04,
+        "market": 5.01,
         "productId": 585506
       },
       {
@@ -20890,7 +20890,7 @@
         "low": 0.25,
         "mid": 0.45,
         "high": 3.99,
-        "market": 0.32,
+        "market": 0.31,
         "productId": 585510
       },
       {
@@ -20899,7 +20899,7 @@
         "low": 7,
         "mid": 7.95,
         "high": 24.85,
-        "market": 8.35,
+        "market": 8.3,
         "productId": 585511
       }
     ],
@@ -21010,7 +21010,7 @@
         "low": 0.05,
         "mid": 0.2,
         "high": 1,
-        "market": 0.16,
+        "market": 0.17,
         "productId": 585522
       },
       {
@@ -21079,7 +21079,7 @@
         "low": 8.94,
         "mid": 12.42,
         "high": 16,
-        "market": 10.34,
+        "market": 10.44,
         "productId": 585529
       }
     ],
@@ -21099,7 +21099,7 @@
         "low": 5.08,
         "mid": 6.69,
         "high": 39.99,
-        "market": 6.39,
+        "market": 6.36,
         "productId": 585531
       }
     ],
@@ -21110,14 +21110,14 @@
         "low": 2.8,
         "mid": 4.95,
         "high": 15,
-        "market": 3.85,
+        "market": 3.83,
         "productId": 585532
       },
       {
         "set": "Arthurian Legends",
         "finish": "Foil",
         "low": 37.76,
-        "mid": 53.86,
+        "mid": 53.23,
         "high": 100,
         "market": 52.56,
         "productId": 585533
@@ -21128,7 +21128,7 @@
         "set": "Arthurian Legends",
         "finish": "Normal",
         "low": 0.36,
-        "mid": 0.58,
+        "mid": 0.57,
         "high": 2.86,
         "market": 0.42,
         "productId": 585534
@@ -21219,7 +21219,7 @@
         "low": 1,
         "mid": 1.66,
         "high": 18,
-        "market": 1.26,
+        "market": 1.23,
         "productId": 585543
       }
     ],
@@ -21250,7 +21250,7 @@
         "low": 13.25,
         "mid": 16.27,
         "high": 29.99,
-        "market": 13.95,
+        "market": 13.99,
         "productId": 585546
       },
       {
@@ -21359,7 +21359,7 @@
         "low": 0.05,
         "mid": 0.21,
         "high": 1,
-        "market": 0.16,
+        "market": 0.15,
         "productId": 585556
       },
       {
@@ -21439,7 +21439,7 @@
         "low": 1.98,
         "mid": 2.49,
         "high": 4.99,
-        "market": 2.41,
+        "market": 2.42,
         "productId": 585564
       },
       {
@@ -21508,7 +21508,7 @@
         "low": 1.45,
         "mid": 2,
         "high": 23,
-        "market": 2,
+        "market": 1.99,
         "productId": 585571
       }
     ],
@@ -21548,7 +21548,7 @@
         "low": 1.95,
         "mid": 5,
         "high": 25,
-        "market": 2.08,
+        "market": 2.1,
         "productId": 585575
       }
     ],
@@ -21656,7 +21656,7 @@
         "low": 34.75,
         "mid": 41.86,
         "high": 48.96,
-        "market": null,
+        "market": 34.75,
         "productId": 668757
       }
     ],
@@ -21725,7 +21725,7 @@
         "low": 1.5,
         "mid": 3.22,
         "high": 19.96,
-        "market": 2.57,
+        "market": 2.5,
         "productId": 667301
       }
     ],
@@ -21754,7 +21754,7 @@
         "low": 5.99,
         "mid": 7.97,
         "high": 39.99,
-        "market": 7.1,
+        "market": 7.12,
         "productId": 667293
       }
     ],
@@ -21783,7 +21783,7 @@
         "low": 14.5,
         "mid": 18,
         "high": 44,
-        "market": 16.89,
+        "market": 16.72,
         "productId": 667473
       }
     ],
@@ -21823,7 +21823,7 @@
         "low": 29.99,
         "mid": 39.99,
         "high": 100,
-        "market": 35.75,
+        "market": 36.22,
         "productId": 656589
       }
     ],
@@ -21834,7 +21834,7 @@
         "low": 5.11,
         "mid": 7.07,
         "high": 10.48,
-        "market": 7.93,
+        "market": 7.84,
         "productId": 656590
       }
     ],
@@ -21843,9 +21843,9 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 160.99,
-        "mid": 182,
+        "mid": 179.9,
         "high": 449,
-        "market": 172.91,
+        "market": 173.86,
         "productId": 656591
       }
     ],
@@ -21853,9 +21853,9 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 1000,
-        "mid": 1037,
-        "high": 1100,
+        "low": 1020,
+        "mid": 1049.49,
+        "high": 1300,
         "market": 927.66,
         "productId": 656592
       }
@@ -21927,7 +21927,7 @@
         "low": 0.2,
         "mid": 0.45,
         "high": 2.34,
-        "market": 0.38,
+        "market": 0.39,
         "productId": 664074
       },
       {
@@ -21947,7 +21947,7 @@
         "low": 0.22,
         "mid": 0.4,
         "high": 3.04,
-        "market": 0.31,
+        "market": 0.32,
         "productId": 666915
       },
       {
@@ -21965,9 +21965,9 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 6.99,
-        "mid": 8.4,
+        "mid": 8.38,
         "high": 69.99,
-        "market": 7.75,
+        "market": 7.79,
         "productId": 666917
       },
       {
@@ -22067,7 +22067,7 @@
         "low": 0.44,
         "mid": 0.56,
         "high": 4.47,
-        "market": 0.58,
+        "market": 0.59,
         "productId": 666928
       },
       {
@@ -22076,7 +22076,7 @@
         "low": 10.36,
         "mid": 12.21,
         "high": 49.98,
-        "market": 10.52,
+        "market": 10.51,
         "productId": 666929
       }
     ],
@@ -22178,7 +22178,7 @@
         "low": 4.61,
         "mid": 6.71,
         "high": 50,
-        "market": 5.8,
+        "market": 5.78,
         "productId": 666940
       },
       {
@@ -22318,7 +22318,7 @@
         "low": 14.99,
         "mid": 18.5,
         "high": 29.99,
-        "market": 16.57,
+        "market": 16.59,
         "productId": 666955
       },
       {
@@ -22358,7 +22358,7 @@
         "low": 155,
         "mid": 277.5,
         "high": 400,
-        "market": 138.7,
+        "market": 140.51,
         "productId": 666960
       }
     ],
@@ -22369,7 +22369,7 @@
         "low": 12.51,
         "mid": 14,
         "high": 29.99,
-        "market": 13.39,
+        "market": 13.44,
         "productId": 666961
       },
       {
@@ -22407,9 +22407,9 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 3.48,
-        "mid": 4.48,
+        "mid": 4.46,
         "high": 35,
-        "market": 4.06,
+        "market": 4.07,
         "productId": 666965
       },
       {
@@ -22429,7 +22429,7 @@
         "low": 7.45,
         "mid": 10.72,
         "high": 40,
-        "market": 7.57,
+        "market": 7.54,
         "productId": 666967
       },
       {
@@ -22447,7 +22447,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 16,
-        "mid": 26.48,
+        "mid": 30,
         "high": 39.99,
         "market": 13.99,
         "productId": 666969
@@ -22469,7 +22469,7 @@
         "low": 0.35,
         "mid": 0.5,
         "high": 1.66,
-        "market": 0.39,
+        "market": 0.4,
         "productId": 666971
       },
       {
@@ -22560,7 +22560,7 @@
         "low": 34.95,
         "mid": 35,
         "high": 79.99,
-        "market": 22.7,
+        "market": 23.41,
         "productId": 666981
       },
       {
@@ -22640,7 +22640,7 @@
         "low": 0.12,
         "mid": 0.25,
         "high": 1,
-        "market": 0.21,
+        "market": 0.2,
         "productId": 666989
       },
       {
@@ -22660,7 +22660,7 @@
         "low": 0.82,
         "mid": 1.25,
         "high": 6.1,
-        "market": 1.09,
+        "market": 1.13,
         "productId": 666991
       },
       {
@@ -22740,7 +22740,7 @@
         "low": 14.49,
         "mid": 19,
         "high": 49.99,
-        "market": 14.98,
+        "market": 14.96,
         "productId": 667000
       },
       {
@@ -22780,7 +22780,7 @@
         "low": 0.2,
         "mid": 0.5,
         "high": 20,
-        "market": 0.44,
+        "market": 0.45,
         "productId": 667004
       },
       {
@@ -22800,7 +22800,7 @@
         "low": 0.32,
         "mid": 0.5,
         "high": 2.97,
-        "market": 0.42,
+        "market": 0.41,
         "productId": 667006
       },
       {
@@ -22818,9 +22818,9 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 3.68,
-        "mid": 4.5,
+        "mid": 4.63,
         "high": 18.48,
-        "market": 4.08,
+        "market": 4.03,
         "productId": 667008
       },
       {
@@ -22840,7 +22840,7 @@
         "low": 5.39,
         "mid": 8.3,
         "high": 28.64,
-        "market": 7.29,
+        "market": 7.42,
         "productId": 667010
       },
       {
@@ -23009,7 +23009,7 @@
         "low": 0.99,
         "mid": 1.9,
         "high": 10,
-        "market": 1.37,
+        "market": 1.34,
         "productId": 667027
       }
     ],
@@ -23060,7 +23060,7 @@
         "low": 4.5,
         "mid": 6.26,
         "high": 39.99,
-        "market": 5.23,
+        "market": 5.25,
         "productId": 667032
       },
       {
@@ -23100,7 +23100,7 @@
         "low": 1.5,
         "mid": 2.99,
         "high": 9.98,
-        "market": 1.87,
+        "market": 1.93,
         "productId": 667036
       },
       {
@@ -23160,7 +23160,7 @@
         "low": 0.05,
         "mid": 0.2,
         "high": 1,
-        "market": 0.13,
+        "market": 0.14,
         "productId": 667042
       },
       {
@@ -23220,7 +23220,7 @@
         "low": 4.85,
         "mid": 6.88,
         "high": 24.29,
-        "market": 5.1,
+        "market": 5.14,
         "productId": 667048
       },
       {
@@ -23240,7 +23240,7 @@
         "low": 0.4,
         "mid": 1,
         "high": 2.78,
-        "market": 0.79,
+        "market": 0.83,
         "productId": 667050
       },
       {
@@ -23320,7 +23320,7 @@
         "low": 4.44,
         "mid": 5.5,
         "high": 15.48,
-        "market": 4.66,
+        "market": 4.75,
         "productId": 667058
       },
       {
@@ -23428,7 +23428,7 @@
         "finish": "Foil",
         "low": 99.98,
         "mid": 100.5,
-        "high": 129.06,
+        "high": 130.37,
         "market": 99.98,
         "productId": 667069
       }
@@ -23518,7 +23518,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.05,
-        "mid": 0.21,
+        "mid": 0.22,
         "high": 1.43,
         "market": 0.14,
         "productId": 667078
@@ -23549,7 +23549,7 @@
         "low": 1.49,
         "mid": 1.9,
         "high": 12.29,
-        "market": 1.87,
+        "market": 1.9,
         "productId": 667081
       }
     ],
@@ -23558,7 +23558,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.1,
-        "mid": 0.34,
+        "mid": 0.33,
         "high": 1.5,
         "market": 0.3,
         "productId": 667082
@@ -23580,7 +23580,7 @@
         "low": 0.15,
         "mid": 0.42,
         "high": 1.61,
-        "market": 0.33,
+        "market": 0.32,
         "productId": 667084
       },
       {
@@ -23700,7 +23700,7 @@
         "low": 0.04,
         "mid": 0.2,
         "high": 1,
-        "market": 0.13,
+        "market": 0.12,
         "productId": 667096
       },
       {
@@ -23709,7 +23709,7 @@
         "low": 5.91,
         "mid": 7.29,
         "high": 10,
-        "market": 6.86,
+        "market": 6.82,
         "productId": 667097
       }
     ],
@@ -23738,7 +23738,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.25,
-        "mid": 0.41,
+        "mid": 0.4,
         "high": 4.99,
         "market": 0.31,
         "productId": 667100
@@ -23809,7 +23809,7 @@
         "low": 2.23,
         "mid": 3.12,
         "high": 19.87,
-        "market": 2.63,
+        "market": 2.67,
         "productId": 667107
       }
     ],
@@ -23820,7 +23820,7 @@
         "low": 2.79,
         "mid": 3.95,
         "high": 15,
-        "market": 3.71,
+        "market": 3.7,
         "productId": 667108
       },
       {
@@ -23840,7 +23840,7 @@
         "low": 3.01,
         "mid": 4.99,
         "high": 41,
-        "market": 3.97,
+        "market": 3.91,
         "productId": 667110
       },
       {
@@ -23920,7 +23920,7 @@
         "low": 4.74,
         "mid": 7,
         "high": 38.99,
-        "market": 5.77,
+        "market": 5.75,
         "productId": 667118
       },
       {
@@ -23938,7 +23938,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 4.29,
-        "mid": 5.19,
+        "mid": 5.02,
         "high": 9.99,
         "market": 4.64,
         "productId": 667120
@@ -23978,7 +23978,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 1.24,
-        "mid": 1.55,
+        "mid": 1.56,
         "high": 9.99,
         "market": 1.4,
         "productId": 667124
@@ -24020,7 +24020,7 @@
         "low": 0.06,
         "mid": 0.24,
         "high": 1,
-        "market": 0.17,
+        "market": 0.18,
         "productId": 667128
       },
       {
@@ -24109,7 +24109,7 @@
         "low": 5.08,
         "mid": 5.94,
         "high": 25,
-        "market": 5.08,
+        "market": 5.13,
         "productId": 667137
       }
     ],
@@ -24138,7 +24138,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.25,
-        "mid": 0.55,
+        "mid": 0.56,
         "high": 1.98,
         "market": 0.46,
         "productId": 667140
@@ -24180,7 +24180,7 @@
         "low": 4.01,
         "mid": 5,
         "high": 19.99,
-        "market": 4.41,
+        "market": 4.4,
         "productId": 667144
       },
       {
@@ -24238,7 +24238,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.2,
-        "mid": 0.49,
+        "mid": 0.48,
         "high": 1.98,
         "market": 0.34,
         "productId": 667150
@@ -24260,7 +24260,7 @@
         "low": 0.38,
         "mid": 0.65,
         "high": 4.51,
-        "market": 0.6,
+        "market": 0.59,
         "productId": 667152
       },
       {
@@ -24369,7 +24369,7 @@
         "low": 0.81,
         "mid": 1.89,
         "high": 16,
-        "market": 1.5,
+        "market": 1.49,
         "productId": 667163
       }
     ],
@@ -24440,7 +24440,7 @@
         "low": 39.99,
         "mid": 52.6,
         "high": 70,
-        "market": 30.71,
+        "market": 31.14,
         "productId": 667170
       },
       {
@@ -24600,7 +24600,7 @@
         "low": 0.49,
         "mid": 1.1,
         "high": 4.99,
-        "market": 0.96,
+        "market": 1.12,
         "productId": 667186
       },
       {
@@ -24620,7 +24620,7 @@
         "low": 0.08,
         "mid": 0.25,
         "high": 1.47,
-        "market": 0.14,
+        "market": 0.15,
         "productId": 667188
       },
       {
@@ -24709,7 +24709,7 @@
         "low": 3.95,
         "mid": 6.24,
         "high": 15,
-        "market": 6.25,
+        "market": 6.16,
         "productId": 667197
       }
     ],
@@ -24749,7 +24749,7 @@
         "low": 1.99,
         "mid": 3.31,
         "high": 31.99,
-        "market": 2.39,
+        "market": 2.42,
         "productId": 667201
       }
     ],
@@ -24867,7 +24867,7 @@
         "set": "Gothic",
         "finish": "Foil",
         "low": 6.69,
-        "mid": 12.61,
+        "mid": 12.06,
         "high": 49.99,
         "market": 6.69,
         "productId": 667213
@@ -24900,7 +24900,7 @@
         "low": 1.5,
         "mid": 3.21,
         "high": 45,
-        "market": 2.68,
+        "market": 2.71,
         "productId": 667218
       },
       {
@@ -24960,7 +24960,7 @@
         "low": 0.02,
         "mid": 0.19,
         "high": 1,
-        "market": 0.11,
+        "market": 0.1,
         "productId": 667224
       },
       {
@@ -24980,7 +24980,7 @@
         "low": 0.38,
         "mid": 0.73,
         "high": 9.99,
-        "market": 0.62,
+        "market": 0.61,
         "productId": 667226
       },
       {
@@ -25020,7 +25020,7 @@
         "low": 0.02,
         "mid": 0.18,
         "high": 0.69,
-        "market": 0.08,
+        "market": 0.09,
         "productId": 667230
       },
       {
@@ -25047,7 +25047,7 @@
         "set": "Gothic",
         "finish": "Foil",
         "low": 2.17,
-        "mid": 3.02,
+        "mid": 3.04,
         "high": 17.99,
         "market": 2.8,
         "productId": 667233
@@ -25080,7 +25080,7 @@
         "low": 0.02,
         "mid": 0.2,
         "high": 1,
-        "market": 0.08,
+        "market": 0.07,
         "productId": 667236
       },
       {
@@ -25291,7 +25291,7 @@
         "low": 0.04,
         "mid": 0.2,
         "high": 1,
-        "market": 0.12,
+        "market": 0.13,
         "productId": 667258
       },
       {
@@ -25300,7 +25300,7 @@
         "low": 20,
         "mid": 21,
         "high": 21.99,
-        "market": 12.64,
+        "market": 12.56,
         "productId": 667259
       }
     ],
@@ -25371,7 +25371,7 @@
         "low": 0.08,
         "mid": 0.24,
         "high": 1,
-        "market": 0.19,
+        "market": 0.17,
         "productId": 667266
       },
       {
@@ -25391,7 +25391,7 @@
         "low": 6.1,
         "mid": 8.47,
         "high": 29.99,
-        "market": 7.52,
+        "market": 7.45,
         "productId": 667268
       },
       {
@@ -25439,8 +25439,8 @@
         "finish": "Foil",
         "low": 7.74,
         "mid": 8.93,
-        "high": 43.96,
-        "market": 8.85,
+        "high": 45.27,
+        "market": 8.86,
         "productId": 667273
       }
     ],
@@ -25520,7 +25520,7 @@
         "low": 1.4,
         "mid": 1.98,
         "high": 14.97,
-        "market": 1.98,
+        "market": 1.97,
         "productId": 667281
       }
     ],
@@ -25551,7 +25551,7 @@
         "low": 0.02,
         "mid": 0.19,
         "high": 1,
-        "market": 0.11,
+        "market": 0.1,
         "productId": 667284
       },
       {
@@ -25660,7 +25660,7 @@
         "low": 1.09,
         "mid": 1.99,
         "high": 48.89,
-        "market": 1.3,
+        "market": 1.27,
         "productId": 667297
       }
     ],
@@ -25711,7 +25711,7 @@
         "low": 0.29,
         "mid": 0.6,
         "high": 9.99,
-        "market": 0.47,
+        "market": 0.46,
         "productId": 667304
       },
       {
@@ -25760,7 +25760,7 @@
         "low": 3.25,
         "mid": 3.78,
         "high": 5.24,
-        "market": 3.84,
+        "market": 3.83,
         "productId": 667309
       }
     ],
@@ -25771,7 +25771,7 @@
         "low": 4.67,
         "mid": 5.89,
         "high": 20,
-        "market": 4.72,
+        "market": 4.74,
         "productId": 667310
       },
       {
@@ -25840,7 +25840,7 @@
         "low": 7.98,
         "mid": 13.64,
         "high": 20,
-        "market": 9.35,
+        "market": 9.24,
         "productId": 667317
       }
     ],
@@ -26071,7 +26071,7 @@
         "low": 4.72,
         "mid": 5.4,
         "high": 16.47,
-        "market": 4.9,
+        "market": 4.92,
         "productId": 667340
       },
       {
@@ -26089,7 +26089,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.25,
-        "mid": 0.43,
+        "mid": 0.44,
         "high": 5.32,
         "market": 0.35,
         "productId": 667342
@@ -26109,7 +26109,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 2.99,
-        "mid": 4.92,
+        "mid": 4.93,
         "high": 23.28,
         "market": 4.17,
         "productId": 667344
@@ -26329,7 +26329,7 @@
         "set": "Gothic",
         "finish": "Foil",
         "low": 96,
-        "mid": 99.91,
+        "mid": 99.95,
         "high": 106.4,
         "market": 106.32,
         "productId": 667367
@@ -26342,7 +26342,7 @@
         "low": 0.25,
         "mid": 0.49,
         "high": 1.61,
-        "market": 0.38,
+        "market": 0.37,
         "productId": 667368
       },
       {
@@ -26362,7 +26362,7 @@
         "low": 17.86,
         "mid": 22,
         "high": 30,
-        "market": 19.81,
+        "market": 19.95,
         "productId": 667370
       },
       {
@@ -26379,10 +26379,10 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 60,
-        "mid": 73.69,
+        "low": 48.68,
+        "mid": 69.06,
         "high": 128.84,
-        "market": 48.68,
+        "market": 49.34,
         "productId": 667372
       },
       {
@@ -26411,7 +26411,7 @@
         "low": 0.99,
         "mid": 1.66,
         "high": 10,
-        "market": 1.53,
+        "market": 1.52,
         "productId": 667375
       }
     ],
@@ -26500,9 +26500,9 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 3.15,
-        "mid": 4.21,
+        "mid": 4.31,
         "high": 39.95,
-        "market": 3.63,
+        "market": 3.62,
         "productId": 667384
       },
       {
@@ -26520,9 +26520,9 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.93,
-        "mid": 1.36,
+        "mid": 1.37,
         "high": 3.36,
-        "market": 1.1,
+        "market": 1.16,
         "productId": 667386
       },
       {
@@ -26551,7 +26551,7 @@
         "low": 11.81,
         "mid": 18.99,
         "high": 39.99,
-        "market": 11.78,
+        "market": 11.85,
         "productId": 667389
       }
     ],
@@ -26602,7 +26602,7 @@
         "low": 4.54,
         "mid": 6,
         "high": 39.99,
-        "market": 2.81,
+        "market": 2.98,
         "productId": 667394
       },
       {
@@ -26662,7 +26662,7 @@
         "low": 53.99,
         "mid": 64.85,
         "high": 119.99,
-        "market": 45.14,
+        "market": 45.66,
         "productId": 667400
       }
     ],
@@ -26673,7 +26673,7 @@
         "low": 4.42,
         "mid": 5,
         "high": 40.4,
-        "market": 4.75,
+        "market": 4.78,
         "productId": 667402
       },
       {
@@ -26753,7 +26753,7 @@
         "low": 3.75,
         "mid": 4.99,
         "high": 49.99,
-        "market": 4.3,
+        "market": 4.38,
         "productId": 667410
       },
       {
@@ -26773,7 +26773,7 @@
         "low": 0.72,
         "mid": 0.95,
         "high": 2.13,
-        "market": 0.83,
+        "market": 0.84,
         "productId": 667412
       },
       {
@@ -26790,7 +26790,7 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 0.03,
+        "low": 0.04,
         "mid": 0.2,
         "high": 1,
         "market": 0.12,
@@ -26813,7 +26813,7 @@
         "low": 18.9,
         "mid": 20.05,
         "high": 24.99,
-        "market": 20.15,
+        "market": 20.1,
         "productId": 667416
       },
       {
@@ -27173,7 +27173,7 @@
         "low": 0.2,
         "mid": 0.43,
         "high": 1.56,
-        "market": 0.36,
+        "market": 0.35,
         "productId": 667452
       },
       {
@@ -27213,7 +27213,7 @@
         "low": 1.33,
         "mid": 2.99,
         "high": 4.97,
-        "market": 1.46,
+        "market": 1.96,
         "productId": 667456
       },
       {
@@ -27222,7 +27222,7 @@
         "low": 6.92,
         "mid": 10,
         "high": 49.99,
-        "market": 7.39,
+        "market": 7.35,
         "productId": 667457
       }
     ],
@@ -27313,7 +27313,7 @@
         "low": 0.05,
         "mid": 0.2,
         "high": 1,
-        "market": 0.13,
+        "market": 0.12,
         "productId": 667466
       },
       {
@@ -27333,7 +27333,7 @@
         "low": 5.5,
         "mid": 6.89,
         "high": 32,
-        "market": 5.51,
+        "market": 5.46,
         "productId": 667468
       },
       {
@@ -27353,7 +27353,7 @@
         "low": 0.1,
         "mid": 0.54,
         "high": 2.88,
-        "market": 0.35,
+        "market": 0.33,
         "productId": 667470
       },
       {
@@ -27362,7 +27362,7 @@
         "low": 5.5,
         "mid": 7,
         "high": 19.99,
-        "market": 5.92,
+        "market": 5.97,
         "productId": 667471
       }
     ],
@@ -27513,7 +27513,7 @@
         "low": 0.05,
         "mid": 0.19,
         "high": 1,
-        "market": 0.09,
+        "market": 0.08,
         "productId": 667488
       },
       {
@@ -27593,7 +27593,7 @@
         "low": 0.06,
         "mid": 0.24,
         "high": 1,
-        "market": 0.2,
+        "market": 0.19,
         "productId": 667496
       },
       {
@@ -27633,7 +27633,7 @@
         "low": 0.06,
         "mid": 0.2,
         "high": 1,
-        "market": 0.1,
+        "market": 0.11,
         "productId": 667500
       },
       {
@@ -27653,7 +27653,7 @@
         "low": 0.4,
         "mid": 0.78,
         "high": 1.81,
-        "market": 0.57,
+        "market": 0.58,
         "productId": 667502
       },
       {
@@ -27753,7 +27753,7 @@
         "low": 6.77,
         "mid": 7.99,
         "high": 19.99,
-        "market": 6.91,
+        "market": 6.87,
         "productId": 667512
       },
       {
@@ -27802,7 +27802,7 @@
         "low": 23.1,
         "mid": 33.31,
         "high": 56.48,
-        "market": 23.05,
+        "market": 23.06,
         "productId": 667517
       }
     ],
@@ -27811,7 +27811,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.25,
-        "mid": 0.47,
+        "mid": 0.48,
         "high": 3.77,
         "market": 0.39,
         "productId": 667518
@@ -28013,7 +28013,7 @@
         "low": 0.03,
         "mid": 0.2,
         "high": 1,
-        "market": 0.11,
+        "market": 0.1,
         "productId": 667539
       },
       {
@@ -28033,7 +28033,7 @@
         "low": 4.7,
         "mid": 5.54,
         "high": 28.18,
-        "market": 4.65,
+        "market": 4.62,
         "productId": 667541
       },
       {
@@ -28133,7 +28133,7 @@
         "low": 0.03,
         "mid": 0.2,
         "high": 1,
-        "market": 0.09,
+        "market": 0.08,
         "productId": 667551
       },
       {
@@ -28299,7 +28299,7 @@
       {
         "set": "Gothic",
         "finish": "Foil",
-        "low": 12.99,
+        "low": 14.3,
         "mid": 15.99,
         "high": 19.99,
         "market": 14.69,
@@ -28313,7 +28313,7 @@
         "low": 1.17,
         "mid": 1.5,
         "high": 2.99,
-        "market": 1.65,
+        "market": 1.68,
         "productId": 667569
       },
       {
@@ -28353,7 +28353,7 @@
         "low": 0.04,
         "mid": 0.2,
         "high": 1,
-        "market": 0.11,
+        "market": 0.1,
         "productId": 667573
       },
       {
@@ -28413,7 +28413,7 @@
         "low": 3.99,
         "mid": 5,
         "high": 39.99,
-        "market": 4.88,
+        "market": 4.91,
         "productId": 667579
       },
       {
@@ -28513,7 +28513,7 @@
         "low": 4.09,
         "mid": 7.68,
         "high": 34.13,
-        "market": 5.49,
+        "market": 5.41,
         "productId": 667589
       },
       {
@@ -28533,7 +28533,7 @@
         "low": 10.99,
         "mid": 15,
         "high": 46.93,
-        "market": 10.41,
+        "market": 10.52,
         "productId": 667591
       },
       {
@@ -28630,7 +28630,7 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 0.03,
+        "low": 0.04,
         "mid": 0.19,
         "high": 1,
         "market": 0.08,
@@ -28640,7 +28640,7 @@
         "set": "Gothic",
         "finish": "Foil",
         "low": 5.92,
-        "mid": 7.54,
+        "mid": 7.57,
         "high": 17.98,
         "market": 6.84,
         "productId": 667602
@@ -28762,7 +28762,7 @@
         "low": 0.94,
         "mid": 1.82,
         "high": 11.99,
-        "market": 1.57,
+        "market": 1.56,
         "productId": 667614
       }
     ],
@@ -28771,7 +28771,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.2,
-        "mid": 0.45,
+        "mid": 0.44,
         "high": 2.99,
         "market": 0.39,
         "productId": 667615
@@ -28813,7 +28813,7 @@
         "low": 0.03,
         "mid": 0.2,
         "high": 1,
-        "market": 0.08,
+        "market": 0.07,
         "productId": 667619
       },
       {
@@ -28922,7 +28922,7 @@
         "low": 5,
         "mid": 8.39,
         "high": 12.5,
-        "market": 8.39,
+        "market": 8.34,
         "productId": 667631
       }
     ],
@@ -28931,7 +28931,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 3.36,
-        "mid": 4.97,
+        "mid": 4.93,
         "high": 9.99,
         "market": 4.16,
         "productId": 667632
@@ -28973,7 +28973,7 @@
         "low": 0.06,
         "mid": 0.25,
         "high": 1,
-        "market": 0.18,
+        "market": 0.19,
         "productId": 667636
       },
       {
@@ -29011,7 +29011,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 0.1,
-        "mid": 0.42,
+        "mid": 0.43,
         "high": 2.98,
         "market": 0.36,
         "productId": 667640
@@ -29173,7 +29173,7 @@
         "low": 2.5,
         "mid": 3.98,
         "high": 14.99,
-        "market": 3.35,
+        "market": 3.36,
         "productId": 667656
       },
       {
@@ -29193,7 +29193,7 @@
         "low": 0.25,
         "mid": 0.5,
         "high": 1.59,
-        "market": 0.42,
+        "market": 0.43,
         "productId": 667658
       },
       {
@@ -29233,7 +29233,7 @@
         "low": 0.2,
         "mid": 0.5,
         "high": 3.99,
-        "market": 0.44,
+        "market": 0.45,
         "productId": 667662
       },
       {
@@ -29253,7 +29253,7 @@
         "low": 0.3,
         "mid": 0.5,
         "high": 6.91,
-        "market": 0.41,
+        "market": 0.4,
         "productId": 667664
       },
       {
@@ -29333,7 +29333,7 @@
         "low": 5.43,
         "mid": 7.82,
         "high": 150,
-        "market": 6.77,
+        "market": 6.86,
         "productId": 667672
       },
       {
@@ -29424,7 +29424,7 @@
         "low": 4.9,
         "mid": 7.43,
         "high": 29.99,
-        "market": 6.23,
+        "market": 6.19,
         "productId": 667682
       },
       {
@@ -29444,7 +29444,7 @@
         "low": 17.5,
         "mid": 22.44,
         "high": 74.99,
-        "market": 18.28,
+        "market": 18.38,
         "productId": 667684
       },
       {
@@ -29513,7 +29513,7 @@
         "low": 2.93,
         "mid": 3.4,
         "high": 19.97,
-        "market": 3.4,
+        "market": 3.38,
         "productId": 667691
       }
     ],
@@ -29521,7 +29521,7 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 24.4,
+        "low": 24.3,
         "mid": 30,
         "high": 49.99,
         "market": 24.29,
@@ -29584,7 +29584,7 @@
         "low": 10.95,
         "mid": 13.19,
         "high": 20,
-        "market": 11.52,
+        "market": 11.48,
         "productId": 667698
       },
       {
@@ -29601,8 +29601,8 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 15,
-        "mid": 25.3,
+        "low": 20,
+        "mid": 27.65,
         "high": 99.99,
         "market": 15.86,
         "productId": 667700
@@ -29672,10 +29672,10 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 39.99,
-        "mid": 39.99,
+        "low": 30,
+        "mid": 35,
         "high": 39.99,
-        "market": 13.19,
+        "market": 14.01,
         "productId": 667708
       }
     ],
@@ -29686,7 +29686,7 @@
         "low": 18.93,
         "mid": 21.75,
         "high": 39.99,
-        "market": 19.04,
+        "market": 19.07,
         "productId": 667710
       },
       {
@@ -29813,7 +29813,7 @@
         "set": "Gothic",
         "finish": "Foil",
         "low": 23.6,
-        "mid": 44.45,
+        "mid": 39.9,
         "high": 99.99,
         "market": 23.58,
         "productId": 667723
@@ -29886,7 +29886,7 @@
         "low": 0.2,
         "mid": 0.46,
         "high": 5.45,
-        "market": 0.44,
+        "market": 0.51,
         "productId": 667730
       },
       {
@@ -29926,7 +29926,7 @@
         "low": 0.05,
         "mid": 0.2,
         "high": 1,
-        "market": 0.11,
+        "market": 0.12,
         "productId": 667734
       },
       {
@@ -30023,7 +30023,7 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 0.03,
+        "low": 0.04,
         "mid": 0.2,
         "high": 1,
         "market": 0.11,
@@ -30064,7 +30064,7 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 3.5,
-        "mid": 5.58,
+        "mid": 5.75,
         "high": 45,
         "market": 4.66,
         "productId": 667748
@@ -30115,7 +30115,7 @@
         "low": 0.5,
         "mid": 1.77,
         "high": 6,
-        "market": 1.2,
+        "market": 1.17,
         "productId": 667753
       }
     ],
@@ -30126,7 +30126,7 @@
         "low": 0.69,
         "mid": 0.99,
         "high": 3.99,
-        "market": 0.98,
+        "market": 0.97,
         "productId": 667754
       },
       {
@@ -30135,7 +30135,7 @@
         "low": 15.25,
         "mid": 23.47,
         "high": 90.44,
-        "market": 16.21,
+        "market": 16.09,
         "productId": 667755
       }
     ],
@@ -30186,7 +30186,7 @@
         "low": 0.05,
         "mid": 0.24,
         "high": 1,
-        "market": 0.13,
+        "market": 0.14,
         "productId": 667760
       },
       {
@@ -30195,7 +30195,7 @@
         "low": 2.4,
         "mid": 2.93,
         "high": 14.47,
-        "market": 2.98,
+        "market": 2.96,
         "productId": 667761
       }
     ],
@@ -30344,9 +30344,9 @@
         "set": "Gothic",
         "finish": "Normal",
         "low": 9.99,
-        "mid": 15,
+        "mid": 14.98,
         "high": 49.99,
-        "market": 10.95,
+        "market": 11.02,
         "productId": 667776
       },
       {
@@ -30366,7 +30366,7 @@
         "low": 1.66,
         "mid": 2.72,
         "high": 10,
-        "market": 2.3,
+        "market": 2.27,
         "productId": 667778
       },
       {
@@ -30446,7 +30446,7 @@
         "low": 0.13,
         "mid": 0.25,
         "high": 1,
-        "market": 0.23,
+        "market": 0.21,
         "productId": 667786
       },
       {
@@ -30463,7 +30463,7 @@
       {
         "set": "Gothic",
         "finish": "Normal",
-        "low": 0.03,
+        "low": 0.04,
         "mid": 0.2,
         "high": 1,
         "market": 0.07,
@@ -30599,7 +30599,7 @@
         "set": "Dragonlord",
         "finish": "Normal",
         "low": 20,
-        "mid": 22.3,
+        "mid": 21.65,
         "high": 25.22,
         "market": 14.36,
         "productId": 647365
@@ -30718,7 +30718,7 @@
       {
         "set": "Dragonlord",
         "finish": "Foil",
-        "low": 230.6,
+        "low": 218.29,
         "mid": 255.5,
         "high": 296.06,
         "market": 249.3,
@@ -30743,7 +30743,7 @@
         "low": 6.44,
         "mid": 9.95,
         "high": 20,
-        "market": 6.27,
+        "market": 6.25,
         "productId": 647359
       },
       {
