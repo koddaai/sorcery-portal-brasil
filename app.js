@@ -14537,14 +14537,14 @@ async function fetchCollectionFromCloudSilently() {
             });
 
             // Save to localStorage
-            saveCollection();
+            saveToStorage();
 
             // Update UI
             updateCollectionStats();
             refreshCurrentView();
 
             console.log(`[AutoSync] Loaded ${cloudRecords.length} cards from cloud`);
-            showSuccessToast(`${cloudRecords.length} cards carregados da nuvem`, 'Coleção sincronizada');
+            showSuccessToast(`${cloudRecords.length} cartas carregadas da nuvem`, 'Coleção sincronizada');
         } else {
             console.log('[AutoSync] No records in cloud');
         }
