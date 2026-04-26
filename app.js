@@ -14528,12 +14528,23 @@ async function fetchCollectionFromCloudSilently() {
         if (cloudRecords && cloudRecords.length > 0) {
             const now = new Date().toISOString();
 
-            // Populate local collection
+            // Populate local collection (sum quantities for duplicate cards)
             cloudRecords.forEach(record => {
-                collection.set(record.card_name, {
-                    qty: record.quantity || 1,
-                    addedAt: record.created_at || now
-                });
+                const cardName = record.card_name;
+                const qty = record.quantity || 1;
+                const addedAt = record.created_at || now;
+
+                if (collection.has(cardName)) {
+                    // Card already exists - add to quantity
+                    const existing = collection.get(cardName);
+                    collection.set(cardName, {
+                        qty: existing.qty + qty,
+                        addedAt: existing.addedAt < addedAt ? existing.addedAt : addedAt
+                    });
+                } else {
+                    // New card
+                    collection.set(cardName, { qty, addedAt });
+                }
             });
 
             // Save to localStorage
