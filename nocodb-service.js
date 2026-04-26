@@ -61,13 +61,14 @@ class NocoDBService {
             headers['X-User-Id'] = this.currentUser.id || this.currentUser.Id;
         }
 
-        // Adicionar headers de segurança (CSRF)
-        if (typeof addSecurityHeaders === 'function') {
-            return addSecurityHeaders(headers);
-        }
-
         // Headers básicos para identificação
         headers['X-Requested-With'] = 'SorceryPortal';
+
+        // NÃO adicionar CSRF headers em modo proxy (causa erro de CORS)
+        // CSRF só faz sentido para requests same-origin
+        if (!this.isProxyMode && typeof addSecurityHeaders === 'function') {
+            return addSecurityHeaders(headers);
+        }
 
         return headers;
     }
