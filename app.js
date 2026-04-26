@@ -14055,6 +14055,11 @@ async function handleLogin(e) {
     try {
         const user = await nocoDBService.login(email, password);
         closeModal('auth-modal');
+
+        // IMPORTANT: Load user's collection from localStorage after login
+        // This is needed because loadFromStorage was called before login (when userId was null)
+        loadFromStorage();
+
         updateAuthUI();
         refreshCurrentView();
         showSuccessToast('Bem-vindo de volta!', 'Login realizado');
@@ -14071,7 +14076,9 @@ async function handleLogin(e) {
         document.dispatchEvent(new CustomEvent('userLoggedIn', { detail: { user } }));
 
         // Auto-fetch collection from cloud if local is empty (new browser/device)
+        console.log('[Login] Collection size after login:', collection.size);
         if (collection.size === 0) {
+            console.log('[Login] Collection empty, fetching from cloud...');
             fetchCollectionFromCloudSilently();
         }
 
@@ -14499,11 +14506,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Silently fetch collection from cloud when local is empty (new browser/device)
 async function fetchCollectionFromCloudSilently() {
-    if (!nocoDBService.currentUser) return;
+    console.log('[AutoSync] fetchCollectionFromCloudSilently called');
+    console.log('[AutoSync] currentUser:', nocoDBService.currentUser);
+
+    if (!nocoDBService.currentUser) {
+        console.log('[AutoSync] No currentUser, aborting');
+        return;
+    }
 
     try {
-        console.log('[AutoSync] Local collection empty, fetching from cloud...');
+        console.log('[AutoSync] Fetching from cloud...');
         const cloudRecords = await nocoDBService.getCloudCollection();
+        console.log('[AutoSync] Cloud records received:', cloudRecords?.length || 0);
 
         if (cloudRecords && cloudRecords.length > 0) {
             const now = new Date().toISOString();
@@ -14524,7 +14538,9 @@ async function fetchCollectionFromCloudSilently() {
             refreshCurrentView();
 
             console.log(`[AutoSync] Loaded ${cloudRecords.length} cards from cloud`);
-            showSuccessToast(`${cloudRecords.length} cards carregados da nuvem`, 'Colecao sincronizada');
+            showSuccessToast(`${cloudRecords.length} cards carregados da nuvem`, 'Coleção sincronizada');
+        } else {
+            console.log('[AutoSync] No records in cloud');
         }
     } catch (error) {
         console.error('[AutoSync] Failed to fetch from cloud:', error);
