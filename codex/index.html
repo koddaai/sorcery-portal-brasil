@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>Codex de Regras | Sorcery Brasil</title>
+    <meta name="description" content="Referencia completa de regras e mecanicas de Sorcery: Contested Realm. Tipos de cards, keywords, zonas de jogo, formatos e Organized Play.">
+    <meta name="keywords" content="codex sorcery, regras sorcery, mecanicas sorcery, keywords sorcery, formatos sorcery">
+    <meta name="author" content="Sorcery Brasil">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sorcery.com.br/codex/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sorcery.com.br/codex/">
+    <meta property="og:title" content="Codex de Regras | Sorcery Brasil">
+    <meta property="og:description" content="Referencia completa de regras e mecanicas de Sorcery: Contested Realm.">
+    <meta property="og:image" content="https://sorcery.com.br/assets/hero-bg.jpg">
+    <meta property="og:locale" content="pt_BR">
+
+    <meta name="theme-color" content="#d4af37">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/styles.min.css?v=111">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="header-top">
+                <a href="/" class="logo">
+                    <picture>
+                        <source srcset="/sorcery-logo.webp" type="image/webp">
+                        <img src="/sorcery-logo.png" alt="Sorcery" class="logo-img" width="40" height="40">
+                    </picture>
+                    <div class="logo-text">
+                        <span class="logo-divider">|</span>
+                        <span class="logo-brasil">BRASIL</span>
+                    </div>
+                </a>
+                <nav class="header-nav-simple">
+                    <a href="/" class="nav-link">Inicio</a>
+                    <a href="/artigos/" class="nav-link">Artigos</a>
+                    <a href="/codex/" class="nav-link active">Codex</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="view active" style="display: block;">
+                <div class="section-header">
+                    <h2>Codex de Regras</h2>
+                    <p class="subtitle">Referencia completa de regras e mecanicas de Sorcery</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="codex-quick-links">
+                    <button class="codex-link active" data-section="basics">Basico</button>
+                    <button class="codex-link" data-section="cardtypes">Tipos de Cards</button>
+                    <button class="codex-link" data-section="mechanics">Mecanicas</button>
+                    <button class="codex-link" data-section="keywords">Palavras-chave</button>
+                    <button class="codex-link" data-section="zones">Zonas de Jogo</button>
+                    <button class="codex-link" data-section="formats">Formatos</button>
+                    <button class="codex-link" data-section="organized">Organized Play</button>
+                </div>
+
+                <!-- Codex Content -->
+                <div id="codex-content" class="codex-content">
+                    <!-- Basics Section -->
+                    <div class="codex-section active" data-section="basics">
+                        <h3>Conceitos Basicos</h3>
+
+                        <div class="codex-entry">
+                            <h4>Objetivo do Jogo</h4>
+                            <p>Reduza os pontos de vida do Avatar adversario de 20 para 0. Voce pode causar dano atraves de ataques com criaturas ou efeitos de magias e habilidades.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>A Regra de Ouro</h4>
+                            <p>Use o bom senso primeiro. Quando o texto de um card e informal ou ambiguo, interprete-o da forma mais razoavel. Consulte o rulebook apenas quando necessario.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>A Regra de Prata</h4>
+                            <p>Texto especifico tem precedencia sobre regras gerais. Se um card diz que voce "pode" fazer algo normalmente proibido, o card tem prioridade.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Estrutura do Turno</h4>
+                            <ol>
+                                <li><strong>Fase de Inicio (Start Phase):</strong> Desvirar permanentes, comprar um card, resolver triggers de inicio</li>
+                                <li><strong>Fase Principal (Main Phase):</strong> Jogar cards, ativar habilidades, movimentar criaturas, atacar</li>
+                                <li><strong>Fase de Fim (End Phase):</strong> Descartar ate o limite de mao (7 cards), resolver triggers de fim</li>
+                            </ol>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Recursos: Threshold e Mana</h4>
+                            <p><strong>Threshold:</strong> Representa seu dominio sobre os elementos. Cada card de Site jogado aumenta seu threshold permanentemente. Threshold nunca diminui durante o jogo.</p>
+                            <p><strong>Mana:</strong> Recurso gerado ao virar Sites. E gasto para jogar cards e ativar habilidades. Mana nao utilizado e perdido no fim do turno.</p>
+                            <p><strong>Affinity:</strong> Alguns cards tem custo reduzido baseado no seu threshold de um elemento especifico.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Os Quatro Elementos</h4>
+                            <div class="element-list">
+                                <div class="element-item fire"><img src="/assets/elements/fire.png" alt="Fogo" class="element-icon-img" loading="lazy" width="24" height="24"> <strong>Fogo:</strong> Dano direto, agressividade, destruicao</div>
+                                <div class="element-item water"><img src="/assets/elements/water.png" alt="Agua" class="element-icon-img" loading="lazy" width="24" height="24"> <strong>Agua:</strong> Controle, compra de cards, manipulacao</div>
+                                <div class="element-item earth"><img src="/assets/elements/earth.png" alt="Terra" class="element-icon-img" loading="lazy" width="24" height="24"> <strong>Terra:</strong> Resistencia, crescimento, criaturas poderosas</div>
+                                <div class="element-item air"><img src="/assets/elements/air.png" alt="Ar" class="element-icon-img" loading="lazy" width="24" height="24"> <strong>Ar:</strong> Evasao, velocidade, versatilidade</div>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Construcao de Deck</h4>
+                            <p><strong>Spellbook:</strong> Seu deck principal com exatamente 60 cards (magias, criaturas, artefatos, auras).</p>
+                            <p><strong>Atlas:</strong> Seu deck de Sites, separado do Spellbook. Contem ate 30 cards de Site.</p>
+                            <p><strong>Limite de copias:</strong> Maximo de 4 copias de qualquer card (exceto Sites basicos).</p>
+                        </div>
+                    </div>
+
+                    <!-- Card Types Section -->
+                    <div class="codex-section" data-section="cardtypes">
+                        <h3>Tipos de Cards</h3>
+
+                        <div class="codex-entry">
+                            <h4>Avatar</h4>
+                            <p>Seu personagem principal. Comeca no campo de batalha com 20 pontos de vida. Se seu Avatar for derrotado, voce perde o jogo.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Minion (Lacaio)</h4>
+                            <p>Criaturas que lutam por voce. Podem atacar, bloquear e ter habilidades especiais. Tem valores de Ataque e Defesa.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Magic (Magia)</h4>
+                            <p>Feiticos de uso unico. Sao jogados, resolvem seu efeito e vao para o cemiterio.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Artifact (Artefato)</h4>
+                            <p>Objetos magicos que permanecem no campo de batalha. Fornecem habilidades continuas ou podem ser ativados.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Aura</h4>
+                            <p>Encantamentos que se anexam a outros permanentes, modificando suas caracteristicas ou concedendo habilidades.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Site (Lugar)</h4>
+                            <p>Locais que geram mana e fornecem threshold. Formam a base de recursos do seu deck.</p>
+                        </div>
+                    </div>
+
+                    <!-- Mechanics Section -->
+                    <div class="codex-section" data-section="mechanics">
+                        <h3>Mecanicas do Jogo</h3>
+
+                        <div class="codex-entry">
+                            <h4>Movimento</h4>
+                            <p>Criaturas podem se mover pelo campo de batalha. O campo e dividido em regioes, e criaturas podem mover entre regioes adjacentes durante sua fase principal.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Combate</h4>
+                            <p>Durante a fase de combate, voce declara atacantes. O oponente pode bloquear. Dano e atribuido simultaneamente, exceto quando uma criatura tem First Strike.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Spellbook vs Atlas</h4>
+                            <p><strong>Spellbook:</strong> Seu deck principal de cards (magias, criaturas, artefatos). Maximo de 60 cards.</p>
+                            <p><strong>Atlas:</strong> Seu deck de Sites. Separado do Spellbook. Maximo de 30 cards.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Bursting</h4>
+                            <p>Habilidade de jogar cards em resposta a acoes do oponente. Cards com Burst podem ser jogados a qualquer momento, como reacao.</p>
+                        </div>
+                    </div>
+
+                    <!-- Keywords Section -->
+                    <div class="codex-section" data-section="keywords">
+                        <h3>Palavras-chave</h3>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Habilidades de Movimento</h4>
+
+                            <div class="codex-entry">
+                                <h4>Airborne (Voar)</h4>
+                                <p>Esta criatura so pode ser bloqueada por outras criaturas com Airborne. Criaturas Airborne podem se mover sobre obstaculos.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Burrowing (Escavar)</h4>
+                                <p>Esta criatura pode se mover para regioes subterraneas e atravessar terreno solido.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Submerge (Submergir)</h4>
+                                <p>Esta criatura pode entrar em regioes aquaticas e se mover pela agua.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Voidwalk</h4>
+                                <p>Esta criatura pode se mover atraves do Void, ignorando restricoes normais de movimento.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Habilidades de Combate</h4>
+
+                            <div class="codex-entry">
+                                <h4>Defender</h4>
+                                <p>Esta criatura nao pode atacar, mas pode bloquear normalmente.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>First Strike</h4>
+                                <p>Esta criatura causa seu dano de combate antes de criaturas sem First Strike. Se ambas criaturas tem First Strike, o dano e simultaneo.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Lethal</h4>
+                                <p>Qualquer quantidade de dano (1 ou mais) causado por esta criatura a outra criatura e suficiente para destrui-la, independente da defesa.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Ranged</h4>
+                                <p>Esta criatura pode atacar criaturas ou Avatares em regioes adjacentes sem precisar se mover para la.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Stealth</h4>
+                                <p>Esta criatura nao pode ser bloqueada. Ataques com Stealth sempre atingem o alvo.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Lance</h4>
+                                <p>+2 de Ataque quando esta criatura ataca. O bonus nao se aplica ao defender.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Intercept</h4>
+                                <p>Esta criatura pode bloquear atacantes que estao atacando outras criaturas ou o Avatar na mesma regiao.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Habilidades Defensivas</h4>
+
+                            <div class="codex-entry">
+                                <h4>Ward</h4>
+                                <p>Esta criatura nao pode ser alvo de habilidades ou magias controladas pelo oponente. Ward nao protege contra efeitos que nao sao direcionados (como "destrua todas as criaturas").</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Disable</h4>
+                                <p>Previne que uma criatura use suas habilidades ativadas e remove suas habilidades passivas temporariamente.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Triggers (Gatilhos)</h4>
+
+                            <div class="codex-entry">
+                                <h4>Genesis</h4>
+                                <p>Efeito que e acionado quando este card entra no campo de batalha (Realm). Acontece apenas uma vez.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Death</h4>
+                                <p>Efeito que e acionado quando este card e destruido e vai para o cemiterio (Cemetery).</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Awaken</h4>
+                                <p>Efeito que e acionado no inicio do seu turno enquanto este card esta em jogo.</p>
+                            </div>
+
+                            <div class="codex-entry">
+                                <h4>Landfall</h4>
+                                <p>Efeito que e acionado quando voce joga um Site.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-subsection">
+                            <h4 class="subsection-title">Tokens</h4>
+
+                            <div class="codex-entry">
+                                <h4>Tokens Comuns</h4>
+                                <p>Tokens sao criaturas criadas por efeitos de cards. Os tokens mais comuns sao:</p>
+                                <ul>
+                                    <li><strong>Foot Soldier:</strong> 1/1 sem habilidades</li>
+                                    <li><strong>Skeleton:</strong> 1/1 sem habilidades</li>
+                                    <li><strong>Frog:</strong> 1/1 sem habilidades</li>
+                                    <li><strong>Tawny (Leao):</strong> 2/2 sem habilidades</li>
+                                    <li><strong>Bruin (Urso):</strong> 3/3 sem habilidades</li>
+                                    <li><strong>Rubble:</strong> 0/1 Defender</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Zones Section -->
+                    <div class="codex-section" data-section="zones">
+                        <h3>Zonas de Jogo</h3>
+
+                        <div class="codex-entry">
+                            <h4>Battlefield (Campo de Batalha)</h4>
+                            <p>Area onde permanentes (criaturas, artefatos, auras, sites) ficam em jogo. Dividido em regioes para movimento.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Hand (Mao)</h4>
+                            <p>Cards que voce comprou mas ainda nao jogou. Limite de 7 cards no final do turno.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Graveyard (Cemiterio)</h4>
+                            <p>Onde vao cards destruidos, descartados ou usados. Alguns efeitos podem interagir com o cemiterio.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Void (Vazio)</h4>
+                            <p>Zona de exilio. Cards removidos do jogo vao para o Void e normalmente nao podem mais ser usados.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Stack (Pilha)</h4>
+                            <p>Zona temporaria onde magias e habilidades aguardam resolucao. Magias resolvem em ordem inversa (ultimo a entrar, primeiro a resolver).</p>
+                        </div>
+                    </div>
+
+                    <!-- Formats Section -->
+                    <div class="codex-section" data-section="formats">
+                        <h3>Formatos de Jogo</h3>
+
+                        <div class="codex-entry format-card">
+                            <h4><i data-lucide="layers"></i> Constructed (Construido)</h4>
+                            <p>O formato Constructed e uma tela para jogadores expressarem sua criatividade construindo decks unicos a partir de suas colecoes.</p>
+                            <div class="format-details">
+                                <p><strong>Requisitos do Deck:</strong></p>
+                                <ul>
+                                    <li>Spellbook: Exatamente 60 cards</li>
+                                    <li>Atlas: Ate 30 cards de Site</li>
+                                    <li>Maximo de 4 copias de cada card (exceto Sites basicos)</li>
+                                    <li>1 Avatar obrigatorio</li>
+                                </ul>
+                                <p><strong>Ideal para:</strong> Jogadores que querem explorar sinergias e construir estrategias personalizadas.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry format-card">
+                            <h4><i data-lucide="shuffle"></i> Draft</h4>
+                            <p>O formato Draft desafia jogadores a construir decks na hora usando boosters que circulam entre os participantes.</p>
+                            <div class="format-details">
+                                <p><strong>Como funciona:</strong></p>
+                                <ol>
+                                    <li>Cada jogador recebe boosters (geralmente 4-6)</li>
+                                    <li>Abra um booster, escolha 1 card, passe o resto</li>
+                                    <li>Repita ate todos os boosters serem draftados</li>
+                                    <li>Construa um deck de 40 cards com os cards draftados</li>
+                                </ol>
+                                <p><strong>Ideal para:</strong> Jogadores que gostam de adaptacao e tomada de decisao rapida.</p>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry format-card">
+                            <h4><i data-lucide="package-open"></i> Sealed</h4>
+                            <p>O formato Sealed testa sua habilidade de construir o melhor deck possivel com um pool limitado de cards.</p>
+                            <div class="format-details">
+                                <p><strong>Como funciona:</strong></p>
+                                <ol>
+                                    <li>Cada jogador recebe boosters selados (geralmente 6)</li>
+                                    <li>Abra todos os boosters</li>
+                                    <li>Construa um deck de 40 cards usando apenas esses cards</li>
+                                    <li>Enfrente outros jogadores no torneio</li>
+                                </ol>
+                                <p><strong>Ideal para:</strong> Iniciantes e jogadores que querem testar novas expansoes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organized Play Section -->
+                    <div class="codex-section" data-section="organized">
+                        <h3>Organized Play 2026</h3>
+                        <p class="section-intro">O programa de Organized Play de Sorcery e construido como um "circulo em expansao" - comecando em comunidades locais e crescendo ate competicoes globais.</p>
+
+                        <div class="op-tiers">
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-1">1</div>
+                                <div class="tier-content">
+                                    <h4>Gothic Store Kits</h4>
+                                    <p>A base do jogo organizado. Kits para lojas promoverem eventos regulares com cards promocionais e playmats como premios.</p>
+                                    <span class="tier-tag">Eventos Semanais</span>
+                                </div>
+                            </div>
+
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-2">2</div>
+                                <div class="tier-content">
+                                    <h4>Cornerstone Championships</h4>
+                                    <p>Celebracoes anuais em lojas estabelecidas. Eventos maiores que reunem jogadores de lojas vizinhas.</p>
+                                    <span class="tier-tag">Eventos Anuais</span>
+                                </div>
+                            </div>
+
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-3">3</div>
+                                <div class="tier-content">
+                                    <h4>Grand Contests</h4>
+                                    <p>Grandes torneios regionais como SCG CON e SorceryFest. Reunem jogadores de varias regioes para competicoes de alto nivel.</p>
+                                    <span class="tier-tag">Eventos Regionais</span>
+                                </div>
+                            </div>
+
+                            <div class="codex-entry op-tier">
+                                <div class="tier-badge tier-4">4</div>
+                                <div class="tier-content">
+                                    <h4>Avatar of the Realm</h4>
+                                    <p>O campeonato mundial. O apice da competicao, reunindo os melhores jogadores do mundo.</p>
+                                    <span class="tier-tag">Campeonato Mundial</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Sistema de Dust</h4>
+                            <p><strong>Dust</strong> e a moeda de recompensa do Organized Play. Voce ganha Dust participando de eventos em qualquer nivel e pode trocar por premios exclusivos.</p>
+                        </div>
+
+                        <div class="codex-entry">
+                            <h4>Encontre Eventos</h4>
+                            <p>Use o <a href="https://sorcerytcg.com/locator" target="_blank">Sorcery Play Network</a> para encontrar lojas e eventos perto de voce.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- External Links -->
+                <div class="codex-links">
+                    <a href="https://curiosa.io/codex" target="_blank" class="btn primary">
+                        <i data-lucide="external-link"></i>
+                        <span>Codex Completo (Curiosa.io)</span>
+                    </a>
+                    <a href="https://sorcerytcg.com/how-to-play" target="_blank" class="btn ghost">
+                        <i data-lucide="play-circle"></i>
+                        <span>Rulebook Oficial (EN)</span>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer style="background: var(--bg-surface-1); padding: var(--space-5); text-align: center; border-top: 1px solid var(--border-color); margin-top: var(--space-6);">
+            <p style="color: var(--text-secondary); font-size: 0.875rem;">Sorcery Brasil - Portal da comunidade brasileira</p>
+        </footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        // Tab switching for codex sections
+        document.querySelectorAll('.codex-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const section = this.dataset.section;
+
+                // Update active link
+                document.querySelectorAll('.codex-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                // Update active section
+                document.querySelectorAll('.codex-section').forEach(s => s.classList.remove('active'));
+                document.querySelector(`.codex-section[data-section="${section}"]`).classList.add('active');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
