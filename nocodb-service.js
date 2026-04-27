@@ -403,25 +403,56 @@ class NocoDBService {
             // Get existing cloud collection
             const cloudCollection = await this.getCloudCollection();
 
-            // Delete existing records for this user
+            // Create map of cloud records by card_name for quick lookup
+            const cloudMap = new Map();
             for (const record of cloudCollection) {
-                await this.deleteRecord(this.tables.collection, record.Id);
+                const existing = cloudMap.get(record.card_name);
+                if (existing) {
+                    // Duplicate in cloud - keep the one with higher quantity
+                    if ((record.quantity || 1) > (existing.quantity || 1)) {
+                        cloudMap.set(record.card_name, record);
+                    }
+                } else {
+                    cloudMap.set(record.card_name, record);
+                }
             }
 
-            // Upload local collection
+            let created = 0;
+            let updated = 0;
+            const now = new Date().toISOString();
+
+            // SMART MERGE: Add new cards and update existing ones
             for (const [cardName, data] of Object.entries(localCollection)) {
-                await this.createRecord(this.tables.collection, {
-                    user_id: this.currentUser.id,
-                    card_name: cardName,
-                    quantity: typeof data === 'object' ? data.qty : 1,
-                    foil: typeof data === 'object' ? (data.foil || false) : false,
-                    condition: typeof data === 'object' ? (data.condition || 'NM') : 'NM',
-                    notes: typeof data === 'object' ? (data.notes || '') : '',
-                    synced_at: new Date().toISOString()
-                });
+                const qty = typeof data === 'object' ? data.qty : 1;
+                const cloudRecord = cloudMap.get(cardName);
+
+                if (cloudRecord) {
+                    // Card exists in cloud - update only if local has more
+                    const cloudQty = cloudRecord.quantity || 1;
+                    if (qty > cloudQty) {
+                        await this.updateRecord(this.tables.collection, cloudRecord.Id, {
+                            quantity: qty,
+                            synced_at: now
+                        });
+                        updated++;
+                    }
+                } else {
+                    // Card not in cloud - create new record
+                    await this.createRecord(this.tables.collection, {
+                        user_id: this.currentUser.id,
+                        card_name: cardName,
+                        quantity: qty,
+                        foil: typeof data === 'object' ? (data.foil || false) : false,
+                        condition: typeof data === 'object' ? (data.condition || 'NM') : 'NM',
+                        notes: typeof data === 'object' ? (data.notes || '') : '',
+                        synced_at: now
+                    });
+                    created++;
+                }
             }
 
-            return { success: true, count: Object.keys(localCollection).length };
+            console.log(`[Sync] Smart merge complete: ${created} created, ${updated} updated`);
+            return { success: true, created, updated, total: Object.keys(localCollection).length };
         } catch (error) {
             console.error('Sync to cloud error:', error);
             throw error;

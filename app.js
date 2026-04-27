@@ -2945,6 +2945,23 @@ function scheduleAutoSync() {
 async function performAutoSync() {
     if (!checkUserLoggedIn() || !autoSyncPending) return;
 
+    // SAFEGUARD: Don't sync if collection is empty (prevents accidental data loss)
+    if (collection.size === 0) {
+        console.log('[AutoSync] Skipped - collection is empty (safeguard against data loss)');
+        autoSyncPending = false;
+        return;
+    }
+
+    // SAFEGUARD: Check if this is a fresh session with less data than before
+    const userId = getCurrentUserId();
+    const lastKnownSize = parseInt(localStorage.getItem(`sorcery-collection-size-${userId}`) || '0');
+    if (lastKnownSize > 0 && collection.size < lastKnownSize * 0.5) {
+        // Collection is less than 50% of last known size - might be data loss
+        console.warn(`[AutoSync] Skipped - collection size (${collection.size}) is much smaller than last known (${lastKnownSize}). Possible data loss detected.`);
+        autoSyncPending = false;
+        return;
+    }
+
     try {
         updateSyncIndicator('syncing');
 
@@ -2957,7 +2974,7 @@ async function performAutoSync() {
             };
         });
 
-        // Sync to cloud
+        // Sync to cloud (now does smart merge, not delete-all)
         await nocoDBService.fullSyncToCloud(
             collectionObj,
             [...wishlist],
@@ -2965,10 +2982,10 @@ async function performAutoSync() {
             decks
         );
 
-        // Update last sync time
-        const userId = getCurrentUserId();
+        // Update last sync time and collection size
         if (userId) {
             localStorage.setItem(`sorcery-last-sync-${userId}`, new Date().toISOString());
+            localStorage.setItem(`sorcery-collection-size-${userId}`, collection.size.toString());
         }
 
         autoSyncPending = false;
