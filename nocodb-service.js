@@ -516,23 +516,26 @@ class NocoDBService {
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
 
-            // Delete existing records
-            for (const record of (data.list || [])) {
-                await this.deleteRecord(this.tables.wishlist, record.Id);
-            }
+            // SMART MERGE: Create set of existing cloud cards
+            const cloudSet = new Set((data.list || []).map(r => r.card_name));
+            let created = 0;
 
-            // Upload local wishlist
+            // Only add cards that don't exist in cloud
             const wishlistArray = Array.from(localWishlist);
             for (const cardName of wishlistArray) {
-                await this.createRecord(this.tables.wishlist, {
-                    user_id: this.currentUser.id,
-                    card_name: cardName,
-                    priority: 'normal',
-                    synced_at: new Date().toISOString()
-                });
+                if (!cloudSet.has(cardName)) {
+                    await this.createRecord(this.tables.wishlist, {
+                        user_id: this.currentUser.id,
+                        card_name: cardName,
+                        priority: 'normal',
+                        synced_at: new Date().toISOString()
+                    });
+                    created++;
+                }
             }
 
-            return { success: true, count: wishlistArray.length };
+            console.log(`[Sync] Wishlist merge: ${created} added`);
+            return { success: true, created, total: wishlistArray.length };
         } catch (error) {
             console.error('Sync wishlist error:', error);
             throw error;
@@ -568,20 +571,25 @@ class NocoDBService {
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
 
-            for (const record of (data.list || [])) {
-                await this.deleteRecord(this.tables.tradeBinder, record.Id);
-            }
+            // SMART MERGE: Create set of existing cloud cards
+            const cloudSet = new Set((data.list || []).map(r => r.card_name));
+            let created = 0;
 
+            // Only add cards that don't exist in cloud
             const tradeArray = Array.from(localTradeBinder);
             for (const cardName of tradeArray) {
-                await this.createRecord(this.tables.tradeBinder, {
-                    user_id: this.currentUser.id,
-                    card_name: cardName,
-                    synced_at: new Date().toISOString()
-                });
+                if (!cloudSet.has(cardName)) {
+                    await this.createRecord(this.tables.tradeBinder, {
+                        user_id: this.currentUser.id,
+                        card_name: cardName,
+                        synced_at: new Date().toISOString()
+                    });
+                    created++;
+                }
             }
 
-            return { success: true, count: tradeArray.length };
+            console.log(`[Sync] TradeBinder merge: ${created} added`);
+            return { success: true, created, total: tradeArray.length };
         } catch (error) {
             console.error('Sync trade binder error:', error);
             throw error;
@@ -617,22 +625,42 @@ class NocoDBService {
             const response = await fetch(url, { method: 'GET', headers: this.getHeaders() });
             const data = await response.json();
 
+            // SMART MERGE: Create map of existing cloud decks by name
+            const cloudDecks = new Map();
             for (const record of (data.list || [])) {
-                await this.deleteRecord(this.tables.decks, record.Id);
+                cloudDecks.set(record.deck_name, record);
             }
+
+            let created = 0;
+            let updated = 0;
+            const now = new Date().toISOString();
 
             for (const deck of localDecks) {
-                await this.createRecord(this.tables.decks, {
-                    user_id: this.currentUser.id,
-                    deck_name: deck.name,
-                    avatar: deck.avatar || '',
-                    cards_json: JSON.stringify(deck.cards || []),
-                    created_at: deck.createdAt || new Date().toISOString(),
-                    synced_at: new Date().toISOString()
-                });
+                const cloudDeck = cloudDecks.get(deck.name);
+                if (cloudDeck) {
+                    // Deck exists - update it
+                    await this.updateRecord(this.tables.decks, cloudDeck.Id, {
+                        avatar: deck.avatar || '',
+                        cards_json: JSON.stringify(deck.cards || []),
+                        synced_at: now
+                    });
+                    updated++;
+                } else {
+                    // New deck - create it
+                    await this.createRecord(this.tables.decks, {
+                        user_id: this.currentUser.id,
+                        deck_name: deck.name,
+                        avatar: deck.avatar || '',
+                        cards_json: JSON.stringify(deck.cards || []),
+                        created_at: deck.createdAt || now,
+                        synced_at: now
+                    });
+                    created++;
+                }
             }
 
-            return { success: true, count: localDecks.length };
+            console.log(`[Sync] Decks merge: ${created} created, ${updated} updated`);
+            return { success: true, created, updated, total: localDecks.length };
         } catch (error) {
             console.error('Sync decks error:', error);
             throw error;
