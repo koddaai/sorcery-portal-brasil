@@ -73,18 +73,6 @@
       "id": "news-1776794431449-2"
     },
     {
-      "title_en": "Avatar of the Realm Update",
-      "content_en": "When we first shared Avatar of the Realm, we described it as the kickoff to Organized Play 2026, a flagship gathering of Sorcery. After a lot of planning and honest conversation, we’ve decided to move Avatar of the Realm to Q4 of this year, rather than holding it in the first half of the year. An event like this asks a lot, and the delay allows us to properly ramp up the team to deliver an experience that meets the community’s expectations, secure a venue that reflects the gathering we want to create, and ensure that when we put something like this into the world, it stands as a clear declaration of Sorcery’s values and how we intend to do things moving forward. As with everything we do at Erik’s Curiosa, we’d rather take the time to build it properly than rush it out too soon. Organized Play 2026 is still very much happening. Store programs, the judge initiative, Gen Con, our SCG CON events, as well as numerous community events, will continue to roll out and build momentum throughout the year. The difference is that the Avatar of the Realm is shifting from being the starting bell to the crescendo; a gathering shaped by a year of stories, rivalries, travels, and shared tables. Avatar of the Realm is meant to be Sorcery’s flagship gathering. A space where mastery and creativity sit side by side. Where players, artists, collectors, and judges share the same room, and where the realm feels less like an idea and more like a place. By moving to Q4, we give ourselves, and you, the ",
-      "link": "https://sorcerytcg.com/news/avatar-of-the-realm-update",
-      "image": "https://cdn.sanity.io/images/vg9ve3gy/production/448e62641ac498d975e4ebc079ef0780154821b4-2000x900.png",
-      "date": "2026-02-18",
-      "category": "News",
-      "slug": "avatar-of-the-realm-update",
-      "title_pt": "Atualização do Avatar of the Realm",
-      "summary_pt": "O Avatar of the Realm, que seria o início do Organized Play 2026, foi adiado para o Q4 deste ano. Essa decisão visa garantir uma experiência que atenda às expectativas da comunidade, com um evento que reflita os valores de Sorcery. A programação do Organized Play 2026 continua, com eventos e iniciativas ao longo do ano.",
-      "id": "news-1776794434555-3"
-    },
-    {
       "title_en": "Sorcery Awaits: Join us at Gen Con 2026",
       "content_en": "Sorcery: Contested Realm is returning to Gen Con 2026, from July 30 to August 2, and we’re delighted to be once again bringing the realm to Indianapolis. After an unforgettable showing last year, marked by packed tables, sold-out events, and the debut of Dragonlord, we’re heading back to Gen Con with renewed energy to build on that momentum and continue to focus on what makes Sorcery special: the people who gather around the table. With more than 72,000 attendees passing through Gen Con last year, the energy in the halls was unmatched, and the Sorcery booth and event space sat right at the heart of it all. This summer, we’re thrilled to invite you to join us in Indianapolis for another standout gathering of players, collectors, and friends. Over the years, Gen Con has become a cherished tradition for us. It’s where we hosted our first events after the release of Alpha, and it will always hold a special place in our hearts as a place where the wider gaming community and the Sorcery community come together to experience Sorcery as it was always meant to be played: together. As in years past, our focus for Gen Con 2026 remains on creating space for these shared moments. Whether you’re opening your very first packs or returning with a well-worn spellbook eager to see familiar faces from other events, you can expect opportunities to jump into games, learn to play, and connect with both the community and the team from Erik’s Curiosa. We’re committed to providing space for players t",
       "link": "https://sorcerytcg.com/news/sorcery-awaits-join-us-at-gen-con-2026",
@@ -179,8 +167,20 @@
       "title_pt": "Eventos Cornerstone de 2025 Estão em Andamento",
       "summary_pt": "A temporada de Organized Play de 2025 de Sorcery: Contested Realm começou oficialmente! Os eventos Cornerstone celebram a comunidade local de Sorcery, reunindo novos jogadores e veteranos para jogar e compartilhar histórias. O primeiro evento ocorreu no último fim de semana e foi um grande sucesso, com novas amizades e emocionantes vitórias. O próximo evento será neste fim de semana em No Land Beyond, em Baltimore!",
       "id": "news-1775767524511-9"
+    },
+    {
+      "title_en": "Gothic Shadows Stir - Jeff A. Menges Returns to Gen Con 2025",
+      "content_en": "We’re thrilled to announce that celebrated fantasy illustrator Jeff A. Menges will be appearing as a guest artist at Gen Con 2025! With a career spanning over three decades, Jeff Menges has captivated fantasy fans worldwide, from his iconic work as one of the original twenty-five Magic: The Gathering artists to his recent contributions in Sorcery: Contested Realm. This year at Gen Con 2025, Jeff will showcase a curated selection of his work, including never-before-seen illustrations from our upcoming set Gothic. You'll be able to find Jeff at the Sorcery booth throughout the week, signing cards, chatting with fans, and sharing how he's helping bring Gothic to life...or perhaps we should say, undeath? Whether you’ve followed Jeff’s work for years or are simply curious about what’s coming next, we can't wait to see you at Gen Con 2025! Gen Con's event calendar will go live on Sunday, May 4th, and with it, our full lineup of offerings:  learn-to-play events,  gameplay experiences, and our first-ever  Crossroads event, part of our newly announced Sorcery Organized Play program. Even more news is getting ready to hatch for Sorcery: Contested Realm, starting later this month. Mark your calendars for Gen Con 2025 and join the conversation in our dedicated #gencon channel on the Sorcery: Contested Realm Discord server or in the Sorcery: Contested Realm Facebook group. We look forward to seeing you at Gen Con! Find more at Jeff A. Menges's artist page Grand Contests bring together pla",
+      "link": "https://sorcerytcg.com/news/gothic-shadows-stir-jeff-a-menges-returns-to-gen-con-2025",
+      "image": "https://cdn.sanity.io/images/vg9ve3gy/production/5979d46447cbdbd67792e96f92dab1acf4e6a62b-2000x900.png",
+      "date": "2025-04-14",
+      "category": "Gothic",
+      "slug": "gothic-shadows-stir-jeff-a-menges-returns-to-gen-con-2025",
+      "title_pt": "Sombras Góticas Agitam - Jeff A. Menges Retorna à Gen Con 2025",
+      "summary_pt": "Estamos empolgados em anunciar que o renomado ilustrador de fantasia Jeff A. Menges será um artista convidado na Gen Con 2025! Ele apresentará uma seleção de seu trabalho, incluindo ilustrações inéditas do próximo conjunto Gothic. Não perca a chance de conhecê-lo na cabine de Sorcery durante o evento!",
+      "id": "news-1777410360685-0"
     }
   ],
-  "lastUpdated": "2026-04-28T10:12:46.418Z",
+  "lastUpdated": "2026-04-28T21:06:05.308Z",
   "source": "https://sorcerytcg.com/news + https://sorcerytcg.com/sitemap.xml"
 }
