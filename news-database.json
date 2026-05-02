@@ -61,18 +61,6 @@
       "id": "news-1775767498615-2"
     },
     {
-      "title_en": "Where the Bones Lead: CJ’s SorceryCon Necromancer",
-      "content_en": "Just a few weeks ago, SorceryCon, Sorcery’s largest community-organized and community-run event, brought hundreds of players together in Indianapolis for four days of celebration, competition, and connection. With competitive tournaments running alongside casual pods and smaller meetups, artists sketched and signed, and old friends reunited. It was equal parts high-stakes competition and heartfelt celebration, a gathering built by the community, for the community. We caught up with the SorceryCon constructed champion, CJ, a name you might recognize from strong finishes at the Courtesan Cup and SCG CONs and online leagues. But ask CJ about SorceryCon, and the conversation quickly shifts away from trophies. For him, the highlight of the weekend was reconnecting with friends, meeting new players, and laughing through matches, even during a Top 8 draft that had to be muted because the table couldn’t stop joking. As he puts it, “Even if I came in last place, this event would’ve been worth it. The bonds I’ve made through Sorcery are the highlight.” CJ came prepared to SorceryCon with skeletons, movement tricks, and one very clear philosophy: Value wins games. Let’s dive into the deck he brought to SorceryCon. CJ: \"I’m CJ! I’ve been a nerd since ’94 and playing Sorcery since ’24. I run a YouTube channel called Old Fashioned Nerds and help run the Sorcerer’s Summit Discord with Bruce. As for highlights… I’ve had a good run. League podiums, SCG wins, multiple SorceryCon Top 8s, and a ",
-      "link": "https://sorcerytcg.com/news/where-the-bones-lead-cj-s-sorcerycon-necromancer",
-      "image": "https://cdn.sanity.io/images/vg9ve3gy/production/52b9a2ab106cc9548b101d42ff470c7da44b1ed6-2000x900.png",
-      "date": "2026-03-04",
-      "category": "News",
-      "slug": "where-the-bones-lead-cj-s-sorcerycon-necromancer",
-      "title_pt": "Onde os Ossos Levam: O Necromante de CJ na SorceryCon",
-      "summary_pt": "Recentemente, a SorceryCon reuniu centenas de jogadores em Indianapolis para celebrar e competir. CJ, campeão do torneio construído, destacou a importância das conexões feitas durante o evento, onde o valor das amizades superou os troféus. Ele trouxe um deck focado em esqueleto e filosofia de que valor ganha jogos.",
-      "id": "news-1776794431449-2"
-    },
-    {
       "title_en": "Sorcery Awaits: Join us at Gen Con 2026",
       "content_en": "Sorcery: Contested Realm is returning to Gen Con 2026, from July 30 to August 2, and we’re delighted to be once again bringing the realm to Indianapolis. After an unforgettable showing last year, marked by packed tables, sold-out events, and the debut of Dragonlord, we’re heading back to Gen Con with renewed energy to build on that momentum and continue to focus on what makes Sorcery special: the people who gather around the table. With more than 72,000 attendees passing through Gen Con last year, the energy in the halls was unmatched, and the Sorcery booth and event space sat right at the heart of it all. This summer, we’re thrilled to invite you to join us in Indianapolis for another standout gathering of players, collectors, and friends. Over the years, Gen Con has become a cherished tradition for us. It’s where we hosted our first events after the release of Alpha, and it will always hold a special place in our hearts as a place where the wider gaming community and the Sorcery community come together to experience Sorcery as it was always meant to be played: together. As in years past, our focus for Gen Con 2026 remains on creating space for these shared moments. Whether you’re opening your very first packs or returning with a well-worn spellbook eager to see familiar faces from other events, you can expect opportunities to jump into games, learn to play, and connect with both the community and the team from Erik’s Curiosa. We’re committed to providing space for players t",
       "link": "https://sorcerytcg.com/news/sorcery-awaits-join-us-at-gen-con-2026",
@@ -179,8 +167,20 @@
       "title_pt": "Sombras Góticas Agitam - Jeff A. Menges Retorna à Gen Con 2025",
       "summary_pt": "Estamos empolgados em anunciar que o renomado ilustrador de fantasia Jeff A. Menges será um artista convidado na Gen Con 2025! Ele apresentará uma seleção de seu trabalho, incluindo ilustrações inéditas do próximo conjunto Gothic. Não perca a chance de conhecê-lo na cabine de Sorcery durante o evento!",
       "id": "news-1777410360685-0"
+    },
+    {
+      "title_en": "Join the Contest: Sorcery: Contested Realm at Gen Con 2025",
+      "content_en": "Mark your calendars for July 31 - August 3 and set your waypoint portals to Indianapolis. With over 71,000 people in attendance last year, we were humbled by the overwhelming reception at our booth, and we can’t wait to share in the experience with you again. If you are new to Gen Con, let us just say - it’s an absolute blast. Picture tens of thousands of gamers, collectors, and creators all in one place, coming together to celebrate what we love most: games, community, and fun. For those that have participated in Sorcery events at Gen Con in the past, you know exactly what we are talking about - but if you haven’t had the honor of attending, it’s an experience not to be missed. Last year, you blew the Erik’s Curiosa team away. We had sold-out learn-to-play events, packed tournaments, and a stream of unforgettable moments. We can’t wait to do it all again this year! We’re still fine-tuning the details, so keep an eye out for more updates as the year progresses, but, as always, we're committed to making this an incredible event! Trust us - you’re not going to want to miss what we’ve got planned! Join the conversation in our dedicated #gencon channel on the  Sorcery: Contested Realm Discord Server or in the Sorcery: Contested Realm Facebook group. We look forward to seeing you at Gen Con! Grand Contests bring together players from across regions for Sorcery's largest competitive and community celebrations. Here's what you need to know. Cornerstone Championsihps celebrate the co",
+      "link": "https://sorcerytcg.com/news/join-the-contest-sorcery-contested-realm-at-gen-con-2025",
+      "image": "https://cdn.sanity.io/images/vg9ve3gy/production/8477a1bf73d17b518640a90d08d2a783333a6f29-2000x900.png",
+      "date": "2025-01-27",
+      "category": "Evento",
+      "slug": "join-the-contest-sorcery-contested-realm-at-gen-con-2025",
+      "title_pt": "Join the Contest: Sorcery: Contested Realm at Gen Con 2025",
+      "summary_pt": "Mark your calendars for July 31 - August 3 and set your waypoint portals to Indianapolis. With over 71,000 people in attendance last year, we were humbled by the overwhelming reception at our booth, and we can’t wait to share in the experience with you again. If you are new to Gen Con, let us just s",
+      "id": "news-1777712694036-0"
     }
   ],
-  "lastUpdated": "2026-05-01T20:51:34.477Z",
+  "lastUpdated": "2026-05-02T09:04:55.195Z",
   "source": "https://sorcerytcg.com/news + https://sorcerytcg.com/sitemap.xml"
 }
